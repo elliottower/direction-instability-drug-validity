@@ -6,13 +6,16 @@
 \usepackage{hyperref}
 \usepackage[margin=1in]{geometry}
 \usepackage{natbib}
+\usepackage{lineno}
 
 \title{Variance- and Subspace-Based Perturbation Divergence Metrics\\Are Magnitude-Confounded}
 
 \author{Elliot Tower\\
 \texttt{elliot@elliottower.ai}}
 
-\date{}
+\date{July 2026}
+
+\linenumbers
 
 \begin{document}
 \maketitle
@@ -449,6 +452,23 @@ geometric perturbation metrics measure magnitude unless explicitly
 prevented from doing so. The DAG is simple, the fix is simple, and the
 failure mode is likely widespread in any analysis comparing perturbation
 groups that differ in effect strength.
+
+\section*{Data and Code Availability}
+
+All analysis code and pre-registration documents are available at
+\url{https://github.com/elliottower/bracket-norm-validity}. The
+repository contains the full commit history demonstrating the
+pre-registration integrity chain (commits \texttt{249abaf},
+\texttt{98897ed}, \texttt{92e3276}). DepMap data (24Q4 release) is
+available from \url{https://depmap.org/portal/}. LINCS L1000 data is
+from GEO (GSE92742). Perturb-seq subspaces were extracted from Replogle
+et al.\ (2022) supplementary data.
+
+\section*{Author Contributions}
+
+E.T.\ conceived the study, designed experiments, wrote pre-registrations,
+implemented all analyses, discovered the magnitude artifact, and wrote
+the manuscript.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
