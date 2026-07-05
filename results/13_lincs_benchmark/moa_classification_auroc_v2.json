@@ -1,0 +1,230 @@
+{
+  "experiment": "13f_v2_moa_classification_broad",
+  "spec_commit": "57867de",
+  "status": "POST-HOC EXPLORATORY",
+  "classification_principle": "core genomic/epigenetic/proteostatic/cytoskeletal vs cell-surface receptor/ion channel",
+  "counts": {
+    "machinery": 180,
+    "kinase": 153,
+    "receptor": 585,
+    "excluded": 864,
+    "no_annotation": 7167
+  },
+  "primary": {
+    "n_machinery": 180,
+    "n_receptor": 585,
+    "base_rate_machinery": 0.23529411764705882,
+    "binary_classification": {
+      "direction_instability": {
+        "auroc": 0.8208831908831908,
+        "auroc_ci_lo": 0.7811573272592773,
+        "auroc_ci_hi": 0.8575600615092956,
+        "auroc_se": 0.01966849914759129,
+        "auprc": 0.6666686240612065,
+        "auprc_ci_lo": 0.5931433313877652,
+        "auprc_ci_hi": 0.7371008523562068,
+        "auprc_se": 0.03647011880308569,
+        "n_boot": 10000
+      },
+      "frechet_variance": {
+        "auroc": 0.7218803418803419,
+        "auroc_ci_lo": 0.6704228164698334,
+        "auroc_ci_hi": 0.771664543882571,
+        "auroc_se": 0.026015516776760873,
+        "auprc": 0.5687711287302595,
+        "auprc_ci_lo": 0.4937304977402802,
+        "auprc_ci_hi": 0.64646130291021,
+        "auprc_se": 0.03927926500263707,
+        "n_boot": 10000
+      },
+      "magnitude_cv": {
+        "auroc": 0.3671415004748338,
+        "auroc_ci_lo": 0.3236005273614635,
+        "auroc_ci_hi": 0.4128225994721264,
+        "auroc_se": 0.02293406892428821,
+        "auprc": 0.17924159568744236,
+        "auprc_ci_lo": 0.15495081104745279,
+        "auprc_ci_hi": 0.21236006042908945,
+        "auprc_se": 0.014728720637847886,
+        "n_boot": 10000
+      }
+    },
+    "paired_differences": {
+      "frechet_variance": {
+        "point_diff": 0.09900284900284895,
+        "ci_lo": 0.06311283197792832,
+        "ci_hi": 0.13535926351386215,
+        "p_value": 0.0,
+        "n_boot": 10000,
+        "auroc_a": 0.8208831908831908,
+        "auroc_b": 0.7218803418803419
+      },
+      "magnitude_cv": {
+        "point_diff": 0.45374169040835705,
+        "ci_lo": 0.3860367346534983,
+        "ci_hi": 0.5180874836842565,
+        "p_value": 0.0,
+        "n_boot": 10000,
+        "auroc_a": 0.8208831908831908,
+        "auroc_b": 0.3671415004748338
+      }
+    }
+  },
+  "sensitivity_nhr_machinery": {
+    "n_machinery": 305,
+    "n_receptor": 585,
+    "base_rate_machinery": 0.34269662921348315,
+    "binary_classification": {
+      "direction_instability": {
+        "auroc": 0.719176124422026,
+        "auroc_ci_lo": 0.6824644578655461,
+        "auroc_ci_hi": 0.7558256324078478,
+        "auroc_se": 0.018694455042224625,
+        "auprc": 0.6208777874467553,
+        "auprc_ci_lo": 0.5654364617232613,
+        "auprc_ci_hi": 0.6780931777251913,
+        "auprc_se": 0.02895096987171646,
+        "n_boot": 10000
+      },
+      "frechet_variance": {
+        "auroc": 0.6145999719770211,
+        "auroc_ci_lo": 0.5722836854086572,
+        "auroc_ci_hi": 0.6575169159521812,
+        "auroc_se": 0.02173634029513961,
+        "auprc": 0.5395745034903631,
+        "auprc_ci_lo": 0.48340167376270604,
+        "auprc_ci_hi": 0.6005244033984144,
+        "auprc_se": 0.030138421161999038,
+        "n_boot": 10000
+      },
+      "magnitude_cv": {
+        "auroc": 0.40318901499229365,
+        "auroc_ci_lo": 0.365279111622196,
+        "auroc_ci_hi": 0.44235449622687945,
+        "auroc_se": 0.0197288811197146,
+        "auprc": 0.28977586660173293,
+        "auprc_ci_lo": 0.257120062941801,
+        "auprc_ci_hi": 0.3312532373243889,
+        "auprc_se": 0.01871214790699314,
+        "n_boot": 10000
+      }
+    },
+    "paired_differences": {
+      "frechet_variance": {
+        "point_diff": 0.10457615244500496,
+        "ci_lo": 0.07661149814923007,
+        "ci_hi": 0.1320217999239779,
+        "p_value": 0.0,
+        "n_boot": 10000,
+        "auroc_a": 0.719176124422026,
+        "auroc_b": 0.6145999719770211
+      },
+      "magnitude_cv": {
+        "point_diff": 0.3159871094297324,
+        "ci_lo": 0.2561597552823636,
+        "ci_hi": 0.3759930810640302,
+        "p_value": 0.0,
+        "n_boot": 10000,
+        "auroc_a": 0.719176124422026,
+        "auroc_b": 0.40318901499229365
+      }
+    }
+  },
+  "sensitivity_nhr_receptor": {
+    "n_machinery": 180,
+    "n_receptor": 710,
+    "base_rate_machinery": 0.20224719101123595,
+    "binary_classification": {
+      "direction_instability": {
+        "auroc": 0.815641627543036,
+        "auroc_ci_lo": 0.7740607271008715,
+        "auroc_ci_hi": 0.8545403465460851,
+        "auroc_se": 0.020287962711092938,
+        "auprc": 0.6309734937341398,
+        "auprc_ci_lo": 0.5583713696963349,
+        "auprc_ci_hi": 0.7037173668357458,
+        "auprc_se": 0.03785459572998062,
+        "n_boot": 10000
+      },
+      "frechet_variance": {
+        "auroc": 0.7252190923317683,
+        "auroc_ci_lo": 0.6733568754393698,
+        "auroc_ci_hi": 0.7744321560419705,
+        "auroc_se": 0.025862162287586206,
+        "auprc": 0.5396407147074406,
+        "auprc_ci_lo": 0.46475106937000266,
+        "auprc_ci_hi": 0.6201940195718054,
+        "auprc_se": 0.039949849718070966,
+        "n_boot": 10000
+      },
+      "magnitude_cv": {
+        "auroc": 0.3756338028169014,
+        "auroc_ci_lo": 0.33307121589599253,
+        "auroc_ci_hi": 0.4189332507012882,
+        "auroc_se": 0.021985986518950396,
+        "auprc": 0.15446459806149238,
+        "auprc_ci_lo": 0.13323200537994548,
+        "auprc_ci_hi": 0.18302240359569413,
+        "auprc_se": 0.012698576608006794,
+        "n_boot": 10000
+      }
+    },
+    "paired_differences": {
+      "frechet_variance": {
+        "point_diff": 0.09042253521126775,
+        "ci_lo": 0.05482040559116713,
+        "ci_hi": 0.12553673319292544,
+        "p_value": 0.0,
+        "n_boot": 10000,
+        "auroc_a": 0.815641627543036,
+        "auroc_b": 0.7252190923317683
+      },
+      "magnitude_cv": {
+        "point_diff": 0.44000782472613464,
+        "ci_lo": 0.37365348420580285,
+        "ci_hi": 0.5034613664218679,
+        "p_value": 0.0,
+        "n_boot": 10000,
+        "auroc_a": 0.815641627543036,
+        "auroc_b": 0.3756338028169014
+      }
+    }
+  },
+  "robustness": {
+    "di_significant_primary": true,
+    "primary_ci_lo": 0.06311283197792832,
+    "di_directional_nhr_machinery": true,
+    "di_directional_nhr_receptor": true,
+    "all_hold": true,
+    "rule": "primary CI excludes zero AND both sensitivity point estimates > 0",
+    "conclusion": "ROBUST: DI significantly > Frechet in primary, directionally in both sensitivity variants"
+  },
+  "ordinal_spearman": {
+    "direction_instability": {
+      "rho": 0.49182510190020745,
+      "p_value": 4.410069364041313e-57,
+      "ci_lo": 0.43773672454088763,
+      "ci_hi": 0.5429843208919379,
+      "se": 0.02712097346345558
+    },
+    "frechet_variance": {
+      "rho": 0.32018109776343373,
+      "p_value": 2.4985055893396562e-23,
+      "ci_lo": 0.2518984887345516,
+      "ci_hi": 0.3851300584968227,
+      "se": 0.03388683843038107
+    },
+    "magnitude_cv": {
+      "rho": -0.1744186041590038,
+      "p_value": 1.0477548315508398e-07,
+      "ci_lo": -0.23658727031002816,
+      "ci_hi": -0.11251342176641968,
+      "se": 0.031447866394497946
+    }
+  },
+  "ordinal_n": {
+    "machinery": 180,
+    "kinase": 153,
+    "receptor": 585
+  }
+}
