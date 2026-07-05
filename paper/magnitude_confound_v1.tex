@@ -7,7 +7,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{natbib}
 
-\title{Geometric Perturbation Metrics Measure Magnitude, Not Mechanism}
+\title{Variance- and Subspace-Based Perturbation Divergence Metrics\\Are Magnitude-Confounded}
 
 \author{Elliot Tower\\
 \texttt{elliot@elliottower.ai}}
@@ -214,8 +214,13 @@ this confound:
 \end{itemize}
 
 After normalization, non-essential genes show \emph{higher} relative
-variability. The raw $d = 2.65$ was the tautology that ``things with
-bigger effects have bigger variance.''
+variability. This reversal is biologically interpretable: non-essential
+genes are dispensable under most conditions but occasionally recruited
+for context-specific functions, producing high relative variability
+around a near-zero mean. The raw $d = 2.65$ was the tautology that
+``things with bigger effects have bigger variance,'' masking a real (and
+opposite-signed) pattern of context-dependent non-essential gene
+recruitment.
 
 \subsection{Perturb-seq: magnitude-matched comparison}
 
@@ -234,6 +239,38 @@ The effect vanishes entirely. The original $d = 0.55$ was driven by
 essential genes having larger transcriptomic effects, which improves PCA
 subspace estimation quality and shifts geodesic distances independent of
 true directional diversity.
+
+\subsection{Confirming the confounder with a magnitude-invariant metric}
+
+A critical question distinguishes the confounder from the mediator
+interpretation: does a mechanically magnitude-invariant metric also show
+no essential/non-essential difference after magnitude control? We
+computed PC1 direction instability---the cosine distance between
+unit-normalized primary response directions in K562 and RPE1---for each
+gene. This metric normalizes by construction (Equation~1), eliminating
+the mechanical path from magnitude to the metric.
+
+Raw PC1 direction instability shows a small essential/non-essential
+difference ($d = 0.19$, $p = 0.001$, magnitude correlation $\rho =
+0.10$). However, this residual correlation---though weaker than geodesic
+distance ($\rho = 0.33$)---reflects estimation-quality effects on PCA
+direction estimation. After magnitude matching ($n = 127$ pairs):
+
+\begin{itemize}
+  \item Essential PC1 D (matched): $0.505$
+  \item Non-essential PC1 D (matched): $0.512$
+  \item Cohen's $d$: $-0.05$ ($p = 0.63$)
+\end{itemize}
+
+After residualization (all 1{,}567 genes): $d = 0.07$, $p = 0.19$.
+
+The magnitude-invariant metric converges to the same null as the
+magnitude-sensitive one. This rules out the mediator interpretation: if
+essential genes had genuinely more diverse response \emph{directions}
+(independent of response strength), the cosine-based metric would detect
+this regardless of magnitude matching. It does not. The confound
+operates through estimation quality at every level---not just on
+multi-dimensional subspaces, but on the primary PCA direction itself.
 
 \subsection{Overriding the pre-registered confirmation}
 
@@ -284,8 +321,13 @@ The evidence that this is a confounder rather than a mediator: if
 magnitude were a \emph{mediator} (essential $\rightarrow$ big response
 $\rightarrow$ genuinely different direction), then conditioning on
 magnitude would attenuate but not eliminate the essential/non-essential
-difference. Instead, magnitude-matching eliminates it completely ($d =
--0.06$). The entire signal traversed the estimation-quality path.
+difference. Instead, magnitude-matching eliminates it completely across
+\emph{four} metrics: geodesic distance ($d = -0.06$), subspace D ($d =
+0.60 \rightarrow$ same as geodesic), PC1 cosine D ($d = -0.05$), and
+PC1 residualized ($d = 0.07$, $p = 0.19$). The convergence of all four
+on the same null---including the mechanically magnitude-invariant
+cosine metric---confirms the entire signal traversed the
+estimation-quality path.
 
 \subsection{LINCS direction instability (no confound)}
 
@@ -295,10 +337,14 @@ blocks the path)}
 \end{equation*}
 
 Direction instability divides by $\|\mathbf{s}_i\|$ before computing
-angles. Magnitude cannot propagate to the metric. This explains the
-observed robustness: corrections do not rerank because the metric
-measures direction independent of magnitude, and the direction is
-stable.
+angles. The mechanical path from magnitude to metric is blocked.
+In finite samples, a residual empirical correlation persists ($\rho
+\approx -0.41$ between D and signal $\ell_2$ norm in LINCS): weaker
+signals produce noisier unit vectors, slightly inflating D. This
+second-order effect is documented but small relative to the primary
+confound in subspace metrics ($\rho = 0.33$). The cosine normalization
+blocks the dominant artifact; it does not guarantee zero
+magnitude-dependence in finite data.
 
 \section{The Fix}
 
@@ -336,17 +382,33 @@ or better-estimated.
 
 \subsection{Limitations}
 
-The magnitude-matching analysis in Perturb-seq used $n = 127$ matched
-pairs (constrained by the overlap in effect-size distributions between
-essential and non-essential genes). Larger matched samples from future
-screens would tighten confidence intervals around the null.
+The magnitude-matching analysis used $n = 127$ matched pairs,
+constrained by the overlap in effect-size distributions between
+essential and non-essential genes. These 127 pairs represent the narrow
+region where both distributions overlap: atypically weak essential genes
+matched to atypically strong non-essential genes. The matched sample is
+not representative of either group's typical member. However, the
+residualization analysis uses all 1{,}567 labeled genes and converges to
+the same null ($d = 0.07$, $p = 0.19$ for PC1 D), confirming that the
+matching result is not an artifact of sample restriction.
+
+Our claim that direction instability is ``immune'' to magnitude
+confounding is precise: the cosine normalization removes the
+\emph{mechanical} dependency. A residual empirical correlation persists
+in finite samples ($\rho = 0.10$ for PC1 D vs.\ magnitude in
+Perturb-seq; $\rho \approx -0.41$ between D and signal norm in LINCS
+drug data). This arises because weaker signals produce noisier estimated
+directions, slightly inflating D. The metric is mechanically immune but
+not entirely empirically independent of magnitude when subspaces are
+estimated from finite data.
 
 Our analysis does not address whether magnitude normalization could mask
 \emph{real} directional divergence in domains where essentiality is not
 defined by magnitude. In principle, a biological process could produce
-both larger effects AND genuinely different directions. The DAG
-distinguishes these cases (mediator vs.\ confounder), but the
-distinction requires per-domain justification.
+both larger effects AND genuinely different directions. The convergence
+of four metrics (geodesic distance, subspace D, PC1 cosine D, and DepMap
+SD) on the same null after magnitude control makes this unlikely in the
+present data, but the possibility remains open for other systems.
 
 \subsection{What the robustness result means in light of the artifact}
 
