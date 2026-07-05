@@ -8,7 +8,7 @@
 
 **Integrity protocol:** Pre-registration document, analysis code, and decision criteria will be committed together in a single commit before any of the three experiments are run on real data. The commit SHA will be recorded here after freeze. Scripts will be complete and runnable before commit; no placeholder functions, no `TODO` blocks, no data-peeking in commented code. This inherits the standard established in the confound paper's frozen commits (249abaf, 98897ed, 92e3276).
 
-**Commit SHA:** _______________ (to be filled after freeze)
+**Commit SHA:** 8d74bd0
 
 ---
 
