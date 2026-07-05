@@ -1,0 +1,58 @@
+% Pre-registered criteria outcomes table and narrative
+% For inclusion in the combined direction-instability + magnitude-confound paper
+% All criteria frozen at commit 8d74bd0 before experiments were run
+
+\subsection{Pre-registered criteria outcomes}
+
+We pre-registered ten decision criteria across three experiments (commit \texttt{8d74bd0}), specifying quantitative thresholds and interpretation guides before observing any results.
+Five criteria passed and five failed.
+We report all outcomes against the frozen thresholds, interpret the failures, and distinguish pre-registered conclusions from post-hoc observations.
+
+\begin{table}[htbp]
+\centering
+\caption{Pre-registered criteria outcomes. All thresholds were frozen before experiments were run (commit \texttt{8d74bd0}). ``Pass'' and ``Fail'' refer strictly to the pre-registered threshold; interpretation follows in the text.}
+\label{tab:prereg_outcomes}
+\small
+\begin{tabular}{llllr}
+\toprule
+\textbf{Exp.} & \textbf{Criterion} & \textbf{Threshold} & \textbf{Observed} & \textbf{Result} \\
+\midrule
+1 & C1: Aggregate $|d|$ & $< 0.1$ & $d = -0.22$ & Fail \\
+1 & C2: Bin-flatness & All bins $\in [-0.15, +0.15]$ & $-0.19$ to $-0.23$ & Fail \\
+1 & C3: Cell-count $|\rho|$ & $< 0.20$ & $\rho = -0.16$ & Pass \\
+\midrule
+2 & C1: DI cosine gap & $\geq 0.02$ over alternatives & $-0.007$ & Fail \\
+2 & C2: DI Jaccard gap & $> 0$ over alternatives & $+0.088$ & Pass \\
+2 & C3: Gap shrinks & Cosine gap $>$ Jaccard gap & Reversed & Fail \\
+2 & C4: Correction converges & Corrected gap $<$ raw gap & $0.088 \to 0.023$ & Pass \\
+\midrule
+3 & C1: Group $d > 0.3$ & Machinery $<$ receptor & $d = 0.77$ & Pass \\
+3 & C2: Three-tier ordering & Mach.\ $<$ kinase $<$ receptor & Kinase $<$ mach. & Fail \\
+3 & C3: Significance & $p < 0.05$ & $p = 0.002$ & Pass \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Experiment~1: cosine direction instability on Perturb-seq.}
+Direction instability detected a small, consistent same-gene transport signal ($d = -0.22$; same-gene mean $D = 0.152$, random-gene mean $D = 0.161$).
+Both C1 and C2 failed their pre-registered thresholds.
+The substantive finding, however, is the absence of bin inversion: across five cell-count bins spanning $[20, 700)$ cells, per-bin effect sizes ranged from $-0.19$ to $-0.23$ with no systematic trend ($\rho = -0.16$, C3 passed).
+For comparison, the confounded metrics showed massive inversion across the same bins: geodesic distance ranged from $d = +1.06$ at low cell counts to $d = -2.02$ at high cell counts; earth mover's distance ranged from $+0.44$ to $-0.75$.
+The pre-registered $\pm 0.15$ band was miscalibrated---the bins are flat but shifted to approximately $-0.2$.
+We interpret this as a genuine weak same-gene signal that the confounded metrics could not isolate because their estimates were dominated by cell-count-dependent estimation artifacts.
+We report the absolute means and effect size rather than the $p$-value ($2.8 \times 10^{-13}$), since a significant-but-small effect at $n = 1{,}676$ is precisely the pattern this paper warns against overinterpreting.
+
+\paragraph{Experiment~2: multi-metric LOO benchmark on LINCS.}
+Direction instability achieved the highest AUROC on the construction-neutral Jaccard outcome (0.945 vs.\ 0.857 for Fr\'{e}chet variance, the best alternative; C2 passed).
+After magnitude residualization, DI retained its advantage (corrected AUROC 0.754 vs.\ 0.731 for Fr\'{e}chet variance; C4 passed).
+On the cosine outcome, Fr\'{e}chet variance (0.976) narrowly edged DI (0.969), so C1 failed ($\Delta = -0.007$).
+C3 failed because DI's advantage over alternatives was \emph{larger} on the Jaccard outcome than on cosine---the opposite of our prediction that the construction-matched advantage would shrink.
+This reversal is informative: it indicates DI's predictive superiority is genuine rather than an artifact of cosine--cosine construction matching.
+The two failures strengthen rather than weaken the central claim, but we report them as failures of the pre-registered predictions.
+
+\paragraph{Experiment~3: MOA class stratification in JUMP-CP.}
+Drugs targeting fundamental cellular machinery showed lower direction instability in Cell Painting morphological profiles (mean $D = 0.69$, $n = 18$) than receptor-mediated drugs (mean $D = 0.83$, $n = 88$; $d = 0.77$, Mann--Whitney $p = 0.002$; C1 and C3 passed).
+This replicates the LINCS L1000 pattern (LINCS $d = 2.05$) in a different measurement modality, with expected attenuation.
+The three-tier ordering failed (C2): kinase inhibitors (mean $D = 0.65$, $n = 21$) fell slightly below machinery rather than between machinery and receptor.
+At $n = 18$ and $n = 21$, the $0.04$ mean difference between machinery and kinase is well within sampling noise; the distinction between these two groups is underpowered.
+The robust result is the machinery-vs-receptor separation, which holds with a large effect size across measurement technologies.
