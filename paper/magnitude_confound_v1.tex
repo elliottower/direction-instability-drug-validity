@@ -1,0 +1,384 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{natbib}
+
+\title{Geometric Perturbation Metrics Measure Magnitude, Not Mechanism}
+
+\author{Elliot Tower\\
+\texttt{elliot@elliottower.ai}}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Geometric metrics for perturbation biology---direction instability,
+Grassmannian geodesic distance, profile variability---are used to
+quantify whether a drug or gene knockout acts consistently across
+cellular contexts. We demonstrate that variance-based and subspace-based
+formulations of these metrics are dominated by effect magnitude. Across
+three perturbation modalities (LINCS L1000, Perturb-seq, DepMap CRISPR
+screens), we show two mechanistically distinct artifacts: (1) genes with
+stronger dependency scores have mechanically higher variance across cell
+lines (DepMap: raw Cohen's $d = 2.65$, coefficient-of-variation
+normalized $d = -1.33$), and (2) genes with larger transcriptomic
+effects produce better-estimated PCA subspaces that shift geodesic
+distances regardless of directional diversity (Perturb-seq: raw $d =
+0.60$, magnitude-matched $d = -0.06$, $p = 0.62$). A pre-registered
+directional prediction that essential gene knockdowns would show greater
+divergence than non-essentials technically passed its criterion ($d >
+0.35$) on the naive metric; we override this confirmation on honesty
+grounds after discovering the magnitude confound. We provide a causal
+DAG explaining why the artifact arises, demonstrate that
+magnitude-normalized metrics eliminate it, and show that cosine-based
+formulations (direction instability) are inherently immune. The
+corrective rule: normalize for effect magnitude before comparing groups
+defined by effect strength, or geometric ``divergence'' reduces to the
+tautology that bigger effects are noisier.
+\end{abstract}
+
+\section{Introduction}
+
+High-throughput perturbation screens produce multi-dimensional signatures
+for thousands of drugs and gene knockdowns across panels of cell lines.
+A natural question follows: does this perturbation act consistently
+across contexts, or does it produce divergent effects depending on
+cellular background? Geometric metrics formalize this question.
+Direction instability measures the mean pairwise angular deviation of
+perturbation signatures across cell lines. Grassmannian geodesic
+distance measures how much a perturbation's response subspace rotates
+between cell types. Profile variability (standard deviation across
+contexts) measures raw spread.
+
+These metrics are used to characterize drug mechanism conservation, gene
+essentiality, and perturbation quality in LINCS L1000
+\citep{subramanian2017next}, Perturb-seq \citep{replogle2022mapping},
+JUMP Cell Painting \citep{chandrasekaran2023jump}, and DepMap CRISPR
+screens. The implicit assumption is that ``more divergent'' reflects
+biology---context-dependent mechanisms, compensatory responses, or
+pathway rewiring.
+
+We show this assumption fails for two of the three major metric
+formulations. Variance-based metrics (standard deviation of scores
+across cell lines) and subspace-based metrics (geodesic distance between
+PCA-estimated perturbation subspaces) are confounded by effect
+magnitude. Groups with stronger perturbation effects appear more
+``divergent'' by construction, regardless of directional diversity.
+Cosine-based metrics (direction instability) are immune because they
+normalize by magnitude before comparison.
+
+Our evidence comes from a sequence of pre-registered and exploratory
+experiments across three data modalities, reported with an explicit
+integrity boundary between confirmatory and post-hoc analyses. The
+discovery unifies two previously puzzling observations: (1) biological
+confound corrections fail to rerank direction instability across three
+domains (Spearman $\rho = 0.83$--$0.99$), and (2) essential gene
+knockdowns appear to ``diverge'' more than non-essentials ($d = 0.55$ in
+Perturb-seq). The first reflects magnitude-dominance of the ranking; the
+second reflects magnitude-confounding of the comparison. Both dissolve
+under the same DAG.
+
+\section{Metrics and Their Magnitude Sensitivity}
+
+\subsection{Direction instability (cosine-based, magnitude-invariant)}
+
+For a perturbation tested in $K$ contexts with signature vectors
+$\mathbf{s}_1, \ldots, \mathbf{s}_K \in \mathbb{R}^d$:
+\begin{equation}
+  D = 1 - \frac{2}{K(K-1)} \sum_{i < j}
+    \frac{\mathbf{s}_i^\top \mathbf{s}_j}
+         {\|\mathbf{s}_i\| \, \|\mathbf{s}_j\|}
+\end{equation}
+The $\ell_2$ normalization makes $D$ invariant to the magnitude of each
+$\mathbf{s}_i$. A drug that produces a strong, consistent signal across
+cell lines receives the same $D$ as one producing a weak, consistent
+signal.
+
+\subsection{Profile variability (variance-based, magnitude-sensitive)}
+
+For a gene with dependency scores $x_1, \ldots, x_K$ across $K$ cell
+lines:
+\begin{equation}
+  V = \text{SD}(x_1, \ldots, x_K)
+\end{equation}
+This metric grows with the absolute magnitude of effects. A gene with
+scores uniformly near $-1$ (strongly essential everywhere) and one with
+scores clustered near $0$ (non-essential everywhere) will have different
+$V$ even if both are equally ``consistent''---the essential gene's
+scores simply occupy a larger range.
+
+\subsection{Grassmannian geodesic distance (subspace-based, indirectly magnitude-sensitive)}
+
+For a gene knocked down in two cell types, let $U_1, U_2 \in
+\text{Gr}(k, d)$ denote the top-$k$ PCA subspaces of the perturbation
+response. The geodesic distance $\delta(U_1, U_2) =
+\|\boldsymbol{\theta}\|_2$ (principal angles) is geometrically
+magnitude-invariant. However, $U_1$ and $U_2$ are \emph{estimated} from
+finite samples. Perturbations with larger effect sizes produce
+higher-SNR data, yielding better-estimated subspaces. This estimation
+quality difference propagates into the distance metric, creating an
+indirect magnitude sensitivity that is absent from the population-level
+definition but present in every finite-sample application.
+
+\section{Pre-registered Experiments}
+
+\subsection{Integrity chain}
+
+All pre-registrations were committed before the author reviewed
+experimental output (commit \texttt{249abaf}). The DepMap replication
+hypothesis was committed separately (commit \texttt{98897ed}) before
+execution. The analysis script was frozen (commit \texttt{92e3276})
+before running. The magnitude-confound analysis (Section~\ref{sec:artifact})
+is exploratory and labeled as such.
+
+\subsection{Experiment 1: Do biological corrections rerank direction instability?}
+
+\textbf{Hypothesis:} Removing confounding features (toxicity genes in
+LINCS, essential-gene subspace in Perturb-seq, cell-health features in
+JUMP-CP) would substantially reorganize the direction instability ranking
+($\rho < 0.70$).
+
+\textbf{Decision criteria:} $\rho < 0.70$: correction bites.
+$0.70 \leq \rho < 0.83$: marginal. $\rho \geq 0.83$: does not bite.
+
+\textbf{Result:} Corrections do not bite in any domain (Table~\ref{tab:robustness}).
+
+\begin{table}[h]
+\centering
+\caption{Rank preservation after biological corrections across three
+perturbation domains. All Spearman correlations exceed the pre-registered
+``doesn't bite'' threshold of $\rho \geq 0.83$.}
+\label{tab:robustness}
+\begin{tabular}{llcc}
+\toprule
+Domain & Correction & $\rho$ & $N$ \\
+\midrule
+LINCS (global) & Toxicity genes removed & $>0.99$ & 8{,}949 \\
+LINCS (HDAC gradient) & Toxicity genes removed & $0.83$ & 20 \\
+Perturb-seq & Essential-gene subspace removed & $0.91$ & 1{,}676 \\
+JUMP-CP & Cell-health features removed & $0.99$ & 25{,}254 \\
+\midrule
+Same-tissue LINCS & Within-tissue variance genes & $0.98$--$0.99$ & 176--358 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Experiment 2: Does essential-gene divergence replicate in DepMap?}
+
+\textbf{Exploratory prior (disclosed):} In Perturb-seq, essential gene
+knockdowns showed higher Grassmannian geodesic distance than non-essentials
+(Cohen's $d = 0.55$, bootstrap CI $[0.45, 0.65]$, $p < 10^{-30}$).
+
+\textbf{Pre-registered prediction:} Essential genes will show higher
+variability of dependency profiles across cell lines than non-essential
+genes (one-tailed, $d > 0.35$). Framed as confirmatory replication of
+the Perturb-seq finding.
+
+\textbf{Operationalization:} Standard deviation of PC1-corrected Chronos
+scores across 1{,}178 cell lines. Essential genes defined by DepMap
+common-essentials list ($n = 1{,}242$); non-essential genes defined by
+DepMap nonessentials list ($n = 726$).
+
+\textbf{Result:} $d = 2.65$ (bootstrap CI $[2.52, 2.79]$, $p <
+10^{-297}$). Pre-registered criterion satisfied. PC1 removal changes
+effect by 0.2\%, ruling out the fitness confound.
+
+\section{Discovery of the Magnitude Artifact}
+\label{sec:artifact}
+
+\textbf{Status: EXPLORATORY. Not pre-registered. Discovered post-hoc
+after observing that $d = 2.65$ was implausibly large.}
+
+The $d = 2.65$ result triggered scrutiny: Cohen's $d$ values above 2
+imply near-zero distributional overlap, which is unusual for biological
+comparisons. Two checks revealed the effect is a magnitude artifact.
+
+\subsection{DepMap: coefficient-of-variation normalization}
+
+Essential genes have large negative Chronos scores (by definition---this
+is what ``essential'' means in DepMap). Larger absolute scores
+mechanically produce larger absolute variance. Normalizing by mean
+effect magnitude (coefficient of variation: SD / $|\bar{x}|$) removes
+this confound:
+
+\begin{itemize}
+  \item Essential CV: mean $= 0.38$, median $= 0.26$
+  \item Non-essential CV: mean $= 2.95$, median $= 1.71$
+  \item Cohen's $d$ (CV): $-1.33$ (sign reversal)
+\end{itemize}
+
+After normalization, non-essential genes show \emph{higher} relative
+variability. The raw $d = 2.65$ was the tautology that ``things with
+bigger effects have bigger variance.''
+
+\subsection{Perturb-seq: magnitude-matched comparison}
+
+Geodesic distance correlates with CERES effect magnitude (Spearman $\rho
+= 0.33$, $p < 10^{-40}$). After matching essential and non-essential
+genes by response magnitude ($n = 127$ matched pairs within 0.2 CERES
+units):
+
+\begin{itemize}
+  \item Essential mean distance: 2.659
+  \item Non-essential mean distance: 2.671
+  \item Cohen's $d$: $-0.06$ ($p = 0.62$, Mann-Whitney)
+\end{itemize}
+
+The effect vanishes entirely. The original $d = 0.55$ was driven by
+essential genes having larger transcriptomic effects, which improves PCA
+subspace estimation quality and shifts geodesic distances independent of
+true directional diversity.
+
+\subsection{Overriding the pre-registered confirmation}
+
+The pre-registered criterion ($d > 0.35$) was technically satisfied by
+the raw SD metric ($d = 2.65$). We override this on honesty grounds: the
+metric captured magnitude, not the directional divergence it was
+intended to measure. A pre-registration protects against cherry-picking
+hypotheses; it does not oblige one to report a confounded metric as if
+it measures the intended construct. Both the ``confirmation'' and the
+artifact are reported; the latter is our actual conclusion.
+
+\section{Causal DAG}
+\label{sec:dag}
+
+The magnitude confound has the same causal structure across both
+affected metrics, though the mechanism differs.
+
+\subsection{DepMap (variance pathway)}
+
+\begin{equation*}
+\text{Magnitude} \rightarrow
+\begin{cases}
+\text{Essentiality label} & \text{(confounds grouping)} \\
+\text{Score variance} & \text{(inflates metric)}
+\end{cases}
+\end{equation*}
+
+Essentiality is \emph{operationally defined} by dependency-score
+magnitude (Chronos $< -0.5$). The magnitude--essentiality association is
+near-tautological. Magnitude also causes higher variance (larger
+absolute numbers span larger ranges). Adjusting for magnitude is correct
+because it removes a spurious path, not a mediating one.
+
+\subsection{Perturb-seq (estimation pathway)}
+
+\begin{equation*}
+\text{Magnitude} \rightarrow
+\begin{cases}
+\text{Essentiality status} & \text{(confounds grouping)} \\
+\text{Subspace estimation quality} \rightarrow \text{Geodesic distance}
+  & \text{(inflates metric)}
+\end{cases}
+\end{equation*}
+
+Here magnitude is not tautologically linked to essentiality, but the
+confounding path through estimation quality produces the same artifact.
+The evidence that this is a confounder rather than a mediator: if
+magnitude were a \emph{mediator} (essential $\rightarrow$ big response
+$\rightarrow$ genuinely different direction), then conditioning on
+magnitude would attenuate but not eliminate the essential/non-essential
+difference. Instead, magnitude-matching eliminates it completely ($d =
+-0.06$). The entire signal traversed the estimation-quality path.
+
+\subsection{LINCS direction instability (no confound)}
+
+\begin{equation*}
+\text{Magnitude} \not\rightarrow D \quad \text{(cosine normalization
+blocks the path)}
+\end{equation*}
+
+Direction instability divides by $\|\mathbf{s}_i\|$ before computing
+angles. Magnitude cannot propagate to the metric. This explains the
+observed robustness: corrections do not rerank because the metric
+measures direction independent of magnitude, and the direction is
+stable.
+
+\section{The Fix}
+
+Three normalizations remove the magnitude confound from affected
+metrics:
+
+\begin{enumerate}
+  \item \textbf{Coefficient of variation} (SD / $|\text{mean effect}|$):
+    removes scale dependence. Applicable when effects have non-zero means.
+  \item \textbf{Magnitude matching}: compare only perturbations with
+    similar absolute effect sizes. The most assumption-free approach; does
+    not require linearity.
+  \item \textbf{Residualization}: regress out effect magnitude and test
+    residuals. Assumes a linear (or specified) relationship between
+    magnitude and the metric.
+\end{enumerate}
+
+Cosine-based formulations (direction instability, Equation~1) require no
+correction---they are the magnitude-normalized version by construction.
+
+\section{Discussion}
+
+This paper makes one claim: variance-based and subspace-based
+perturbation-divergence metrics are magnitude-confounded when used to
+compare groups defined by effect strength. The claim is supported by two
+mechanistically distinct artifacts (variance inflation in DepMap,
+estimation-quality bias in Perturb-seq) that converge on the same
+conclusion across three data modalities.
+
+The practical implication is a rule: before comparing ``divergence''
+across groups that differ in perturbation strength, normalize for
+magnitude. Failing to do so produces effects that look large ($d = 2.65$,
+$d = 0.55$) but reduce to the tautology that bigger effects are noisier
+or better-estimated.
+
+\subsection{Limitations}
+
+The magnitude-matching analysis in Perturb-seq used $n = 127$ matched
+pairs (constrained by the overlap in effect-size distributions between
+essential and non-essential genes). Larger matched samples from future
+screens would tighten confidence intervals around the null.
+
+Our analysis does not address whether magnitude normalization could mask
+\emph{real} directional divergence in domains where essentiality is not
+defined by magnitude. In principle, a biological process could produce
+both larger effects AND genuinely different directions. The DAG
+distinguishes these cases (mediator vs.\ confounder), but the
+distinction requires per-domain justification.
+
+\subsection{What the robustness result means in light of the artifact}
+
+The bracket-norm robustness finding (corrections do not rerank, $\rho =
+0.83$--$0.99$) is independently valid because direction instability is
+cosine-based and magnitude-invariant. The robustness reflects genuine
+directional stability of perturbation signatures, not magnitude
+dominance. However, the \emph{interpretation} shifts: the ranking is
+robust because the underlying geometry is stable, which we now
+understand is partially because cosine normalization removes the primary
+source of apparent variation (magnitude).
+
+\subsection{Implications for the field}
+
+Researchers computing variability metrics on perturbation atlases
+(DepMap, Perturb-seq, PRISM, JUMP-CP) should verify that their metric is
+magnitude-invariant before interpreting group differences as biological
+divergence. Metrics that lack built-in normalization (SD, geodesic
+distance on estimated subspaces) require explicit magnitude correction.
+Metrics with built-in normalization (cosine similarity, direction
+instability) are safe by construction.
+
+\section{Conclusion}
+
+We pre-registered a divergence prediction, the naive metric confirmed
+it, and our own post-hoc checks killed it. The killing is the finding:
+geometric perturbation metrics measure magnitude unless explicitly
+prevented from doing so. The DAG is simple, the fix is simple, and the
+failure mode is likely widespread in any analysis comparing perturbation
+groups that differ in effect strength.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
