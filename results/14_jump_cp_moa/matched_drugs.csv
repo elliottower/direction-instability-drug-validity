@@ -1,0 +1,331 @@
+drug_name,moa,moa_class,jump_di,lincs_di,Metadata_JCP2022
+equol,estrogen receptor agonist,other,0.9112725052584983,0.9257190972566604,JCP2022_000632
+tranylcypromine,monoamine oxidase inhibitor,other,0.8403957440000313,0.962023738771677,JCP2022_000856
+sulconazole,sterol demethylase inhibitor,other,0.7916787768863408,0.8538244664669037,JCP2022_001075
+quinethazone,thiazide diuretic,other,0.9812444082442366,0.9514108039438725,JCP2022_001265
+BVT-948,tyrosine phosphatase inhibitor,other,0.814273904187072,0.7954165637493134,JCP2022_001890
+SB-334867,orexin receptor antagonist,other,0.8610608349031721,0.8969013169407845,JCP2022_002010
+ZK-93423,benzodiazepine receptor agonist,receptor,0.6220580878964206,0.9261776953935624,JCP2022_002118
+metolazone,carbonic anhydrase inhibitor,other,1.0057066641898367,0.9757749829441308,JCP2022_003070
+propranolol,adrenergic receptor antagonist,receptor,1.067745338085555,0.91413614153862,JCP2022_003111
+nifurtimox,DNA inhibitor,other,0.8954899269562531,0.9636060446500778,JCP2022_003280
+irsogladine,phosphodiesterase inhibitor,other,1.010583665678079,0.9223054125905036,JCP2022_003677
+voriconazole,cytochrome P450 inhibitor,other,0.9432659120461601,0.9194908887147905,JCP2022_005362
+SGX523,hepatocyte growth factor receptor inhibitor,other,0.9053682050911717,0.9408310763537884,JCP2022_005529
+zamifenacin,acetylcholine receptor antagonist,receptor,0.6382577673332133,0.9700697995722294,JCP2022_005628
+lacidipine,calcium channel blocker,receptor,0.8777167979093695,0.897161528468132,JCP2022_006292
+ENMD-2076,Aurora kinase inhibitor|FLT3 inhibitor|VEGFR inhibitor,kinase,0.8320641053154294,0.8237342089414597,JCP2022_007138
+nabumetone,cyclooxygenase inhibitor,other,0.9573226744206091,0.8553500473499298,JCP2022_007196
+marbofloxacin,bacterial DNA gyrase inhibitor,other,0.6605562709579075,1.0016624620184302,JCP2022_007783
+formoterol,adrenergic receptor agonist,receptor,0.6925506811555588,0.9246350824832916,JCP2022_007934
+clorgiline,monoamine oxidase inhibitor,other,0.8552713905201496,0.9628406539559364,JCP2022_008513
+piperacetazine,dopamine receptor antagonist,receptor,0.534428304809002,0.9601311422884464,JCP2022_008514
+memantine,glutamate receptor antagonist,receptor,0.8826724605629251,0.9050987735390664,JCP2022_008727
+clebopride,dopamine receptor antagonist,receptor,0.8926660601784583,0.9544068537652493,JCP2022_008959
+tetrahydrozoline,adrenergic receptor agonist,receptor,0.9321398917998456,0.9570101760327816,JCP2022_009475
+propoxycaine,local anesthetic,other,0.8909632506404994,0.9735012818127872,JCP2022_009839
+reboxetine,adrenergic receptor antagonist,receptor,0.9614109942754956,0.951578300446272,JCP2022_010065
+SB-203580,p38 MAPK inhibitor,kinase,0.5063213685857375,0.9469060637056828,JCP2022_010404
+aripiprazole,serotonin receptor agonist|serotonin receptor antagonist,receptor,0.8309294003314333,0.900504432618618,JCP2022_010654
+cilomilast,phosphodiesterase inhibitor,other,0.906766739810602,0.9285868853330612,JCP2022_010699
+oxybuprocaine,local anesthetic,other,1.0001182530048718,0.992106723599136,JCP2022_012064
+cyclophosphamide,DNA alkylating agent,machinery,0.8882042548079168,0.9553556255996228,JCP2022_012146
+naproxen,cyclooxygenase inhibitor,other,1.0575909951978484,0.9558031633496284,JCP2022_012183
+naphazoline,adrenergic receptor agonist,receptor,0.9717454424606443,0.9610306099057198,JCP2022_012266
+oxcarbazepine,sodium channel blocker,receptor,0.6168817973950671,0.9277822822332382,JCP2022_013346
+pazopanib,KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|VEGFR inhibitor,kinase,0.6159097308130776,0.953071404248476,JCP2022_013455
+buparlisib,PI3K inhibitor,kinase,0.7309717174294298,0.8800141960382462,JCP2022_013856
+finasteride,5 alpha reductase inhibitor,other,0.9850123024010403,0.9603582471609116,JCP2022_014806
+cisapride,serotonin receptor agonist,receptor,0.6644974865541892,0.9609503634274006,JCP2022_015087
+vinpocetine,phosphodiesterase inhibitor|sodium channel blocker,receptor,0.7619144280804568,0.9490047432482244,JCP2022_015225
+SB-525334,TGF beta receptor inhibitor,other,0.4926380606285121,0.9195186570286752,JCP2022_016549
+ketoprofen,cyclooxygenase inhibitor,other,0.9396149884619881,0.970856050029397,JCP2022_016618
+hydroflumethiazide,sodium/potassium/chloride transporter inhibitor,other,0.9381369330661988,0.8947772234678268,JCP2022_016807
+BX-912,pyruvate dehydrogenase kinase inhibitor,other,0.7169348225210004,0.81064572930336,JCP2022_016871
+SRC-kinase-inhibitor-I,SRC inhibitor,kinase,0.5996394634637479,0.975421654060483,JCP2022_016935
+GW-9662,PPAR receptor antagonist,other,0.8411304430276529,0.97198885679245,JCP2022_017067
+pargyline,monoamine oxidase inhibitor,other,0.882696471685826,0.960389979183674,JCP2022_017478
+practolol,adrenergic receptor antagonist,receptor,0.951489810694593,0.9485932849347593,JCP2022_018323
+oxybenzone,lipase inhibitor,other,0.9945472761168707,0.946741495281458,JCP2022_018778
+repaglinide,insulin secretagogue,other,0.9647452065940658,0.967038445174694,JCP2022_019333
+pramipexole,dopamine receptor agonist,receptor,0.9892380771050511,0.9230808690190316,JCP2022_019441
+benperidol,dopamine receptor antagonist,receptor,0.9772106933761381,0.993034086190164,JCP2022_020054
+ondansetron,serotonin receptor antagonist,receptor,1.0246183242804459,0.9751313794404268,JCP2022_020127
+carbamazepine,carboxamide antiepileptic,other,1.000366282871044,0.9325073808431624,JCP2022_020269
+pefloxacin,bacterial DNA gyrase inhibitor,other,0.9848903895825776,0.9147654548287392,JCP2022_020639
+artesunate,DNA synthesis inhibitor,machinery,0.5266534165680868,0.95437715575099,JCP2022_020823
+metyrapone,cytochrome P450 inhibitor,other,0.9516210298146488,0.9686318635940552,JCP2022_021039
+methazolamide,carbonic anhydrase inhibitor,other,0.934709892678613,0.9329367950558662,JCP2022_021425
+triamterene,sodium channel blocker,receptor,0.7982772430933284,0.9299567490816116,JCP2022_021857
+SANT-1,smoothened receptor antagonist,other,0.8878978902430027,0.9611464887857436,JCP2022_021969
+TCS-359,FLT3 inhibitor,kinase,0.3795509174664302,0.8989777565002441,JCP2022_022682
+riluzole,glutamate inhibitor,other,0.8737436142145163,0.9123314619064332,JCP2022_022756
+quinpirol-(-),dopamine receptor agonist,receptor,1.0276140824614826,0.9762619975954294,JCP2022_022896
+moracizine,sodium channel blocker,receptor,0.7816730042657112,0.9512387849390508,JCP2022_022963
+purmorphamine,smoothened receptor agonist,other,0.8064963235381037,0.930020734667778,JCP2022_023729
+enalapril,angiotensin converting enzyme inhibitor,other,0.9357322672570186,0.919881135225296,JCP2022_024450
+alrestatin,aldose reductase inhibitor,other,0.7189567265011683,0.951269332319498,JCP2022_024601
+PD-184352,MEK inhibitor,kinase,0.8847510342726803,0.8976346254348755,JCP2022_025145
+milnacipran,serotonin–norepinephrine reuptake inhibitor (SNRI),other,0.9754865115797596,0.949189942330122,JCP2022_025882
+bosentan,endothelin receptor antagonist,other,1.0282998156221532,0.9631292298436164,JCP2022_025924
+diclofenamide,carbonic anhydrase inhibitor,other,0.9241686984662237,0.983695512637496,JCP2022_025933
+clonidine,adrenergic receptor agonist,receptor,1.0628544254623316,0.9714176878333092,JCP2022_025946
+mercaptopurine,immunosuppressant|protein synthesis inhibitor|purine antagonist,machinery,0.9468295767274675,0.9067976102232932,JCP2022_026330
+mephenytoin,hydantoin antiepileptic,other,1.0029984475369977,0.9468786790966988,JCP2022_026410
+maraviroc,CC chemokine receptor antagonist,other,0.864978957974342,0.9448968693614006,JCP2022_027492
+trapidil,PDGFR tyrosine kinase receptor inhibitor,other,0.9677232921047421,0.9655913934111596,JCP2022_027497
+tiaprofenic-acid,cyclooxygenase inhibitor,other,0.9174751869239526,0.9467277117073536,JCP2022_027820
+fludarabine,ribonucleotide reductase inhibitor,machinery,0.4544359929480879,0.6739643216133118,JCP2022_029186
+doxylamine,histamine receptor antagonist,receptor,0.9484467634061982,0.9940349012613297,JCP2022_029272
+brinzolamide,carbonic anhydrase inhibitor,other,0.9703389076999624,0.9513249695301056,JCP2022_029365
+desipramine,tricyclic antidepressant,other,0.7904744204369534,0.914776273071766,JCP2022_029407
+ramipril,angiotensin converting enzyme inhibitor,other,0.841220797430862,0.9635603092610836,JCP2022_029423
+ibuprofen,cyclooxygenase inhibitor,other,0.8803353878092347,0.9081133008003236,JCP2022_029646
+ibuprofen-(S),cyclooxygenase inhibitor,other,0.8803353878092347,0.959702491760254,JCP2022_029646
+gemfibrozil,lipoprotein lipase activator,other,1.0102438056807999,0.9605423621833324,JCP2022_029684
+ruxolitinib,JAK inhibitor,kinase,0.5501586741212589,0.9661550372838974,JCP2022_029868
+tinidazole,antiprotozoal agent,other,1.0453882252779703,0.9433523826301098,JCP2022_030599
+tetramisole,immunostimulant,other,0.8175384585519965,0.9554047510027884,JCP2022_030932
+SKF-96365,calcium channel blocker,receptor,0.5824441515133703,0.9435236155986786,JCP2022_030983
+"hydroxytacrine-maleate-(r,s)",cholinesterase inhibitor,other,0.712103247030319,0.9402173459529876,JCP2022_031045
+methapyrilene,histamine receptor antagonist,receptor,0.9586984991249431,0.90797258913517,JCP2022_031320
+levetiracetam,calcium channel blocker,receptor,1.024639725418528,0.9822636507451534,JCP2022_031690
+RX-821002,adrenergic receptor antagonist,receptor,0.7375036098150308,0.9476177953183652,JCP2022_031861
+naftopidil,adrenergic receptor antagonist,receptor,0.8817273347362913,0.960373267531395,JCP2022_032134
+guaifenesin,expectorant,other,1.01561311937665,0.9316888228058816,JCP2022_032332
+polydatin,ICAM1 expression inhibitor,other,0.578007112989275,0.9808431304991244,JCP2022_032353
+diltiazem,calcium channel blocker,receptor,0.7480448839023099,0.9680550955235958,JCP2022_032357
+mefexamide,psychoactive drug,other,0.8718829039890911,0.983141716569662,JCP2022_032690
+diflunisal,prostanoid receptor antagonist,other,1.0422527071795271,0.9611299447715282,JCP2022_032702
+PHA-793887,CDK inhibitor,machinery,0.7436164323302648,0.8335468173027039,JCP2022_032771
+pirenperone,serotonin receptor antagonist,receptor,0.7639282634625417,0.9721419624984264,JCP2022_033179
+homoharringtonine,protein synthesis inhibitor,machinery,0.7559684137189177,0.4971183538436889,JCP2022_033400
+nimesulide,cyclooxygenase inhibitor,other,0.9651634841040991,0.926413267850876,JCP2022_033532
+mefenamic-acid,cyclooxygenase inhibitor,other,1.0542952735184297,0.9477271288633348,JCP2022_033540
+miglitol,glucosidase inhibitor,other,0.8129372152580914,0.9400881603360176,JCP2022_033936
+OMDM-2,FAAH inhibitor,other,0.8080395563970593,0.9224770218133926,JCP2022_034137
+urapidil,adrenergic receptor antagonist,receptor,0.9383078944332925,0.934075154364109,JCP2022_034199
+BRL-50481,phosphodiesterase inhibitor,other,0.9039250214000566,0.9499152190983297,JCP2022_034709
+bezafibrate,PPAR receptor agonist,other,0.8271141817367289,0.962753150612116,JCP2022_035200
+pheniramine,histamine receptor antagonist,receptor,0.9653475388705175,0.9837395939975976,JCP2022_035427
+mestranol,estrogen receptor agonist,other,0.5689807575944439,0.9627796411514282,JCP2022_036039
+perindopril,angiotensin converting enzyme inhibitor,other,0.936631000713107,0.930003635585308,JCP2022_036635
+pirlindole,monoamine oxidase inhibitor,other,0.8981662785737287,0.912775494158268,JCP2022_037889
+MD-920,NFkB pathway inhibitor,other,0.8453301695101472,0.9794230461120604,JCP2022_038012
+desloratadine,histamine receptor antagonist,receptor,0.8192365895648972,0.8745850324630737,JCP2022_038571
+olopatadine,histamine receptor antagonist,receptor,0.6498169064582753,0.8641100376844406,JCP2022_038675
+droxinostat,HDAC inhibitor,machinery,0.8030190563478307,0.7761261761188507,JCP2022_039863
+chlorthalidone,carbonic anhydrase inhibitor,other,0.9218739121977994,0.9652899652719498,JCP2022_040057
+sertaconazole,sterol demethylase inhibitor,other,0.4772823182237883,0.9347650185227394,JCP2022_040521
+tolbutamide,ATP channel blocker,other,0.76912743225003,0.9362751916050912,JCP2022_040599
+veliparib,PARP inhibitor,other,0.8022383707231728,0.936734028160572,JCP2022_040846
+dobutamine,adrenergic receptor agonist,receptor,0.7901306234851238,0.9690777342766524,JCP2022_041776
+flupirtine,glutamate receptor antagonist,receptor,0.7376269297437719,0.9017072841525078,JCP2022_042261
+spiroxatrine,serotonin receptor antagonist,receptor,0.7885225404627532,0.9594531916081904,JCP2022_042354
+propafenone,antiarrhythmic,other,0.9486500544261008,0.9666631408035756,JCP2022_042547
+neratinib,EGFR inhibitor,kinase,0.7477090653059424,0.8295613825321198,JCP2022_042595
+saclofen,GABA receptor antagonist,receptor,0.7677797358366155,0.9748662188649178,JCP2022_042960
+niflumic-acid,cyclooxygenase inhibitor,other,0.7322543573881104,0.9927252968773246,JCP2022_043099
+arcyriaflavin-a,CDK inhibitor,machinery,0.5913380996459521,0.913908913731575,JCP2022_043287
+proxymetacaine,sodium channel blocker,receptor,0.8004321970572161,0.9411981888115406,JCP2022_043713
+bisacodyl,laxative,other,1.0235401291424606,0.9448374919593334,JCP2022_044671
+EXO-1,ARF inhibitor,other,1.073569418280949,0.9892262630164624,JCP2022_044745
+phenolphthalein,indicator dye,other,0.8007742805654404,0.8761457279324532,JCP2022_044972
+molindone,dopamine receptor antagonist,receptor,1.036166518505337,0.8695411533117294,JCP2022_045421
+FK-866,niacinamide phosphoribosyltransferase inhibitor,other,0.339703419340742,0.9376891031861304,JCP2022_046054
+ciprofibrate,PPAR receptor agonist,other,0.9661001486860116,0.9636615514755248,JCP2022_046194
+BAX-channel-blocker,cytochrome C release inhibitor,other,0.6491728222088019,0.950142066925764,JCP2022_047143
+benzamil,sodium channel blocker,receptor,0.8266786734480994,0.9326290115714072,JCP2022_047559
+argatroban,thrombin inhibitor,other,0.9484234363993309,0.9848076179623604,JCP2022_047636
+nocodazole,tubulin polymerization inhibitor,other,0.5746241433827506,0.8870673552155495,JCP2022_047835
+minaprine,serotonin reuptake inhibitor,other,0.9544178112007364,0.925361879169941,JCP2022_048737
+anandamide,cannabinoid receptor agonist,receptor,0.8165232718819682,0.9750932548195124,JCP2022_049224
+KI-16425,lysophosphatidic acid receptor antagonist,other,0.6568125792839823,0.9040390774607658,JCP2022_050162
+CP-724714,EGFR inhibitor|protein tyrosine kinase inhibitor,kinase,0.6497771109825267,0.9595759510993958,JCP2022_050271
+azathioprine,dehydrogenase inhibitor,other,0.9052432388303709,0.900082416832447,JCP2022_050338
+quinidine,sodium channel blocker,receptor,0.48116234497670973,0.897928349673748,JCP2022_050797
+quinine,hemozoin biocrystallization inhibitor,other,0.48116234497670973,0.9223779290914536,JCP2022_050797
+flufenamic-acid,chloride channel blocker,other,0.9380958103195854,0.8326493799686432,JCP2022_050861
+BMS-754807,IGF-1 inhibitor,other,0.5708440953085633,0.8749936521053314,JCP2022_051166
+NSC-95397,CDC inhibitor,other,0.6684666596419501,0.923642724752426,JCP2022_052804
+benzonatate,local anesthetic,other,0.9923696186763993,0.961364708840847,JCP2022_052832
+dioxybenzone,topical sunscreen agent,other,0.9843596607783621,0.9667600318789482,JCP2022_053711
+tolcapone,catechol O methyltransferase inhibitor,other,0.8299014750917029,0.9555141143500804,JCP2022_054422
+metixene,acetylcholine receptor antagonist,receptor,0.4170096407083087,0.9285171553492546,JCP2022_054516
+menadione,mitochondrial DNA polymerase inhibitor|phosphatase inhibitor,other,0.907559298528564,0.8082805871963501,JCP2022_054618
+tetrabenazine,vesicular monoamine transporter inhibitor,other,0.9792159332220747,0.9610598348081112,JCP2022_054710
+flutamide,androgen receptor antagonist,other,0.9342797795426219,0.9455511346459388,JCP2022_054801
+sulindac,cyclooxygenase inhibitor,other,1.0326365919262213,0.9632680900394917,JCP2022_054903
+SB-590885,RAF inhibitor,kinase,0.4705839510819384,0.9748482275754212,JCP2022_054955
+piroxicam,cyclooxygenase inhibitor,other,0.9410215023430505,0.9355993568897248,JCP2022_055352
+dapsone,bacterial antifolate,other,0.9797219654167948,0.8971498683094978,JCP2022_055852
+CYT-997,tubulin polymerization inhibitor,other,0.5206245934726182,0.8773431926965714,JCP2022_056401
+sulfasalazine,cyclooxygenase inhibitor,other,0.8166191031031368,0.9839805364608764,JCP2022_058046
+indapamide,thiazide diuretic,other,0.9712819117388293,0.9469716735184192,JCP2022_058212
+GW-311616,elastase inhibitor|leukocyte elastase inhibitor,other,0.6288409219320321,0.9622288905084132,JCP2022_058288
+benzthiazide,carbonic anhydrase inhibitor,other,0.9696333306611649,0.9438881874084472,JCP2022_058336
+safinamide,dopamine reuptake inhibitor|glutamate inhibitor|monoamine oxidase inhibitor,other,1.076150816360269,0.9312794357538224,JCP2022_058460
+dienestrol,estrogen receptor agonist,other,0.9075075233585456,0.9801933001726866,JCP2022_058571
+fasudil,rho associated kinase inhibitor,other,0.835497097411678,0.9144555926322936,JCP2022_058852
+PETCM,caspase activator,other,0.7614100142634892,0.9643263891339302,JCP2022_058889
+fostamatinib,SYK inhibitor,other,0.6200602856703853,0.9089394435286522,JCP2022_059004
+somatostatin,somatostatin receptor agonist,other,0.57245460463669,0.9304080829024316,JCP2022_059103
+ilomastat,matrix metalloprotease inhibitor,other,0.8523004419620945,0.9461758323013784,JCP2022_059269
+rufloxacin,bacterial DNA gyrase inhibitor,other,1.035708395085768,0.944041796028614,JCP2022_059332
+alda-1,aldehyde dehydrogenase activator,other,0.8985560190460917,0.9269007220864296,JCP2022_059966
+azacitidine,DNA methyltransferase inhibitor,other,0.475146979707771,0.7160261571407318,JCP2022_060040
+etodolac,cyclooxygenase inhibitor,other,0.950692423921491,0.968088500201702,JCP2022_060238
+nialamide,monoamine oxidase inhibitor,other,0.8147823945506487,0.7430124878883362,JCP2022_060311
+acepromazine,dopamine receptor antagonist,receptor,0.6856970975856923,0.9584340006113052,JCP2022_060393
+etomidate,GABA receptor modulator,other,1.037798296813975,0.9821459017693996,JCP2022_060588
+nevirapine,non-nucleoside reverse transcriptase inhibitor,other,0.920702748478083,0.9907033946365118,JCP2022_060649
+iproniazid,monoamine oxidase inhibitor,other,0.9878531296581362,0.8982048705220222,JCP2022_062174
+tranilast,angiogenesis inhibitor,other,0.9940939918315442,0.97428710013628,JCP2022_062326
+bifonazole,sterol demethylase inhibitor,other,0.8504371646000988,0.9636635817587376,JCP2022_062849
+toltrazuril,antiprotozoal agent,other,0.9755007127418344,0.9847625344991684,JCP2022_062893
+dipivefrine,adrenergic receptor agonist,receptor,0.7988284850951202,0.9716539792716504,JCP2022_062967
+doxepin,histamine receptor antagonist,receptor,1.0136450904633874,0.9673904813826084,JCP2022_063153
+racecadotril,enkephalinase inhibitor,other,0.8762585605818498,0.9682056158781052,JCP2022_063174
+alfacalcidol,vitamin D receptor agonist,other,0.9028702968588644,0.8957210257649422,JCP2022_063437
+diphenidol,acetylcholine receptor agonist,receptor,0.9804520057284977,0.9414879120886326,JCP2022_063565
+bromhexine,mucolytic agent,other,0.9149250928117019,0.970215693116188,JCP2022_064148
+tolterodine,acetylcholine receptor antagonist,receptor,1.0311431091678438,0.974718764424324,JCP2022_065085
+YC-1,guanylyl cyclase activator,other,0.5440777653150852,0.9382776468992232,JCP2022_065525
+tenoxicam,cyclooxygenase inhibitor,other,0.922623058003406,0.9871826879680156,JCP2022_065984
+zimelidine,selective serotonin reuptake inhibitor (SSRI),other,0.9358142234118757,0.9567927457392216,JCP2022_066972
+ketorolac,cyclooxygenase inhibitor,other,1.0008668102584346,0.9664342142641544,JCP2022_067216
+PP-2,SRC inhibitor,kinase,0.4166901903621404,0.8467850089073181,JCP2022_067432
+lovastatin,HMGCR inhibitor,other,0.7148335044052709,0.927818775177002,JCP2022_067776
+PF-04217903,c-Met inhibitor,other,0.893947213722403,0.9388056173920633,JCP2022_067886
+trazodone,adrenergic receptor antagonist|serotonin receptor antagonist|serotonin reuptake inhibitor,receptor,0.7882088220305321,0.9653529189527036,JCP2022_068606
+dosulepin,norepinephrine reuptake inhibitor|serotonin–norepinephrine reuptake inhibitor (SNRI)|tricyclic antidepressant,other,0.6770159745450981,0.9551919251680374,JCP2022_068674
+ticlopidine,purinergic receptor antagonist,other,0.9179655953425784,0.9321404621005058,JCP2022_068699
+ponatinib,Bcr-Abl kinase inhibitor|FLT3 inhibitor|PDGFR tyrosine kinase receptor inhibitor,kinase,0.7593121515568315,0.9421238116919994,JCP2022_068713
+NSC-632839,ubiquitin specific protease inhibitor,other,0.756219548806515,0.6335754692554474,JCP2022_069131
+cyclosporin-a,calcineurin inhibitor,other,0.8459628205841069,0.8979329541325569,JCP2022_069491
+purvalanol-a,CDK inhibitor,machinery,0.6474631873565595,0.6065717339515686,JCP2022_069668
+7-nitroindazole,nitric oxide synthase inhibitor,other,0.855788742600615,0.9369056224822998,JCP2022_070256
+buphenine,adrenergic receptor agonist,receptor,0.9737611310381739,0.9496771022677422,JCP2022_070801
+midodrine,adrenergic receptor agonist,receptor,1.0153562289218712,0.9717315956950188,JCP2022_070828
+carprofen,cyclooxygenase inhibitor,other,0.9712134764559793,0.9786238465458156,JCP2022_071112
+ZM-336372,RAF inhibitor,kinase,0.6392472372452576,0.8118817955255508,JCP2022_071733
+entecavir,DNA replication inhibitor|nucleoside reverse transcriptase inhibitor,other,0.8669843406813413,0.9427940882742404,JCP2022_072682
+butyl-paraben,DNA synthesis inhibitor,machinery,0.7447162869813716,0.9712538477033376,JCP2022_073093
+PD-98059,MEK inhibitor,kinase,0.8222282075036617,0.9388772435486316,JCP2022_073156
+SB-202190,p38 MAPK inhibitor,kinase,0.710267937388507,0.8875880837440491,JCP2022_073458
+itopride,dopamine receptor antagonist,receptor,1.0077993281692899,0.9768523816019296,JCP2022_075251
+maprotiline,norepinephrine reputake inhibitor|tricyclic antidepressant,other,0.5303951993678532,0.8799658045172691,JCP2022_075584
+articaine,local anesthetic,other,0.9974014205800985,0.9463030770421028,JCP2022_075726
+hesperidin,flavanone glycoside,other,1.0430654381704259,0.9574938602745532,JCP2022_075990
+orphenadrine,acetylcholine receptor antagonist,receptor,0.9710807833707517,0.9259474575519562,JCP2022_076227
+dilazep,adenosine reuptake inhibitor,other,0.7658151115226134,0.8377605974674225,JCP2022_076233
+methoxsalen,DNA synthesis inhibitor,machinery,0.7995255202576939,0.8193046301603317,JCP2022_076523
+cefaclor,bacterial cell wall synthesis inhibitor,other,0.9344449606703408,0.9796745982021092,JCP2022_076685
+motesanib,KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|VEGFR inhibitor,kinase,0.9109974973637001,0.9602547883987428,JCP2022_077046
+aminopurvalanol-a,CDK inhibitor|tyrosine kinase inhibitor,machinery,0.6034444791941938,0.7090856730937958,JCP2022_077089
+oxibendazole,tubulin polymerization inhibitor,other,0.6699465373220239,0.9088417813181876,JCP2022_077096
+loperamide,opioid receptor agonist,receptor,0.5860941775158224,0.9215600192546844,JCP2022_077671
+niridazole,phosphofructokinase inhibitor,other,0.7701633716510718,0.938778791576624,JCP2022_077738
+zaprinast,phosphodiesterase inhibitor,other,0.637002519249599,0.970767293125391,JCP2022_077927
+PRIMA1,TP53 inhibitor,other,0.9909724962001009,0.922992005944252,JCP2022_077952
+KU-0063794,mTOR inhibitor,machinery,0.5431734031071903,0.7688326686620712,JCP2022_078078
+perphenazine,dopamine receptor antagonist,receptor,0.3155300214188588,0.8455370664596558,JCP2022_078143
+nefopam,cyclooxygenase inhibitor,other,0.9260242388302222,0.9575622156262398,JCP2022_078233
+epirizole,cyclooxygenase inhibitor,other,1.0134333661269121,0.959970574826002,JCP2022_078327
+indoprofen,cyclooxygenase inhibitor|prostanoid receptor antagonist,other,1.004367580703364,0.9282448440790176,JCP2022_078759
+JTE-013,lysophospholipid receptor antagonist,other,0.7838247967856512,0.9541887678205968,JCP2022_079562
+CGP-53353,EGFR inhibitor|PKC inhibitor,kinase,0.6277448196859385,0.9182559922337532,JCP2022_079715
+mirtazapine,adrenergic receptor antagonist|serotonin receptor antagonist,receptor,0.9263202117737649,0.9644612036645412,JCP2022_079716
+cilostazol,phosphodiesterase inhibitor,other,0.7303144949847389,0.9465623497962952,JCP2022_080224
+estradiol-valerate,estrogen receptor agonist,other,0.9156376270942761,0.944389745593071,JCP2022_080395
+mestinon,cholinesterase inhibitor,other,0.8995191978786334,0.8334956467151642,JCP2022_081019
+puromycin,protein synthesis inhibitor,machinery,0.8254036274409219,0.8679766356945038,JCP2022_081430
+SB-366791,TRPV antagonist,other,0.870786377849244,0.9294409453868866,JCP2022_081462
+simvastatin,HMGCR inhibitor,other,0.7316338217352898,0.9548892192542552,JCP2022_081555
+meclofenamic-acid,cyclooxygenase inhibitor|prostanoid receptor antagonist,other,0.8671056199266794,0.9408994652330877,JCP2022_082046
+KU-60019,ATM kinase inhibitor,other,0.3729500349758683,0.9067252054810524,JCP2022_082234
+JZL-184,monoacylglucerol lipase inhibitor,other,0.9207134704965825,0.953168485313654,JCP2022_082643
+amlexanox,histamine receptor modulator,other,0.6932311429461548,0.9438770785927773,JCP2022_083099
+ozagrel,thromboxane synthase inhibitor,other,0.9273719061904844,0.9542275071144104,JCP2022_083372
+sulfacetamide,PABA antagonist,other,0.9944270836337086,0.9163892790675164,JCP2022_083818
+cyclopentolate,acetylcholine receptor antagonist,receptor,0.85706908680577,0.967646673321724,JCP2022_083926
+roxatidine-acetate,histamine receptor antagonist,receptor,1.0318066665980428,0.95786651968956,JCP2022_084264
+nicotine,acetylcholine receptor agonist,receptor,0.7576099294268085,0.9618986919522284,JCP2022_084364
+isoxicam,cyclooxygenase inhibitor,other,1.0404883877766025,0.9465298391878604,JCP2022_084828
+N6-cyclopentyladenosine,adenosine receptor agonist,other,0.7882049222705355,0.943574983626604,JCP2022_084963
+butoconazole,bacterial cell wall synthesis inhibitor,other,0.6974537184505742,0.9469504356384276,JCP2022_086051
+securinine,GABA receptor antagonist|TP53 activator,receptor,0.8612714247796807,0.9354790970683098,JCP2022_086138
+methiazole,anthelmintic agent,other,0.8081093879096813,0.9447425194084644,JCP2022_086204
+flurbiprofen-(+/-),cyclooxygenase inhibitor,other,1.0657302980827348,0.9263551607728004,JCP2022_086457
+clofibric-acid,PPAR receptor agonist,other,1.0363658901801545,0.9466051571071148,JCP2022_087287
+tamoxifen,estrogen receptor antagonist|selective estrogen receptor modulator (SERM),other,0.8796972355160982,0.9456121996045111,JCP2022_087444
+tripelennamine,histamine receptor antagonist,receptor,1.0190387436246386,0.9888321859762071,JCP2022_088857
+bepridil,calcium channel blocker,receptor,0.6964474992451545,0.9619749449193478,JCP2022_089383
+piretanide,glucocorticoid receptor agonist,other,0.7910408887585721,0.8960371538996696,JCP2022_089581
+tangeritin,cell cycle inhibitor,other,0.9454129183029141,0.9604229144752026,JCP2022_090019
+NBQX,glutamate receptor antagonist,receptor,0.6639196881562894,0.9632689580321312,JCP2022_090884
+disopyramide,sodium channel blocker,receptor,1.0287775966884962,0.9651593416929244,JCP2022_091909
+nicardipine,calcium channel blocker,receptor,0.5838727568636096,0.9527971148490906,JCP2022_092262
+estradiol-benzoate,contraceptive agent,other,0.6565741567469447,0.9072476774454116,JCP2022_092328
+ifenprodil,adrenergic receptor antagonist|glutamate receptor antagonist,receptor,0.8879249958601636,0.9365251138806344,JCP2022_092361
+IRL-2500,endothelin receptor antagonist,other,0.8786882004525346,0.9694693814963102,JCP2022_092464
+tacedinaline,HDAC inhibitor,machinery,0.4841677682460057,0.8972196355462074,JCP2022_092791
+terazosin,adrenergic receptor antagonist,receptor,0.8345220637045284,0.9339760541915894,JCP2022_093047
+NNC-55-0396,T-type calcium channel blocker,receptor,0.7242739131657079,0.6904864311218262,JCP2022_093956
+leflunomide,dihydroorotate dehydrogenase inhibitor|PDGFR tyrosine kinase receptor inhibitor,other,0.6959245005615078,0.9350366070866584,JCP2022_094002
+levomepromazine,dopamine receptor antagonist,receptor,0.5976508119976023,0.9723841957747936,JCP2022_095844
+trifluridine,DNA directed DNA polymerase inhibitor|thymidylate synthase inhibitor,other,0.5481765423582781,0.8777050003409386,JCP2022_096012
+pyrrolidine-dithiocarbamate,NFkB pathway inhibitor,other,0.7341913478758721,0.8667589426040649,JCP2022_096067
+olmesartan,angiotensin receptor antagonist,other,0.9139454770842877,0.9540474712848664,JCP2022_096209
+doxycycline,bacterial 30S ribosomal subunit inhibitor|metalloproteinase inhibitor,other,0.9236910187654698,0.9060591831803322,JCP2022_097030
+vorinostat,HDAC inhibitor,machinery,0.47974245232159196,0.628347635269165,JCP2022_097466
+chloroxine,opioid receptor antagonist,receptor,0.9079769464068768,0.8516677767038345,JCP2022_098004
+homochlorcyclizine,antihistamine,other,0.3983261191178433,0.9443122819066048,JCP2022_098279
+zuclopenthixol,dopamine receptor antagonist,receptor,0.22627161953630126,0.9421070404350758,JCP2022_098433
+prochlorperazine,dopamine receptor antagonist,receptor,0.8544348745679184,0.9000468403100967,JCP2022_098974
+tiabendazole,angiogenesis inhibitor,other,1.0013046688329363,0.9656030721962452,JCP2022_099101
+etifenin,renal function diagnostic agent,other,0.8847066057860342,0.9420007690787316,JCP2022_099906
+alfuzosin,adrenergic receptor antagonist,receptor,0.9608618237823024,0.9692704286426306,JCP2022_099931
+zalcitabine,nucleoside reverse transcriptase inhibitor,other,0.8072331177196597,0.9546751752495766,JCP2022_100626
+citalopram,selective serotonin reuptake inhibitor (SSRI),other,1.0499983264017738,0.8778330981731415,JCP2022_100839
+escitalopram,selective serotonin reuptake inhibitor (SSRI),other,1.0499983264017738,0.9541481100022792,JCP2022_100839
+chlorprothixene,dopamine receptor antagonist,receptor,0.8046242003832502,0.8514081835746765,JCP2022_100895
+triclosan,antibacterial agent,other,0.697781045843568,0.8773405402898788,JCP2022_103094
+dinoprostone,prostanoid receptor agonist,other,0.7973972512808033,0.9402669444680214,JCP2022_103217
+batimastat,matrix metalloprotease inhibitor,other,0.7046698924327276,0.9464475326240064,JCP2022_103291
+esculin,antioxidant,other,1.008137981030502,0.9688545987010002,JCP2022_103628
+loxapine,dopamine receptor antagonist|serotonin receptor antagonist,receptor,0.8509773556467977,0.8972739055752754,JCP2022_104007
+molsidomine,guanylate cyclase stimulant,other,0.9133046625711176,0.9585196897387503,JCP2022_104353
+ketoconazole,sterol demethylase inhibitor,other,0.877873375867013,0.9411290474236012,JCP2022_104490
+iloperidone,dopamine receptor antagonist|serotonin receptor antagonist,receptor,0.7367900256233322,0.937485247850418,JCP2022_104655
+benazepril,angiotensin converting enzyme inhibitor,other,0.9580696834924334,0.990192413330078,JCP2022_105093
+efavirenz,HIV protease inhibitor,other,0.8279661939593305,0.9586886167526244,JCP2022_105184
+BI-2536,PLK inhibitor,other,0.6428741041625436,0.6833779513835907,JCP2022_105442
+KU-55933,ATM kinase inhibitor,other,0.5805459955367721,0.9691245015710592,JCP2022_105539
+triflupromazine,dopamine receptor antagonist,receptor,0.8274542014511048,0.8376213759183884,JCP2022_105686
+amiloride,sodium channel blocker,receptor,0.7032009050268975,0.9386873915791512,JCP2022_105696
+azaperone,dopamine receptor antagonist,receptor,1.0144128302928959,0.9827430304139853,JCP2022_105904
+gatifloxacin,bacterial DNA gyrase inhibitor,other,0.9273399898378242,0.8086081445217133,JCP2022_106033
+nilutamide,androgen receptor antagonist,other,0.9092763329941831,0.9803888071328402,JCP2022_106594
+cediranib,KIT inhibitor|VEGFR inhibitor,kinase,0.5964136341374351,0.845695897936821,JCP2022_106680
+zoxazolamine,myorelaxant,other,1.0292445591222834,0.9351301938295364,JCP2022_108218
+anisomycin,DNA synthesis inhibitor,machinery,0.8332385180119818,0.5551339983940125,JCP2022_109043
+capsaicin,TRPV agonist,other,0.9361496993215203,0.9299965649843216,JCP2022_109074
+clemastine,histamine receptor antagonist,receptor,0.45584923623423046,0.9127167463302612,JCP2022_109590
+cycloheximide,protein synthesis inhibitor,machinery,0.7821303422754431,0.7701760828495026,JCP2022_109917
+parbendazole,tubulin polymerization inhibitor,other,0.5640526318574881,0.943441815674305,JCP2022_110440
+biperiden,acetylcholine receptor antagonist,receptor,0.8971442779783463,0.9761021248996258,JCP2022_110645
+meloxicam,cyclooxygenase inhibitor,other,0.9622770014360834,0.9317939803004264,JCP2022_112044
+bromfenac,cyclooxygenase inhibitor,other,1.0364903137210195,0.9484277777373792,JCP2022_112292
+brompheniramine,histamine receptor antagonist,receptor,0.9450235223663205,0.950505781918764,JCP2022_112610
+promazine,dopamine receptor antagonist,receptor,0.8033827210644682,0.9512989297509192,JCP2022_113210
+ibudilast,leukotriene receptor antagonist|phosphodiesterase inhibitor,other,0.9045635388877072,0.9622242264449596,JCP2022_113779
+cetirizine,histamine receptor antagonist,receptor,0.9378629235008985,0.9689098447561264,JCP2022_113898
+levocetirizine,histamine receptor antagonist,receptor,0.9378629235008985,0.9899138789623976,JCP2022_113898
+fenbufen,cyclooxygenase inhibitor,other,0.9396258062936862,0.9555666856467724,JCP2022_114755
+alverine,muscle relaxant,other,0.79732536576984,0.9872266752645372,JCP2022_114793
+SB-239063,p38 MAPK inhibitor,kinase,0.6342576083897264,0.8803776502609253,JCP2022_115091
+trimipramine,norepinephrine reputake inhibitor|tricyclic antidepressant,other,0.568122546473269,0.9050121158361436,JCP2022_115340
+PP-1,SRC inhibitor,kinase,0.554025655078672,0.8311186581850052,JCP2022_115963
+coumarin,vitamin K antagonist,other,0.6229812486317297,0.9805111326277256,JCP2022_116437
+diphenhydramine,histamine receptor antagonist,receptor,1.0808656372418743,0.9676198288798332,JCP2022_116723

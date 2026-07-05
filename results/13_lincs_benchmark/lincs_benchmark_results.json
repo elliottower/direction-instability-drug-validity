@@ -1,0 +1,36 @@
+{
+  "experiment": "13_lincs_metric_benchmark",
+  "preregistered": "PREREGISTRATION_COMBINED_PAPER.md",
+  "n_drugs": 2694,
+  "min_cell_lines": 10,
+  "cosine_aurocs": {
+    "direction_instability": 0.9693088955200593,
+    "magnitude_cv": 0.3966268796442572,
+    "frechet_variance": 0.9758864314551517,
+    "mean_top_gene_jaccard": 0.9688237473914145
+  },
+  "jaccard_aurocs": {
+    "direction_instability": 0.9445527441717936,
+    "magnitude_cv": 0.3936846653648654,
+    "frechet_variance": 0.8564893582428217,
+    "mean_top_gene_jaccard": 1.0
+  },
+  "corrected_jaccard_aurocs": {
+    "direction_instability": 0.7540725382204343,
+    "magnitude_cv": 0.4994463762029399,
+    "frechet_variance": 0.7311962187136418,
+    "mean_top_gene_jaccard": 0.7239056905030784
+  },
+  "criteria": {
+    "c1_cosine_gap": -0.006577535935092471,
+    "c1_pass": false,
+    "c2_jaccard_gap": 0.0880633859289719,
+    "c2_best_alternative": "frechet_variance",
+    "c2_pass": true,
+    "c3_gap_shrinks": false,
+    "c4_corrected_gap": 0.022876319506792475,
+    "c4_gap_converges": true
+  },
+  "jaccard_threshold": 0.040247549541770206,
+  "cosine_threshold": 0.5
+}

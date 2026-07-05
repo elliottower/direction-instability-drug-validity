@@ -31,11 +31,11 @@ from tqdm import tqdm
 HOLONOMY_DIR = Path(__file__).resolve().parent.parent.parent / "genetic-perturbation-holonomy"
 SUBSPACE_PATH = HOLONOMY_DIR / "data" / "extracted" / "subspaces.npz"
 METADATA_PATH = HOLONOMY_DIR / "data" / "extracted" / "metadata.json"
-RAW_DIR = HOLONOMY_DIR / "data" / "raw"
+RAW_DIR = HOLONOMY_DIR / "data"
 OUTPUT_DIR = Path("results/12_perturbseq_cosine")
 
 K562_FILENAME = "ReplogleWeissman2022_K562_essential.h5ad"
-RPE1_FILENAME = "ReplogleWeissman2022_RPE1.h5ad"
+RPE1_FILENAME = "ReplogleWeissman2022_rpe1.h5ad"
 
 BINS = [(20, 40), (40, 60), (60, 100), (100, 200), (200, 700)]
 

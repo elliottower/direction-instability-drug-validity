@@ -1,0 +1,28 @@
+{
+  "experiment": "14_jump_cp_moa_stratification",
+  "preregistered": "PREREGISTRATION_COMBINED_PAPER.md",
+  "n_matched": 330,
+  "group_sizes": {
+    "machinery": 18,
+    "kinase": 21,
+    "receptor": 88,
+    "other": 203,
+    "unclassified": 0
+  },
+  "jump_cp": {
+    "machinery_mean": 0.6918372682381931,
+    "machinery_std": 0.14848413609595312,
+    "kinase_mean": 0.6494581941690509,
+    "kinase_std": 0.14221615756792014,
+    "receptor_mean": 0.8252711696611321,
+    "receptor_std": 0.1747776803212762,
+    "cohens_d_receptor_vs_machinery": 0.7747371524060351,
+    "mann_whitney_u": 425.0,
+    "mann_whitney_p": 0.002043260956361473
+  },
+  "criteria": {
+    "c1_d_gt_03_and_correct_direction": true,
+    "c2_ordering_correct": false,
+    "c3_significant": true
+  }
+}
