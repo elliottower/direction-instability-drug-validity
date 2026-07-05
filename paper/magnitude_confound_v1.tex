@@ -247,8 +247,15 @@ interpretation: does a mechanically magnitude-invariant metric also show
 no essential/non-essential difference after magnitude control? We
 computed PC1 direction instability---the cosine distance between
 unit-normalized primary response directions in K562 and RPE1---for each
-gene. This metric normalizes by construction (Equation~1), eliminating
-the mechanical path from magnitude to the metric.
+gene. The Perturb-seq dataset contains only two well-powered cell types
+(K562 and RPE1, each with $>$50 cells per guide), so $D = 1 -
+|\cos(\hat{u}_{\text{K562}}, \hat{u}_{\text{RPE1}})|$ reduces to a
+single pairwise comparison rather than a population average. This
+suffices for the present test: we are not estimating population-level
+stability but asking whether the \emph{direction} of response differs
+between these two contexts after controlling for magnitude. The metric
+normalizes by construction (Equation~1), eliminating the mechanical path
+from magnitude to the metric.
 
 Raw PC1 direction instability shows a small essential/non-essential
 difference ($d = 0.19$, $p = 0.001$, magnitude correlation $\rho =
@@ -321,13 +328,12 @@ The evidence that this is a confounder rather than a mediator: if
 magnitude were a \emph{mediator} (essential $\rightarrow$ big response
 $\rightarrow$ genuinely different direction), then conditioning on
 magnitude would attenuate but not eliminate the essential/non-essential
-difference. Instead, magnitude-matching eliminates it completely across
-\emph{four} metrics: geodesic distance ($d = -0.06$), subspace D ($d =
-0.60 \rightarrow$ same as geodesic), PC1 cosine D ($d = -0.05$), and
-PC1 residualized ($d = 0.07$, $p = 0.19$). The convergence of all four
-on the same null---including the mechanically magnitude-invariant
-cosine metric---confirms the entire signal traversed the
-estimation-quality path.
+difference. Instead, magnitude-matching eliminates it completely across all tested
+metrics: geodesic distance (matched $d = -0.06$), PC1 cosine D (matched
+$d = -0.05$), and PC1 cosine D residualized over all genes ($d = 0.07$,
+$p = 0.19$). The convergence on the same null---including the
+mechanically magnitude-invariant cosine metric---confirms the entire
+signal traversed the estimation-quality path.
 
 \subsection{LINCS direction instability (no confound)}
 
@@ -390,7 +396,11 @@ matched to atypically strong non-essential genes. The matched sample is
 not representative of either group's typical member. However, the
 residualization analysis uses all 1{,}567 labeled genes and converges to
 the same null ($d = 0.07$, $p = 0.19$ for PC1 D), confirming that the
-matching result is not an artifact of sample restriction.
+matching result is not an artifact of sample restriction. Residualization
+assumes a linear magnitude--D relationship; if the true relationship is
+nonlinear, some confounding could survive. The magnitude-matching
+approach makes no linearity assumption and yields the same null,
+suggesting the linear approximation is adequate here.
 
 Our claim that direction instability is ``immune'' to magnitude
 confounding is precise: the cosine normalization removes the
