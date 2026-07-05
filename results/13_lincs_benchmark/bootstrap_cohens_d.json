@@ -1,0 +1,65 @@
+{
+  "lincs_machinery_vs_receptor": {
+    "point": -1.9433832037673846,
+    "ci_lo": -2.333691391177446,
+    "ci_hi": -1.606403869990208,
+    "se": 0.1847913271136278,
+    "n1": 114,
+    "n2": 481,
+    "description": "Machinery vs receptor DI in LINCS (lower = more consistent)"
+  },
+  "lincs_machinery_vs_kinase": {
+    "point": -0.8363581805115131,
+    "ci_lo": -1.1160819501166737,
+    "ci_hi": -0.5703004365612835,
+    "se": 0.13996457873998874,
+    "n1": 114,
+    "n2": 122,
+    "description": "Machinery vs kinase DI in LINCS"
+  },
+  "lincs_kinase_vs_receptor": {
+    "point": -0.9254599264862058,
+    "ci_lo": -1.2060476196995995,
+    "ci_hi": -0.6727746803933289,
+    "se": 0.13634346056649094,
+    "n1": 122,
+    "n2": 481,
+    "description": "Kinase vs receptor DI in LINCS"
+  },
+  "jump_cp_machinery_vs_receptor": {
+    "point": -0.7747371524060349,
+    "ci_lo": -1.3492007121274159,
+    "ci_hi": -0.32732464226710867,
+    "se": 0.2599670551269679,
+    "n1": 18,
+    "n2": 88,
+    "description": "Machinery vs receptor DI in JUMP-CP"
+  },
+  "jump_cp_machinery_vs_kinase": {
+    "point": 0.2843968589170234,
+    "ci_lo": -0.3539964372194474,
+    "ci_hi": 0.9736104849988243,
+    "se": 0.3349667835316953,
+    "n1": 18,
+    "n2": 21,
+    "description": "Machinery vs kinase DI in JUMP-CP"
+  },
+  "jump_cp_kinase_vs_receptor": {
+    "point": -1.0307678223092955,
+    "ci_lo": -1.5952256521950336,
+    "ci_hi": -0.5904664811581369,
+    "se": 0.25626962406254,
+    "n1": 21,
+    "n2": 88,
+    "description": "Kinase vs receptor DI in JUMP-CP"
+  },
+  "perturbseq_cosine_transport": {
+    "description": "Same-gene vs random-gene cosine DI (random from permutation distribution)",
+    "point": -0.2155651637347406,
+    "ci_lo": -0.32980532393565704,
+    "ci_hi": -0.18801370763114514,
+    "se": 0.03601710239857117,
+    "n_same": 1676,
+    "note": "Random group bootstrapped from N(mean, std) of 1000-permutation null"
+  }
+}
