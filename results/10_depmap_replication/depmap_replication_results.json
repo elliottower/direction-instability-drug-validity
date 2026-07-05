@@ -1,0 +1,37 @@
+{
+  "experiment": "10_depmap_replication",
+  "prereg_commit": "98897ed",
+  "depmap_release": "DepMap Public 24Q4",
+  "n_cell_lines": 1178,
+  "n_genes_total": 17916,
+  "n_essential": 1242,
+  "n_nonessential": 726,
+  "classification_method": "common_essentials list",
+  "pc1_variance_explained": 0.8542732900912808,
+  "primary_analysis": {
+    "essential_sd_mean": 0.28758770367496256,
+    "essential_sd_median": 0.274708720189118,
+    "nonessential_sd_mean": 0.11184568863473236,
+    "nonessential_sd_median": 0.10879164061487624,
+    "cohens_d": 2.6465816616503512,
+    "bootstrap_d_mean": 2.6508353180144884,
+    "bootstrap_d_ci_lower": 2.515593909062889,
+    "bootstrap_d_ci_upper": 2.790701499390074,
+    "mann_whitney_p_two_tailed": 2.477968252230033e-297,
+    "mann_whitney_p_one_tailed": 1.2389841261150165e-297,
+    "verdict": "CONFIRMS (replicates)"
+  },
+  "falsification_pc1_sensitivity": {
+    "d_without_pc1_removal": 2.652125427500235,
+    "d_with_pc1_removal": 2.6465816616503512,
+    "change_percent": 0.20903105835039987,
+    "triggered": false
+  },
+  "alternative_within_group_correlation": {
+    "essential_mean_corr": 0.0055397105688400165,
+    "nonessential_mean_corr": 0.008875023722498269,
+    "n_sampled_per_group": 200,
+    "prediction_confirmed": true
+  },
+  "timestamp": "2026-07-05T15:17:58.662870"
+}

@@ -1,0 +1,156 @@
+{
+  "population_median": 0.9218883514404297,
+  "n_drugs_total": 8949,
+  "broad_mechanism_drugs": [
+    {
+      "drug": "atorvastatin",
+      "reason": "HMG-CoA reductase inhibitor \u2014 universally expressed target",
+      "raw_bracket": 0.9243408218026161,
+      "magnitude_cv": 0.41812247037887573,
+      "n_celllines": 56,
+      "below_median": false
+    },
+    {
+      "drug": "simvastatin",
+      "reason": "HMG-CoA reductase inhibitor \u2014 universally expressed target",
+      "raw_bracket": 0.9391569308936596,
+      "magnitude_cv": 0.5212242603302002,
+      "n_celllines": 58,
+      "below_median": false
+    },
+    {
+      "drug": "lovastatin",
+      "reason": "HMG-CoA reductase inhibitor \u2014 universally expressed target",
+      "raw_bracket": 0.9134735837578773,
+      "magnitude_cv": 0.3794543445110321,
+      "n_celllines": 58,
+      "below_median": true
+    },
+    {
+      "drug": "metformin",
+      "reason": "AMPK activator / mitochondrial complex I \u2014 fundamental metabolism",
+      "raw_bracket": 0.8989266008138657,
+      "magnitude_cv": 0.2921784222126007,
+      "n_celllines": 12,
+      "below_median": true
+    },
+    {
+      "drug": "dexamethasone",
+      "reason": "Glucocorticoid receptor agonist \u2014 ubiquitous receptor",
+      "raw_bracket": 0.8853556662797928,
+      "magnitude_cv": 0.5161187052726746,
+      "n_celllines": 57,
+      "below_median": true
+    },
+    {
+      "drug": "sirolimus",
+      "reason": "mTOR inhibitor \u2014 universal growth pathway",
+      "raw_bracket": 0.7834091782569885,
+      "magnitude_cv": 0.26712507009506226,
+      "n_celllines": 62,
+      "below_median": true
+    },
+    {
+      "drug": "methotrexate",
+      "reason": "DHFR inhibitor \u2014 fundamental folate metabolism",
+      "raw_bracket": 0.7483511567115784,
+      "magnitude_cv": 0.37348470091819763,
+      "n_celllines": 8,
+      "below_median": true
+    },
+    {
+      "drug": "aspirin",
+      "reason": "COX inhibitor \u2014 ubiquitous prostaglandin pathway",
+      "raw_bracket": 0.9559719860553741,
+      "magnitude_cv": 0.1833639144897461,
+      "n_celllines": 8,
+      "below_median": false
+    },
+    {
+      "drug": "vorinostat",
+      "reason": "Pan-HDAC inhibitor \u2014 universal chromatin modifier",
+      "raw_bracket": 0.4899001121520996,
+      "magnitude_cv": 0.23246915638446808,
+      "n_celllines": 60,
+      "below_median": true
+    },
+    {
+      "drug": "trichostatin-a",
+      "reason": "Pan-HDAC inhibitor \u2014 universal chromatin modifier",
+      "raw_bracket": 0.5498353242874146,
+      "magnitude_cv": 0.219968780875206,
+      "n_celllines": 64,
+      "below_median": true
+    }
+  ],
+  "context_specific_drugs": [
+    {
+      "drug": "vemurafenib",
+      "reason": "BRAF V600E \u2014 only mutant melanoma lines",
+      "raw_bracket": 0.8401501327753067,
+      "magnitude_cv": 0.49369028210639954,
+      "n_celllines": 61,
+      "above_median": false
+    },
+    {
+      "drug": "imatinib",
+      "reason": "BCR-ABL \u2014 CML-specific fusion protein",
+      "raw_bracket": 0.876224473118782,
+      "magnitude_cv": 0.37471064925193787,
+      "n_celllines": 19,
+      "above_median": false
+    },
+    {
+      "drug": "erlotinib",
+      "reason": "EGFR \u2014 lung/epithelial cancers",
+      "raw_bracket": 0.8940449655056,
+      "magnitude_cv": 0.48244398832321167,
+      "n_celllines": 19,
+      "above_median": false
+    },
+    {
+      "drug": "crizotinib",
+      "reason": "ALK/ROS1 \u2014 rare lung cancer subtypes",
+      "raw_bracket": 0.8685662895441055,
+      "magnitude_cv": 0.5120106935501099,
+      "n_celllines": 19,
+      "above_median": false
+    },
+    {
+      "drug": "lapatinib",
+      "reason": "HER2 \u2014 amplified breast cancer only",
+      "raw_bracket": 0.862966775894165,
+      "magnitude_cv": 0.23271973431110382,
+      "n_celllines": 19,
+      "above_median": false
+    },
+    {
+      "drug": "gefitinib",
+      "reason": "EGFR \u2014 mutant-dependent efficacy",
+      "raw_bracket": 0.8713809698820114,
+      "magnitude_cv": 0.28132522106170654,
+      "n_celllines": 19,
+      "above_median": false
+    },
+    {
+      "drug": "PCI-34051",
+      "reason": "HDAC8-selective \u2014 tissue-restricted expression",
+      "raw_bracket": 0.8888733759522438,
+      "magnitude_cv": 0.40069952607154846,
+      "n_celllines": 12,
+      "above_median": false
+    },
+    {
+      "drug": "tubastatin-a",
+      "reason": "HDAC6-selective \u2014 cell-type dependent effects",
+      "raw_bracket": 0.7146724462509155,
+      "magnitude_cv": 0.4078395664691925,
+      "n_celllines": 9,
+      "above_median": false
+    }
+  ],
+  "h2_broad_below_median": 7,
+  "h2_broad_total": 10,
+  "h2_specific_above_median": 0,
+  "h2_specific_total": 8
+}

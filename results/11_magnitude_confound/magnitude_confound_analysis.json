@@ -1,0 +1,36 @@
+{
+  "experiment": "11_magnitude_confound_analysis",
+  "status": "EXPLORATORY \u2014 not pre-registered. Discovered post-hoc after DepMap artifact.",
+  "depmap": {
+    "raw_d": 2.6466,
+    "cv_normalized_d": -1.3263,
+    "interpretation": "Essentiality is defined by magnitude; SD difference is tautological.",
+    "dag_arrow": "magnitude -> essentiality_label AND magnitude -> variance (confounder)"
+  },
+  "perturbseq": {
+    "raw_d": 0.6,
+    "distance_magnitude_rho": 0.326,
+    "residualized_d": 0.217,
+    "magnitude_matched_d": -0.059,
+    "magnitude_matched_p": 0.624,
+    "matched_n": 127,
+    "interpretation": "Geodesic distance correlates with effect magnitude (rho=0.33). After matching on magnitude, essential vs non-essential difference vanishes entirely.",
+    "dag_arrow": "magnitude -> subspace_estimation_quality -> geodesic_distance (confounder via estimation)"
+  },
+  "lincs": {
+    "global_rho": 0.999,
+    "hdac_within_class_rho": 0.829,
+    "interpretation": "Direction instability rankings are robust to feature-subset corrections. Magnitude confound does not apply here because the metric is cosine-based (normalized).",
+    "dag_arrow": "No magnitude confound \u2014 metric is inherently normalized."
+  },
+  "causal_dag": {
+    "confound_structure": "Effect magnitude is a common cause of (1) essentiality classification and (2) divergence metric inflation. Adjusting for magnitude removes the spurious association.",
+    "confounder_vs_mediator": {
+      "depmap": "Confounder \u2014 essentiality IS DEFINED BY magnitude (CERES score). Tautological.",
+      "perturbseq": "Confounder via estimation \u2014 larger effects produce better-estimated PCA subspaces, shifting geodesic distances regardless of true directional diversity.",
+      "lincs": "Not applicable \u2014 cosine-based direction instability is already magnitude-normalized."
+    },
+    "fix": "Normalize divergence metrics by response magnitude before comparing groups defined by effect size. Use CV (SD/|mean|), magnitude-matching, or residualization."
+  },
+  "actionable_rule": "If you compute divergence/instability metrics on perturbation data and then compare groups defined by effect strength (essential vs non-essential, toxic vs non-toxic), you MUST normalize for effect magnitude or you will mistake magnitude for divergence."
+}

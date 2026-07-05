@@ -95,15 +95,15 @@ def main():
     chronos = pd.read_csv(chronos_path, index_col=0)
     log(f"  Shape: {chronos.shape[0]} cell lines x {chronos.shape[1]} genes")
 
-    gene_names = [col.split(" (")[0] for col in chronos.columns]
+    gene_names = [col.rsplit(" (", 1)[0] for col in chronos.columns]
     chronos.columns = gene_names
     log(f"  Genes after name extraction: {len(gene_names)}")
 
     log("Classifying genes by essentiality...")
     if essentials_path.exists() and nonessentials_path.exists():
         log("  Using DepMap common essential / nonessential gene lists")
-        common_ess = set(pd.read_csv(essentials_path, header=None)[0].str.split(" (").str[0])
-        noness_list = set(pd.read_csv(nonessentials_path, header=None)[0].str.split(" (").str[0])
+        common_ess = set(pd.read_csv(essentials_path, header=None)[0].str.split(r" \(").str[0])
+        noness_list = set(pd.read_csv(nonessentials_path, header=None)[0].str.split(r" \(").str[0])
         essential_genes = sorted(set(gene_names) & common_ess)
         nonessential_genes = sorted(set(gene_names) & noness_list)
         log(f"  Common essentials in data: {len(essential_genes)}")
