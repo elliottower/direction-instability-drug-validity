@@ -167,9 +167,13 @@ The following do not meet either definition and are excluded mechanically:
 ## Priority order for compound MOA strings
 
 LINCS MOA annotations are pipe-separated (e.g., "CDK inhibitor|cell cycle
-inhibitor|MCL1 inhibitor"). Classification uses the first match in priority
-order: **machinery > kinase > receptor > excluded**. This ensures specific
-targets take precedence over vague annotations.
+inhibitor|MCL1 inhibitor"). Classification checks nuclear receptor status
+**first** — any drug matching a nuclear receptor keyword is classified as
+"excluded" regardless of other keywords in the compound MOA string. This
+ensures all NHR drugs are deterministically excluded from the primary analysis
+and available to the sensitivity analysis. After the NHR check, remaining drugs
+use the first match in priority order: **machinery > kinase > receptor >
+excluded**.
 
 ## Relationship to other definitions in the paper
 
@@ -194,35 +198,41 @@ AUROC reported as the headline 13f v2 result uses machinery (n=180) vs receptor
 (n=586) with nuclear receptors, non-core intracellular enzymes, kinases,
 bacterial targets, and transporters all removed from the evaluation set.
 
-**Robustness requirement: DI > Frechet must hold in all three variants.** The
-result is considered robust only if DI outperforms Frechet variance on the MOA
-classification task under all three nuclear-receptor treatments:
-1. Nuclear receptors excluded (primary)
-2. Nuclear receptors folded into machinery
-3. Nuclear receptors folded into receptor
+**Robustness requirement (two-tier gate):**
+1. **Primary must be significant:** the paired bootstrap 95% CI for
+   AUROC(DI) − AUROC(Fréchet) must exclude zero (ci_lo > 0).
+2. **Sensitivity must be directional:** in both NHR variants (folded into
+   machinery, folded into receptor), the point estimate
+   AUROC(DI) − AUROC(Fréchet) must be > 0.
 
-If any variant shows Frechet >= DI, the robustness claim is withdrawn and the
-result is reported as "directionally supportive but sensitive to the
-nuclear-receptor boundary."
+The result is considered robust only if all three conditions hold:
+1. Nuclear receptors excluded (primary) — CI excludes zero
+2. Nuclear receptors folded into machinery — point estimate DI > Fréchet
+3. Nuclear receptors folded into receptor — point estimate DI > Fréchet
+
+If the primary CI includes zero, the finding is not established. If either
+sensitivity variant reverses direction (Fréchet >= DI), the robustness claim
+is withdrawn and the result is reported as "directionally supportive but
+sensitive to the nuclear-receptor boundary."
 
 ## Verified counts (pre-run)
 
 Applying the broad classification to the LINCS 8,949-drug CSV:
 - Machinery: 180
 - Kinase: 153
-- Receptor: 586
-- Excluded (auto, by the rule): 863
+- Receptor: 585
+- Excluded (auto, by the rule): 864 (including all 125 NHR drugs)
 - No MOA annotation: 7,167
 - Total: 8,949
 
 Aurora kinase inhibitors (n=11): all classified as kinase (Aurora kinase
 inhibitor appears only in the kinase keyword list). No dual-match ambiguity.
 
-Nuclear hormone receptors: all classified as excluded (verified for
-glucocorticoid n=34, estrogen n=27, androgen n=10, progesterone n=15, PPAR
-n=23+1 compound, retinoid n=12, vitamin D n=6, mineralocorticoid n=4). One PPAR
-drug (oleoylethanolamide) classified as receptor due to compound MOA including
-cannabinoid receptor — correct behavior under the priority rule.
+Nuclear hormone receptors: all 125 classified as excluded (NHR check runs
+first, before keyword matching). This includes oleoylethanolamide, whose
+compound MOA contains both "cannabinoid receptor" and "PPAR receptor" — the
+NHR-first rule ensures it lands in excluded rather than receptor. The
+sensitivity analysis moves all 125 NHR drugs.
 
 ## Implementation assertions
 
@@ -231,3 +241,4 @@ The 13f_v2 script must include the following runtime assertions:
 2. Excluded drugs are removed from the AUROC evaluation set (not silently relabeled)
 3. machinery_n + kinase_n + receptor_n + excluded_n == total annotated drugs (1,782)
 4. Binary AUROC computed on machinery-vs-receptor only; kinases held out
+5. No nuclear receptor drug in the machinery class (contamination check)
