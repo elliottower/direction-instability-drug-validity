@@ -1,0 +1,90 @@
+{
+  "experiment": "13f_moa_classification_auroc",
+  "description": "Can each metric predict machinery vs receptor MOA class?",
+  "n_machinery": 114,
+  "n_receptor": 481,
+  "base_rate_machinery": 0.1915966386554622,
+  "binary_classification": {
+    "direction_instability": {
+      "auroc": 0.8316373053215158,
+      "auroc_ci_lo": 0.7817689070309011,
+      "auroc_ci_hi": 0.8783984481337668,
+      "auroc_se": 0.024967193905490955,
+      "auprc": 0.6873773256393517,
+      "auprc_ci_lo": 0.5996180712927193,
+      "auprc_ci_hi": 0.768682118785996,
+      "auprc_se": 0.04328399471719417,
+      "n_boot": 10000
+    },
+    "frechet_variance": {
+      "auroc": 0.7970055075318233,
+      "auroc_ci_lo": 0.7399995471014492,
+      "auroc_ci_hi": 0.8502111542996665,
+      "auroc_se": 0.02851780847142208,
+      "auprc": 0.6284919079061172,
+      "auprc_ci_lo": 0.5347287598921958,
+      "auprc_ci_hi": 0.7194330600854671,
+      "auprc_se": 0.047122898381619406,
+      "n_boot": 10000
+    },
+    "magnitude_cv": {
+      "auroc": 0.3835394098551993,
+      "auroc_ci_lo": 0.32775028652765453,
+      "auroc_ci_hi": 0.43994927996113886,
+      "auroc_se": 0.028431424299955495,
+      "auprc": 0.15173577689819082,
+      "auprc_ci_lo": 0.1251487014389145,
+      "auprc_ci_hi": 0.19215883453948793,
+      "auprc_se": 0.017040066756403162,
+      "n_boot": 10000
+    }
+  },
+  "paired_differences": {
+    "frechet_variance": {
+      "point_diff": 0.0346317977896925,
+      "ci_lo": 3.7963383106357e-05,
+      "ci_hi": 0.07013688627624952,
+      "p_value": 0.0248,
+      "n_boot": 10000,
+      "auroc_a": 0.8316373053215158,
+      "auroc_b": 0.7970055075318233
+    },
+    "magnitude_cv": {
+      "point_diff": 0.4480978954663165,
+      "ci_lo": 0.3631590207463016,
+      "ci_hi": 0.5322957825350297,
+      "p_value": 0.0,
+      "n_boot": 10000,
+      "auroc_a": 0.8316373053215158,
+      "auroc_b": 0.3835394098551993
+    }
+  },
+  "ordinal_spearman": {
+    "direction_instability": {
+      "rho": 0.48485251410476765,
+      "p_value": 1.5114869029320095e-43,
+      "ci_lo": 0.42028388741909467,
+      "ci_hi": 0.5467503819275528,
+      "se": 0.0323867461985982
+    },
+    "frechet_variance": {
+      "rho": 0.37485473786503043,
+      "p_value": 2.438606129616889e-25,
+      "ci_lo": 0.3005319340964936,
+      "ci_hi": 0.44628224992566046,
+      "se": 0.03732072546072237
+    },
+    "magnitude_cv": {
+      "rho": -0.13693410414990148,
+      "p_value": 0.0002354349618108907,
+      "ci_lo": -0.2072153564314397,
+      "ci_hi": -0.06413392409211337,
+      "se": 0.03625888402542852
+    }
+  },
+  "ordinal_n": {
+    "machinery": 114,
+    "kinase": 122,
+    "receptor": 481
+  }
+}
