@@ -14,6 +14,7 @@ dependencies = [
     "matplotlib>=3.7",
     "pandas>=2.0",
     "tqdm>=4.65",
+    "anndata>=0.11.4",
 ]
 
 [project.optional-dependencies]
@@ -21,3 +22,8 @@ singlecell = ["scanpy>=1.10", "anndata>=0.10"]
 
 [tool.setuptools.packages.find]
 include = ["geometry*"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
