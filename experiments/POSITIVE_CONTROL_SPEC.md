@@ -81,7 +81,7 @@ target classes rather than one or two guards against the possibility that a
 single mechanism's idiosyncrasy (e.g., proteostasis stress specifically)
 explains the stability.
 
-**Count:** 39 drugs. All have n_cell_lines >= 5; 34 have n_cell_lines >= 10.
+**Count:** 59 drugs. All have n_cell_lines >= 5; 51 have n_cell_lines >= 10.
 
 ### Hypothesis (stated before running)
 
@@ -108,7 +108,7 @@ whether the experiment passes or fails.
 ### Robustness checks
 
 1. **Cell-line-matched:** Restrict to drugs with n_cell_lines >= 10 (103 NHR,
-   34 machinery) to ensure DI estimates are not inflated by small-n noise.
+   51 machinery) to ensure DI estimates are not inflated by small-n noise.
 2. **Narrower negative control:** Restrict the negative control to proteasome
    + tubulin only (n=22, the most mechanistically homogeneous stable set) to
    confirm the result is not driven by heterogeneity in the broader set.
@@ -159,7 +159,7 @@ sweep tau over a grid (tau in {0.001, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5}).
 For each tau, generate 500 pseudo-perturbations at K = 13 (the annotated-drug
 median) and compute the DI distribution. Select the tau whose sigma=0 DI
 distribution (mean and standard deviation) best matches the empirical DI
-distribution of the negative-control machinery drugs (the 39 constitutive
+distribution of the negative-control machinery drugs (the 59 constitutive
 machinery drugs from Section A). This anchors the synthetic null to the real
 instrument's noise floor.
 
@@ -253,7 +253,7 @@ synthetic and biological evidence are concordant.
    and spike-in parameters above are frozen. If the result is null, we do not
    add drugs, change thresholds, or redefine classes.
 5. **Drug counts verified for feasibility only.** We confirmed 125 NHR and
-   39 constitutive machinery drugs exist in the dataset with adequate
+   59 constitutive machinery drugs exist in the dataset with adequate
    cell-line coverage. No DI values were examined before freezing this spec.
 6. **Single primary test.** The pass/fail gate is the bootstrap CI on
    mean(DI_NHR) - mean(DI_machinery) at alpha = 0.05. Mann-Whitney and AUROC
