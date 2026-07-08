@@ -1,0 +1,19 @@
+{
+  "n_genes": 1567,
+  "n_essential": 855,
+  "n_nonessential": 712,
+  "chronos_threshold": -0.5,
+  "observed_diff": 0.1232,
+  "observed_cohens_d": 0.5997,
+  "observed_mann_whitney_p": 3.1358830018555834e-33,
+  "essential_mean": 2.798,
+  "nonessential_mean": 2.6748,
+  "n_permutations": 10000,
+  "null_mean_diff": 8.2e-05,
+  "null_std_diff": 0.0109,
+  "permutation_p_value": 0.0,
+  "null_quantiles": {
+    "q025": -0.0211,
+    "q975": 0.0216
+  }
+}
