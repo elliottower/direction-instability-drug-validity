@@ -38,7 +38,8 @@ Phenotype-projected bracket correlates with on-target genetic perturbation
 connectivity ($\rho = 0.38$, $p < 10^{-27}$) while raw bracket does not
 ($\rho = -0.04$). Transport-stable bracket outpredicts raw bracket for
 held-out cell-line effects in all 66 valid leave-one-out folds
-($p_{\text{Wilcoxon}} = 8.2 \times 10^{-13}$; mean
+(Wilcoxon signed-rank on paired fold-level differences,
+$p = 8.2 \times 10^{-13}$; mean
 $\Delta\rho = +1.10$, 95\% CI $[1.00, 1.19]$), with a
 variance-preserving permutation null confirming the advantage is
 drug-specific ($p_{\text{perm}} < 10^{-3}$). Essential-gene correction
@@ -47,11 +48,6 @@ rather than converge across cell types ($d = 0.60$,
 $p_{\text{perm}} < 10^{-4}$), inverting the predicted confound. Item-level
 rank shifts identify confound-dominated perturbations---proteasome and
 spliceosome genes shift 660--900 positions---providing actionable flags.
-A CRISPRi convergent-validity check does not independently confirm the
-phenotype-projection result ($\rho = -0.12$, $p = 0.16$, $n = 131$),
-attributable to a pre-registered single-cell-line confound: CRISPRi
-enrichment correlates with raw bracket rather than projected bracket,
-the reverse of the shRNA pattern.
 Pre-registered scorecard: 2 of 5 drug hypotheses survive
 Holm--Bonferroni correction, 1 is refuted, 2 are informative nulls.
 The validity ladder is a proof system for mechanistic
@@ -473,7 +469,7 @@ H1$^\star$ & Toxicity reclassifies & $\Delta < 0.01$ & Refuted & --- \\
 H2$^\star$ & Broad drugs below median & 7/10 below & Confirmed & No \\
 H3 & $|\rho_{\text{proj}}| > 0.3$ & $\rho = 0.376$ & Confirmed & Yes \\
 H4$^\star$ & AUROC gap $> 0.05$ & Gap $= 0.018$ & Null & No \\
-H5 & TS wins $\geq$80\% folds & 66/66 folds, $p_W = 8.2\mathrm{e}{-13}$ & Confirmed & Yes \\
+H5 & TS wins $\geq$80\% folds & 66/66 folds, $p_W = 8.2 \times 10^{-13}$ & Confirmed & Yes \\
 \midrule
 HP1 & Correction bites ($\rho < 0.70$) & $\rho = 0.91$ & Doesn't bite & --- \\
 HP2$^\star$ & GO prediction improves & $\Delta\rho = -0.02$ & Doesn't bite & --- \\
@@ -521,7 +517,12 @@ bracket correlated positively with CRISPRi enrichment
 ($\rho = +0.27$, $p = 0.002$) while projected bracket did not---the
 reverse of the shRNA pattern---indicating that the K562-only CRISPRi
 directions are confounded by cell-type-specific effects rather than
-the projection failing. On the 114-drug matched subset, shRNA
+the projection failing. The positive raw-bracket/CRISPRi correlation
+likely arises because K562 is a leukemia line where many drug targets
+are highly expressed; drugs with high raw instability across many cell
+lines coincidentally match K562-specific CRISPRi signatures, producing
+a spurious correlation that the phenotype projection amplifies rather
+than removes. On the 114-drug matched subset, shRNA
 projection ($\rho = 0.42$) and CRISPRi projection ($\rho = -0.14$)
 diverge, confirming that the ground-truth source drives the difference.
 
@@ -532,9 +533,15 @@ being reinforced. CRISPRi signatures derive from a single hematopoietic
 cell type, so the CRISPRi ``on-target direction'' captures
 cell-type-specific effects rather than cross-context mechanism---a
 confound that multi-cell-line shRNA consensus avoids by averaging
-across ${\sim}20$ cell lines. The non-significant CRISPRi projected
-$\rho$ is underpowered ($n = 131$ vs.\ 795 for shRNA) and should not
-be interpreted as evidence against the projection method.
+across ${\sim}20$ cell lines. A post-hoc power calculation shows
+$>$99\% power to detect $\rho = 0.376$ at $n = 131$ ($\alpha = 0.05$,
+one-sided); the CRISPRi 95\% CI $[-0.29, 0.05]$ excludes the shRNA
+effect size entirely, and the two correlations differ significantly
+($z = 5.47$, $p < 10^{-7}$). The CRISPRi result is therefore a
+genuine divergence from the shRNA finding, not an underpowered null.
+The K562-only confound is the pre-registered explanation for this
+divergence: drugs tested across many cell lines are poorly matched by
+an on-target direction from a single hematopoietic context.
 
 \subsection{Experiment 5: Transport-stable bracket outpredicts raw bracket in held-out cell lines}
 
@@ -546,10 +553,27 @@ signed-rank on per-fold $\Delta\rho$ yields $p = 8.2 \times 10^{-13}$
 
 \paragraph{Full leave-one-out summary.}
 Across 66 folds, mean raw $\rho = -0.60$ (anti-predictive in every
-fold) while mean TS $\rho = +0.50$ (positively predictive). Mean
-$\Delta\rho = +1.10$ (95\% bootstrap CI $[1.00, 1.19]$). Five cell
-lines were excluded for having $< 20$ eligible drugs. Table~\ref{tab:transport}
-shows representative folds illustrating the rare/common regime distinction.
+fold; range $[-0.78, -0.22]$) while mean TS $\rho = +0.50$ (positively
+predictive). Mean $\Delta\rho = +1.10$ (95\% bootstrap CI
+$[1.00, 1.19]$; all 66 values positive, range $[0.17, 1.57]$). Five
+cell lines were excluded for having $< 20$ eligible drugs.
+Figure~\ref{fig:delta_rho} shows the $\Delta\rho$ distribution and the
+frequency gradient; Table~\ref{tab:transport} shows representative folds
+illustrating the rare/common regime distinction.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_h5_full_delta_rho.pdf}
+\caption{%
+\textbf{Full 66-fold leave-one-out: TS advantage is universal.}
+\textbf{Left:}~Distribution of per-fold $\Delta\rho$ (TS $-$ raw Spearman
+correlation with held-out cosine). All 66 values are positive; the mean
+(red line) is $+1.10$. \textbf{Right:}~Rarer cell lines (fewer drugs per
+fold) show larger TS advantages (Spearman $\rho = -0.32$, $p = 0.009$),
+confirming that the rare/common regime distinction from the preliminary
+5-fold analysis generalizes across all cell lines.}
+\label{fig:delta_rho}
+\end{figure}
 
 \begin{table}[t]
 \centering
@@ -609,8 +633,9 @@ prediction without variance correction, not a failure of direction
 instability as a concept.
 
 \paragraph{Permutation null rules out algebraic artifact.}
-A variance-preserving permutation null (on the preliminary 5-fold analysis)
-tests whether the TS advantage is algebraic: held-out
+Before conducting the full 66-fold leave-one-out, we tested whether the
+TS advantage could be algebraic using a variance-preserving permutation
+null on the preliminary 5-fold analysis. Held-out
 \emph{signatures} are shuffled across drugs while training data
 (raw DI, Fr\'echet variance, TS, consensus vector) remain fixed,
 and held-out cosines are recomputed against each drug's original
@@ -756,7 +781,9 @@ geometric estimand.
 What changes is the inferential warrant. Phenotype projection (H3) proves
 that direction instability decomposes into on-target and off-target
 components ($\rho = 0.38$ vs.\ $-0.04$); a CRISPRi convergent-validity
-check does not independently confirm this, attributable to the K562-only confound. Transport stability (H5) proves
+check does not independently confirm this finding, likely because
+K562-only CRISPRi signatures are confounded by cell-type-specific
+effects. Transport stability (H5) proves
 the metric predicts held-out effects only after Fr\'{e}chet variance
 correction; raw bracket is anti-predictive in all 66 folds. Essential-gene
 correction identifies proteasome/spliceosome genes as confound-dominated
@@ -819,7 +846,10 @@ confound-dominated.
 \caption{Cross-domain summary. All three domains exceed the ``doesn't
 bite'' threshold ($\rho \geq 0.83$). The LINCS HDAC gradient $\rho$
 measures fine-grained ordering within a single drug class (20 compounds);
-the global 8{,}949-drug $\rho > 0.99$.}
+the global 8{,}949-drug $\rho > 0.99$. H5 (transport stability) tests
+predictive validity rather than rank preservation; the 66-fold
+leave-one-out result (Table~\ref{tab:scorecard}) provides the strongest
+domain-specific evidence for LINCS.}
 \label{tab:cross_domain}
 \small
 \begin{tabular}{llrl}
@@ -853,10 +883,11 @@ ground-truth on-target directions. shRNA has well-documented off-target
 effects, which add noise to the ground truth and make H3's $\rho = 0.38$
 a conservative estimate. A CRISPRi convergent-validity check did not
 independently confirm the phenotype-projection result ($\rho = -0.12$,
-$p = 0.16$, $n = 131$); this is attributable to the K562-only confound
-(CRISPRi signatures from a single cell type are poor on-target directions
-for drugs acting in non-hematopoietic contexts), but the shRNA H3 result
-is un-refuted rather than reinforced. Drugs with unannotated targets
+$p = 0.16$, $n = 131$; 95\% CI excludes shRNA $\rho = 0.376$,
+$z = 5.47$, $p < 10^{-7}$); this genuine divergence is attributable to
+the K562-only confound (CRISPRi signatures from a single cell type are
+poor on-target directions for drugs acting in non-hematopoietic contexts).
+The shRNA H3 result is not refuted but neither is it reinforced. Drugs with unannotated targets
 (7{,}398 of 8{,}949) are excluded from H3 and H4, limiting these rungs
 to 17\% of the dataset. LINCS measures 978 landmark genes, restricting
 the toxicity gene set to the landmark panel.

@@ -159,11 +159,17 @@ explanation.
 
 ### Interpretation (following frozen decision tree)
 
-The shRNA-based H3 result (rho = 0.38) is un-refuted but not reinforced.
+The shRNA-based H3 result (rho = 0.38) is not refuted but not reinforced.
 CRISPRi does not provide independent convergent validity, attributable
-to the pre-registered single-cell-line limitation. The non-significant
-CRISPRi result (p = 0.16, n = 131 vs 795 for shRNA) is underpowered
-and should not be interpreted as evidence against the projection method.
+to the pre-registered single-cell-line limitation.
+
+Post-hoc power analysis (added after initial commit): n=131 has >99%
+power to detect rho=0.376 (alpha=0.05, one-sided). The CRISPRi 95% CI
+[-0.29, 0.05] excludes the shRNA effect size entirely; the two
+correlations are significantly different (z=5.47, p<10^-7). The CRISPRi
+result is therefore a genuine divergence from the shRNA finding, not an
+underpowered null. The K562-only confound remains the pre-registered
+explanation for this divergence.
 
 ### What this does NOT change
 
