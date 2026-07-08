@@ -213,7 +213,7 @@ def run_real(data_dir: Path, output_dir: Path):
             "n_drugs": len(fold_drugs),
             "raw_spearman": float(raw_rho),
             "ts_spearman": float(ts_rho),
-            "ts_wins": ts_rho > raw_rho,
+            "ts_wins": bool(ts_rho > raw_rho),
             "drugs": fold_drugs,
         })
 
