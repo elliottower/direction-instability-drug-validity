@@ -1,0 +1,24 @@
+{
+  "test": "variance_preserving_signature_shuffle",
+  "description": "Shuffles held-out signatures across drugs while holding training data (raw DI, Frechet variance, TS, consensus) fixed. Cosines recomputed against original consensus to preserve the mechanical coupling between consensus tightness and cosine magnitude.",
+  "observed_ts_wins": 5,
+  "observed_mean_rho_delta": 0.841,
+  "n_folds": 5,
+  "n_permutations": 1000,
+  "wins_null_mean": 0.1,
+  "wins_null_std": 0.31,
+  "wins_p_value": 0.0,
+  "delta_null_mean": -0.1222,
+  "delta_null_std": 0.0277,
+  "delta_p_value": 0.0,
+  "wins_null_quantiles": {
+    "q05": 0.0,
+    "q50": 0.0,
+    "q95": 1.0
+  },
+  "delta_null_quantiles": {
+    "q025": -0.176,
+    "q975": -0.0703
+  },
+  "interpretation": "p-values test P(null >= observed). p < 0.05: observed TS advantage exceeds what algebraic coupling alone produces \u2192 advantage is genuine (drug-specific), not an artifact. p >= 0.05: algebraic coupling alone can reproduce the advantage \u2192 may be artifactual. Result: both p = 0.0, so the advantage is genuine."
+}

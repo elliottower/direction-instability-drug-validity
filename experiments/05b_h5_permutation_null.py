@@ -187,13 +187,11 @@ def run_permutation(data_dir: Path, output_dir: Path, n_perm: int = 1000):
             "q975": round(float(np.quantile(null_mean_delta_distribution, 0.975)), 4),
         },
         "interpretation": (
-            "If p_value_wins < 0.05 AND p_value_delta < 0.05: "
-            "TS advantage persists under variance-preserving null → "
-            "advantage is algebraic (Frechet variance mechanically predicts "
-            "held-out cosine). "
-            "If p_value_wins >= 0.05 OR p_value_delta >= 0.05: "
-            "TS advantage collapses when drug-specific signal is broken → "
-            "advantage is genuine, not an artifact of the penalization formula."
+            "p-values test P(null >= observed). If p < 0.05: observed TS "
+            "advantage exceeds what algebraic coupling alone produces → "
+            "advantage is genuine (drug-specific), not an artifact. "
+            "If p >= 0.05: algebraic coupling alone can reproduce the "
+            "observed advantage → advantage may be artifactual."
         ),
     }
 
@@ -209,12 +207,12 @@ def run_permutation(data_dir: Path, output_dir: Path, n_perm: int = 1000):
     log(f"p-value (wins): {p_value_wins:.4f}")
     log(f"p-value (delta): {p_value_delta:.4f}")
 
-    if p_value_wins >= 0.05 or p_value_delta >= 0.05:
-        log("PASS: TS advantage collapses under variance-preserving null")
+    if p_value_wins < 0.05 and p_value_delta < 0.05:
+        log("PASS: observed TS advantage exceeds variance-preserving null")
         log("  → advantage is drug-specific, not an algebraic artifact")
     else:
-        log("CAUTION: TS advantage persists under variance-preserving null")
-        log("  → advantage may reflect algebraic coupling, not genuine signal")
+        log("CAUTION: algebraic coupling may explain TS advantage")
+        log("  → observed advantage is within range of the variance-preserving null")
 
     log(f"Saved to {output_dir / 'permutation_null.json'}")
 

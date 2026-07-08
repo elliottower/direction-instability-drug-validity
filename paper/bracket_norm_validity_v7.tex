@@ -731,8 +731,13 @@ variance-preserving permutation null tests this directly: held-out
 data (raw DI, Fr\'echet variance, TS, and consensus vector) remains
 fixed, and held-out cosines are recomputed against each drug's original
 consensus. This preserves the mechanical coupling between consensus
-tightness and cosine magnitude; if TS's advantage persists under this
-null, the advantage is algebraic rather than drug-specific.
+tightness and cosine magnitude. Under this null (1{,}000 permutations),
+TS wins only 0.1 of 5 folds on average with mean $\Delta\rho = -0.12$
+(raw DI actually outpredicts TS when drug-specific signal is broken).
+The observed advantage (5/5 folds, $\Delta\rho = +0.84$) falls entirely
+outside the null distribution ($p_{\text{perm}} < 10^{-3}$), confirming
+that the Fr\'echet penalty rewards genuine drug-specific structure rather
+than exploiting algebraic coupling with the held-out outcome.
 
 \subsection{Experiment 7: Essential-gene correction preserves ranking but reveals confound-dominated machinery}
 
