@@ -63,7 +63,7 @@ def build_drug_cell_matrix(signatures, sig_ids, siginfo):
 def run_synthetic():
     """Validate: transport-stable bracket predicts held-out better than raw."""
     log("=== SYNTHETIC MODE ===")
-    rng = np.random.default_rng()
+    rng = np.random.default_rng(seed=20260707_05)
     n_genes = 200
     n_cells = 8
     n_drugs_stable = 40

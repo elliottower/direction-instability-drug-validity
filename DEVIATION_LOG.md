@@ -68,3 +68,35 @@ without requiring curator judgment about which GO terms are relevant.
   specified in PREREGISTRATION.md (commit 8d74bd0)
 - Scorer functions in geometry/bracket_norm.py remain unchanged
 - All other pre-registered decisions (H1, H2, H6) are unaffected
+
+
+## Entry 2: H5 fold threshold adjustment for fewer than 5 valid folds
+
+**Date:** 2026-07-07
+**Status:** Pre-specified before running experiment 05
+**Applies to:** H5 (transport stability)
+
+The pre-registered criterion is "transport-stable bracket outpredicts raw in
+at least 4 of 5 folds." If fewer than 5 cell lines produce valid folds
+(i.e., >=20 drugs with data in both training and held-out), the threshold
+adjusts to ceil(n_valid_folds * 0.8). This maintains the 80% win-rate
+requirement while avoiding discarding the experiment when a rare cell line
+has too few drugs.
+
+In practice, the LINCS data has 71 cell lines and the first 5 alphabetically
+all produced valid folds, so this fallback was not triggered.
+
+
+## Entry 3: H3 and H4 shared dependency on shRNA consensus
+
+**Date:** 2026-07-07
+**Status:** Documented before interpreting results
+**Applies to:** H3 (phenotype projection), H4 (localization)
+
+H3 uses the shRNA consensus signature as the phenotype_direction vector.
+H4 uses the top-100 genes of that same shRNA consensus as the region_mask.
+These are not independent tests — both derive from the same genetic
+perturbation object. The paper must state this shared dependency and not
+present H3 and H4 as two independent confirmations of the validity ladder.
+H5 (transport stability) is fully independent of H3/H4 since it uses no
+gene sets or shRNA data

@@ -104,9 +104,14 @@ def compute_bracket_norm_per_region(
 
 
 def run_synthetic():
-    """Validate with synthetic neural data where size confound is planted."""
-    log("=== SYNTHETIC MODE ===")
-    rng = np.random.default_rng()
+    """Estimator unit-test: validates that BN/sqrt(n) removes a planted size confound.
+
+    This is NOT evidence for H6 — it verifies the correction arithmetic by
+    injecting a known sqrt(n) + linear-n dependence and checking recovery.
+    H6 evidence comes only from the --real Steinmetz path.
+    """
+    log("=== SYNTHETIC MODE (estimator unit-test, not H6 evidence) ===")
+    rng = np.random.default_rng(seed=20260707_06)
 
     n_regions = 20
     neuron_counts = rng.integers(10, 200, size=n_regions)

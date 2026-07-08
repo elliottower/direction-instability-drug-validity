@@ -71,7 +71,7 @@ def make_region_mask(shrna_sig, n_genes, top_n=REGION_MASK_SIZE):
 def run_synthetic():
     """Validate: localization score predicts MOA better than raw bracket."""
     log("=== SYNTHETIC MODE ===")
-    rng = np.random.default_rng()
+    rng = np.random.default_rng(seed=20260707_04)
     n_genes = 200
     n_contexts = 8
     n_moa_classes = 5

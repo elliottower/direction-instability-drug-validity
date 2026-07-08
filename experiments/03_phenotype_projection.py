@@ -70,7 +70,7 @@ def compute_on_target_enrichment(drug_sigs_matrix, shrna_direction):
 def run_synthetic():
     """Validate: phenotype-projected bracket correlates with on-target enrichment."""
     log("=== SYNTHETIC MODE ===")
-    rng = np.random.default_rng()
+    rng = np.random.default_rng(seed=20260707_03)
     n_genes = 200
     n_contexts = 8
     n_drugs = 100
