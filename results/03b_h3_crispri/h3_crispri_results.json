@@ -1,0 +1,6726 @@
+[
+  {
+    "drug": "1,2,3,4,5,6-hexabromocyclohexane",
+    "target": "JAK2",
+    "n_celllines": 9,
+    "raw_bracket": 0.9329361915588379,
+    "proj_shrna": 3.0613756337099605,
+    "enrich_shrna": 0.001219583292784654
+  },
+  {
+    "drug": "10-DEBC",
+    "target": "PIM1",
+    "n_celllines": 53,
+    "raw_bracket": 0.9237321615219116,
+    "proj_shrna": 2.910488464235611,
+    "enrich_shrna": 0.10541700599083015
+  },
+  {
+    "drug": "10-hydroxycamptothecin",
+    "target": "TOP1",
+    "n_celllines": 9,
+    "raw_bracket": 0.9346072897315025,
+    "proj_crispri": 0.69861518621888,
+    "enrich_crispri": 0.0013821501686918387,
+    "proj_shrna": 3.097648589147462,
+    "enrich_shrna": 9.277643320598967e-07
+  },
+  {
+    "drug": "16,16-dimethylprostaglandin-e2",
+    "target": "HPGD",
+    "n_celllines": 51,
+    "raw_bracket": 0.8702561855316162,
+    "proj_shrna": 4.911808831002198,
+    "enrich_shrna": 0.1659953380723147
+  },
+  {
+    "drug": "17-hydroxyprogesterone-caproate",
+    "target": "AR",
+    "n_celllines": 9,
+    "raw_bracket": 0.9437580034136772,
+    "proj_shrna": 0.9997033683790101,
+    "enrich_shrna": 0.02058150001575143
+  },
+  {
+    "drug": "3,3'-diindolylmethane",
+    "target": "AR",
+    "n_celllines": 15,
+    "raw_bracket": 0.8778881430625916,
+    "proj_shrna": 1.0034105774192583,
+    "enrich_shrna": 0.021599555687459082
+  },
+  {
+    "drug": "3-amino-benzamide",
+    "target": "PARP1",
+    "n_celllines": 51,
+    "raw_bracket": 0.9272651970386505,
+    "proj_shrna": 3.071621179072296,
+    "enrich_shrna": 0.00052032044506789
+  },
+  {
+    "drug": "3-methyl-GABA",
+    "target": "ABAT",
+    "n_celllines": 9,
+    "raw_bracket": 0.8737562745809555,
+    "proj_shrna": 6.067809082567692,
+    "enrich_shrna": 0.010707694852649718
+  },
+  {
+    "drug": "4,5,6,7-tetrabromobenzotriazole",
+    "target": "AKT1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9627460092306137,
+    "proj_shrna": 3.557014760298607,
+    "enrich_shrna": 0.23417840102537557
+  },
+  {
+    "drug": "4-iodo-6-phenylpyrimidine",
+    "target": "MIF",
+    "n_celllines": 51,
+    "raw_bracket": 0.9170959442853928,
+    "proj_shrna": 2.464846013200049,
+    "enrich_shrna": 0.13669678781809935
+  },
+  {
+    "drug": "5-FP",
+    "target": "TYMS",
+    "n_celllines": 7,
+    "raw_bracket": 0.9079219996929169,
+    "proj_shrna": 3.5829806810333613,
+    "enrich_shrna": 0.09409907271535545
+  },
+  {
+    "drug": "5-aminolevulinic-acid",
+    "target": "ALAD",
+    "n_celllines": 8,
+    "raw_bracket": 0.9376837275922298,
+    "proj_shrna": 4.246522639478956,
+    "enrich_shrna": 0.04556036165830424
+  },
+  {
+    "drug": "ABT-737",
+    "target": "BCL2",
+    "n_celllines": 55,
+    "raw_bracket": 0.9197835177183151,
+    "proj_shrna": 7.898667471968767,
+    "enrich_shrna": 0.3671564024325882
+  },
+  {
+    "drug": "ABT-751",
+    "target": "TUBB",
+    "n_celllines": 51,
+    "raw_bracket": 0.894107423722744,
+    "proj_crispri": 1.007562392325452,
+    "enrich_crispri": 3.957320132151891e-05
+  },
+  {
+    "drug": "AC-55649",
+    "target": "RARA",
+    "n_celllines": 51,
+    "raw_bracket": 0.9288636445999146,
+    "proj_shrna": 3.6027879947832986,
+    "enrich_shrna": 0.15865292609743253
+  },
+  {
+    "drug": "AG-14361",
+    "target": "PARP1",
+    "n_celllines": 51,
+    "raw_bracket": 0.6728529930114746,
+    "proj_shrna": 4.837137273877275,
+    "enrich_shrna": 0.05812263480665081
+  },
+  {
+    "drug": "AG-490",
+    "target": "EGFR",
+    "n_celllines": 13,
+    "raw_bracket": 0.8526873886585236,
+    "proj_shrna": 1.8247466294620283,
+    "enrich_shrna": 0.42782607007837115
+  },
+  {
+    "drug": "AM-580",
+    "target": "RARA",
+    "n_celllines": 58,
+    "raw_bracket": 0.9398793242871761,
+    "proj_shrna": 4.608112754655187,
+    "enrich_shrna": 0.18835060678432658
+  },
+  {
+    "drug": "AR-A014418",
+    "target": "GSK3B",
+    "n_celllines": 16,
+    "raw_bracket": 0.8459624946117401,
+    "proj_shrna": 4.213510895768802,
+    "enrich_shrna": 0.12764168423041156
+  },
+  {
+    "drug": "ARC-239",
+    "target": "ADRA2A",
+    "n_celllines": 8,
+    "raw_bracket": 0.8558738082647324,
+    "proj_shrna": 3.628915572805064,
+    "enrich_shrna": 0.15957652016851487
+  },
+  {
+    "drug": "AS-604850",
+    "target": "PIK3CA",
+    "n_celllines": 14,
+    "raw_bracket": 0.9698283523321152,
+    "proj_shrna": 2.068389804972397,
+    "enrich_shrna": 0.09744528910643169
+  },
+  {
+    "drug": "AS-703026",
+    "target": "MAP2K1",
+    "n_celllines": 14,
+    "raw_bracket": 0.8719498515129089,
+    "proj_shrna": 3.774069130911932,
+    "enrich_shrna": 0.07816347498078713
+  },
+  {
+    "drug": "AT-7519",
+    "target": "CDK1",
+    "n_celllines": 18,
+    "raw_bracket": 0.5598033964633942,
+    "proj_crispri": 1.5862550826423405,
+    "enrich_crispri": 8.616008756700563e-06,
+    "proj_shrna": 8.977238487379223,
+    "enrich_shrna": 0.07924354854305093
+  },
+  {
+    "drug": "AT-9283",
+    "target": "AURKA",
+    "n_celllines": 8,
+    "raw_bracket": 0.6750549972057343,
+    "proj_crispri": 0.6858082477545911,
+    "enrich_crispri": 0.0011295374638129797,
+    "proj_shrna": 4.3600510358810425,
+    "enrich_shrna": 0.13401075955476927
+  },
+  {
+    "drug": "AT7867",
+    "target": "AKT2",
+    "n_celllines": 6,
+    "raw_bracket": 0.727126806974411,
+    "proj_shrna": 1.251908345023791,
+    "enrich_shrna": 0.2670558586052927
+  },
+  {
+    "drug": "AZ-10417808",
+    "target": "CASP3",
+    "n_celllines": 13,
+    "raw_bracket": 0.9662484005093575,
+    "proj_shrna": 4.299246936463392,
+    "enrich_shrna": 0.11431657842564391
+  },
+  {
+    "drug": "AZ-628",
+    "target": "BRAF",
+    "n_celllines": 19,
+    "raw_bracket": 0.819538801908493,
+    "proj_shrna": 4.2512177906015465,
+    "enrich_shrna": 0.1886497859691758
+  },
+  {
+    "drug": "BADGE",
+    "target": "PPARG",
+    "n_celllines": 15,
+    "raw_bracket": 0.9130711853504181,
+    "proj_shrna": 4.844279751749266,
+    "enrich_shrna": 0.2872631726144306
+  },
+  {
+    "drug": "BAX-channel-blocker",
+    "target": "BAX",
+    "n_celllines": 51,
+    "raw_bracket": 0.9495760947465897,
+    "proj_shrna": 6.353119248239433,
+    "enrich_shrna": 0.14962036585188798
+  },
+  {
+    "drug": "BAY-11-7082",
+    "target": "RELA",
+    "n_celllines": 50,
+    "raw_bracket": 0.8730496317148209,
+    "proj_shrna": 9.015880052124967,
+    "enrich_shrna": 0.14037912664890317
+  },
+  {
+    "drug": "BAY-K-8644-(S)-(-)",
+    "target": "CACNA1C",
+    "n_celllines": 51,
+    "raw_bracket": 0.9053502008318901,
+    "proj_shrna": 3.8753192129906484,
+    "enrich_shrna": 0.057464679085585724
+  },
+  {
+    "drug": "BI-2536",
+    "target": "BRD4",
+    "n_celllines": 56,
+    "raw_bracket": 0.6029588282108307,
+    "proj_crispri": 1.440149910487338,
+    "enrich_crispri": 4.0234728587831304e-05,
+    "proj_shrna": 6.096791997406777,
+    "enrich_shrna": 0.07264682161647418
+  },
+  {
+    "drug": "BI-78D3",
+    "target": "MAPK8",
+    "n_celllines": 14,
+    "raw_bracket": 0.9067429229617119,
+    "proj_shrna": 6.824623125595051,
+    "enrich_shrna": 0.11721066876555497
+  },
+  {
+    "drug": "BIBU-1361",
+    "target": "EGFR",
+    "n_celllines": 8,
+    "raw_bracket": 0.6102917492389679,
+    "proj_shrna": 4.527703947254589,
+    "enrich_shrna": 0.12581724800142613
+  },
+  {
+    "drug": "BIBX-1382",
+    "target": "EGFR",
+    "n_celllines": 13,
+    "raw_bracket": 0.8045403957366943,
+    "proj_shrna": 2.5847587877741227,
+    "enrich_shrna": 0.20621307400805566
+  },
+  {
+    "drug": "BIX-02188",
+    "target": "MAP2K5",
+    "n_celllines": 9,
+    "raw_bracket": 0.8734133988618851,
+    "proj_shrna": 5.035415220591757,
+    "enrich_shrna": 0.12535898599498196
+  },
+  {
+    "drug": "BIX-02189",
+    "target": "MAP2K5",
+    "n_celllines": 7,
+    "raw_bracket": 0.7643586993217468,
+    "proj_shrna": 3.4544987990742637,
+    "enrich_shrna": 0.06023151469686483
+  },
+  {
+    "drug": "BMS-191011",
+    "target": "KCNMA1",
+    "n_celllines": 55,
+    "raw_bracket": 0.9479903466999531,
+    "proj_shrna": 4.613468195849196,
+    "enrich_shrna": 0.1274692535111086
+  },
+  {
+    "drug": "BMS-345541",
+    "target": "CHUK",
+    "n_celllines": 19,
+    "raw_bracket": 0.767929345369339,
+    "proj_shrna": 8.175730945596918,
+    "enrich_shrna": 0.08470124776409538
+  },
+  {
+    "drug": "BMS-387032",
+    "target": "CDK2",
+    "n_celllines": 6,
+    "raw_bracket": 0.32175499200820923,
+    "proj_crispri": 1.2440348418904326,
+    "enrich_crispri": 1.125719981848032e-05,
+    "proj_shrna": 1.8185126205285391,
+    "enrich_shrna": 0.09565209560948862
+  },
+  {
+    "drug": "BMS-536924",
+    "target": "AKT1",
+    "n_celllines": 51,
+    "raw_bracket": 0.8252095878124237,
+    "proj_shrna": 4.975912249941452,
+    "enrich_shrna": 0.08688055211696
+  },
+  {
+    "drug": "BMS-754807",
+    "target": "AKT1",
+    "n_celllines": 51,
+    "raw_bracket": 0.8622468560934067,
+    "proj_shrna": 4.178883257508278,
+    "enrich_shrna": 0.1104080641118097
+  },
+  {
+    "drug": "BMS-777607",
+    "target": "AXL",
+    "n_celllines": 6,
+    "raw_bracket": 0.7691224962472916,
+    "proj_shrna": 1.3992348889509836,
+    "enrich_shrna": 0.10566404882300517
+  },
+  {
+    "drug": "BVT-948",
+    "target": "PTPN1",
+    "n_celllines": 8,
+    "raw_bracket": 0.7364765703678131,
+    "proj_shrna": 9.879498799996716,
+    "enrich_shrna": 0.06151440492382054
+  },
+  {
+    "drug": "BX-795",
+    "target": "CDK2",
+    "n_celllines": 51,
+    "raw_bracket": 0.7787444442510605,
+    "proj_crispri": 1.2348992143346618,
+    "enrich_crispri": 2.6425289331271015e-06,
+    "proj_shrna": 5.209111976191109,
+    "enrich_shrna": 0.14999442201318303
+  },
+  {
+    "drug": "BX-912",
+    "target": "CDK2",
+    "n_celllines": 19,
+    "raw_bracket": 0.7406839430332184,
+    "proj_crispri": 1.0545597690000768,
+    "enrich_crispri": 4.051872343376143e-05,
+    "proj_shrna": 4.052975462934776,
+    "enrich_shrna": 0.1593681291996205
+  },
+  {
+    "drug": "CD-1530",
+    "target": "RARG",
+    "n_celllines": 45,
+    "raw_bracket": 0.7426194250583649,
+    "proj_shrna": 4.985836590299702,
+    "enrich_shrna": 0.022229927424908036
+  },
+  {
+    "drug": "CD-437",
+    "target": "RARG",
+    "n_celllines": 51,
+    "raw_bracket": 0.7810577005147934,
+    "proj_shrna": 4.439376157346894,
+    "enrich_shrna": 0.00910252013694901
+  },
+  {
+    "drug": "CGK-733",
+    "target": "ATM",
+    "n_celllines": 14,
+    "raw_bracket": 0.6672457456588745,
+    "proj_shrna": 8.9548298565896,
+    "enrich_shrna": 0.12015862206398253
+  },
+  {
+    "drug": "CGP-13501",
+    "target": "GABBR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9537869617342949,
+    "proj_shrna": 5.127705178390711,
+    "enrich_shrna": 0.06837685763642654
+  },
+  {
+    "drug": "CGP-52411",
+    "target": "EGFR",
+    "n_celllines": 14,
+    "raw_bracket": 0.9481605812907219,
+    "proj_shrna": 4.438923165038392,
+    "enrich_shrna": 0.20565973853067376
+  },
+  {
+    "drug": "CGP-53353",
+    "target": "EGFR",
+    "n_celllines": 14,
+    "raw_bracket": 0.9044442027807236,
+    "proj_shrna": 3.660701477429369,
+    "enrich_shrna": 0.23399513410460315
+  },
+  {
+    "drug": "CGP-54626",
+    "target": "GABBR1",
+    "n_celllines": 8,
+    "raw_bracket": 0.9025316014885902,
+    "proj_shrna": 5.921311362513474,
+    "enrich_shrna": 0.15405478642334458
+  },
+  {
+    "drug": "CGP-55845",
+    "target": "GABBR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9601864404976368,
+    "proj_shrna": 5.16613734074128,
+    "enrich_shrna": 0.00612351583670212
+  },
+  {
+    "drug": "CGP-57380",
+    "target": "AURKB",
+    "n_celllines": 13,
+    "raw_bracket": 0.7949409186840057,
+    "proj_crispri": 0.9542295279285139,
+    "enrich_crispri": 1.3077227849827212e-05,
+    "proj_shrna": 5.73985122392575,
+    "enrich_shrna": 0.14886877898447892
+  },
+  {
+    "drug": "CGP-60474",
+    "target": "CDK1",
+    "n_celllines": 18,
+    "raw_bracket": 0.5175517499446869,
+    "proj_crispri": 1.4275711755227398,
+    "enrich_crispri": 2.940952645785935e-05,
+    "proj_shrna": 7.3284280335201935,
+    "enrich_shrna": 0.07718051971148387
+  },
+  {
+    "drug": "CGP-7930",
+    "target": "GABBR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9225726202130318,
+    "proj_shrna": 2.3720661545029054,
+    "enrich_shrna": 0.011582534458655369
+  },
+  {
+    "drug": "CGS-20625",
+    "target": "GABRA1",
+    "n_celllines": 13,
+    "raw_bracket": 0.94482396915555,
+    "proj_shrna": 2.235852349262971,
+    "enrich_shrna": 0.06890338051326328
+  },
+  {
+    "drug": "CHIR-99021",
+    "target": "CDK1",
+    "n_celllines": 9,
+    "raw_bracket": 0.7330798208713531,
+    "proj_crispri": 0.9778317554498932,
+    "enrich_crispri": 4.566491721813298e-05,
+    "proj_shrna": 1.7222784467869334,
+    "enrich_shrna": 0.05707519921406701
+  },
+  {
+    "drug": "CI-976",
+    "target": "ACAT1",
+    "n_celllines": 51,
+    "raw_bracket": 0.9308001473546028,
+    "proj_shrna": 6.607932080521303,
+    "enrich_shrna": 0.18124384210495137
+  },
+  {
+    "drug": "CL-218872",
+    "target": "GABRA1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9133702740073204,
+    "proj_shrna": 2.452669528241341,
+    "enrich_shrna": 0.0974910846436936
+  },
+  {
+    "drug": "CP-724714",
+    "target": "ERBB2",
+    "n_celllines": 18,
+    "raw_bracket": 0.9226712584495544,
+    "proj_shrna": 4.780734588312947,
+    "enrich_shrna": 0.2894176920727318
+  },
+  {
+    "drug": "CV-1808",
+    "target": "ADORA2A",
+    "n_celllines": 8,
+    "raw_bracket": 0.8954428434371948,
+    "proj_shrna": 2.249482565692493,
+    "enrich_shrna": 0.0015297239041501959
+  },
+  {
+    "drug": "CYT-997",
+    "target": "TUBB",
+    "n_celllines": 50,
+    "raw_bracket": 0.869420662522316,
+    "proj_crispri": 0.7947562254035059,
+    "enrich_crispri": 7.699148521921991e-05
+  },
+  {
+    "drug": "CYT387",
+    "target": "JAK1",
+    "n_celllines": 6,
+    "raw_bracket": 0.660618782043457,
+    "proj_shrna": 3.12522784670194,
+    "enrich_shrna": 0.23658775118987307
+  },
+  {
+    "drug": "D-4476",
+    "target": "CSNK1A1",
+    "n_celllines": 15,
+    "raw_bracket": 0.904901809990406,
+    "proj_crispri": 1.123562552543059,
+    "enrich_crispri": 4.459463184174254e-05,
+    "proj_shrna": 5.581853974433172,
+    "enrich_shrna": 0.11520255158615456
+  },
+  {
+    "drug": "D-64131",
+    "target": "TUBB",
+    "n_celllines": 15,
+    "raw_bracket": 0.8486958295106888,
+    "proj_crispri": 1.0135785297037372,
+    "enrich_crispri": 3.784181649446991e-07
+  },
+  {
+    "drug": "DAU-5884",
+    "target": "CHRM3",
+    "n_celllines": 13,
+    "raw_bracket": 0.8638883978128433,
+    "proj_shrna": 3.5245725023440824,
+    "enrich_shrna": 0.10053747173657257
+  },
+  {
+    "drug": "DPPE",
+    "target": "ABCB1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9504969231784344,
+    "proj_shrna": 2.337711827495159,
+    "enrich_shrna": 0.1193268171888997
+  },
+  {
+    "drug": "DR-2313",
+    "target": "PARP1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9164914712309837,
+    "proj_shrna": 4.557436364965561,
+    "enrich_shrna": 0.04381736762796096
+  },
+  {
+    "drug": "DUP-697",
+    "target": "PTGS2",
+    "n_celllines": 13,
+    "raw_bracket": 0.9255989864468575,
+    "proj_shrna": 1.4838088794778554,
+    "enrich_shrna": 0.12228592398797478
+  },
+  {
+    "drug": "EBPC",
+    "target": "AKR1B1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9586054645478725,
+    "proj_shrna": 3.9983000315916843,
+    "enrich_shrna": 0.11486001740866314
+  },
+  {
+    "drug": "EMD-66684",
+    "target": "AGTR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9163980111479759,
+    "proj_shrna": 3.140065869077658,
+    "enrich_shrna": 0.10825709783940685
+  },
+  {
+    "drug": "ENMD-2076",
+    "target": "AURKA",
+    "n_celllines": 8,
+    "raw_bracket": 0.6198656260967255,
+    "proj_crispri": 0.3066283107128653,
+    "enrich_crispri": 2.1593002879134288e-07,
+    "proj_shrna": 1.5097850007670266,
+    "enrich_shrna": 0.07800278235601255
+  },
+  {
+    "drug": "EO-1428",
+    "target": "MAPK11",
+    "n_celllines": 13,
+    "raw_bracket": 0.9123416170477867,
+    "proj_shrna": 3.039047203002832,
+    "enrich_shrna": 0.031326410402884086
+  },
+  {
+    "drug": "ER-27319",
+    "target": "SYK",
+    "n_celllines": 13,
+    "raw_bracket": 0.5749573409557343,
+    "proj_shrna": 6.079528654041963,
+    "enrich_shrna": 0.0033361367219699734
+  },
+  {
+    "drug": "EX-527",
+    "target": "SIRT1",
+    "n_celllines": 54,
+    "raw_bracket": 0.9339455515146255,
+    "proj_shrna": 3.7955479843530266,
+    "enrich_shrna": 0.08826103016981168
+  },
+  {
+    "drug": "FK-866",
+    "target": "NAMPT",
+    "n_celllines": 54,
+    "raw_bracket": 0.9342102557420731,
+    "proj_shrna": 2.9204173808660983,
+    "enrich_shrna": 0.038472632292139375
+  },
+  {
+    "drug": "FPL-64176",
+    "target": "CACNA1C",
+    "n_celllines": 53,
+    "raw_bracket": 0.9434593170881271,
+    "proj_shrna": 3.9742259283932615,
+    "enrich_shrna": 0.18049047174500643
+  },
+  {
+    "drug": "FR-180204",
+    "target": "MAPK1",
+    "n_celllines": 14,
+    "raw_bracket": 0.9336107447743416,
+    "proj_shrna": 1.803694446008284,
+    "enrich_shrna": 0.036812737499136716
+  },
+  {
+    "drug": "GANT-58",
+    "target": "GLI1",
+    "n_celllines": 51,
+    "raw_bracket": 0.9487751089036465,
+    "proj_shrna": 4.373445928996684,
+    "enrich_shrna": 0.12155643354350687
+  },
+  {
+    "drug": "GANT-61",
+    "target": "GLI1",
+    "n_celllines": 13,
+    "raw_bracket": 0.893534779548645,
+    "proj_shrna": 3.002668715058229,
+    "enrich_shrna": 0.1027351423937839
+  },
+  {
+    "drug": "GBR-12935",
+    "target": "AGTR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9146226197481155,
+    "proj_shrna": 3.775536894798279,
+    "enrich_shrna": 0.08359128120014603
+  },
+  {
+    "drug": "GDC-0879",
+    "target": "BRAF",
+    "n_celllines": 20,
+    "raw_bracket": 0.9111911803483963,
+    "proj_shrna": 5.335774707009918,
+    "enrich_shrna": 0.39569912388066086
+  },
+  {
+    "drug": "GDC-0941",
+    "target": "PIK3CA",
+    "n_celllines": 19,
+    "raw_bracket": 0.6842208802700043,
+    "proj_shrna": 3.3635901977792817,
+    "enrich_shrna": 0.10631329484391472
+  },
+  {
+    "drug": "GNF-2",
+    "target": "ABL1",
+    "n_celllines": 18,
+    "raw_bracket": 0.9374491721391678,
+    "proj_shrna": 5.859142028817944,
+    "enrich_shrna": 0.3006983519163988
+  },
+  {
+    "drug": "GR-235",
+    "target": "NR1H4",
+    "n_celllines": 14,
+    "raw_bracket": 0.9142493009567261,
+    "proj_shrna": 1.7299882907133837,
+    "enrich_shrna": 0.05665835965648203
+  },
+  {
+    "drug": "GS-39783",
+    "target": "GABBR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9582896046340466,
+    "proj_shrna": 2.772667453648188,
+    "enrich_shrna": 0.016728432909904
+  },
+  {
+    "drug": "GSK-3-inhibitor-IX",
+    "target": "GSK3A",
+    "n_celllines": 20,
+    "raw_bracket": 0.7778275609016418,
+    "proj_shrna": 3.0426822849010167,
+    "enrich_shrna": 0.08147406988791772
+  },
+  {
+    "drug": "GTP-14564",
+    "target": "CSF1R",
+    "n_celllines": 13,
+    "raw_bracket": 0.9023422747850418,
+    "proj_shrna": 1.9107317672326014,
+    "enrich_shrna": 0.014291526663351428
+  },
+  {
+    "drug": "GW-0742",
+    "target": "PPARD",
+    "n_celllines": 13,
+    "raw_bracket": 0.9477218724787235,
+    "proj_shrna": 3.3434092238163338,
+    "enrich_shrna": 0.0034998665574799276
+  },
+  {
+    "drug": "GW-1929",
+    "target": "PPARG",
+    "n_celllines": 13,
+    "raw_bracket": 0.8695221990346909,
+    "proj_shrna": 6.403788030911715,
+    "enrich_shrna": 0.32541531962534975
+  },
+  {
+    "drug": "GW-3965",
+    "target": "NR1H2",
+    "n_celllines": 13,
+    "raw_bracket": 0.8968546092510223,
+    "proj_shrna": 3.4715502628913293,
+    "enrich_shrna": 0.19513491765927515
+  },
+  {
+    "drug": "GW-4064",
+    "target": "NR1H4",
+    "n_celllines": 15,
+    "raw_bracket": 0.9619852304458618,
+    "proj_shrna": 3.0544046753219196,
+    "enrich_shrna": 0.06824666746393238
+  },
+  {
+    "drug": "GW-441756",
+    "target": "NTRK1",
+    "n_celllines": 14,
+    "raw_bracket": 0.8590400815010071,
+    "proj_shrna": 3.347340922598,
+    "enrich_shrna": 0.2373370295544106
+  },
+  {
+    "drug": "GW-501516",
+    "target": "PPARA",
+    "n_celllines": 14,
+    "raw_bracket": 0.9481008872389793,
+    "proj_shrna": 2.1649550207696118,
+    "enrich_shrna": 0.02717824318987372
+  },
+  {
+    "drug": "GW-5074",
+    "target": "NTRK1",
+    "n_celllines": 18,
+    "raw_bracket": 0.9283848032355309,
+    "proj_shrna": 3.0272980214528786,
+    "enrich_shrna": 0.10000393806093655
+  },
+  {
+    "drug": "GW-583340",
+    "target": "EGFR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9552319645881653,
+    "proj_shrna": 4.395032567473558,
+    "enrich_shrna": 0.09532853383248963
+  },
+  {
+    "drug": "GW-6471",
+    "target": "PPARA",
+    "n_celllines": 13,
+    "raw_bracket": 0.914023146033287,
+    "proj_shrna": 1.266176669070354,
+    "enrich_shrna": 0.030880086705398213
+  },
+  {
+    "drug": "GW-7647",
+    "target": "PPARA",
+    "n_celllines": 15,
+    "raw_bracket": 0.8973226845264435,
+    "proj_shrna": 5.4174529331071035,
+    "enrich_shrna": 0.04082692446356706
+  },
+  {
+    "drug": "GW-843682X",
+    "target": "PLK1",
+    "n_celllines": 60,
+    "raw_bracket": 0.8820692151784897,
+    "proj_crispri": 0.8170400007788587,
+    "enrich_crispri": 0.0010515568072614705,
+    "proj_shrna": 4.6264626046232245,
+    "enrich_shrna": 0.001782447573091872
+  },
+  {
+    "drug": "GW-9508",
+    "target": "FFAR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9140609428286552,
+    "proj_shrna": 1.592579719920953,
+    "enrich_shrna": 0.09641546659587963
+  },
+  {
+    "drug": "GW-9662",
+    "target": "NCOA2",
+    "n_celllines": 14,
+    "raw_bracket": 0.9540187865495682,
+    "proj_shrna": 1.9556480336647768,
+    "enrich_shrna": 0.026205988787353363
+  },
+  {
+    "drug": "H-89",
+    "target": "GSG2",
+    "n_celllines": 13,
+    "raw_bracket": 0.8364713937044144,
+    "proj_shrna": 1.412019815009374,
+    "enrich_shrna": 0.015855639420492063
+  },
+  {
+    "drug": "HMN-214",
+    "target": "PLK1",
+    "n_celllines": 19,
+    "raw_bracket": 0.9092673733830452,
+    "proj_crispri": 0.7525354096550435,
+    "enrich_crispri": 0.0003748621981816286,
+    "proj_shrna": 4.894387490088828,
+    "enrich_shrna": 0.03371326401528396
+  },
+  {
+    "drug": "IKK-16",
+    "target": "IKBKB",
+    "n_celllines": 12,
+    "raw_bracket": 0.6978560388088226,
+    "proj_shrna": 4.45343022251671,
+    "enrich_shrna": 0.11007188848737215
+  },
+  {
+    "drug": "IKK-2-inhibitor",
+    "target": "IKBKB",
+    "n_celllines": 13,
+    "raw_bracket": 0.9406850747764111,
+    "proj_shrna": 1.1823858190805485,
+    "enrich_shrna": 0.06397324590956543
+  },
+  {
+    "drug": "IKK-2-inhibitor-V",
+    "target": "IKBKB",
+    "n_celllines": 55,
+    "raw_bracket": 0.7430426776409149,
+    "proj_shrna": 9.611127631361235,
+    "enrich_shrna": 0.2203631534869146
+  },
+  {
+    "drug": "IRL-2500",
+    "target": "EDNRB",
+    "n_celllines": 13,
+    "raw_bracket": 0.9395664595067501,
+    "proj_shrna": 5.534629051884015,
+    "enrich_shrna": 0.014678552374873866
+  },
+  {
+    "drug": "ITE",
+    "target": "AHR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9253843948245049,
+    "proj_shrna": 3.1867548330472064,
+    "enrich_shrna": 0.08980484824059332
+  },
+  {
+    "drug": "JAK3-inhibitor-V",
+    "target": "JAK3",
+    "n_celllines": 13,
+    "raw_bracket": 0.9269294366240501,
+    "proj_shrna": 7.256888418625563,
+    "enrich_shrna": 0.27079232569861134
+  },
+  {
+    "drug": "JLK-6",
+    "target": "PSEN1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8214225471019745,
+    "proj_shrna": 4.408180349148237,
+    "enrich_shrna": 0.1643072209093086
+  },
+  {
+    "drug": "JNJ-26481585",
+    "target": "HDAC1",
+    "n_celllines": 14,
+    "raw_bracket": 0.809188649058342,
+    "proj_shrna": 3.22717109977544,
+    "enrich_shrna": 0.04045959607248406
+  },
+  {
+    "drug": "JNJ-38877605",
+    "target": "MET",
+    "n_celllines": 13,
+    "raw_bracket": 0.8676132410764694,
+    "proj_shrna": 1.2238135987367385,
+    "enrich_shrna": 0.24358383878524492
+  },
+  {
+    "drug": "JNJ-7706621",
+    "target": "AURKA",
+    "n_celllines": 13,
+    "raw_bracket": 0.6162300109863281,
+    "proj_crispri": 3.3067983988202614,
+    "enrich_crispri": 0.0015398295617734582,
+    "proj_shrna": 15.923983712035875,
+    "enrich_shrna": 0.23912527735143385
+  },
+  {
+    "drug": "JX-401",
+    "target": "MAPK14",
+    "n_celllines": 13,
+    "raw_bracket": 0.8923730999231339,
+    "proj_shrna": 2.169523578041639,
+    "enrich_shrna": 0.08490603159485577
+  },
+  {
+    "drug": "JZL-184",
+    "target": "MGLL",
+    "n_celllines": 51,
+    "raw_bracket": 0.9455553963780403,
+    "proj_shrna": 3.957647676564315,
+    "enrich_shrna": 0.03462638522076866
+  },
+  {
+    "drug": "K-858",
+    "target": "KIF11",
+    "n_celllines": 14,
+    "raw_bracket": 0.934465117752552,
+    "proj_crispri": 0.8328852157903763,
+    "enrich_crispri": 0.0003624329387987076,
+    "proj_shrna": 3.7250979929179935,
+    "enrich_shrna": 0.08963268759946263
+  },
+  {
+    "drug": "KI-16425",
+    "target": "LPAR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8868805915117264,
+    "proj_shrna": 5.992785528684274,
+    "enrich_shrna": 0.2086334448595295
+  },
+  {
+    "drug": "KI-8751",
+    "target": "KDR",
+    "n_celllines": 11,
+    "raw_bracket": 0.8638651818037033,
+    "proj_shrna": 2.453861842914061,
+    "enrich_shrna": 0.08280985943887575
+  },
+  {
+    "drug": "KN-62",
+    "target": "AKT1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8997199982404709,
+    "proj_shrna": 2.7516985392341247,
+    "enrich_shrna": 0.12146667565406588
+  },
+  {
+    "drug": "KN-93",
+    "target": "CAMK2A",
+    "n_celllines": 13,
+    "raw_bracket": 0.846377968788147,
+    "proj_shrna": 2.9680396016591635,
+    "enrich_shrna": 0.026768235810409102
+  },
+  {
+    "drug": "KU-0063794",
+    "target": "MTOR",
+    "n_celllines": 51,
+    "raw_bracket": 0.7511438429355621,
+    "proj_crispri": 1.5833250523950855,
+    "enrich_crispri": 0.0012891093678145363,
+    "proj_shrna": 7.313177189791904,
+    "enrich_shrna": 0.20808342194870022
+  },
+  {
+    "drug": "KU-55933",
+    "target": "ATM",
+    "n_celllines": 19,
+    "raw_bracket": 0.9237789884209633,
+    "proj_shrna": 3.0079924548752826,
+    "enrich_shrna": 0.17774727540225488
+  },
+  {
+    "drug": "KU-60019",
+    "target": "ATM",
+    "n_celllines": 6,
+    "raw_bracket": 0.6823143064975739,
+    "proj_shrna": 1.1742389311393102,
+    "enrich_shrna": 0.03142535913635758
+  },
+  {
+    "drug": "L-161982",
+    "target": "PTGER4",
+    "n_celllines": 13,
+    "raw_bracket": 0.9350986182689667,
+    "proj_shrna": 6.454449410812977,
+    "enrich_shrna": 0.14208568236342334
+  },
+  {
+    "drug": "L-165041",
+    "target": "PPARD",
+    "n_celllines": 13,
+    "raw_bracket": 0.926199346780777,
+    "proj_shrna": 4.323695531640297,
+    "enrich_shrna": 0.06903377243558939
+  },
+  {
+    "drug": "L-690330",
+    "target": "IMPA1",
+    "n_celllines": 52,
+    "raw_bracket": 0.9226776286959648,
+    "proj_shrna": 4.600667837282382,
+    "enrich_shrna": 0.04802376035819922
+  },
+  {
+    "drug": "LE-135",
+    "target": "RARB",
+    "n_celllines": 55,
+    "raw_bracket": 0.9047175645828247,
+    "proj_shrna": 6.275979398537164,
+    "enrich_shrna": 0.16408004451184954
+  },
+  {
+    "drug": "LFM-A13",
+    "target": "BTK",
+    "n_celllines": 55,
+    "raw_bracket": 0.931964747607708,
+    "proj_shrna": 5.7207077399498285,
+    "enrich_shrna": 0.25707973348065494
+  },
+  {
+    "drug": "MDL-29951",
+    "target": "FBP1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8562640845775604,
+    "proj_shrna": 4.068860141894756,
+    "enrich_shrna": 0.14666004438112257
+  },
+  {
+    "drug": "MEK1-2-inhibitor",
+    "target": "MAP2K2",
+    "n_celllines": 13,
+    "raw_bracket": 0.9059251174330711,
+    "proj_shrna": 4.511791044320816,
+    "enrich_shrna": 0.06758336756028971
+  },
+  {
+    "drug": "MG-132",
+    "target": "PSMB1",
+    "n_celllines": 16,
+    "raw_bracket": 0.565131276845932,
+    "proj_crispri": 1.8595174577668843,
+    "enrich_crispri": 0.0013809735180419606,
+    "proj_shrna": 3.542021597921848,
+    "enrich_shrna": 0.0003273861439093452
+  },
+  {
+    "drug": "MGCD-265",
+    "target": "AXL",
+    "n_celllines": 6,
+    "raw_bracket": 0.66071417927742,
+    "proj_shrna": 2.590178778767586,
+    "enrich_shrna": 0.04423280204873259
+  },
+  {
+    "drug": "MK-1775",
+    "target": "WEE1",
+    "n_celllines": 56,
+    "raw_bracket": 0.8285963237285614,
+    "proj_crispri": 0.8577379004746422,
+    "enrich_crispri": 2.8061718567280976e-05,
+    "proj_shrna": 2.7680020087821915,
+    "enrich_shrna": 0.01518081560451684
+  },
+  {
+    "drug": "MK-2206",
+    "target": "AKT1",
+    "n_celllines": 56,
+    "raw_bracket": 0.8237734735012054,
+    "proj_shrna": 4.879512990038696,
+    "enrich_shrna": 0.22856604737100739
+  },
+  {
+    "drug": "MK-5108",
+    "target": "AURKA",
+    "n_celllines": 8,
+    "raw_bracket": 0.7496738135814667,
+    "proj_crispri": 0.6026288422194811,
+    "enrich_crispri": 0.0010985212734648487,
+    "proj_shrna": 3.649789418492998,
+    "enrich_shrna": 0.2129620498192395
+  },
+  {
+    "drug": "MRS-1220",
+    "target": "ADORA2B",
+    "n_celllines": 13,
+    "raw_bracket": 0.9546640552580357,
+    "proj_shrna": 5.190627348728669,
+    "enrich_shrna": 0.07712601712808098
+  },
+  {
+    "drug": "Merck60",
+    "target": "HDAC1",
+    "n_celllines": 9,
+    "raw_bracket": 0.6573967039585114,
+    "proj_shrna": 3.9697817828920154,
+    "enrich_shrna": 0.23250427702246057
+  },
+  {
+    "drug": "NCS-382",
+    "target": "GABBR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.918872781097889,
+    "proj_shrna": 3.1514591994958048,
+    "enrich_shrna": 0.24526407733829192
+  },
+  {
+    "drug": "NFKB-activation-inhibitor-II",
+    "target": "RELA",
+    "n_celllines": 49,
+    "raw_bracket": 0.9222921282052994,
+    "proj_shrna": 2.5369507680095884,
+    "enrich_shrna": 0.048128476294415856
+  },
+  {
+    "drug": "NPC-15199",
+    "target": "PPARG",
+    "n_celllines": 13,
+    "raw_bracket": 0.931105449795723,
+    "proj_shrna": 5.016274333286744,
+    "enrich_shrna": 0.10105395000061268
+  },
+  {
+    "drug": "NSC-3852",
+    "target": "HDAC1",
+    "n_celllines": 15,
+    "raw_bracket": 0.6447292268276215,
+    "proj_shrna": 9.429513910838535,
+    "enrich_shrna": 0.2697597670118199
+  },
+  {
+    "drug": "NSC-632839",
+    "target": "SENP2",
+    "n_celllines": 56,
+    "raw_bracket": 0.6079320013523102,
+    "proj_shrna": 4.906404204018317,
+    "enrich_shrna": 0.09905532213674295
+  },
+  {
+    "drug": "NSC-663284",
+    "target": "CDC25A",
+    "n_celllines": 12,
+    "raw_bracket": 0.7364509403705597,
+    "proj_shrna": 2.8183106500090975,
+    "enrich_shrna": 0.006332987316511662
+  },
+  {
+    "drug": "NSC-95397",
+    "target": "CDC25A",
+    "n_celllines": 56,
+    "raw_bracket": 0.8986999690532684,
+    "proj_shrna": 3.278040672374236,
+    "enrich_shrna": 0.07075915654269593
+  },
+  {
+    "drug": "NU-1025",
+    "target": "PARP1",
+    "n_celllines": 55,
+    "raw_bracket": 0.9385374374687672,
+    "proj_shrna": 3.9795971733577526,
+    "enrich_shrna": 0.00045016953520649397
+  },
+  {
+    "drug": "NU-7026",
+    "target": "PRKDC",
+    "n_celllines": 13,
+    "raw_bracket": 0.8406644314527512,
+    "proj_shrna": 1.8436559475003145,
+    "enrich_shrna": 0.03913430601712364
+  },
+  {
+    "drug": "NU-7441",
+    "target": "PRKDC",
+    "n_celllines": 19,
+    "raw_bracket": 0.8501428961753845,
+    "proj_shrna": 3.1991932004341606,
+    "enrich_shrna": 0.08167704630907568
+  },
+  {
+    "drug": "NVP-AEW541",
+    "target": "IGF1R",
+    "n_celllines": 6,
+    "raw_bracket": 0.6725797355175018,
+    "proj_shrna": 4.222706731657187,
+    "enrich_shrna": 0.07830381636837558
+  },
+  {
+    "drug": "NVP-AUY922",
+    "target": "HSP90AA1",
+    "n_celllines": 56,
+    "raw_bracket": 0.7154473066329956,
+    "proj_shrna": 4.692759545340941,
+    "enrich_shrna": 0.0501353361763377
+  },
+  {
+    "drug": "NVP-BEZ235",
+    "target": "ATR",
+    "n_celllines": 54,
+    "raw_bracket": 0.7287133932113647,
+    "proj_crispri": 0.9837990713714235,
+    "enrich_crispri": 7.135159493809121e-05,
+    "proj_shrna": 2.5777722817567743,
+    "enrich_shrna": 0.0911404066075372
+  },
+  {
+    "drug": "NVP-BGJ398",
+    "target": "FGFR1",
+    "n_celllines": 6,
+    "raw_bracket": 0.7302111685276031,
+    "proj_shrna": 0.7598317176103592,
+    "enrich_shrna": 0.06894487966939611
+  },
+  {
+    "drug": "NVP-TAE684",
+    "target": "ALK",
+    "n_celllines": 19,
+    "raw_bracket": 0.7063922882080078,
+    "proj_shrna": 5.1913803373163905,
+    "enrich_shrna": 0.14995335776470942
+  },
+  {
+    "drug": "OMDM-2",
+    "target": "GPR119",
+    "n_celllines": 13,
+    "raw_bracket": 0.9188007786870003,
+    "proj_shrna": 4.847672497614836,
+    "enrich_shrna": 0.01281989513692855
+  },
+  {
+    "drug": "OSI-027",
+    "target": "MTOR",
+    "n_celllines": 19,
+    "raw_bracket": 0.6748259663581848,
+    "proj_crispri": 1.0269917787372627,
+    "enrich_crispri": 0.00011067168540578685,
+    "proj_shrna": 4.4499654743755075,
+    "enrich_shrna": 0.1608110332256354
+  },
+  {
+    "drug": "OSI-930",
+    "target": "FLT1",
+    "n_celllines": 6,
+    "raw_bracket": 0.7140422761440277,
+    "proj_shrna": 1.577764305472374,
+    "enrich_shrna": 0.07990095923782192
+  },
+  {
+    "drug": "PAC-1",
+    "target": "CASP3",
+    "n_celllines": 51,
+    "raw_bracket": 0.7909628301858902,
+    "proj_shrna": 5.396224313284836,
+    "enrich_shrna": 0.048878404614242976
+  },
+  {
+    "drug": "PCI-24781",
+    "target": "HDAC1",
+    "n_celllines": 13,
+    "raw_bracket": 0.5297595858573914,
+    "proj_shrna": 6.093112971156072,
+    "enrich_shrna": 0.0916164727468507
+  },
+  {
+    "drug": "PCI-34051",
+    "target": "HDAC1",
+    "n_celllines": 12,
+    "raw_bracket": 0.8888733759522438,
+    "proj_shrna": 4.55000214888291,
+    "enrich_shrna": 0.054536977686158394
+  },
+  {
+    "drug": "PD-0325901",
+    "target": "MAP2K1",
+    "n_celllines": 19,
+    "raw_bracket": 0.7619713842868805,
+    "proj_shrna": 2.7620160775749305,
+    "enrich_shrna": 0.10023091459882583
+  },
+  {
+    "drug": "PD-158780",
+    "target": "EGFR",
+    "n_celllines": 8,
+    "raw_bracket": 0.7585069090127945,
+    "proj_shrna": 7.5030125225228925,
+    "enrich_shrna": 0.12755971188656545
+  },
+  {
+    "drug": "PD-160170",
+    "target": "NPY1R",
+    "n_celllines": 13,
+    "raw_bracket": 0.8734456300735474,
+    "proj_shrna": 5.937175374000501,
+    "enrich_shrna": 0.14233641814121256
+  },
+  {
+    "drug": "PD-173074",
+    "target": "FGFR1",
+    "n_celllines": 19,
+    "raw_bracket": 0.7992634028196335,
+    "proj_shrna": 2.7080441409210017,
+    "enrich_shrna": 0.06436967230707413
+  },
+  {
+    "drug": "PD-184352",
+    "target": "MAP2K1",
+    "n_celllines": 19,
+    "raw_bracket": 0.8037699609994888,
+    "proj_shrna": 3.686702994139571,
+    "enrich_shrna": 0.14215608184204953
+  },
+  {
+    "drug": "PD-198306",
+    "target": "MAP2K1",
+    "n_celllines": 13,
+    "raw_bracket": 0.7227232754230499,
+    "proj_shrna": 4.357497723438801,
+    "enrich_shrna": 0.0789718805976003
+  },
+  {
+    "drug": "PD-407824",
+    "target": "WEE1",
+    "n_celllines": 13,
+    "raw_bracket": 0.7068542242050171,
+    "proj_crispri": 1.4346259485421708,
+    "enrich_crispri": 0.0005670880588269139,
+    "proj_shrna": 5.154890028329996,
+    "enrich_shrna": 0.05692228802116972
+  },
+  {
+    "drug": "PD-98059",
+    "target": "AKT1",
+    "n_celllines": 58,
+    "raw_bracket": 0.9187418892979622,
+    "proj_shrna": 4.490418115201424,
+    "enrich_shrna": 0.20636080442274363
+  },
+  {
+    "drug": "PETCM",
+    "target": "CASP3",
+    "n_celllines": 8,
+    "raw_bracket": 0.9259842187166214,
+    "proj_shrna": 3.3312521097915515,
+    "enrich_shrna": 0.173404038474815
+  },
+  {
+    "drug": "PF-04217903",
+    "target": "MET",
+    "n_celllines": 56,
+    "raw_bracket": 0.9310530722141266,
+    "proj_shrna": 4.397587364747539,
+    "enrich_shrna": 0.29518580629748215
+  },
+  {
+    "drug": "PF-3845",
+    "target": "FAAH",
+    "n_celllines": 51,
+    "raw_bracket": 0.9558081775903702,
+    "proj_shrna": 4.370162487719573,
+    "enrich_shrna": 0.18288215590054335
+  },
+  {
+    "drug": "PF-431396",
+    "target": "PTK2",
+    "n_celllines": 6,
+    "raw_bracket": 0.6687320470809937,
+    "proj_crispri": 0.37526738548787647,
+    "enrich_crispri": 2.949711046628759e-06,
+    "proj_shrna": 3.6186599055926005,
+    "enrich_shrna": 0.029119212056338606
+  },
+  {
+    "drug": "PF-477736",
+    "target": "CHEK1",
+    "n_celllines": 6,
+    "raw_bracket": 0.7380113899707794,
+    "proj_crispri": 0.6988178803249546,
+    "enrich_crispri": 0.006490257939390893,
+    "proj_shrna": 2.2210613528887433,
+    "enrich_shrna": 0.09291801291608781
+  },
+  {
+    "drug": "PF-562271",
+    "target": "PTK2",
+    "n_celllines": 17,
+    "raw_bracket": 0.5883099138736725,
+    "proj_crispri": 1.4313883217261154,
+    "enrich_crispri": 0.0005335619669825333,
+    "proj_shrna": 10.686702117323875,
+    "enrich_shrna": 0.2222001395818518
+  },
+  {
+    "drug": "PF-750",
+    "target": "FAAH",
+    "n_celllines": 51,
+    "raw_bracket": 0.8753203749656677,
+    "proj_shrna": 4.978548802593175,
+    "enrich_shrna": 0.1983528871447513
+  },
+  {
+    "drug": "PHA-665752",
+    "target": "MET",
+    "n_celllines": 18,
+    "raw_bracket": 0.878510132431984,
+    "proj_shrna": 9.658925350487621,
+    "enrich_shrna": 0.2061053889534037
+  },
+  {
+    "drug": "PHA-793887",
+    "target": "CDK1",
+    "n_celllines": 19,
+    "raw_bracket": 0.6493022441864014,
+    "proj_crispri": 1.7568698459437306,
+    "enrich_crispri": 2.13963359445049e-08,
+    "proj_shrna": 6.550926014693857,
+    "enrich_shrna": 0.09595198031639995
+  },
+  {
+    "drug": "PHTPP",
+    "target": "ESR2",
+    "n_celllines": 13,
+    "raw_bracket": 0.962069895118475,
+    "proj_shrna": 1.8613212026464634,
+    "enrich_shrna": 0.05274434729742783
+  },
+  {
+    "drug": "PI-103",
+    "target": "MTOR",
+    "n_celllines": 59,
+    "raw_bracket": 0.7507245093584061,
+    "proj_crispri": 1.2219813485484787,
+    "enrich_crispri": 0.0003116081998531184,
+    "proj_shrna": 4.679251695449139,
+    "enrich_shrna": 0.14507540756266568
+  },
+  {
+    "drug": "PIK-75",
+    "target": "PIK3CA",
+    "n_celllines": 54,
+    "raw_bracket": 0.6242894232273102,
+    "proj_shrna": 10.344894459714514,
+    "enrich_shrna": 0.12937964791931122
+  },
+  {
+    "drug": "PJ-34",
+    "target": "EEF2",
+    "n_celllines": 51,
+    "raw_bracket": 0.8607720583677292,
+    "proj_crispri": 1.0135166596337326,
+    "enrich_crispri": 0.002792813052663199
+  },
+  {
+    "drug": "PNU-74654",
+    "target": "CTNNB1",
+    "n_celllines": 54,
+    "raw_bracket": 0.8614740520715714,
+    "proj_shrna": 5.373839652690331,
+    "enrich_shrna": 0.1518071397418339
+  },
+  {
+    "drug": "PP-1",
+    "target": "HCK",
+    "n_celllines": 13,
+    "raw_bracket": 0.8006995320320129,
+    "proj_shrna": 2.4797668693921504,
+    "enrich_shrna": 0.01139892156561495
+  },
+  {
+    "drug": "PP-2",
+    "target": "ABL1",
+    "n_celllines": 15,
+    "raw_bracket": 0.8025787770748138,
+    "proj_shrna": 3.0983816217808497,
+    "enrich_shrna": 0.17658867022591096
+  },
+  {
+    "drug": "PPT",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9307363480329514,
+    "proj_shrna": 3.2535776041257076,
+    "enrich_shrna": 0.15578481260727362
+  },
+  {
+    "drug": "PQ-401",
+    "target": "IGF1R",
+    "n_celllines": 13,
+    "raw_bracket": 0.8953284993767738,
+    "proj_shrna": 4.62771404056977,
+    "enrich_shrna": 0.2713198695489929
+  },
+  {
+    "drug": "PU-H71",
+    "target": "HSP90AA1",
+    "n_celllines": 14,
+    "raw_bracket": 0.7784838378429413,
+    "proj_shrna": 8.560935017499295,
+    "enrich_shrna": 0.10540394350713544
+  },
+  {
+    "drug": "QX-314",
+    "target": "MAPK14",
+    "n_celllines": 13,
+    "raw_bracket": 0.9432868100702763,
+    "proj_shrna": 1.377563316279497,
+    "enrich_shrna": 0.08178952993218047
+  },
+  {
+    "drug": "R-59022",
+    "target": "DGKA",
+    "n_celllines": 8,
+    "raw_bracket": 0.8224759101867676,
+    "proj_shrna": 1.3820463887282781,
+    "enrich_shrna": 0.022786037366444356
+  },
+  {
+    "drug": "RITA",
+    "target": "MDM2",
+    "n_celllines": 50,
+    "raw_bracket": 0.9128579944372177,
+    "proj_shrna": 4.353023343584975,
+    "enrich_shrna": 0.012087050947812372
+  },
+  {
+    "drug": "RS-504393",
+    "target": "CCL2",
+    "n_celllines": 13,
+    "raw_bracket": 0.9445114433765411,
+    "proj_shrna": 1.422919744100326,
+    "enrich_shrna": 0.056023425669089244
+  },
+  {
+    "drug": "RS-79948",
+    "target": "ADRA2A",
+    "n_celllines": 8,
+    "raw_bracket": 0.8827914595603943,
+    "proj_shrna": 4.780284051384244,
+    "enrich_shrna": 0.06503907277422982
+  },
+  {
+    "drug": "RWJ-21757",
+    "target": "TLR7",
+    "n_celllines": 13,
+    "raw_bracket": 0.9646140709519386,
+    "proj_shrna": 1.1904630849185662,
+    "enrich_shrna": 0.023408844093105508
+  },
+  {
+    "drug": "Ro-15-4513",
+    "target": "GABRA1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9632220566272736,
+    "proj_shrna": 2.3474467306947098,
+    "enrich_shrna": 0.054121583691151054
+  },
+  {
+    "drug": "Ro-19-4605",
+    "target": "GABRA1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9387211687862873,
+    "proj_shrna": 2.376915541214821,
+    "enrich_shrna": 0.015681810067466273
+  },
+  {
+    "drug": "Ro-28-1675",
+    "target": "GCK",
+    "n_celllines": 51,
+    "raw_bracket": 0.7613986134529114,
+    "proj_shrna": 5.726982462347722,
+    "enrich_shrna": 0.08842034824283829
+  },
+  {
+    "drug": "Ro-3306",
+    "target": "CDK1",
+    "n_celllines": 8,
+    "raw_bracket": 0.6313267648220062,
+    "proj_crispri": 0.7802999611552478,
+    "enrich_crispri": 0.00024411268253130862,
+    "proj_shrna": 3.092175170779228,
+    "enrich_shrna": 0.07395084105752403
+  },
+  {
+    "drug": "Ro-90-7501",
+    "target": "APP",
+    "n_celllines": 11,
+    "raw_bracket": 0.7469997704029083,
+    "proj_shrna": 2.6407203793525698,
+    "enrich_shrna": 0.07815657619291017
+  },
+  {
+    "drug": "SANT-1",
+    "target": "SHH",
+    "n_celllines": 13,
+    "raw_bracket": 0.9697784949094057,
+    "proj_shrna": 3.355468424084859,
+    "enrich_shrna": 0.10911405925071449
+  },
+  {
+    "drug": "SAR-245409",
+    "target": "MTOR",
+    "n_celllines": 6,
+    "raw_bracket": 0.6010719239711761,
+    "proj_crispri": 0.32752193406965674,
+    "enrich_crispri": 0.00022601652905153264,
+    "proj_shrna": 2.3209091305732725,
+    "enrich_shrna": 0.1878176369889042
+  },
+  {
+    "drug": "SB-202190",
+    "target": "AKT1",
+    "n_celllines": 14,
+    "raw_bracket": 0.8774388507008553,
+    "proj_shrna": 1.9037285434020745,
+    "enrich_shrna": 0.04950732927016532
+  },
+  {
+    "drug": "SB-203580",
+    "target": "AKT1",
+    "n_celllines": 19,
+    "raw_bracket": 0.861395001411438,
+    "proj_shrna": 3.369235121094954,
+    "enrich_shrna": 0.2865684424535999
+  },
+  {
+    "drug": "SB-216763",
+    "target": "CCNA2",
+    "n_celllines": 59,
+    "raw_bracket": 0.8414297848939896,
+    "proj_crispri": 1.35380060823003,
+    "enrich_crispri": 1.9051330271862221e-06,
+    "proj_shrna": 7.421175068696119,
+    "enrich_shrna": 0.2016992043721908
+  },
+  {
+    "drug": "SB-218078",
+    "target": "CHEK1",
+    "n_celllines": 13,
+    "raw_bracket": 0.7696923166513443,
+    "proj_crispri": 1.2064708100192227,
+    "enrich_crispri": 5.401039640292173e-05,
+    "proj_shrna": 5.280802749479428,
+    "enrich_shrna": 0.08774604391561525
+  },
+  {
+    "drug": "SB-225002",
+    "target": "CXCR2",
+    "n_celllines": 55,
+    "raw_bracket": 0.9221464246511459,
+    "proj_shrna": 4.186943659035847,
+    "enrich_shrna": 0.0565927321677151
+  },
+  {
+    "drug": "SB-239063",
+    "target": "MAPK11",
+    "n_celllines": 19,
+    "raw_bracket": 0.8259995877742767,
+    "proj_shrna": 6.9300470192268575,
+    "enrich_shrna": 0.07505465001185119
+  },
+  {
+    "drug": "SB-334867",
+    "target": "HCRTR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8823966458439827,
+    "proj_crispri": 1.191016924009087,
+    "enrich_crispri": 0.002699177822752769
+  },
+  {
+    "drug": "SB-408124",
+    "target": "HCRTR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9555432461202145,
+    "proj_crispri": 0.5339534942311165,
+    "enrich_crispri": 0.0003794278670531922
+  },
+  {
+    "drug": "SB-415286",
+    "target": "GSK3A",
+    "n_celllines": 13,
+    "raw_bracket": 0.8994250148534775,
+    "proj_shrna": 3.028327261026089,
+    "enrich_shrna": 0.08130756033642683
+  },
+  {
+    "drug": "SB-431542",
+    "target": "ACVR1C",
+    "n_celllines": 13,
+    "raw_bracket": 0.9072833582758904,
+    "proj_shrna": 4.323331486338224,
+    "enrich_shrna": 0.007917012884253227
+  },
+  {
+    "drug": "SB-525334",
+    "target": "TGFBR1",
+    "n_celllines": 19,
+    "raw_bracket": 0.8757853284478188,
+    "proj_shrna": 2.244394982244536,
+    "enrich_shrna": 0.00893051150280938
+  },
+  {
+    "drug": "SB-590885",
+    "target": "BRAF",
+    "n_celllines": 18,
+    "raw_bracket": 0.9523072466254234,
+    "proj_shrna": 9.047494784874075,
+    "enrich_shrna": 0.31947236633698495
+  },
+  {
+    "drug": "SC-10",
+    "target": "PRKCA",
+    "n_celllines": 13,
+    "raw_bracket": 0.9686927534639835,
+    "proj_shrna": 3.694502760966619,
+    "enrich_shrna": 0.10448138873900703
+  },
+  {
+    "drug": "SC-9",
+    "target": "PRKCA",
+    "n_celllines": 13,
+    "raw_bracket": 0.9374380931258202,
+    "proj_shrna": 4.13787751721266,
+    "enrich_shrna": 0.03304555412263799
+  },
+  {
+    "drug": "SD-169",
+    "target": "MAPK14",
+    "n_celllines": 8,
+    "raw_bracket": 0.8844132795929909,
+    "proj_shrna": 4.745113250400339,
+    "enrich_shrna": 0.15325175937619306
+  },
+  {
+    "drug": "SGX523",
+    "target": "MET",
+    "n_celllines": 6,
+    "raw_bracket": 0.7266768515110016,
+    "proj_shrna": 3.2945734918117524,
+    "enrich_shrna": 0.09497105764391112
+  },
+  {
+    "drug": "SJ-172550",
+    "target": "MDM4",
+    "n_celllines": 51,
+    "raw_bracket": 0.8964857012033463,
+    "proj_shrna": 2.382261180328388,
+    "enrich_shrna": 0.10706412769048157
+  },
+  {
+    "drug": "SKI-II",
+    "target": "SPHK1",
+    "n_celllines": 55,
+    "raw_bracket": 0.8345967829227448,
+    "proj_shrna": 4.028473594744598,
+    "enrich_shrna": 0.04323443816464678
+  },
+  {
+    "drug": "SN-38",
+    "target": "TOP1",
+    "n_celllines": 51,
+    "raw_bracket": 0.6208919286727905,
+    "proj_crispri": 1.5972465941988234,
+    "enrich_crispri": 0.000566756938062761,
+    "proj_shrna": 2.777955482333314,
+    "enrich_shrna": 0.0009729245395716547
+  },
+  {
+    "drug": "SNS-314",
+    "target": "AURKA",
+    "n_celllines": 13,
+    "raw_bracket": 0.8676718324422836,
+    "proj_crispri": 1.2926386198424937,
+    "enrich_crispri": 3.4934325539859516e-05,
+    "proj_shrna": 4.191215210809157,
+    "enrich_shrna": 0.28275143148590587
+  },
+  {
+    "drug": "SR-95639A",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9461416080594063,
+    "proj_shrna": 3.6059914771945047,
+    "enrich_shrna": 0.08308823389813202
+  },
+  {
+    "drug": "SRC-kinase-inhibitor-I",
+    "target": "CSK",
+    "n_celllines": 8,
+    "raw_bracket": 0.8959331512451172,
+    "proj_shrna": 4.436593881675175,
+    "enrich_shrna": 0.20478674250512174
+  },
+  {
+    "drug": "STAT3-inhibitor-VI",
+    "target": "STAT3",
+    "n_celllines": 51,
+    "raw_bracket": 0.9361924976110458,
+    "proj_shrna": 6.664041385411047,
+    "enrich_shrna": 0.3067550990603287
+  },
+  {
+    "drug": "T-0070907",
+    "target": "PPARG",
+    "n_celllines": 13,
+    "raw_bracket": 0.9398278594017029,
+    "proj_shrna": 2.8057382956911354,
+    "enrich_shrna": 0.07833943020980261
+  },
+  {
+    "drug": "TAK-715",
+    "target": "MAPK14",
+    "n_celllines": 19,
+    "raw_bracket": 0.9194626435637474,
+    "proj_shrna": 2.060170543385528,
+    "enrich_shrna": 0.11912296376494069
+  },
+  {
+    "drug": "TCS-359",
+    "target": "FLT3",
+    "n_celllines": 8,
+    "raw_bracket": 0.8170650005340576,
+    "proj_shrna": 1.902878109631794,
+    "enrich_shrna": 0.04014793936522043
+  },
+  {
+    "drug": "TGX-221",
+    "target": "PIK3CB",
+    "n_celllines": 19,
+    "raw_bracket": 0.9099029526114464,
+    "proj_shrna": 3.784383020902935,
+    "enrich_shrna": 0.22853339196649358
+  },
+  {
+    "drug": "TPCA-1",
+    "target": "IKBKB",
+    "n_celllines": 56,
+    "raw_bracket": 0.8079309612512589,
+    "proj_shrna": 5.976064127615907,
+    "enrich_shrna": 0.12003867186468486
+  },
+  {
+    "drug": "TTNPB",
+    "target": "RARA",
+    "n_celllines": 15,
+    "raw_bracket": 0.8887942656874657,
+    "proj_shrna": 0.7764490723609925,
+    "enrich_shrna": 0.05419216612953992
+  },
+  {
+    "drug": "TW-37",
+    "target": "BCL2",
+    "n_celllines": 49,
+    "raw_bracket": 0.765069454908371,
+    "proj_shrna": 6.704645747851048,
+    "enrich_shrna": 0.0734051761660206
+  },
+  {
+    "drug": "TWS-119",
+    "target": "GSK3B",
+    "n_celllines": 21,
+    "raw_bracket": 0.8541149497032166,
+    "proj_shrna": 3.6626563250308943,
+    "enrich_shrna": 0.11405206530818024
+  },
+  {
+    "drug": "U-0126",
+    "target": "AKT1",
+    "n_celllines": 15,
+    "raw_bracket": 0.8223829567432404,
+    "proj_shrna": 3.473078272172383,
+    "enrich_shrna": 0.14303138115077108
+  },
+  {
+    "drug": "VER-155008",
+    "target": "HSPA1A",
+    "n_celllines": 51,
+    "raw_bracket": 0.898839995265007,
+    "proj_shrna": 3.4743593112744535,
+    "enrich_shrna": 0.0908636663298843
+  },
+  {
+    "drug": "VX-702",
+    "target": "IL1B",
+    "n_celllines": 14,
+    "raw_bracket": 0.9312152042984962,
+    "proj_shrna": 5.406757826824765,
+    "enrich_shrna": 0.03406488011938791
+  },
+  {
+    "drug": "VX-745",
+    "target": "MAPK11",
+    "n_celllines": 19,
+    "raw_bracket": 0.9001844525337219,
+    "proj_shrna": 1.787140342662906,
+    "enrich_shrna": 0.01625675096897794
+  },
+  {
+    "drug": "WAY-161503",
+    "target": "HTR2C",
+    "n_celllines": 8,
+    "raw_bracket": 0.9110212847590446,
+    "proj_shrna": 1.6370574150766646,
+    "enrich_shrna": 0.01709924516069905
+  },
+  {
+    "drug": "WAY-629",
+    "target": "HTR2C",
+    "n_celllines": 8,
+    "raw_bracket": 0.9534996710717678,
+    "proj_shrna": 1.2972938040537494,
+    "enrich_shrna": 0.0034856735112498427
+  },
+  {
+    "drug": "WHI-P154",
+    "target": "EGFR",
+    "n_celllines": 13,
+    "raw_bracket": 0.8440496325492859,
+    "proj_shrna": 9.094011343442476,
+    "enrich_shrna": 0.22698750325535944
+  },
+  {
+    "drug": "WYE-125132",
+    "target": "MTOR",
+    "n_celllines": 19,
+    "raw_bracket": 0.6236203610897064,
+    "proj_crispri": 1.1284435817433702,
+    "enrich_crispri": 9.505530684056252e-05,
+    "proj_shrna": 2.9262061779610593,
+    "enrich_shrna": 0.15666763858475008
+  },
+  {
+    "drug": "WYE-354",
+    "target": "MTOR",
+    "n_celllines": 14,
+    "raw_bracket": 0.8191734105348587,
+    "proj_crispri": 1.0664703701635188,
+    "enrich_crispri": 0.002001743575511323,
+    "proj_shrna": 8.215364400829587,
+    "enrich_shrna": 0.12023547371067256
+  },
+  {
+    "drug": "WZ-3146",
+    "target": "EGFR",
+    "n_celllines": 14,
+    "raw_bracket": 0.8483140170574188,
+    "proj_shrna": 6.094820291458905,
+    "enrich_shrna": 0.269791963980893
+  },
+  {
+    "drug": "WZ-4002",
+    "target": "EGFR",
+    "n_celllines": 19,
+    "raw_bracket": 0.8727863430976868,
+    "proj_shrna": 5.84615444805887,
+    "enrich_shrna": 0.2992822877847381
+  },
+  {
+    "drug": "XE-991",
+    "target": "KCNQ1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9053271263837814,
+    "proj_shrna": 2.0053529576995435,
+    "enrich_shrna": 0.11829647962998369
+  },
+  {
+    "drug": "Y-134",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8378879576921463,
+    "proj_shrna": 5.291244427840679,
+    "enrich_shrna": 0.14132167043513633
+  },
+  {
+    "drug": "Y-27632",
+    "target": "PKIA",
+    "n_celllines": 56,
+    "raw_bracket": 0.8992722257971764,
+    "proj_shrna": 2.760348853207641,
+    "enrich_shrna": 0.021199513615543175
+  },
+  {
+    "drug": "Y-39983",
+    "target": "ROCK1",
+    "n_celllines": 6,
+    "raw_bracket": 0.763485386967659,
+    "proj_shrna": 1.6846183240413666,
+    "enrich_shrna": 0.1864256647686524
+  },
+  {
+    "drug": "YM-155",
+    "target": "BIRC5",
+    "n_celllines": 54,
+    "raw_bracket": 0.8021604716777802,
+    "proj_crispri": 1.510157373901647,
+    "enrich_crispri": 6.818979823399921e-05,
+    "proj_shrna": 4.691635243912247,
+    "enrich_shrna": 0.11004950423165738
+  },
+  {
+    "drug": "ZD-7155",
+    "target": "AGTR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9203981310129166,
+    "proj_shrna": 2.074031745776152,
+    "enrich_shrna": 0.03810021713617773
+  },
+  {
+    "drug": "ZK-164015",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8848739042878151,
+    "proj_shrna": 3.717063877636041,
+    "enrich_shrna": 0.08516744696065448
+  },
+  {
+    "drug": "ZK-93423",
+    "target": "GABRA1",
+    "n_celllines": 14,
+    "raw_bracket": 0.8789800778031349,
+    "proj_shrna": 2.643594431353139,
+    "enrich_shrna": 0.10573731873557168
+  },
+  {
+    "drug": "ZK-93426",
+    "target": "GABRA1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9501479119062424,
+    "proj_shrna": 2.2909579367782826,
+    "enrich_shrna": 0.06715252776325897
+  },
+  {
+    "drug": "ZM-306416",
+    "target": "EGFR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9312538579106331,
+    "proj_shrna": 4.46598613071136,
+    "enrich_shrna": 0.21850921723583472
+  },
+  {
+    "drug": "ZM-323881",
+    "target": "KDR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9404172487556934,
+    "proj_shrna": 2.9418857857967033,
+    "enrich_shrna": 0.12608704010654836
+  },
+  {
+    "drug": "ZM-336372",
+    "target": "BRAF",
+    "n_celllines": 51,
+    "raw_bracket": 0.791827842593193,
+    "proj_shrna": 4.079459856456402,
+    "enrich_shrna": 0.09933138999926516
+  },
+  {
+    "drug": "ZM-39923",
+    "target": "JAK1",
+    "n_celllines": 8,
+    "raw_bracket": 0.9244808480143547,
+    "proj_shrna": 3.2050946674176624,
+    "enrich_shrna": 0.18152533837781792
+  },
+  {
+    "drug": "ZM-447439",
+    "target": "AURKA",
+    "n_celllines": 19,
+    "raw_bracket": 0.8943001925945282,
+    "proj_crispri": 0.5268498173447093,
+    "enrich_crispri": 0.0017707629008386694,
+    "proj_shrna": 3.917580585904986,
+    "enrich_shrna": 0.3759855965612111
+  },
+  {
+    "drug": "ZSTK-474",
+    "target": "PIK3CB",
+    "n_celllines": 19,
+    "raw_bracket": 0.6905879378318787,
+    "proj_shrna": 2.4949780225056655,
+    "enrich_shrna": 0.13218260655776248
+  },
+  {
+    "drug": "acamprosate",
+    "target": "GABRA1",
+    "n_celllines": 10,
+    "raw_bracket": 0.9563509486615658,
+    "proj_shrna": 1.3886551558971405,
+    "enrich_shrna": 0.059875150955178924
+  },
+  {
+    "drug": "acetyl-farnesyl-cysteine",
+    "target": "PPARG",
+    "n_celllines": 15,
+    "raw_bracket": 0.9125747159123421,
+    "proj_shrna": 4.004853896867662,
+    "enrich_shrna": 0.13082309447071694
+  },
+  {
+    "drug": "acitretin",
+    "target": "RARA",
+    "n_celllines": 15,
+    "raw_bracket": 0.9528073854744434,
+    "proj_shrna": 3.5156431142063367,
+    "enrich_shrna": 0.10084474302761137
+  },
+  {
+    "drug": "acyclovir",
+    "target": "PNP",
+    "n_celllines": 9,
+    "raw_bracket": 0.7584780305624008,
+    "proj_shrna": 4.530201603141096,
+    "enrich_shrna": 0.1420171422077523
+  },
+  {
+    "drug": "afatinib",
+    "target": "EGFR",
+    "n_celllines": 17,
+    "raw_bracket": 0.7605313360691071,
+    "proj_shrna": 5.589684456148568,
+    "enrich_shrna": 0.20809486882298334
+  },
+  {
+    "drug": "albendazole",
+    "target": "TUBA1A",
+    "n_celllines": 13,
+    "raw_bracket": 0.848298117518425,
+    "proj_shrna": 1.7874886357249358,
+    "enrich_shrna": 0.05435670152132843
+  },
+  {
+    "drug": "alda-1",
+    "target": "ALDH2",
+    "n_celllines": 51,
+    "raw_bracket": 0.9166131094098091,
+    "proj_shrna": 3.5288921010611105,
+    "enrich_shrna": 0.1847952968091704
+  },
+  {
+    "drug": "alfacalcidol",
+    "target": "CYP27B1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8599119484424591,
+    "proj_shrna": 2.550103487712996,
+    "enrich_shrna": 0.03883608669174721
+  },
+  {
+    "drug": "alimemazine",
+    "target": "HRH1",
+    "n_celllines": 8,
+    "raw_bracket": 0.7680062502622604,
+    "proj_shrna": 3.0436890375401293,
+    "enrich_shrna": 0.020530968807613625
+  },
+  {
+    "drug": "alisertib",
+    "target": "AURKA",
+    "n_celllines": 8,
+    "raw_bracket": 0.7630937397480011,
+    "proj_crispri": 0.3897912261707058,
+    "enrich_crispri": 0.0007455467444271748,
+    "proj_shrna": 2.833693981968931,
+    "enrich_shrna": 0.045695632498699235
+  },
+  {
+    "drug": "alrestatin",
+    "target": "AKR1B1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9387600235641003,
+    "proj_shrna": 3.1000479904887004,
+    "enrich_shrna": 0.04212444086994083
+  },
+  {
+    "drug": "alvespimycin",
+    "target": "HSP90AA1",
+    "n_celllines": 14,
+    "raw_bracket": 0.7602144330739975,
+    "proj_shrna": 4.572122097015381,
+    "enrich_shrna": 0.12293986097916676
+  },
+  {
+    "drug": "alvocidib",
+    "target": "CDK1",
+    "n_celllines": 19,
+    "raw_bracket": 0.473086416721344,
+    "proj_crispri": 1.552539117193381,
+    "enrich_crispri": 3.8863831137595844e-05,
+    "proj_shrna": 5.960007129531157,
+    "enrich_shrna": 0.09418833840071361
+  },
+  {
+    "drug": "amcinonide",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8934498652815819,
+    "proj_shrna": 2.7474752867069,
+    "enrich_shrna": 0.1276523958086253
+  },
+  {
+    "drug": "aminopentamide",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9668233320116997,
+    "proj_shrna": 3.334729450635421,
+    "enrich_shrna": 0.09198284134814472
+  },
+  {
+    "drug": "aminopurvalanol-a",
+    "target": "CDK1",
+    "n_celllines": 15,
+    "raw_bracket": 0.6355984210968018,
+    "proj_crispri": 1.1070460002742712,
+    "enrich_crispri": 0.0003443741149757854,
+    "proj_shrna": 8.115439539580118,
+    "enrich_shrna": 0.14193368528328065
+  },
+  {
+    "drug": "amlodipine",
+    "target": "CACNA1C",
+    "n_celllines": 13,
+    "raw_bracket": 0.803293839097023,
+    "proj_shrna": 5.843514960927841,
+    "enrich_shrna": 0.13302708193955315
+  },
+  {
+    "drug": "amodiaquine",
+    "target": "HNMT",
+    "n_celllines": 13,
+    "raw_bracket": 0.8808100074529648,
+    "proj_shrna": 9.662442184411562,
+    "enrich_shrna": 0.19911721822326456
+  },
+  {
+    "drug": "amonafide",
+    "target": "TOP2A",
+    "n_celllines": 12,
+    "raw_bracket": 0.7835444658994675,
+    "proj_crispri": 1.4307486126499251,
+    "enrich_crispri": 6.390942774173647e-05,
+    "proj_shrna": 14.401445703524532,
+    "enrich_shrna": 0.15743402479128665
+  },
+  {
+    "drug": "amperozide",
+    "target": "FAAH",
+    "n_celllines": 13,
+    "raw_bracket": 0.9006620272994041,
+    "proj_shrna": 2.429322510193556,
+    "enrich_shrna": 0.05114687167193299
+  },
+  {
+    "drug": "amuvatinib",
+    "target": "KIT",
+    "n_celllines": 6,
+    "raw_bracket": 0.6619344055652618,
+    "proj_shrna": 2.6813538789749147,
+    "enrich_shrna": 0.1576111887445144
+  },
+  {
+    "drug": "andarine",
+    "target": "AR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9565151892602444,
+    "proj_shrna": 1.929644647699136,
+    "enrich_shrna": 0.038405169067010414
+  },
+  {
+    "drug": "antimycin-a",
+    "target": "CYCS",
+    "n_celllines": 14,
+    "raw_bracket": 0.8852083906531334,
+    "proj_crispri": 0.9857308632078836,
+    "enrich_crispri": 0.0002066568743656651,
+    "proj_shrna": 3.5551786024819365,
+    "enrich_shrna": 0.10750892625225905
+  },
+  {
+    "drug": "apigenin",
+    "target": "AKR1B1",
+    "n_celllines": 15,
+    "raw_bracket": 0.8338090032339096,
+    "proj_shrna": 2.572162155310313,
+    "enrich_shrna": 0.15353927143735646
+  },
+  {
+    "drug": "arctigenin",
+    "target": "CHUK",
+    "n_celllines": 15,
+    "raw_bracket": 0.9238422140479088,
+    "proj_shrna": 4.34797490352676,
+    "enrich_shrna": 0.13401590906723015
+  },
+  {
+    "drug": "arcyriaflavin-a",
+    "target": "CCND1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8765048757195473,
+    "proj_crispri": 0.8717062770080491,
+    "enrich_crispri": 0.0011531865545493642,
+    "proj_shrna": 4.585572498731124,
+    "enrich_shrna": 0.09441272253215871
+  },
+  {
+    "drug": "arecaidine-propargyl-ester",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9583165906369686,
+    "proj_shrna": 2.935685790120027,
+    "enrich_shrna": 0.11379183961379624
+  },
+  {
+    "drug": "argatroban",
+    "target": "F2",
+    "n_celllines": 7,
+    "raw_bracket": 0.9614323452115059,
+    "proj_shrna": 4.451890353645597,
+    "enrich_shrna": 0.10490202974546836
+  },
+  {
+    "drug": "artemether",
+    "target": "ATP1A1",
+    "n_celllines": 7,
+    "raw_bracket": 0.9271028488874435,
+    "proj_crispri": 1.3594624452939659,
+    "enrich_crispri": 0.0009880179280927276,
+    "proj_shrna": 13.30499891156242,
+    "enrich_shrna": 0.2022534620582661
+  },
+  {
+    "drug": "aspirin",
+    "target": "AKR1C1",
+    "n_celllines": 8,
+    "raw_bracket": 0.9559719860553741,
+    "proj_shrna": 1.9016920349427633,
+    "enrich_shrna": 0.050674100347919415
+  },
+  {
+    "drug": "ataluren",
+    "target": "DMD",
+    "n_celllines": 8,
+    "raw_bracket": 0.9585511349141598,
+    "proj_shrna": 2.65246444940567,
+    "enrich_shrna": 0.10268001370398938
+  },
+  {
+    "drug": "atorvastatin",
+    "target": "AHR",
+    "n_celllines": 56,
+    "raw_bracket": 0.9243408218026161,
+    "proj_shrna": 4.196527184575022,
+    "enrich_shrna": 0.17965887740446362
+  },
+  {
+    "drug": "auranofin",
+    "target": "IKBKB",
+    "n_celllines": 44,
+    "raw_bracket": 0.695077657699585,
+    "proj_shrna": 7.760609058320648,
+    "enrich_shrna": 0.13441035857637473
+  },
+  {
+    "drug": "aurora-a-inhibitor-i",
+    "target": "AURKA",
+    "n_celllines": 19,
+    "raw_bracket": 0.8889533281326294,
+    "proj_crispri": 0.9878304682639752,
+    "enrich_crispri": 0.002149663416524992,
+    "proj_shrna": 4.533681720146659,
+    "enrich_shrna": 0.12205352650065393
+  },
+  {
+    "drug": "azacitidine",
+    "target": "DNMT1",
+    "n_celllines": 8,
+    "raw_bracket": 0.6752480566501617,
+    "proj_crispri": 1.4562417575545226,
+    "enrich_crispri": 0.000556554042068388,
+    "proj_shrna": 7.991856694221497,
+    "enrich_shrna": 0.08945824975385452
+  },
+  {
+    "drug": "azacyclonol",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9811082128435373,
+    "proj_shrna": 1.6521611968294168,
+    "enrich_shrna": 0.10365883790677799
+  },
+  {
+    "drug": "azathioprine",
+    "target": "HPRT1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8301770985126495,
+    "proj_shrna": 3.4354489190237865,
+    "enrich_shrna": 0.17175029188474245
+  },
+  {
+    "drug": "azelastine",
+    "target": "HRH1",
+    "n_celllines": 7,
+    "raw_bracket": 0.8643394410610199,
+    "proj_shrna": 8.811473021904627,
+    "enrich_shrna": 0.06571056078702586
+  },
+  {
+    "drug": "barasertib-HQPA",
+    "target": "AURKB",
+    "n_celllines": 19,
+    "raw_bracket": 0.9037878587841988,
+    "proj_crispri": 0.6286978201041508,
+    "enrich_crispri": 0.00013755832991082834,
+    "proj_shrna": 2.420774933277515,
+    "enrich_shrna": 0.223976367834954
+  },
+  {
+    "drug": "belinostat",
+    "target": "HDAC1",
+    "n_celllines": 13,
+    "raw_bracket": 0.5507833957672119,
+    "proj_shrna": 9.405811240275701,
+    "enrich_shrna": 0.10974872432781524
+  },
+  {
+    "drug": "bemegride",
+    "target": "GABRA1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9376990497112274,
+    "proj_shrna": 3.0799121722961083,
+    "enrich_shrna": 0.09872284730122605
+  },
+  {
+    "drug": "benidipine",
+    "target": "CACNA1C",
+    "n_celllines": 7,
+    "raw_bracket": 0.9404615499079227,
+    "proj_shrna": 2.9314294031688144,
+    "enrich_shrna": 0.09009669992616409
+  },
+  {
+    "drug": "benzbromarone",
+    "target": "ABCC1",
+    "n_celllines": 9,
+    "raw_bracket": 0.9156337976455688,
+    "proj_shrna": 3.200699746608734,
+    "enrich_shrna": 0.07303879564489879
+  },
+  {
+    "drug": "benzthiazide",
+    "target": "CA2",
+    "n_celllines": 13,
+    "raw_bracket": 0.93857616558671,
+    "proj_shrna": 2.830285492997903,
+    "enrich_shrna": 0.0965899439211313
+  },
+  {
+    "drug": "bergenin",
+    "target": "IL1B",
+    "n_celllines": 8,
+    "raw_bracket": 0.9224148020148277,
+    "proj_shrna": 2.6461753909076964,
+    "enrich_shrna": 0.0028262007346511187
+  },
+  {
+    "drug": "betahistine",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9385479837656021,
+    "proj_shrna": 2.2361109094359937,
+    "enrich_shrna": 0.17018557853704408
+  },
+  {
+    "drug": "betamethasone",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8833919167518616,
+    "proj_shrna": 1.3163518221714559,
+    "enrich_shrna": 0.13335507248604106
+  },
+  {
+    "drug": "betamethasone-acetate",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9272633939981461,
+    "proj_shrna": 2.7051786963756266,
+    "enrich_shrna": 0.16100087275280917
+  },
+  {
+    "drug": "bethanechol",
+    "target": "CHRM1",
+    "n_celllines": 8,
+    "raw_bracket": 0.9113109186291695,
+    "proj_shrna": 2.403920091688633,
+    "enrich_shrna": 0.025139348127617644
+  },
+  {
+    "drug": "betulinic-acid",
+    "target": "GPBAR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.932482548058033,
+    "proj_shrna": 5.54556260487208,
+    "enrich_shrna": 0.0064604593461723425
+  },
+  {
+    "drug": "bezafibrate",
+    "target": "PPARA",
+    "n_celllines": 15,
+    "raw_bracket": 0.9615563564002514,
+    "proj_shrna": 1.4757827218089785,
+    "enrich_shrna": 0.048926646782742944
+  },
+  {
+    "drug": "bicalutamide",
+    "target": "AR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9131324663758278,
+    "proj_shrna": 2.516820638989791,
+    "enrich_shrna": 0.09145862563773122
+  },
+  {
+    "drug": "bimatoprost",
+    "target": "AKR1C3",
+    "n_celllines": 8,
+    "raw_bracket": 0.9379367232322693,
+    "proj_shrna": 4.4038319843156,
+    "enrich_shrna": 0.07927283033206667
+  },
+  {
+    "drug": "biotin",
+    "target": "ACACA",
+    "n_celllines": 13,
+    "raw_bracket": 0.9180324897170067,
+    "proj_shrna": 3.2167647798091936,
+    "enrich_shrna": 0.07184347725908058
+  },
+  {
+    "drug": "biperiden",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9071659222245216,
+    "proj_shrna": 2.8889400678185315,
+    "enrich_shrna": 0.057729875163753386
+  },
+  {
+    "drug": "bisindolylmaleimide-ix",
+    "target": "AKT1",
+    "n_celllines": 12,
+    "raw_bracket": 0.46383213996887207,
+    "proj_shrna": 7.192841719497334,
+    "enrich_shrna": 0.0764102226491481
+  },
+  {
+    "drug": "bithionol",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.7443916201591492,
+    "proj_shrna": 4.230078713634075,
+    "enrich_shrna": 0.15126273755854047
+  },
+  {
+    "drug": "bortezomib",
+    "target": "PSMA1",
+    "n_celllines": 51,
+    "raw_bracket": 0.6444034576416016,
+    "proj_crispri": 1.357232077002985,
+    "enrich_crispri": 0.0012718153035919807,
+    "proj_shrna": 4.02334955610481,
+    "enrich_shrna": 9.401702636685494e-05
+  },
+  {
+    "drug": "bosutinib",
+    "target": "ABL1",
+    "n_celllines": 15,
+    "raw_bracket": 0.8370328098535538,
+    "proj_shrna": 8.389527256290117,
+    "enrich_shrna": 0.2344348643603098
+  },
+  {
+    "drug": "brefeldin-a",
+    "target": "ARF1",
+    "n_celllines": 56,
+    "raw_bracket": 0.7738810777664185,
+    "proj_shrna": 5.480349838714321,
+    "enrich_shrna": 0.04326962435499149
+  },
+  {
+    "drug": "brimonidine",
+    "target": "ADRA2A",
+    "n_celllines": 13,
+    "raw_bracket": 0.92258021235466,
+    "proj_shrna": 3.1460217588987107,
+    "enrich_shrna": 0.15455417629009904
+  },
+  {
+    "drug": "brompheniramine",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9278024882078171,
+    "proj_shrna": 2.2296412877547436,
+    "enrich_shrna": 0.06349707784062275
+  },
+  {
+    "drug": "brucine",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.949010580778122,
+    "proj_shrna": 2.5761580417553582,
+    "enrich_shrna": 0.186580444565835
+  },
+  {
+    "drug": "bucladesine",
+    "target": "PRKACA",
+    "n_celllines": 56,
+    "raw_bracket": 0.9481521025300026,
+    "proj_shrna": 6.472021316809507,
+    "enrich_shrna": 0.18429002913983883
+  },
+  {
+    "drug": "budesonide",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8683042526245117,
+    "proj_shrna": 2.400662604814921,
+    "enrich_shrna": 0.09129264814604099
+  },
+  {
+    "drug": "bumetanide",
+    "target": "CFTR",
+    "n_celllines": 13,
+    "raw_bracket": 0.887989915907383,
+    "proj_shrna": 5.191410382588704,
+    "enrich_shrna": 0.18303336691872207
+  },
+  {
+    "drug": "buparlisib",
+    "target": "PIK3CA",
+    "n_celllines": 6,
+    "raw_bracket": 0.5529401898384094,
+    "proj_shrna": 2.551316843430201,
+    "enrich_shrna": 0.14665141615690747
+  },
+  {
+    "drug": "buphenine",
+    "target": "ADRB2",
+    "n_celllines": 13,
+    "raw_bracket": 0.9475463107228279,
+    "proj_shrna": 1.3951610091787119,
+    "enrich_shrna": 0.07249148917829817
+  },
+  {
+    "drug": "buthionine-sulfoximine",
+    "target": "GCLM",
+    "n_celllines": 13,
+    "raw_bracket": 0.9544814899563789,
+    "proj_shrna": 2.2815143636021857,
+    "enrich_shrna": 0.10960914454103321
+  },
+  {
+    "drug": "calcifediol",
+    "target": "VDR",
+    "n_celllines": 15,
+    "raw_bracket": 0.9093541949987411,
+    "proj_shrna": 2.6072021123908815,
+    "enrich_shrna": 4.384848171312553e-06
+  },
+  {
+    "drug": "calcipotriol",
+    "target": "VDR",
+    "n_celllines": 8,
+    "raw_bracket": 0.7485677599906921,
+    "proj_shrna": 1.7790265211037226,
+    "enrich_shrna": 0.012592068529304612
+  },
+  {
+    "drug": "calcitriol",
+    "target": "VDR",
+    "n_celllines": 59,
+    "raw_bracket": 0.9221717044711113,
+    "proj_shrna": 4.560582018935806,
+    "enrich_shrna": 0.043113957959023175
+  },
+  {
+    "drug": "camptothecin",
+    "target": "TOP1",
+    "n_celllines": 12,
+    "raw_bracket": 0.5754807591438293,
+    "proj_crispri": 2.007375391527259,
+    "enrich_crispri": 7.943392355997498e-06,
+    "proj_shrna": 2.4877710261128168,
+    "enrich_shrna": 0.016350864792688213
+  },
+  {
+    "drug": "canertinib",
+    "target": "AKT1",
+    "n_celllines": 19,
+    "raw_bracket": 0.824113517999649,
+    "proj_shrna": 3.2661323627968977,
+    "enrich_shrna": 0.15096907481930177
+  },
+  {
+    "drug": "capecitabine",
+    "target": "TYMS",
+    "n_celllines": 13,
+    "raw_bracket": 0.8880888149142265,
+    "proj_shrna": 5.79536432486314,
+    "enrich_shrna": 0.09839328713125983
+  },
+  {
+    "drug": "capsaicin",
+    "target": "CFTR",
+    "n_celllines": 53,
+    "raw_bracket": 0.9199592247605324,
+    "proj_shrna": 7.94753093967763,
+    "enrich_shrna": 0.2387312566899169
+  },
+  {
+    "drug": "carbenoxolone",
+    "target": "GJA1",
+    "n_celllines": 13,
+    "raw_bracket": 0.913132794201374,
+    "proj_shrna": 1.769395133241629,
+    "enrich_shrna": 0.11338727579688257
+  },
+  {
+    "drug": "carbetocin",
+    "target": "OXTR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9481055736541748,
+    "proj_shrna": 3.0330630288674283,
+    "enrich_shrna": 0.020593699872622162
+  },
+  {
+    "drug": "carbidopa",
+    "target": "DDC",
+    "n_celllines": 13,
+    "raw_bracket": 0.8843177929520607,
+    "proj_shrna": 7.485155572684912,
+    "enrich_shrna": 0.2445853520208061
+  },
+  {
+    "drug": "carbinoxamine",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9162699729204178,
+    "proj_shrna": 4.237943339233215,
+    "enrich_shrna": 0.15220598495290805
+  },
+  {
+    "drug": "carmofur",
+    "target": "TYMS",
+    "n_celllines": 7,
+    "raw_bracket": 0.9114006012678146,
+    "proj_shrna": 3.7783119550773074,
+    "enrich_shrna": 0.07876276073153576
+  },
+  {
+    "drug": "carprofen",
+    "target": "PTGS2",
+    "n_celllines": 13,
+    "raw_bracket": 0.967051200568676,
+    "proj_shrna": 1.8097154937493496,
+    "enrich_shrna": 0.06781388594778637
+  },
+  {
+    "drug": "cediranib",
+    "target": "CSF1R",
+    "n_celllines": 14,
+    "raw_bracket": 0.8333023935556412,
+    "proj_shrna": 2.3155244331765963,
+    "enrich_shrna": 4.2736998440438e-05
+  },
+  {
+    "drug": "celecoxib",
+    "target": "CA12",
+    "n_celllines": 15,
+    "raw_bracket": 0.9047372937202454,
+    "proj_shrna": 5.601545713629041,
+    "enrich_shrna": 0.3435333116477892
+  },
+  {
+    "drug": "cerulenin",
+    "target": "FASN",
+    "n_celllines": 54,
+    "raw_bracket": 0.7628842443227768,
+    "proj_shrna": 4.356884759229268,
+    "enrich_shrna": 0.049222827811181924
+  },
+  {
+    "drug": "cetirizine",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9248901233077049,
+    "proj_shrna": 1.4237859420096264,
+    "enrich_shrna": 0.07687922537121494
+  },
+  {
+    "drug": "chloramphenicol",
+    "target": "CD55",
+    "n_celllines": 8,
+    "raw_bracket": 0.8408161550760269,
+    "proj_shrna": 4.030997580715588,
+    "enrich_shrna": 0.07581276702674078
+  },
+  {
+    "drug": "chloroquine",
+    "target": "MRGPRX1",
+    "n_celllines": 56,
+    "raw_bracket": 0.9460604004561901,
+    "proj_shrna": 3.5445593017092967,
+    "enrich_shrna": 0.2147906949639955
+  },
+  {
+    "drug": "chlorprothixene",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8084307312965393,
+    "proj_shrna": 2.0194171846677094,
+    "enrich_shrna": 0.006491249554443856
+  },
+  {
+    "drug": "ciglitazone",
+    "target": "PPARG",
+    "n_celllines": 15,
+    "raw_bracket": 0.9628796689212322,
+    "proj_shrna": 2.8370954260939643,
+    "enrich_shrna": 0.060504281047784936
+  },
+  {
+    "drug": "ciprofibrate",
+    "target": "PPARA",
+    "n_celllines": 13,
+    "raw_bracket": 0.9629930518567562,
+    "proj_shrna": 1.4744102135300636,
+    "enrich_shrna": 0.07283392577770442
+  },
+  {
+    "drug": "cladribine",
+    "target": "ADA",
+    "n_celllines": 9,
+    "raw_bracket": 0.6996690034866333,
+    "proj_shrna": 5.482733836604489,
+    "enrich_shrna": 0.03962849376901745
+  },
+  {
+    "drug": "clemastine",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8671932965517044,
+    "proj_shrna": 1.9480009109545977,
+    "enrich_shrna": 0.027978227581123782
+  },
+  {
+    "drug": "clobenpropit",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9338048025965691,
+    "proj_shrna": 2.3094719864237003,
+    "enrich_shrna": 0.0721919725535578
+  },
+  {
+    "drug": "clocortolone-pivalate",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9277717396616936,
+    "proj_shrna": 2.8827218698003354,
+    "enrich_shrna": 0.07363775919679938
+  },
+  {
+    "drug": "clofarabine",
+    "target": "POLA1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8103538453578949,
+    "proj_crispri": 1.3184175610056437,
+    "enrich_crispri": 0.0006662194584910419,
+    "proj_shrna": 4.40783432756479,
+    "enrich_shrna": 0.09626111831915196
+  },
+  {
+    "drug": "clofibrate",
+    "target": "LPL",
+    "n_celllines": 13,
+    "raw_bracket": 0.9593904949724674,
+    "proj_shrna": 4.015137878843607,
+    "enrich_shrna": 0.19864444292437966
+  },
+  {
+    "drug": "clofibric-acid",
+    "target": "PPARA",
+    "n_celllines": 14,
+    "raw_bracket": 0.9490839466452599,
+    "proj_shrna": 2.8189686504039138,
+    "enrich_shrna": 0.11743875849561292
+  },
+  {
+    "drug": "clomethiazole",
+    "target": "GABRA1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9082800969481468,
+    "proj_shrna": 3.11088587420109,
+    "enrich_shrna": 0.08702560768233525
+  },
+  {
+    "drug": "clomifene",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.7960855513811111,
+    "proj_shrna": 3.3385434030340266,
+    "enrich_shrna": 0.2022167934440091
+  },
+  {
+    "drug": "clomipramine",
+    "target": "GSTP1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9081316590309143,
+    "proj_shrna": 2.0091339947703557,
+    "enrich_shrna": 0.07797525070033373
+  },
+  {
+    "drug": "clopidogrel",
+    "target": "P2RY12",
+    "n_celllines": 12,
+    "raw_bracket": 0.8623442500829697,
+    "proj_shrna": 3.585434319846558,
+    "enrich_shrna": 0.052623024115590944
+  },
+  {
+    "drug": "cortisone",
+    "target": "NR3C1",
+    "n_celllines": 12,
+    "raw_bracket": 0.8229406923055649,
+    "proj_shrna": 1.9903612778042301,
+    "enrich_shrna": 0.16092241289274867
+  },
+  {
+    "drug": "cortisone-acetate",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.961387824267149,
+    "proj_shrna": 3.6314954958282986,
+    "enrich_shrna": 0.17391872443471712
+  },
+  {
+    "drug": "crizotinib",
+    "target": "ALK",
+    "n_celllines": 19,
+    "raw_bracket": 0.8685662895441055,
+    "proj_shrna": 8.138797449351054,
+    "enrich_shrna": 0.17500029961880514
+  },
+  {
+    "drug": "cromoglicic-acid",
+    "target": "KCNMA1",
+    "n_celllines": 8,
+    "raw_bracket": 0.9444017894566059,
+    "proj_shrna": 3.6311463862657547,
+    "enrich_shrna": 0.03162253754269617
+  },
+  {
+    "drug": "curcumin",
+    "target": "APP",
+    "n_celllines": 56,
+    "raw_bracket": 0.7521579563617706,
+    "proj_shrna": 3.6757720793536923,
+    "enrich_shrna": 0.17094686849688756
+  },
+  {
+    "drug": "cycloheximide",
+    "target": "RPL3",
+    "n_celllines": 16,
+    "raw_bracket": 0.5170410871505737,
+    "proj_crispri": 0.579812679365602,
+    "enrich_crispri": 6.045576521582676e-05
+  },
+  {
+    "drug": "cytarabine",
+    "target": "POLA1",
+    "n_celllines": 10,
+    "raw_bracket": 0.7830672413110733,
+    "proj_crispri": 1.4122785345733564,
+    "enrich_crispri": 0.00019458718697876358,
+    "proj_shrna": 11.004274519284566,
+    "enrich_shrna": 0.1390451485016806
+  },
+  {
+    "drug": "cytochalasin-b",
+    "target": "ACTB",
+    "n_celllines": 51,
+    "raw_bracket": 0.9088426530361176,
+    "proj_crispri": 1.3425365955980395,
+    "enrich_crispri": 0.0017786308414266137,
+    "proj_shrna": 4.158726434088221,
+    "enrich_shrna": 0.15193724198836467
+  },
+  {
+    "drug": "dacinostat",
+    "target": "HDAC1",
+    "n_celllines": 14,
+    "raw_bracket": 0.6045916080474854,
+    "proj_shrna": 5.434938520848096,
+    "enrich_shrna": 0.11153672420233818
+  },
+  {
+    "drug": "dactinomycin",
+    "target": "POLR2A",
+    "n_celllines": 12,
+    "raw_bracket": 0.42868518829345703,
+    "proj_crispri": 1.1171303115108702,
+    "enrich_crispri": 2.00511201771441e-06,
+    "proj_shrna": 4.396156640666904,
+    "enrich_shrna": 0.0015906212129879749
+  },
+  {
+    "drug": "daidzein",
+    "target": "ESRRA",
+    "n_celllines": 8,
+    "raw_bracket": 0.8919736370444298,
+    "proj_shrna": 6.241829278745821,
+    "enrich_shrna": 0.152068864294038
+  },
+  {
+    "drug": "danazol",
+    "target": "AR",
+    "n_celllines": 14,
+    "raw_bracket": 0.9167209938168526,
+    "proj_shrna": 2.7768391285623824,
+    "enrich_shrna": 0.11324138877853684
+  },
+  {
+    "drug": "danusertib",
+    "target": "AURKA",
+    "n_celllines": 13,
+    "raw_bracket": 0.864138051867485,
+    "proj_crispri": 1.1898955548058778,
+    "enrich_crispri": 0.0009555281818114807,
+    "proj_shrna": 8.297998182284527,
+    "enrich_shrna": 0.17306877707604063
+  },
+  {
+    "drug": "dapsone",
+    "target": "DHFR",
+    "n_celllines": 8,
+    "raw_bracket": 0.893488809466362,
+    "proj_crispri": 0.9999159917485135,
+    "enrich_crispri": 0.00010597376275367016,
+    "proj_shrna": 0.8801924974790641,
+    "enrich_shrna": 0.0026131586070643614
+  },
+  {
+    "drug": "dasatinib",
+    "target": "ABL1",
+    "n_celllines": 18,
+    "raw_bracket": 0.7844666093587875,
+    "proj_shrna": 4.534410888268278,
+    "enrich_shrna": 0.21340972883568643
+  },
+  {
+    "drug": "daunorubicin",
+    "target": "TOP2A",
+    "n_celllines": 19,
+    "raw_bracket": 0.5574558675289154,
+    "proj_crispri": 2.335947662912213,
+    "enrich_crispri": 3.251984773425167e-05,
+    "proj_shrna": 11.110595359439738,
+    "enrich_shrna": 0.24000939082192563
+  },
+  {
+    "drug": "decitabine",
+    "target": "DNMT1",
+    "n_celllines": 14,
+    "raw_bracket": 0.9304310530424118,
+    "proj_crispri": 1.4536873677774906,
+    "enrich_crispri": 0.004497715579719505,
+    "proj_shrna": 8.733905528764149,
+    "enrich_shrna": 0.1776978744961264
+  },
+  {
+    "drug": "deferiprone",
+    "target": "UGT1A6",
+    "n_celllines": 7,
+    "raw_bracket": 0.972116831690073,
+    "proj_shrna": 1.9016130048604238,
+    "enrich_shrna": 0.002672068798342267
+  },
+  {
+    "drug": "deforolimus",
+    "target": "MTOR",
+    "n_celllines": 13,
+    "raw_bracket": 0.826913058757782,
+    "proj_crispri": 0.8381879895799003,
+    "enrich_crispri": 7.970476378414482e-06,
+    "proj_shrna": 10.191821569051498,
+    "enrich_shrna": 0.12993384890756943
+  },
+  {
+    "drug": "deracoxib",
+    "target": "PTGS2",
+    "n_celllines": 13,
+    "raw_bracket": 0.9573019556701183,
+    "proj_shrna": 2.445084642141293,
+    "enrich_shrna": 0.16558440860954793
+  },
+  {
+    "drug": "desloratadine",
+    "target": "HRH1",
+    "n_celllines": 7,
+    "raw_bracket": 0.8464531153440475,
+    "proj_shrna": 1.8767486682959966,
+    "enrich_shrna": 0.048571663187475744
+  },
+  {
+    "drug": "desmethylclozapine",
+    "target": "HTR2C",
+    "n_celllines": 13,
+    "raw_bracket": 0.9350117072463036,
+    "proj_shrna": 1.0935852565826514,
+    "enrich_shrna": 0.003930763495393563
+  },
+  {
+    "drug": "desoximetasone",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8917746171355247,
+    "proj_shrna": 5.107684515034541,
+    "enrich_shrna": 0.2411991282832595
+  },
+  {
+    "drug": "desoxycortone",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9575709030032158,
+    "proj_shrna": 1.9072816641284869,
+    "enrich_shrna": 0.055830397503014106
+  },
+  {
+    "drug": "dexamethasone",
+    "target": "ANXA1",
+    "n_celllines": 57,
+    "raw_bracket": 0.8853556662797928,
+    "proj_shrna": 4.397186329172817,
+    "enrich_shrna": 0.11055033146911697
+  },
+  {
+    "drug": "dexrazoxane",
+    "target": "TOP2A",
+    "n_celllines": 14,
+    "raw_bracket": 0.9581611081957817,
+    "proj_crispri": 0.9594294384133745,
+    "enrich_crispri": 0.0011260166797958712,
+    "proj_shrna": 6.22423361487441,
+    "enrich_shrna": 0.02699716182764078
+  },
+  {
+    "drug": "diarylpropionitrile",
+    "target": "ESR2",
+    "n_celllines": 13,
+    "raw_bracket": 0.9613556787371635,
+    "proj_shrna": 1.2708934090840511,
+    "enrich_shrna": 0.06959938453475445
+  },
+  {
+    "drug": "diazoxide",
+    "target": "ATP1A1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9160482734441757,
+    "proj_crispri": 0.6935809186190001,
+    "enrich_crispri": 0.0007007871764431594,
+    "proj_shrna": 3.788938514697246,
+    "enrich_shrna": 0.1270926323133006
+  },
+  {
+    "drug": "diclofenac",
+    "target": "AKR1C3",
+    "n_celllines": 15,
+    "raw_bracket": 0.9384494237601757,
+    "proj_shrna": 3.865510217632566,
+    "enrich_shrna": 0.13036214531311785
+  },
+  {
+    "drug": "dicycloverine",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.933055929839611,
+    "proj_shrna": 1.538248556546676,
+    "enrich_shrna": 0.19978693720546747
+  },
+  {
+    "drug": "didanosine",
+    "target": "PNP",
+    "n_celllines": 7,
+    "raw_bracket": 0.9591589421033859,
+    "proj_shrna": 3.151442981901623,
+    "enrich_shrna": 0.08402207359041824
+  },
+  {
+    "drug": "dienestrol",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.883491113781929,
+    "proj_shrna": 4.37844574260406,
+    "enrich_shrna": 0.15140459670512119
+  },
+  {
+    "drug": "diethylstilbestrol",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8256718218326569,
+    "proj_shrna": 2.3816315355973368,
+    "enrich_shrna": 0.07819652339662841
+  },
+  {
+    "drug": "digitoxigenin",
+    "target": "ATP1A1",
+    "n_celllines": 8,
+    "raw_bracket": 0.5380451679229736,
+    "proj_crispri": 1.591080785345763,
+    "enrich_crispri": 0.0003135542656075097,
+    "proj_shrna": 4.841875089066369,
+    "enrich_shrna": 0.035935573921401565
+  },
+  {
+    "drug": "digitoxin",
+    "target": "ATP1A1",
+    "n_celllines": 13,
+    "raw_bracket": 0.5871279239654541,
+    "proj_crispri": 1.7763132878931516,
+    "enrich_crispri": 6.288827006106703e-05,
+    "proj_shrna": 3.26478155148335,
+    "enrich_shrna": 0.034840545117013955
+  },
+  {
+    "drug": "digoxin",
+    "target": "ATP1A1",
+    "n_celllines": 13,
+    "raw_bracket": 0.563414990901947,
+    "proj_crispri": 1.3420765610015066,
+    "enrich_crispri": 0.000164355336818521,
+    "proj_shrna": 3.4871817964773912,
+    "enrich_shrna": 0.04191222079042434
+  },
+  {
+    "drug": "dihydroergotamine",
+    "target": "ADRA2A",
+    "n_celllines": 13,
+    "raw_bracket": 0.8847217038273811,
+    "proj_shrna": 2.7123834238602567,
+    "enrich_shrna": 0.19446235046418625
+  },
+  {
+    "drug": "dilazep",
+    "target": "SLC29A1",
+    "n_celllines": 9,
+    "raw_bracket": 0.7869438827037811,
+    "proj_shrna": 2.949853476136923,
+    "enrich_shrna": 0.006632462959204555
+  },
+  {
+    "drug": "diltiazem",
+    "target": "CACNA1C",
+    "n_celllines": 13,
+    "raw_bracket": 0.9036242589354515,
+    "proj_shrna": 1.4591880574440346,
+    "enrich_shrna": 0.22715857399981942
+  },
+  {
+    "drug": "dimercaptosuccinic-acid",
+    "target": "DNMT1",
+    "n_celllines": 9,
+    "raw_bracket": 0.9498994499444962,
+    "proj_crispri": 0.6474045217430653,
+    "enrich_crispri": 0.0010131672292089087,
+    "proj_shrna": 4.410865692628755,
+    "enrich_shrna": 0.007370493772108411
+  },
+  {
+    "drug": "diphemanil",
+    "target": "CHRM3",
+    "n_celllines": 8,
+    "raw_bracket": 0.8957318440079689,
+    "proj_shrna": 1.2879776363926274,
+    "enrich_shrna": 0.050283065269823846
+  },
+  {
+    "drug": "diphenhydramine",
+    "target": "HRH1",
+    "n_celllines": 7,
+    "raw_bracket": 0.9236925691366196,
+    "proj_shrna": 9.220312413715181,
+    "enrich_shrna": 0.17126073017222154
+  },
+  {
+    "drug": "diphenidol",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9319763779640198,
+    "proj_shrna": 3.3644083711581354,
+    "enrich_shrna": 0.15286590051408755
+  },
+  {
+    "drug": "dipyridamole",
+    "target": "ADA",
+    "n_celllines": 13,
+    "raw_bracket": 0.9156611934304237,
+    "proj_shrna": 3.773543914923301,
+    "enrich_shrna": 0.13292607752681818
+  },
+  {
+    "drug": "disopyramide",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.933384120464325,
+    "proj_shrna": 1.9730366298403494,
+    "enrich_shrna": 0.0818451272120777
+  },
+  {
+    "drug": "disulfiram",
+    "target": "ALDH2",
+    "n_celllines": 7,
+    "raw_bracket": 0.8004221022129059,
+    "proj_shrna": 6.213656133129483,
+    "enrich_shrna": 0.04841300190971709
+  },
+  {
+    "drug": "docetaxel",
+    "target": "BCL2",
+    "n_celllines": 13,
+    "raw_bracket": 0.8984731361269951,
+    "proj_shrna": 5.637254633391515,
+    "enrich_shrna": 0.22734570934113663
+  },
+  {
+    "drug": "doconexent",
+    "target": "FFAR1",
+    "n_celllines": 15,
+    "raw_bracket": 0.9508869685232639,
+    "proj_shrna": 1.560010573126021,
+    "enrich_shrna": 0.08964048597592011
+  },
+  {
+    "drug": "doramapimod",
+    "target": "MAPK11",
+    "n_celllines": 6,
+    "raw_bracket": 0.650431901216507,
+    "proj_shrna": 1.3528324057658514,
+    "enrich_shrna": 0.04579367283344382
+  },
+  {
+    "drug": "dorsomorphin",
+    "target": "ACVR1",
+    "n_celllines": 55,
+    "raw_bracket": 0.7335564196109772,
+    "proj_shrna": 6.465565022936573,
+    "enrich_shrna": 0.031111925925778827
+  },
+  {
+    "drug": "dosulepin",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9082749783992767,
+    "proj_shrna": 6.320616425994115,
+    "enrich_shrna": 0.12395387511998113
+  },
+  {
+    "drug": "dovitinib",
+    "target": "CSF1R",
+    "n_celllines": 18,
+    "raw_bracket": 0.8864036649465561,
+    "proj_shrna": 2.226367550055965,
+    "enrich_shrna": 0.002730015560828747
+  },
+  {
+    "drug": "doxepin",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8295955955982208,
+    "proj_shrna": 1.9336329028010368,
+    "enrich_shrna": 0.16923121824227483
+  },
+  {
+    "drug": "doxercalciferol",
+    "target": "VDR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9235957860946655,
+    "proj_shrna": 3.775281695601268,
+    "enrich_shrna": 0.04705712588429467
+  },
+  {
+    "drug": "doxorubicin",
+    "target": "TOP2A",
+    "n_celllines": 12,
+    "raw_bracket": 0.4762771725654602,
+    "proj_crispri": 0.7722815600313379,
+    "enrich_crispri": 0.00016613719119729005,
+    "proj_shrna": 7.2361073724248195,
+    "enrich_shrna": 0.25936723763834735
+  },
+  {
+    "drug": "doxylamine",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9565016813576221,
+    "proj_shrna": 1.2440647685374968,
+    "enrich_shrna": 0.06343219494040486
+  },
+  {
+    "drug": "droxinostat",
+    "target": "HDAC6",
+    "n_celllines": 8,
+    "raw_bracket": 0.6040356159210205,
+    "proj_shrna": 2.272266951522657,
+    "enrich_shrna": 0.011548610704431361
+  },
+  {
+    "drug": "ebselen",
+    "target": "ALB",
+    "n_celllines": 9,
+    "raw_bracket": 0.9054791778326035,
+    "proj_shrna": 3.604750877867142,
+    "enrich_shrna": 0.04869793859267535
+  },
+  {
+    "drug": "econazole",
+    "target": "NPY1R",
+    "n_celllines": 13,
+    "raw_bracket": 0.9269475117325783,
+    "proj_shrna": 4.407933519436763,
+    "enrich_shrna": 0.17621673801972637
+  },
+  {
+    "drug": "edaravone",
+    "target": "BCL2",
+    "n_celllines": 8,
+    "raw_bracket": 0.9440678171813488,
+    "proj_shrna": 3.8363529539534023,
+    "enrich_shrna": 0.17586216962001888
+  },
+  {
+    "drug": "elesclomol",
+    "target": "HSPA1A",
+    "n_celllines": 51,
+    "raw_bracket": 0.8937871009111404,
+    "proj_shrna": 5.9560874646551465,
+    "enrich_shrna": 0.21055923689336087
+  },
+  {
+    "drug": "embelin",
+    "target": "XIAP",
+    "n_celllines": 13,
+    "raw_bracket": 0.9352481812238693,
+    "proj_shrna": 2.2537178580577555,
+    "enrich_shrna": 0.03901777767760373
+  },
+  {
+    "drug": "emetine",
+    "target": "RPS2",
+    "n_celllines": 56,
+    "raw_bracket": 0.6483162343502045,
+    "proj_crispri": 1.429158854347168,
+    "enrich_crispri": 8.087428348548853e-05
+  },
+  {
+    "drug": "entacapone",
+    "target": "COMT",
+    "n_celllines": 8,
+    "raw_bracket": 0.9273272603750229,
+    "proj_shrna": 1.8260101521653789,
+    "enrich_shrna": 0.0761079212003466
+  },
+  {
+    "drug": "entinostat",
+    "target": "HDAC1",
+    "n_celllines": 14,
+    "raw_bracket": 0.603680282831192,
+    "proj_shrna": 5.213061313052754,
+    "enrich_shrna": 0.1606554436006178
+  },
+  {
+    "drug": "enzalutamide",
+    "target": "AR",
+    "n_celllines": 51,
+    "raw_bracket": 0.9556915163993835,
+    "proj_shrna": 1.6894006398028019,
+    "enrich_shrna": 0.018021734237170017
+  },
+  {
+    "drug": "enzastaurin",
+    "target": "AKT1",
+    "n_celllines": 19,
+    "raw_bracket": 0.830452099442482,
+    "proj_shrna": 3.950514234384598,
+    "enrich_shrna": 0.1969850806838167
+  },
+  {
+    "drug": "epicatechin-gallate-(-)",
+    "target": "BACE1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8460797071456909,
+    "proj_shrna": 3.496565968180314,
+    "enrich_shrna": 0.11083148980793567
+  },
+  {
+    "drug": "epirubicin",
+    "target": "CHD1",
+    "n_celllines": 15,
+    "raw_bracket": 0.482189416885376,
+    "proj_shrna": 4.497219327234086,
+    "enrich_shrna": 0.04326814273832724
+  },
+  {
+    "drug": "eprosartan",
+    "target": "AGTR1",
+    "n_celllines": 8,
+    "raw_bracket": 0.9613772928714752,
+    "proj_shrna": 1.9914139253752572,
+    "enrich_shrna": 0.03694260619001
+  },
+  {
+    "drug": "equol",
+    "target": "ESR1",
+    "n_celllines": 8,
+    "raw_bracket": 0.7048610150814056,
+    "proj_shrna": 0.421573454780238,
+    "enrich_shrna": 0.10224921783938967
+  },
+  {
+    "drug": "erbstatin-analog",
+    "target": "EGFR",
+    "n_celllines": 8,
+    "raw_bracket": 0.8567107915878296,
+    "proj_shrna": 4.259054059428828,
+    "enrich_shrna": 0.16816129291774562
+  },
+  {
+    "drug": "erlotinib",
+    "target": "EGFR",
+    "n_celllines": 19,
+    "raw_bracket": 0.8940449506044388,
+    "proj_shrna": 4.92099548031015,
+    "enrich_shrna": 0.29272976744074697
+  },
+  {
+    "drug": "erythromycin-estolate",
+    "target": "ABCB1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8627753555774689,
+    "proj_shrna": 2.8342196471416035,
+    "enrich_shrna": 0.0560663362596705
+  },
+  {
+    "drug": "erythromycin-ethylsuccinate",
+    "target": "ABCB1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9036435931921005,
+    "proj_shrna": 2.386867414682339,
+    "enrich_shrna": 0.1415014320221566
+  },
+  {
+    "drug": "estradiol",
+    "target": "ESR1",
+    "n_celllines": 16,
+    "raw_bracket": 0.8782694488763809,
+    "proj_shrna": 2.25244142220666,
+    "enrich_shrna": 0.24436847286087104
+  },
+  {
+    "drug": "estradiol-benzoate",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.903998538851738,
+    "proj_shrna": 6.885846001024429,
+    "enrich_shrna": 0.09454754712938129
+  },
+  {
+    "drug": "estradiol-cypionate",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9149722158908844,
+    "proj_shrna": 11.115101856298935,
+    "enrich_shrna": 0.3687020783945947
+  },
+  {
+    "drug": "estradiol-valerate",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9552119076251984,
+    "proj_shrna": 4.04056598781011,
+    "enrich_shrna": 0.1742753850832779
+  },
+  {
+    "drug": "estriol",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8357856720685959,
+    "proj_shrna": 2.7737669409849706,
+    "enrich_shrna": 0.19589896507206195
+  },
+  {
+    "drug": "estrone",
+    "target": "ESR1",
+    "n_celllines": 15,
+    "raw_bracket": 0.8855949193239212,
+    "proj_shrna": 3.667790773227101,
+    "enrich_shrna": 0.20265547993867372
+  },
+  {
+    "drug": "estropipate",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8968335911631584,
+    "proj_shrna": 3.4654237631803904,
+    "enrich_shrna": 0.04116760875695036
+  },
+  {
+    "drug": "etacrynic-acid",
+    "target": "ATP1A1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8358843624591827,
+    "proj_crispri": 0.4483969805122565,
+    "enrich_crispri": 0.00020654364690455825,
+    "proj_shrna": 1.6117663724081857,
+    "enrich_shrna": 0.06599718767151685
+  },
+  {
+    "drug": "etazolate",
+    "target": "GABRB3",
+    "n_celllines": 8,
+    "raw_bracket": 0.8614000976085663,
+    "proj_shrna": 3.9211807399988174,
+    "enrich_shrna": 0.08950405444808496
+  },
+  {
+    "drug": "ethinyl-estradiol",
+    "target": "ESR1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8710127919912338,
+    "proj_shrna": 5.912346799458776,
+    "enrich_shrna": 0.2200944024721707
+  },
+  {
+    "drug": "etodolac",
+    "target": "PTGS2",
+    "n_celllines": 14,
+    "raw_bracket": 0.8791206404566765,
+    "proj_shrna": 2.150834424155099,
+    "enrich_shrna": 0.15245052819015203
+  },
+  {
+    "drug": "etomoxir",
+    "target": "CPT1A",
+    "n_celllines": 56,
+    "raw_bracket": 0.9338604807853699,
+    "proj_shrna": 7.925633950652434,
+    "enrich_shrna": 0.2888924355966225
+  },
+  {
+    "drug": "etoposide",
+    "target": "TOP2A",
+    "n_celllines": 11,
+    "raw_bracket": 0.6053983569145203,
+    "proj_crispri": 1.3859312339862335,
+    "enrich_crispri": 0.0027766028661935227,
+    "proj_shrna": 8.638977336070754,
+    "enrich_shrna": 0.14166540151905682
+  },
+  {
+    "drug": "eugenol",
+    "target": "AR",
+    "n_celllines": 8,
+    "raw_bracket": 0.895846351981163,
+    "proj_shrna": 0.8041947382901397,
+    "enrich_shrna": 0.009713548897014812
+  },
+  {
+    "drug": "everolimus",
+    "target": "MTOR",
+    "n_celllines": 14,
+    "raw_bracket": 0.6671533584594727,
+    "proj_crispri": 2.472342548707884,
+    "enrich_crispri": 0.0012310663197177816,
+    "proj_shrna": 8.025933703878424,
+    "enrich_shrna": 0.19627573910330298
+  },
+  {
+    "drug": "ezetimibe",
+    "target": "ANPEP",
+    "n_celllines": 13,
+    "raw_bracket": 0.832342118024826,
+    "proj_shrna": 5.551137621204059,
+    "enrich_shrna": 0.2506073224910246
+  },
+  {
+    "drug": "fasudil",
+    "target": "PKIA",
+    "n_celllines": 13,
+    "raw_bracket": 0.8894836977124214,
+    "proj_shrna": 1.9464005124874604,
+    "enrich_shrna": 0.018266231519286302
+  },
+  {
+    "drug": "felodipine",
+    "target": "CFTR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9039068520069122,
+    "proj_shrna": 5.976530435471198,
+    "enrich_shrna": 0.20591009045585285
+  },
+  {
+    "drug": "fenbendazole",
+    "target": "TUBB",
+    "n_celllines": 13,
+    "raw_bracket": 0.8951781094074249,
+    "proj_crispri": 0.927375873705922,
+    "enrich_crispri": 0.0010488924015517474
+  },
+  {
+    "drug": "fenoterol",
+    "target": "ADRB2",
+    "n_celllines": 13,
+    "raw_bracket": 0.931887686252594,
+    "proj_shrna": 1.0099832205436168,
+    "enrich_shrna": 0.060145889506291184
+  },
+  {
+    "drug": "fenretinide",
+    "target": "RARA",
+    "n_celllines": 16,
+    "raw_bracket": 0.8220534473657608,
+    "proj_shrna": 3.2813730215032897,
+    "enrich_shrna": 0.0448354817875638
+  },
+  {
+    "drug": "fexaramine",
+    "target": "NR1H4",
+    "n_celllines": 13,
+    "raw_bracket": 0.8845911622047424,
+    "proj_shrna": 3.3775366842746735,
+    "enrich_shrna": 0.06537225975194705
+  },
+  {
+    "drug": "fexofenadine",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9409911446273327,
+    "proj_shrna": 1.8379854233219073,
+    "enrich_shrna": 0.14597619060838785
+  },
+  {
+    "drug": "flavoxate",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.91236312687397,
+    "proj_shrna": 4.064519329712941,
+    "enrich_shrna": 0.2031806612046161
+  },
+  {
+    "drug": "floxuridine",
+    "target": "TYMS",
+    "n_celllines": 13,
+    "raw_bracket": 0.834746390581131,
+    "proj_shrna": 2.6376647756267815,
+    "enrich_shrna": 0.075052396578422
+  },
+  {
+    "drug": "flubendazole",
+    "target": "TUBB",
+    "n_celllines": 7,
+    "raw_bracket": 0.7759449332952499,
+    "proj_crispri": 0.5614996048730371,
+    "enrich_crispri": 0.0010940262272556062
+  },
+  {
+    "drug": "fluconazole",
+    "target": "CYP51A1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9624917432665825,
+    "proj_shrna": 1.4399399968485038,
+    "enrich_shrna": 0.06272986766511224
+  },
+  {
+    "drug": "flucytosine",
+    "target": "DNMT1",
+    "n_celllines": 7,
+    "raw_bracket": 0.910462811589241,
+    "proj_crispri": 0.7653344616843234,
+    "enrich_crispri": 0.00013626823454355257,
+    "proj_shrna": 4.487705222197941,
+    "enrich_shrna": 0.01770372462656078
+  },
+  {
+    "drug": "fludarabine",
+    "target": "ADA",
+    "n_celllines": 14,
+    "raw_bracket": 0.6987497806549072,
+    "proj_shrna": 6.2016037581386145,
+    "enrich_shrna": 0.21048323636609112
+  },
+  {
+    "drug": "fludroxycortide",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9114022627472878,
+    "proj_shrna": 1.2144024085540037,
+    "enrich_shrna": 0.09295709845776301
+  },
+  {
+    "drug": "flufenamic-acid",
+    "target": "AKR1C3",
+    "n_celllines": 13,
+    "raw_bracket": 0.8378054350614548,
+    "proj_shrna": 6.136584867269565,
+    "enrich_shrna": 0.13901145618187005
+  },
+  {
+    "drug": "flumazenil",
+    "target": "GABRA1",
+    "n_celllines": 13,
+    "raw_bracket": 0.928621418774128,
+    "proj_shrna": 2.8497647119638247,
+    "enrich_shrna": 0.05079523918579043
+  },
+  {
+    "drug": "flunisolide",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8643980622291565,
+    "proj_shrna": 2.0890101947081394,
+    "enrich_shrna": 0.1960943672929858
+  },
+  {
+    "drug": "fluocinolone-acetonide",
+    "target": "NR3C1",
+    "n_celllines": 8,
+    "raw_bracket": 0.7794454395771027,
+    "proj_shrna": 2.922061367758683,
+    "enrich_shrna": 0.047512459908180205
+  },
+  {
+    "drug": "fluocinonide",
+    "target": "NR3C1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8904213979840279,
+    "proj_shrna": 1.9322276615670748,
+    "enrich_shrna": 0.07814819474195023
+  },
+  {
+    "drug": "fluorometholone",
+    "target": "NR3C1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8086408376693726,
+    "proj_shrna": 2.4426824131182263,
+    "enrich_shrna": 0.05375126400981345
+  },
+  {
+    "drug": "fluoxetine",
+    "target": "ANO1",
+    "n_celllines": 12,
+    "raw_bracket": 0.8080058544874191,
+    "proj_shrna": 2.154281825052969,
+    "enrich_shrna": 0.07767928498645293
+  },
+  {
+    "drug": "fluphenazine",
+    "target": "CALM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8267800509929657,
+    "proj_shrna": 3.6786016776966743,
+    "enrich_shrna": 0.02901868598399049
+  },
+  {
+    "drug": "flupirtine",
+    "target": "ADRA2A",
+    "n_celllines": 14,
+    "raw_bracket": 0.8892674520611763,
+    "proj_shrna": 3.203817607446031,
+    "enrich_shrna": 0.06626622426339068
+  },
+  {
+    "drug": "flutamide",
+    "target": "AHR",
+    "n_celllines": 55,
+    "raw_bracket": 0.9326892718672752,
+    "proj_shrna": 3.7775785676006115,
+    "enrich_shrna": 0.09746892056768175
+  },
+  {
+    "drug": "fluticasone-propionate",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9143542423844337,
+    "proj_shrna": 1.8753376881090493,
+    "enrich_shrna": 0.08263169202851728
+  },
+  {
+    "drug": "fluvastatin",
+    "target": "HMGCR",
+    "n_celllines": 15,
+    "raw_bracket": 0.8337794542312622,
+    "proj_crispri": 1.1020483113660415,
+    "enrich_crispri": 0.004780850040793366,
+    "proj_shrna": 2.8513100612731206,
+    "enrich_shrna": 0.056271824555565786
+  },
+  {
+    "drug": "foretinib",
+    "target": "FLT1",
+    "n_celllines": 6,
+    "raw_bracket": 0.7084799408912659,
+    "proj_shrna": 0.996931387980779,
+    "enrich_shrna": 0.05431726335141662
+  },
+  {
+    "drug": "formoterol",
+    "target": "ADRB2",
+    "n_celllines": 13,
+    "raw_bracket": 0.896598182618618,
+    "proj_shrna": 4.206155908986544,
+    "enrich_shrna": 0.11116148936782011
+  },
+  {
+    "drug": "fostamatinib",
+    "target": "SYK",
+    "n_celllines": 56,
+    "raw_bracket": 0.8791357353329659,
+    "proj_shrna": 4.009573194587772,
+    "enrich_shrna": 0.052955606796567745
+  },
+  {
+    "drug": "fulvestrant",
+    "target": "ESR1",
+    "n_celllines": 14,
+    "raw_bracket": 0.8090739548206329,
+    "proj_shrna": 3.2039190358840504,
+    "enrich_shrna": 0.13928718191552036
+  },
+  {
+    "drug": "gabazine",
+    "target": "GABRA1",
+    "n_celllines": 13,
+    "raw_bracket": 0.900293231010437,
+    "proj_shrna": 2.685448470788124,
+    "enrich_shrna": 0.03121527431118043
+  },
+  {
+    "drug": "gedunin",
+    "target": "HSP90AA1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8217857182025909,
+    "proj_shrna": 3.6843040649380003,
+    "enrich_shrna": 0.011642889379097687
+  },
+  {
+    "drug": "gefitinib",
+    "target": "EGFR",
+    "n_celllines": 19,
+    "raw_bracket": 0.8713809549808502,
+    "proj_shrna": 2.563918064299383,
+    "enrich_shrna": 0.2895378873235046
+  },
+  {
+    "drug": "geldanamycin",
+    "target": "HSP90AA1",
+    "n_celllines": 61,
+    "raw_bracket": 0.7392204999923706,
+    "proj_shrna": 6.061447595190155,
+    "enrich_shrna": 0.06721908488799855
+  },
+  {
+    "drug": "gemcitabine",
+    "target": "CMPK1",
+    "n_celllines": 51,
+    "raw_bracket": 0.8557871580123901,
+    "proj_crispri": 1.3476846719156428,
+    "enrich_crispri": 0.002757316671031099,
+    "proj_shrna": 7.956049335207425,
+    "enrich_shrna": 0.1926349050771714
+  },
+  {
+    "drug": "gemfibrozil",
+    "target": "LPL",
+    "n_celllines": 11,
+    "raw_bracket": 0.9225869253277779,
+    "proj_shrna": 3.058669818531383,
+    "enrich_shrna": 0.033235876645073326
+  },
+  {
+    "drug": "genistein",
+    "target": "CFTR",
+    "n_celllines": 15,
+    "raw_bracket": 0.8419948369264603,
+    "proj_shrna": 1.3039505003463654,
+    "enrich_shrna": 0.23069408220025256
+  },
+  {
+    "drug": "gestrinone",
+    "target": "AR",
+    "n_celllines": 8,
+    "raw_bracket": 0.8911340162158012,
+    "proj_shrna": 3.638629631272384,
+    "enrich_shrna": 0.05631468163359998
+  },
+  {
+    "drug": "givinostat",
+    "target": "HDAC1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9138634130358696,
+    "proj_shrna": 6.378158230047959,
+    "enrich_shrna": 0.09740461993118643
+  },
+  {
+    "drug": "glycopyrrolate",
+    "target": "CHRM1",
+    "n_celllines": 9,
+    "raw_bracket": 0.9057841673493385,
+    "proj_shrna": 2.22886681308349,
+    "enrich_shrna": 0.12118465296930836
+  },
+  {
+    "drug": "gossypol",
+    "target": "BCL2",
+    "n_celllines": 51,
+    "raw_bracket": 0.9184179678559303,
+    "proj_shrna": 5.768844961208456,
+    "enrich_shrna": 0.15124511994706413
+  },
+  {
+    "drug": "guanaben-acetate",
+    "target": "ADRA2A",
+    "n_celllines": 13,
+    "raw_bracket": 0.9463835544884205,
+    "proj_shrna": 4.002758691326166,
+    "enrich_shrna": 0.08849790675633873
+  },
+  {
+    "drug": "guanfacine",
+    "target": "ADRA2A",
+    "n_celllines": 13,
+    "raw_bracket": 0.9466573894023895,
+    "proj_shrna": 2.7934058100367203,
+    "enrich_shrna": 0.14420097356836337
+  },
+  {
+    "drug": "halcinonide",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9253755956888199,
+    "proj_shrna": 1.244691252326354,
+    "enrich_shrna": 0.041402426718385676
+  },
+  {
+    "drug": "hesperidin",
+    "target": "AURKB",
+    "n_celllines": 13,
+    "raw_bracket": 0.9390931129455566,
+    "proj_crispri": 1.2088731095576999,
+    "enrich_crispri": 0.0007532490363441616,
+    "proj_shrna": 5.6584574190469885,
+    "enrich_shrna": 0.19420566303967135
+  },
+  {
+    "drug": "hexamethylenebisacetamide",
+    "target": "AKT1",
+    "n_celllines": 7,
+    "raw_bracket": 0.8946694284677505,
+    "proj_shrna": 22.500250881626492,
+    "enrich_shrna": 0.38933555080945226
+  },
+  {
+    "drug": "homatropine",
+    "target": "CHRM1",
+    "n_celllines": 9,
+    "raw_bracket": 0.8321594595909119,
+    "proj_shrna": 1.6270337241391342,
+    "enrich_shrna": 0.07215573535607067
+  },
+  {
+    "drug": "homochlorcyclizine",
+    "target": "HRH1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8825164064764977,
+    "proj_shrna": 1.4061208415244306,
+    "enrich_shrna": 0.07883102521424235
+  },
+  {
+    "drug": "homoharringtonine",
+    "target": "RPL3",
+    "n_celllines": 13,
+    "raw_bracket": 0.3905482292175293,
+    "proj_crispri": 1.572115094545814,
+    "enrich_crispri": 0.0010568492322943228
+  },
+  {
+    "drug": "hydrocortisone",
+    "target": "ANXA1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9268679693341255,
+    "proj_shrna": 2.1930707154365687,
+    "enrich_shrna": 0.09018234658285351
+  },
+  {
+    "drug": "hydrocortisone-acetate",
+    "target": "NR3C1",
+    "n_celllines": 8,
+    "raw_bracket": 0.7236083745956421,
+    "proj_shrna": 2.8351028258247033,
+    "enrich_shrna": 0.028082280149877903
+  },
+  {
+    "drug": "hydrocortisone-valerate",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9479425363242626,
+    "proj_shrna": 1.9634285546266115,
+    "enrich_shrna": 0.11686579154642462
+  },
+  {
+    "drug": "hydroflumethiazide",
+    "target": "ATP1A1",
+    "n_celllines": 9,
+    "raw_bracket": 0.8359798192977905,
+    "proj_crispri": 0.8802333611441323,
+    "enrich_crispri": 2.218889819203677e-05,
+    "proj_shrna": 3.4902499698930316,
+    "enrich_shrna": 0.06558720946268082
+  },
+  {
+    "drug": "hydroxychloroquine",
+    "target": "TLR7",
+    "n_celllines": 5,
+    "raw_bracket": 0.9762399401515722,
+    "proj_shrna": 1.1589376091957093,
+    "enrich_shrna": 0.035503381457893335
+  },
+  {
+    "drug": "hydroxyfasudil",
+    "target": "PKIA",
+    "n_celllines": 8,
+    "raw_bracket": 0.8785808905959129,
+    "proj_shrna": 0.8886316461222512,
+    "enrich_shrna": 0.0031234619795181967
+  },
+  {
+    "drug": "hyoscyamine",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9205837845802307,
+    "proj_shrna": 3.2151159384311776,
+    "enrich_shrna": 0.20595745245613273
+  },
+  {
+    "drug": "ibrutinib",
+    "target": "BLK",
+    "n_celllines": 6,
+    "raw_bracket": 0.6441753208637238,
+    "proj_shrna": 1.050053628285726,
+    "enrich_shrna": 0.002131614204204324
+  },
+  {
+    "drug": "ibudilast",
+    "target": "IL1B",
+    "n_celllines": 13,
+    "raw_bracket": 0.9465206041932106,
+    "proj_shrna": 4.827333228328289,
+    "enrich_shrna": 0.000433645036875277
+  },
+  {
+    "drug": "icosapent",
+    "target": "ACSL3",
+    "n_celllines": 11,
+    "raw_bracket": 0.9516585767269135,
+    "proj_shrna": 2.8764375601302494,
+    "enrich_shrna": 0.048726274965305016
+  },
+  {
+    "drug": "idarubicin",
+    "target": "TOP2A",
+    "n_celllines": 51,
+    "raw_bracket": 0.8344293385744095,
+    "proj_crispri": 0.995666835984295,
+    "enrich_crispri": 0.00040281323914112587,
+    "proj_shrna": 7.875757238619467,
+    "enrich_shrna": 0.10736439204193093
+  },
+  {
+    "drug": "imatinib",
+    "target": "ABL1",
+    "n_celllines": 19,
+    "raw_bracket": 0.876224473118782,
+    "proj_shrna": 3.150892287492752,
+    "enrich_shrna": 0.38378842436947025
+  },
+  {
+    "drug": "imiloxan",
+    "target": "ADRA2A",
+    "n_celllines": 8,
+    "raw_bracket": 0.8704219162464142,
+    "proj_shrna": 5.336910221725702,
+    "enrich_shrna": 0.06872992991148763
+  },
+  {
+    "drug": "imiquimod",
+    "target": "TLR7",
+    "n_celllines": 54,
+    "raw_bracket": 0.9545604735612869,
+    "proj_shrna": 3.2817686916303583,
+    "enrich_shrna": 0.11331415000288647
+  },
+  {
+    "drug": "indapamide",
+    "target": "CA2",
+    "n_celllines": 8,
+    "raw_bracket": 0.8814853206276894,
+    "proj_shrna": 3.712680003472737,
+    "enrich_shrna": 0.12290920399005145
+  },
+  {
+    "drug": "indirubin",
+    "target": "CDK1",
+    "n_celllines": 8,
+    "raw_bracket": 0.7202673554420471,
+    "proj_crispri": 0.7278090373802311,
+    "enrich_crispri": 0.003071746341899515,
+    "proj_shrna": 2.8255227910620824,
+    "enrich_shrna": 0.10928666089036998
+  },
+  {
+    "drug": "indirubin-3-monoxime",
+    "target": "CDK1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8155900239944458,
+    "proj_crispri": 1.0741834901776033,
+    "enrich_crispri": 0.0024819973562099874,
+    "proj_shrna": 5.391063621793037,
+    "enrich_shrna": 0.21494240557121103
+  },
+  {
+    "drug": "indole-3-carbinol",
+    "target": "AHR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9532402232289314,
+    "proj_shrna": 2.393324409921964,
+    "enrich_shrna": 0.0402475695001705
+  },
+  {
+    "drug": "ingenol",
+    "target": "PRKCD",
+    "n_celllines": 52,
+    "raw_bracket": 0.7447397708892822,
+    "proj_shrna": 7.347641177531641,
+    "enrich_shrna": 0.14392533092797422
+  },
+  {
+    "drug": "ipratropium",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8499580323696136,
+    "proj_shrna": 5.006896909278555,
+    "enrich_shrna": 0.12737125414588846
+  },
+  {
+    "drug": "irbesartan",
+    "target": "AGTR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9320531040430069,
+    "proj_shrna": 1.8254376523292217,
+    "enrich_shrna": 0.06594158480826096
+  },
+  {
+    "drug": "irinotecan",
+    "target": "TOP1",
+    "n_celllines": 13,
+    "raw_bracket": 0.7449299395084381,
+    "proj_crispri": 1.32716564524085,
+    "enrich_crispri": 4.569981400645252e-06,
+    "proj_shrna": 3.7404678952999606,
+    "enrich_shrna": 0.012910518136449112
+  },
+  {
+    "drug": "isoflupredone-acetate",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8577088117599487,
+    "proj_shrna": 4.817643666496644,
+    "enrich_shrna": 0.0796313783248479
+  },
+  {
+    "drug": "isoliquiritigenin",
+    "target": "GABBR1",
+    "n_celllines": 51,
+    "raw_bracket": 0.8467496037483215,
+    "proj_shrna": 3.3448575912269893,
+    "enrich_shrna": 0.04722404258308277
+  },
+  {
+    "drug": "isotretinoin",
+    "target": "RARA",
+    "n_celllines": 15,
+    "raw_bracket": 0.8979155197739601,
+    "proj_shrna": 2.6324748805591036,
+    "enrich_shrna": 0.12999665800394045
+  },
+  {
+    "drug": "isoxsuprine",
+    "target": "ADRB2",
+    "n_celllines": 13,
+    "raw_bracket": 0.9354004040360451,
+    "proj_shrna": 1.0992090394481635,
+    "enrich_shrna": 0.0700142528479688
+  },
+  {
+    "drug": "ispinesib",
+    "target": "KIF11",
+    "n_celllines": 13,
+    "raw_bracket": 0.7978947162628174,
+    "proj_crispri": 1.9796081900968652,
+    "enrich_crispri": 0.0005488876778475585,
+    "proj_shrna": 6.494461992230171,
+    "enrich_shrna": 0.09546620206380396
+  },
+  {
+    "drug": "isradipine",
+    "target": "CACNA1D",
+    "n_celllines": 11,
+    "raw_bracket": 0.8800629079341888,
+    "proj_shrna": 2.3775174436244098,
+    "enrich_shrna": 0.17215094166991296
+  },
+  {
+    "drug": "itopride",
+    "target": "CHRM3",
+    "n_celllines": 7,
+    "raw_bracket": 0.9388445429503918,
+    "proj_shrna": 2.3171267800387882,
+    "enrich_shrna": 0.06139167692130432
+  },
+  {
+    "drug": "kenpaullone",
+    "target": "CCNB1",
+    "n_celllines": 16,
+    "raw_bracket": 0.8083464205265045,
+    "proj_crispri": 1.0451766971299543,
+    "enrich_crispri": 4.9690648797793654e-05,
+    "proj_shrna": 4.862748329589764,
+    "enrich_shrna": 0.06622718064865385
+  },
+  {
+    "drug": "ketoconazole",
+    "target": "KCNA10",
+    "n_celllines": 8,
+    "raw_bracket": 0.7986550629138947,
+    "proj_crispri": 0.7831958863496584,
+    "enrich_crispri": 0.0013106278051748172
+  },
+  {
+    "drug": "ketotifen",
+    "target": "HRH1",
+    "n_celllines": 14,
+    "raw_bracket": 0.8845907896757126,
+    "proj_shrna": 2.290341558937843,
+    "enrich_shrna": 0.12659389649009345
+  },
+  {
+    "drug": "lacidipine",
+    "target": "CACNA1C",
+    "n_celllines": 7,
+    "raw_bracket": 0.8871093019843102,
+    "proj_shrna": 4.12759833250727,
+    "enrich_shrna": 0.047942895209482694
+  },
+  {
+    "drug": "lapatinib",
+    "target": "EGFR",
+    "n_celllines": 19,
+    "raw_bracket": 0.862966775894165,
+    "proj_shrna": 2.5596397826284694,
+    "enrich_shrna": 0.08311347478689868
+  },
+  {
+    "drug": "latanoprost",
+    "target": "PTGFR",
+    "n_celllines": 7,
+    "raw_bracket": 0.8820457607507706,
+    "proj_shrna": 15.277212929157983,
+    "enrich_shrna": 0.26988082519895684
+  },
+  {
+    "drug": "latrepirdine",
+    "target": "HRH1",
+    "n_celllines": 8,
+    "raw_bracket": 0.9221679121255875,
+    "proj_shrna": 1.528717883995601,
+    "enrich_shrna": 0.09433182635171988
+  },
+  {
+    "drug": "leflunomide",
+    "target": "AHR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9133637472987175,
+    "proj_shrna": 2.3009962298167057,
+    "enrich_shrna": 0.01998044627353668
+  },
+  {
+    "drug": "lenalidomide",
+    "target": "TNF",
+    "n_celllines": 55,
+    "raw_bracket": 0.9354677423834801,
+    "proj_shrna": 4.743765302223188,
+    "enrich_shrna": 0.15700204855237931
+  },
+  {
+    "drug": "lestaurtinib",
+    "target": "FLT3",
+    "n_celllines": 15,
+    "raw_bracket": 0.7081578969955444,
+    "proj_shrna": 4.548995723043169,
+    "enrich_shrna": 0.02798559581211535
+  },
+  {
+    "drug": "levocabastine",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9647685028612614,
+    "proj_shrna": 3.584564317113314,
+    "enrich_shrna": 0.07461106738802314
+  },
+  {
+    "drug": "levocetirizine",
+    "target": "HRH1",
+    "n_celllines": 7,
+    "raw_bracket": 0.9640773087739944,
+    "proj_shrna": 0.891968370903106,
+    "enrich_shrna": 0.019706262722879453
+  },
+  {
+    "drug": "levofloxacin",
+    "target": "TOP2A",
+    "n_celllines": 7,
+    "raw_bracket": 0.9210510104894638,
+    "proj_crispri": 1.3841438243717024,
+    "enrich_crispri": 3.457376155031927e-05,
+    "proj_shrna": 16.475509318567457,
+    "enrich_shrna": 0.3281497346506512
+  },
+  {
+    "drug": "lidocaine",
+    "target": "EGFR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9196468964219093,
+    "proj_shrna": 3.3167887824850206,
+    "enrich_shrna": 0.04850328022190897
+  },
+  {
+    "drug": "linoleic-acid",
+    "target": "FABP4",
+    "n_celllines": 8,
+    "raw_bracket": 0.959220115095377,
+    "proj_shrna": 1.6174930376665932,
+    "enrich_shrna": 0.020983685519926354
+  },
+  {
+    "drug": "linsitinib",
+    "target": "IGF1R",
+    "n_celllines": 56,
+    "raw_bracket": 0.9360092431306839,
+    "proj_shrna": 3.6058860054989528,
+    "enrich_shrna": 0.19811003892050394
+  },
+  {
+    "drug": "lithocholic-acid",
+    "target": "GPBAR1",
+    "n_celllines": 15,
+    "raw_bracket": 0.9196163713932037,
+    "proj_shrna": 4.084010636522656,
+    "enrich_shrna": 0.2711508134379983
+  },
+  {
+    "drug": "lonidamine",
+    "target": "GCK",
+    "n_celllines": 55,
+    "raw_bracket": 0.9101516753435135,
+    "proj_shrna": 4.765209543659831,
+    "enrich_shrna": 0.1496869115627284
+  },
+  {
+    "drug": "loratadine",
+    "target": "HRH1",
+    "n_celllines": 7,
+    "raw_bracket": 0.8937030509114265,
+    "proj_shrna": 2.8681344120275405,
+    "enrich_shrna": 0.02911050112084368
+  },
+  {
+    "drug": "losartan",
+    "target": "AGTR1",
+    "n_celllines": 55,
+    "raw_bracket": 0.9565416574478149,
+    "proj_shrna": 3.421798198805614,
+    "enrich_shrna": 0.11253067712954223
+  },
+  {
+    "drug": "loteprednol",
+    "target": "NR3C1",
+    "n_celllines": 7,
+    "raw_bracket": 0.9014919027686119,
+    "proj_shrna": 8.031846907876787,
+    "enrich_shrna": 0.13142229129152838
+  },
+  {
+    "drug": "lovastatin",
+    "target": "HDAC2",
+    "n_celllines": 58,
+    "raw_bracket": 0.9134735837578773,
+    "proj_shrna": 6.3134220890065285,
+    "enrich_shrna": 0.1740731222781875
+  },
+  {
+    "drug": "loxoprofen",
+    "target": "PTGS2",
+    "n_celllines": 7,
+    "raw_bracket": 0.9405248798429966,
+    "proj_shrna": 1.8349878702844893,
+    "enrich_shrna": 0.04333865611830223
+  },
+  {
+    "drug": "lupanine",
+    "target": "INS",
+    "n_celllines": 13,
+    "raw_bracket": 0.9367222487926483,
+    "proj_shrna": 3.970495339005421,
+    "enrich_shrna": 0.008172021776631233
+  },
+  {
+    "drug": "mafenide",
+    "target": "CA12",
+    "n_celllines": 9,
+    "raw_bracket": 0.8390883803367615,
+    "proj_shrna": 9.243893249167336,
+    "enrich_shrna": 0.33789640873470717
+  },
+  {
+    "drug": "masitinib",
+    "target": "FGFR3",
+    "n_celllines": 19,
+    "raw_bracket": 0.9018174856901169,
+    "proj_shrna": 3.6374135248319446,
+    "enrich_shrna": 0.11151843112586679
+  },
+  {
+    "drug": "mebendazole",
+    "target": "TUBA1A",
+    "n_celllines": 14,
+    "raw_bracket": 0.8174996376037598,
+    "proj_shrna": 3.034213533768287,
+    "enrich_shrna": 0.14314927845612146
+  },
+  {
+    "drug": "mebeverine",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9355396404862404,
+    "proj_shrna": 1.8185806383307164,
+    "enrich_shrna": 0.10963858885801958
+  },
+  {
+    "drug": "medrysone",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.918114461004734,
+    "proj_shrna": 2.48257129964156,
+    "enrich_shrna": 0.19399663371931197
+  },
+  {
+    "drug": "mefenamic-acid",
+    "target": "KCNQ1",
+    "n_celllines": 14,
+    "raw_bracket": 0.9278324544429779,
+    "proj_shrna": 2.4199435920505734,
+    "enrich_shrna": 0.13166069236048372
+  },
+  {
+    "drug": "mepyramine",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9603970795869827,
+    "proj_shrna": 1.0605483752412674,
+    "enrich_shrna": 0.06598758715576114
+  },
+  {
+    "drug": "mercaptopurine",
+    "target": "HPRT1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8708307594060898,
+    "proj_shrna": 4.324990425791059,
+    "enrich_shrna": 0.04586764382101283
+  },
+  {
+    "drug": "mestranol",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.920720785856247,
+    "proj_shrna": 3.328100429704556,
+    "enrich_shrna": 0.20774961631659394
+  },
+  {
+    "drug": "metformin",
+    "target": "ACACB",
+    "n_celllines": 12,
+    "raw_bracket": 0.8989265933632851,
+    "proj_shrna": 2.350265794179656,
+    "enrich_shrna": 0.09755826220470354
+  },
+  {
+    "drug": "methantheline",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.892792284488678,
+    "proj_shrna": 1.3373725305383022,
+    "enrich_shrna": 0.17227521066601614
+  },
+  {
+    "drug": "methapyrilene",
+    "target": "HRH1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8736169189214706,
+    "proj_shrna": 2.9013526290655136,
+    "enrich_shrna": 0.09559311484965693
+  },
+  {
+    "drug": "methotrexate",
+    "target": "DHFR",
+    "n_celllines": 8,
+    "raw_bracket": 0.7483511567115784,
+    "proj_crispri": 0.7565525123871645,
+    "enrich_crispri": 0.001633316543091574,
+    "proj_shrna": 2.1414893056665147,
+    "enrich_shrna": 0.027546064849552687
+  },
+  {
+    "drug": "methoxsalen",
+    "target": "CYP1A1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8013659417629242,
+    "proj_shrna": 1.3465343000633376,
+    "enrich_shrna": 0.030981717205613712
+  },
+  {
+    "drug": "methylprednisolone",
+    "target": "NR3C1",
+    "n_celllines": 9,
+    "raw_bracket": 0.9058046117424965,
+    "proj_shrna": 3.5527654675145945,
+    "enrich_shrna": 0.10875387373939649
+  },
+  {
+    "drug": "metoclopramide",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9577981159090996,
+    "proj_shrna": 4.31628445096505,
+    "enrich_shrna": 0.0774238303207122
+  },
+  {
+    "drug": "mevastatin",
+    "target": "HMGCR",
+    "n_celllines": 14,
+    "raw_bracket": 0.8463428020477295,
+    "proj_crispri": 0.8641159912285746,
+    "enrich_crispri": 0.003867450665397234,
+    "proj_shrna": 2.528764674296746,
+    "enrich_shrna": 0.051334050543122345
+  },
+  {
+    "drug": "mexiletine",
+    "target": "PLAU",
+    "n_celllines": 13,
+    "raw_bracket": 0.9375145249068737,
+    "proj_shrna": 1.9473609305345094,
+    "enrich_shrna": 0.05178836139663279
+  },
+  {
+    "drug": "mibefradil",
+    "target": "ANO1",
+    "n_celllines": 13,
+    "raw_bracket": 0.815157413482666,
+    "proj_shrna": 4.975715817167209,
+    "enrich_shrna": 0.08037416839814515
+  },
+  {
+    "drug": "midostaurin",
+    "target": "FLT3",
+    "n_celllines": 13,
+    "raw_bracket": 0.7729292660951614,
+    "proj_shrna": 2.84620087269025,
+    "enrich_shrna": 0.029269490887001703
+  },
+  {
+    "drug": "mifepristone",
+    "target": "AR",
+    "n_celllines": 15,
+    "raw_bracket": 0.8909886404871941,
+    "proj_shrna": 2.5742261818477084,
+    "enrich_shrna": 0.1399995130318823
+  },
+  {
+    "drug": "mifobate",
+    "target": "PPARG",
+    "n_celllines": 8,
+    "raw_bracket": 0.8791153952479362,
+    "proj_shrna": 4.57235582705055,
+    "enrich_shrna": 0.1375172314379256
+  },
+  {
+    "drug": "miglitol",
+    "target": "GAA",
+    "n_celllines": 7,
+    "raw_bracket": 0.9005617275834084,
+    "proj_shrna": 12.833661366076697,
+    "enrich_shrna": 0.20218522035665742
+  },
+  {
+    "drug": "mirtazapine",
+    "target": "ADRA2A",
+    "n_celllines": 13,
+    "raw_bracket": 0.9095973148941994,
+    "proj_shrna": 2.4905513706497655,
+    "enrich_shrna": 0.21307605092637516
+  },
+  {
+    "drug": "mitoxantrone",
+    "target": "TOP2A",
+    "n_celllines": 11,
+    "raw_bracket": 0.5068918764591217,
+    "proj_crispri": 2.0596478676405,
+    "enrich_crispri": 7.065384940816943e-05,
+    "proj_shrna": 12.201600661061027,
+    "enrich_shrna": 0.15566991072910596
+  },
+  {
+    "drug": "mocetinostat",
+    "target": "HDAC1",
+    "n_celllines": 14,
+    "raw_bracket": 0.7292307019233704,
+    "proj_shrna": 10.64963988812415,
+    "enrich_shrna": 0.29121764413284623
+  },
+  {
+    "drug": "mometasone",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8984982147812843,
+    "proj_shrna": 3.0083356144336553,
+    "enrich_shrna": 0.09889401947305831
+  },
+  {
+    "drug": "monastrol",
+    "target": "KIF11",
+    "n_celllines": 13,
+    "raw_bracket": 0.9714688360691071,
+    "proj_crispri": 1.071263392102891,
+    "enrich_crispri": 0.001166423839201454,
+    "proj_shrna": 2.3143203783875856,
+    "enrich_shrna": 0.13769572989957712
+  },
+  {
+    "drug": "motesanib",
+    "target": "FLT1",
+    "n_celllines": 19,
+    "raw_bracket": 0.9123714193701744,
+    "proj_shrna": 1.9381431402605878,
+    "enrich_shrna": 0.2014706351088904
+  },
+  {
+    "drug": "moxifloxacin",
+    "target": "TOP2A",
+    "n_celllines": 14,
+    "raw_bracket": 0.941688846796751,
+    "proj_crispri": 0.4260696482500198,
+    "enrich_crispri": 6.591274726864134e-05,
+    "proj_shrna": 4.098083275687563,
+    "enrich_shrna": 0.2531821618061123
+  },
+  {
+    "drug": "moxonidine",
+    "target": "ADRA2A",
+    "n_celllines": 13,
+    "raw_bracket": 0.9587574154138565,
+    "proj_shrna": 3.4937270000959053,
+    "enrich_shrna": 0.05436590836826327
+  },
+  {
+    "drug": "mycophenolate-mofetil",
+    "target": "IMPDH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8372473120689392,
+    "proj_shrna": 4.016975046732487,
+    "enrich_shrna": 0.07276544786647321
+  },
+  {
+    "drug": "mycophenolic-acid",
+    "target": "IMPDH1",
+    "n_celllines": 14,
+    "raw_bracket": 0.7880953103303909,
+    "proj_shrna": 4.669602634487571,
+    "enrich_shrna": 0.08832122924219732
+  },
+  {
+    "drug": "myricetin",
+    "target": "PIK3CG",
+    "n_celllines": 8,
+    "raw_bracket": 0.9220053181052208,
+    "proj_shrna": 0.8802902773022652,
+    "enrich_shrna": 0.06081308966543819
+  },
+  {
+    "drug": "nTZDpa",
+    "target": "PPARG",
+    "n_celllines": 13,
+    "raw_bracket": 0.9509650431573391,
+    "proj_shrna": 4.644442590383383,
+    "enrich_shrna": 0.11637524029755841
+  },
+  {
+    "drug": "naloxone",
+    "target": "CREB1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9033560901880264,
+    "proj_shrna": 3.9820443745224905,
+    "enrich_shrna": 0.2018130690073896
+  },
+  {
+    "drug": "navitoclax",
+    "target": "BCL2",
+    "n_celllines": 51,
+    "raw_bracket": 0.9301399663090706,
+    "proj_shrna": 7.986568731087096,
+    "enrich_shrna": 0.19974196836900493
+  },
+  {
+    "drug": "necrostatin-1",
+    "target": "RIPK1",
+    "n_celllines": 55,
+    "raw_bracket": 0.9228982254862785,
+    "proj_shrna": 4.447232833765573,
+    "enrich_shrna": 0.15045604813566626
+  },
+  {
+    "drug": "neratinib",
+    "target": "EGFR",
+    "n_celllines": 56,
+    "raw_bracket": 0.7885739356279373,
+    "proj_shrna": 4.026397729989189,
+    "enrich_shrna": 0.13950840889838023
+  },
+  {
+    "drug": "nialamide",
+    "target": "COMT",
+    "n_celllines": 9,
+    "raw_bracket": 0.7616966515779495,
+    "proj_shrna": 3.2174253074659243,
+    "enrich_shrna": 0.020812148318331225
+  },
+  {
+    "drug": "niclosamide",
+    "target": "STAT3",
+    "n_celllines": 58,
+    "raw_bracket": 0.8036276996135712,
+    "proj_shrna": 5.118761005433343,
+    "enrich_shrna": 0.12148742921930822
+  },
+  {
+    "drug": "nicorandil",
+    "target": "KCNJ11",
+    "n_celllines": 7,
+    "raw_bracket": 0.8406723439693451,
+    "proj_shrna": 6.962953161625635,
+    "enrich_shrna": 0.08498547395319989
+  },
+  {
+    "drug": "nifedipine",
+    "target": "CACNA1C",
+    "n_celllines": 55,
+    "raw_bracket": 0.9155811965465546,
+    "proj_shrna": 4.695654329893364,
+    "enrich_shrna": 0.13883255084352086
+  },
+  {
+    "drug": "niflumic-acid",
+    "target": "ANO1",
+    "n_celllines": 8,
+    "raw_bracket": 0.9756825994700193,
+    "proj_shrna": 1.478484089353255,
+    "enrich_shrna": 0.05283558206660022
+  },
+  {
+    "drug": "nilotinib",
+    "target": "ABL1",
+    "n_celllines": 19,
+    "raw_bracket": 0.8935078158974648,
+    "proj_shrna": 3.4125838947444285,
+    "enrich_shrna": 0.32377999921442324
+  },
+  {
+    "drug": "nilutamide",
+    "target": "AR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9689521994441748,
+    "proj_shrna": 1.6712310245403876,
+    "enrich_shrna": 0.03747630356664389
+  },
+  {
+    "drug": "nimodipine",
+    "target": "CFTR",
+    "n_celllines": 57,
+    "raw_bracket": 0.9508068561553955,
+    "proj_shrna": 2.4749832579254507,
+    "enrich_shrna": 0.1603785032727254
+  },
+  {
+    "drug": "nintedanib",
+    "target": "FGFR1",
+    "n_celllines": 6,
+    "raw_bracket": 0.6429385244846344,
+    "proj_shrna": 0.7993889232476552,
+    "enrich_shrna": 0.10018895123732907
+  },
+  {
+    "drug": "nisoldipine",
+    "target": "CACNA1C",
+    "n_celllines": 7,
+    "raw_bracket": 0.8575003743171692,
+    "proj_shrna": 9.860034159251622,
+    "enrich_shrna": 0.16202479835192207
+  },
+  {
+    "drug": "nitrendipine",
+    "target": "CACNA1D",
+    "n_celllines": 57,
+    "raw_bracket": 0.9290111884474754,
+    "proj_shrna": 3.6035593567383395,
+    "enrich_shrna": 0.2323200863774133
+  },
+  {
+    "drug": "nitrocaramiphen",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9496267735958099,
+    "proj_shrna": 3.566157091695529,
+    "enrich_shrna": 0.1448681154434306
+  },
+  {
+    "drug": "nobiletin",
+    "target": "MAP2K1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8941754102706909,
+    "proj_shrna": 2.9906254082154007,
+    "enrich_shrna": 0.1815948258287472
+  },
+  {
+    "drug": "norgestimate",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9396063014864922,
+    "proj_shrna": 3.2545804088123336,
+    "enrich_shrna": 0.04330566830745752
+  },
+  {
+    "drug": "norgestrel",
+    "target": "AR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9203278049826622,
+    "proj_shrna": 3.51323056115936,
+    "enrich_shrna": 0.076434147896979
+  },
+  {
+    "drug": "nutlin-3",
+    "target": "MDM2",
+    "n_celllines": 51,
+    "raw_bracket": 0.9330926313996315,
+    "proj_shrna": 10.766089609025741,
+    "enrich_shrna": 0.1869997250290476
+  },
+  {
+    "drug": "obatoclax",
+    "target": "BCL2",
+    "n_celllines": 13,
+    "raw_bracket": 0.7595994621515274,
+    "proj_shrna": 6.093443699754202,
+    "enrich_shrna": 0.08513476545704535
+  },
+  {
+    "drug": "octopamine",
+    "target": "F10",
+    "n_celllines": 5,
+    "raw_bracket": 1.0015774000203237,
+    "proj_shrna": 1.7943362832069396,
+    "enrich_shrna": 0.04060056198885165
+  },
+  {
+    "drug": "olaparib",
+    "target": "PARP1",
+    "n_celllines": 56,
+    "raw_bracket": 0.905920647084713,
+    "proj_shrna": 5.229265063004448,
+    "enrich_shrna": 0.053555738445627776
+  },
+  {
+    "drug": "oligomycin-a",
+    "target": "ATP5A1",
+    "n_celllines": 55,
+    "raw_bracket": 0.9291273653507233,
+    "proj_shrna": 3.4547713119273236,
+    "enrich_shrna": 0.15595313742507244
+  },
+  {
+    "drug": "olmesartan",
+    "target": "AGTR1",
+    "n_celllines": 7,
+    "raw_bracket": 0.9393066465854645,
+    "proj_shrna": 8.992491798741478,
+    "enrich_shrna": 0.11369490690436024
+  },
+  {
+    "drug": "olmesartan-medoxomil",
+    "target": "AGTR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8708239197731018,
+    "proj_shrna": 2.2870474975460615,
+    "enrich_shrna": 0.04109420877108505
+  },
+  {
+    "drug": "olomoucine",
+    "target": "CDK1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9321329444646835,
+    "proj_crispri": 0.9258581033426427,
+    "enrich_crispri": 0.00047136045038008293,
+    "proj_shrna": 6.038723813799711,
+    "enrich_shrna": 0.1531529572618675
+  },
+  {
+    "drug": "olopatadine",
+    "target": "HRH1",
+    "n_celllines": 9,
+    "raw_bracket": 0.8580814450979233,
+    "proj_shrna": 3.8476960211992264,
+    "enrich_shrna": 0.061508986999509796
+  },
+  {
+    "drug": "orantinib",
+    "target": "AURKA",
+    "n_celllines": 56,
+    "raw_bracket": 0.9214945957064629,
+    "proj_crispri": 2.105815971212613,
+    "enrich_crispri": 0.0062677385563353,
+    "proj_shrna": 7.473980255715259,
+    "enrich_shrna": 0.08619703594576666
+  },
+  {
+    "drug": "ouabain",
+    "target": "ATP1A1",
+    "n_celllines": 14,
+    "raw_bracket": 0.5918484926223755,
+    "proj_crispri": 1.627122555214615,
+    "enrich_crispri": 2.8581420422225197e-05,
+    "proj_shrna": 4.506754395070967,
+    "enrich_shrna": 0.050490078342591005
+  },
+  {
+    "drug": "oxibendazole",
+    "target": "TUBB",
+    "n_celllines": 13,
+    "raw_bracket": 0.8813586384057999,
+    "proj_crispri": 0.8237145324297305,
+    "enrich_crispri": 8.481083582293686e-05
+  },
+  {
+    "drug": "oxotremorine-sesquifumarate",
+    "target": "CHRM1",
+    "n_celllines": 8,
+    "raw_bracket": 0.9144586101174355,
+    "proj_shrna": 3.256456266556467,
+    "enrich_shrna": 0.0679236843305695
+  },
+  {
+    "drug": "oxybutynin",
+    "target": "CHRM1",
+    "n_celllines": 8,
+    "raw_bracket": 0.9725709669291973,
+    "proj_shrna": 3.7063006098781313,
+    "enrich_shrna": 0.09871191051410566
+  },
+  {
+    "drug": "oxyphenonium",
+    "target": "CHRM1",
+    "n_celllines": 9,
+    "raw_bracket": 0.888310395181179,
+    "proj_shrna": 3.782555811935001,
+    "enrich_shrna": 0.026323596496369284
+  },
+  {
+    "drug": "paclitaxel",
+    "target": "BCL2",
+    "n_celllines": 16,
+    "raw_bracket": 0.8730984032154083,
+    "proj_shrna": 4.228815896933278,
+    "enrich_shrna": 0.22144277050532324
+  },
+  {
+    "drug": "palbociclib",
+    "target": "CDK4",
+    "n_celllines": 19,
+    "raw_bracket": 0.7920795977115631,
+    "proj_shrna": 5.52181899286153,
+    "enrich_shrna": 0.08400782039199672
+  },
+  {
+    "drug": "panobinostat",
+    "target": "HDAC1",
+    "n_celllines": 15,
+    "raw_bracket": 0.5331078171730042,
+    "proj_shrna": 10.515181907585688,
+    "enrich_shrna": 0.09750949148824262
+  },
+  {
+    "drug": "parbendazole",
+    "target": "TUBB",
+    "n_celllines": 52,
+    "raw_bracket": 0.9351712390780449,
+    "proj_crispri": 1.0878168541124578,
+    "enrich_crispri": 1.527482249308047e-05
+  },
+  {
+    "drug": "paroxetine",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.7778706848621368,
+    "proj_shrna": 3.403371116671807,
+    "enrich_shrna": 0.0005236494135204585
+  },
+  {
+    "drug": "parthenolide-(alternate-stereo)",
+    "target": "IKBKB",
+    "n_celllines": 13,
+    "raw_bracket": 0.7988368719816208,
+    "proj_shrna": 5.217580061310377,
+    "enrich_shrna": 0.04870173997639782
+  },
+  {
+    "drug": "pazopanib",
+    "target": "CSF1R",
+    "n_celllines": 19,
+    "raw_bracket": 0.9091397523880005,
+    "proj_shrna": 1.5237701642408705,
+    "enrich_shrna": 0.003198267788324438
+  },
+  {
+    "drug": "pefloxacin",
+    "target": "TOP2A",
+    "n_celllines": 7,
+    "raw_bracket": 0.893888995051384,
+    "proj_crispri": 0.5548528573923255,
+    "enrich_crispri": 0.0009706083037427932,
+    "proj_shrna": 6.267528258618855,
+    "enrich_shrna": 0.06892552123085594
+  },
+  {
+    "drug": "pelitinib",
+    "target": "EGFR",
+    "n_celllines": 6,
+    "raw_bracket": 0.7210782170295715,
+    "proj_shrna": 6.2904509862264,
+    "enrich_shrna": 0.28416257427251423
+  },
+  {
+    "drug": "pemetrexed",
+    "target": "ATIC",
+    "n_celllines": 50,
+    "raw_bracket": 0.9090394750237465,
+    "proj_shrna": 6.56109830009694,
+    "enrich_shrna": 0.23194308255439466
+  },
+  {
+    "drug": "pepstatin",
+    "target": "CTSB",
+    "n_celllines": 8,
+    "raw_bracket": 0.6374744474887848,
+    "proj_shrna": 2.7159255540796687,
+    "enrich_shrna": 0.01803569177903719
+  },
+  {
+    "drug": "perhexiline",
+    "target": "CPT1A",
+    "n_celllines": 49,
+    "raw_bracket": 0.775817409157753,
+    "proj_shrna": 3.1129476844973,
+    "enrich_shrna": 0.024179252012894503
+  },
+  {
+    "drug": "perphenazine",
+    "target": "CALM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8296419829130173,
+    "proj_shrna": 4.851627342689496,
+    "enrich_shrna": 0.05787356346603567
+  },
+  {
+    "drug": "pevonedistat",
+    "target": "NAE1",
+    "n_celllines": 52,
+    "raw_bracket": 0.8280781656503677,
+    "proj_crispri": 1.3819091760844768,
+    "enrich_crispri": 3.7074335609774236e-07,
+    "proj_shrna": 4.771139065289749,
+    "enrich_shrna": 0.03729177293810282
+  },
+  {
+    "drug": "phenelzine",
+    "target": "ABAT",
+    "n_celllines": 9,
+    "raw_bracket": 0.914996400475502,
+    "proj_shrna": 5.767143148514959,
+    "enrich_shrna": 0.21110852169724215
+  },
+  {
+    "drug": "pheniramine",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9752387944608927,
+    "proj_shrna": 3.455636773736049,
+    "enrich_shrna": 0.1046378322658379
+  },
+  {
+    "drug": "phenolphthalein",
+    "target": "UGT1A9",
+    "n_celllines": 13,
+    "raw_bracket": 0.8589129596948624,
+    "proj_shrna": 2.084160237549207,
+    "enrich_shrna": 0.020552688846750877
+  },
+  {
+    "drug": "phenylbutyrate",
+    "target": "HDAC1",
+    "n_celllines": 11,
+    "raw_bracket": 0.9682583101093769,
+    "proj_shrna": 8.57057115056298,
+    "enrich_shrna": 0.06889862424373039
+  },
+  {
+    "drug": "piceatannol",
+    "target": "ATP5A1",
+    "n_celllines": 15,
+    "raw_bracket": 0.8008954524993896,
+    "proj_shrna": 1.8104379279272897,
+    "enrich_shrna": 0.03893198316087898
+  },
+  {
+    "drug": "picotamide",
+    "target": "TBXA2R",
+    "n_celllines": 13,
+    "raw_bracket": 0.9485030733048916,
+    "proj_shrna": 1.8902722587570167,
+    "enrich_shrna": 0.09138666312896593
+  },
+  {
+    "drug": "pifithrin-alpha",
+    "target": "TP53",
+    "n_celllines": 55,
+    "raw_bracket": 0.9485156647861004,
+    "proj_shrna": 6.669051356849446,
+    "enrich_shrna": 0.1995308849836528
+  },
+  {
+    "drug": "pifithrin-mu",
+    "target": "HSPA1A",
+    "n_celllines": 57,
+    "raw_bracket": 0.8238950669765472,
+    "proj_shrna": 4.520429652772452,
+    "enrich_shrna": 0.12178032849431109
+  },
+  {
+    "drug": "pilocarpine",
+    "target": "CHRM1",
+    "n_celllines": 7,
+    "raw_bracket": 0.8928579017519951,
+    "proj_shrna": 4.864595369214103,
+    "enrich_shrna": 0.0982470218691498
+  },
+  {
+    "drug": "pinocembrin",
+    "target": "CYP1B1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9689887668937445,
+    "proj_shrna": 2.2477107433936534,
+    "enrich_shrna": 0.01944490577888147
+  },
+  {
+    "drug": "pioglitazone",
+    "target": "PPARG",
+    "n_celllines": 15,
+    "raw_bracket": 0.9438113160431385,
+    "proj_shrna": 3.236893468243735,
+    "enrich_shrna": 0.1522868030120641
+  },
+  {
+    "drug": "piperidolate",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9149177372455597,
+    "proj_shrna": 3.036179676078833,
+    "enrich_shrna": 0.1556704986553692
+  },
+  {
+    "drug": "pirarubicin",
+    "target": "TOP2A",
+    "n_celllines": 14,
+    "raw_bracket": 0.7347306609153748,
+    "proj_crispri": 1.7872396012446774,
+    "enrich_crispri": 1.6894054616982612e-06,
+    "proj_shrna": 11.934735065633124,
+    "enrich_shrna": 0.18868572103203007
+  },
+  {
+    "drug": "pirenzepine",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9456469640135765,
+    "proj_shrna": 2.8291699261619496,
+    "enrich_shrna": 0.13890987055664628
+  },
+  {
+    "drug": "pirfenidone",
+    "target": "FURIN",
+    "n_celllines": 13,
+    "raw_bracket": 0.9559085965156555,
+    "proj_shrna": 4.72894169925115,
+    "enrich_shrna": 0.012199928228458001
+  },
+  {
+    "drug": "pirinixic-acid",
+    "target": "PPARA",
+    "n_celllines": 15,
+    "raw_bracket": 0.9557902999222279,
+    "proj_shrna": 1.0951426669955253,
+    "enrich_shrna": 0.10947866621226954
+  },
+  {
+    "drug": "pitavastatin",
+    "target": "HMGCR",
+    "n_celllines": 9,
+    "raw_bracket": 0.6595001518726349,
+    "proj_crispri": 1.2346377888881368,
+    "enrich_crispri": 0.0005874870941648688,
+    "proj_shrna": 5.67675777276357,
+    "enrich_shrna": 0.024243992875988774
+  },
+  {
+    "drug": "podophyllotoxin",
+    "target": "IGF1R",
+    "n_celllines": 14,
+    "raw_bracket": 0.7764242887496948,
+    "proj_shrna": 4.6321533266659625,
+    "enrich_shrna": 0.12384009927490425
+  },
+  {
+    "drug": "polydatin",
+    "target": "ICAM1",
+    "n_celllines": 7,
+    "raw_bracket": 0.9791720882058144,
+    "proj_shrna": 2.8524678434644426,
+    "enrich_shrna": 0.06733908834100077
+  },
+  {
+    "drug": "ponatinib",
+    "target": "ABL1",
+    "n_celllines": 6,
+    "raw_bracket": 0.7000400424003601,
+    "proj_shrna": 4.852161854505539,
+    "enrich_shrna": 0.328984952990826
+  },
+  {
+    "drug": "pramipexole",
+    "target": "ADRA2A",
+    "n_celllines": 7,
+    "raw_bracket": 0.8154375851154327,
+    "proj_shrna": 2.7356837079638527,
+    "enrich_shrna": 0.012182930544044845
+  },
+  {
+    "drug": "pravastatin",
+    "target": "HMGCR",
+    "n_celllines": 15,
+    "raw_bracket": 0.8846074417233467,
+    "proj_crispri": 0.8429588647410815,
+    "enrich_crispri": 0.0033528299740250333,
+    "proj_shrna": 2.326251493323417,
+    "enrich_shrna": 0.22465179472698082
+  },
+  {
+    "drug": "prednisolone",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9365252405405045,
+    "proj_shrna": 1.8138447285462649,
+    "enrich_shrna": 0.08702935299356174
+  },
+  {
+    "drug": "prednisolone-acetate",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9024880304932594,
+    "proj_shrna": 6.475242889271333,
+    "enrich_shrna": 0.22373400890865014
+  },
+  {
+    "drug": "prednisolone-hemisuccinate",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9065200015902519,
+    "proj_shrna": 2.809659262116139,
+    "enrich_shrna": 0.09991365281802533
+  },
+  {
+    "drug": "pregnenolone",
+    "target": "SULT2B1",
+    "n_celllines": 15,
+    "raw_bracket": 0.887253113090992,
+    "proj_shrna": 2.067697459388347,
+    "enrich_shrna": 0.2330449426792578
+  },
+  {
+    "drug": "probucol",
+    "target": "ABCA1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9503277130424976,
+    "proj_shrna": 1.004050159874635,
+    "enrich_shrna": 0.1308139106311188
+  },
+  {
+    "drug": "procainamide",
+    "target": "DNMT1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9261219501495361,
+    "proj_crispri": 0.7888546083519704,
+    "enrich_crispri": 0.0028169752886306625,
+    "proj_shrna": 2.394743326000678,
+    "enrich_shrna": 0.03776410522572693
+  },
+  {
+    "drug": "procaterol",
+    "target": "ADRB2",
+    "n_celllines": 13,
+    "raw_bracket": 0.9279438182711601,
+    "proj_shrna": 2.287247543151562,
+    "enrich_shrna": 0.05717061722616301
+  },
+  {
+    "drug": "profenamine",
+    "target": "CHRM1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8439536988735199,
+    "proj_shrna": 2.2513886988162994,
+    "enrich_shrna": 0.005305363529155616
+  },
+  {
+    "drug": "proguanil",
+    "target": "DHFR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9490411542356014,
+    "proj_crispri": 0.5764684187190177,
+    "enrich_crispri": 0.004941159362678254,
+    "proj_shrna": 1.7846216347355108,
+    "enrich_shrna": 0.041283577855653286
+  },
+  {
+    "drug": "promethazine",
+    "target": "HRH1",
+    "n_celllines": 51,
+    "raw_bracket": 0.9141528010368347,
+    "proj_shrna": 3.1809659463342497,
+    "enrich_shrna": 0.20581200271212552
+  },
+  {
+    "drug": "propantheline",
+    "target": "CHRM1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8632134050130844,
+    "proj_shrna": 6.625724243266242,
+    "enrich_shrna": 0.12379467067331973
+  },
+  {
+    "drug": "propofol",
+    "target": "FAAH",
+    "n_celllines": 13,
+    "raw_bracket": 0.9636149294674397,
+    "proj_shrna": 1.791935224754688,
+    "enrich_shrna": 0.06278021679554513
+  },
+  {
+    "drug": "pterostilbene",
+    "target": "PTGS2",
+    "n_celllines": 10,
+    "raw_bracket": 0.8859022781252861,
+    "proj_shrna": 7.676487887899081,
+    "enrich_shrna": 0.13872423728594185
+  },
+  {
+    "drug": "purmorphamine",
+    "target": "SMO",
+    "n_celllines": 55,
+    "raw_bracket": 0.9172021374106407,
+    "proj_shrna": 7.216963995566673,
+    "enrich_shrna": 0.022084700560757398
+  },
+  {
+    "drug": "purvalanol-a",
+    "target": "CDK1",
+    "n_celllines": 8,
+    "raw_bracket": 0.4681536555290222,
+    "proj_crispri": 0.9571487240822592,
+    "enrich_crispri": 0.002001585060836826,
+    "proj_shrna": 9.239197777850288,
+    "enrich_shrna": 0.08578370386363421
+  },
+  {
+    "drug": "purvalanol-b",
+    "target": "CDK2",
+    "n_celllines": 8,
+    "raw_bracket": 0.9081190899014473,
+    "proj_crispri": 0.8898463888188267,
+    "enrich_crispri": 0.00028161264987568483,
+    "proj_shrna": 4.3823620857937,
+    "enrich_shrna": 0.16258129560360235
+  },
+  {
+    "drug": "pyrazinamide",
+    "target": "FASN",
+    "n_celllines": 8,
+    "raw_bracket": 0.8760401085019112,
+    "proj_shrna": 2.0674746142966405,
+    "enrich_shrna": 0.0437340123707044
+  },
+  {
+    "drug": "pyrazolanthrone",
+    "target": "MAPK10",
+    "n_celllines": 19,
+    "raw_bracket": 0.882314570248127,
+    "proj_shrna": 2.6755412086975157,
+    "enrich_shrna": 0.017804735116677683
+  },
+  {
+    "drug": "pyrimethamine",
+    "target": "DHFR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9058150723576546,
+    "proj_crispri": 0.6294732978365576,
+    "enrich_crispri": 9.117787762347686e-05,
+    "proj_shrna": 0.8281982722572792,
+    "enrich_shrna": 0.03308355864506951
+  },
+  {
+    "drug": "pyroxamide",
+    "target": "HDAC1",
+    "n_celllines": 13,
+    "raw_bracket": 0.6701794266700745,
+    "proj_shrna": 5.347630140873102,
+    "enrich_shrna": 0.07845283120107993
+  },
+  {
+    "drug": "pyrvinium-pamoate",
+    "target": "AR",
+    "n_celllines": 51,
+    "raw_bracket": 0.6872899234294891,
+    "proj_shrna": 4.763137830203655,
+    "enrich_shrna": 0.10295873127893174
+  },
+  {
+    "drug": "quercetin",
+    "target": "ATP5A1",
+    "n_celllines": 15,
+    "raw_bracket": 0.9094854593276978,
+    "proj_shrna": 2.237133327694166,
+    "enrich_shrna": 0.05337983318558259
+  },
+  {
+    "drug": "quizartinib",
+    "target": "CSF1R",
+    "n_celllines": 19,
+    "raw_bracket": 0.9438101798295975,
+    "proj_shrna": 1.3920082498276443,
+    "enrich_shrna": 0.004391928341003715
+  },
+  {
+    "drug": "raloxifene",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8147050738334656,
+    "proj_shrna": 2.5401086027805624,
+    "enrich_shrna": 0.04885793524798121
+  },
+  {
+    "drug": "raltitrexed",
+    "target": "FPGS",
+    "n_celllines": 13,
+    "raw_bracket": 0.8718034029006958,
+    "proj_shrna": 2.1720783656988387,
+    "enrich_shrna": 0.05724176956461435
+  },
+  {
+    "drug": "resorcinol",
+    "target": "CA12",
+    "n_celllines": 13,
+    "raw_bracket": 0.9337476566433907,
+    "proj_shrna": 7.110515224627959,
+    "enrich_shrna": 0.03779350271557491
+  },
+  {
+    "drug": "resveratrol",
+    "target": "CSNK2A1",
+    "n_celllines": 57,
+    "raw_bracket": 0.9325097650289536,
+    "proj_shrna": 4.399400820007973,
+    "enrich_shrna": 0.17619894857786278
+  },
+  {
+    "drug": "retinol",
+    "target": "ALDH1A1",
+    "n_celllines": 15,
+    "raw_bracket": 0.8739742934703827,
+    "proj_shrna": 1.6157026996215185,
+    "enrich_shrna": 0.12991356758362826
+  },
+  {
+    "drug": "reversine",
+    "target": "AURKB",
+    "n_celllines": 14,
+    "raw_bracket": 0.8435767740011215,
+    "proj_crispri": 0.8139616859873955,
+    "enrich_crispri": 0.00036593120008984243,
+    "proj_shrna": 3.025716850227052,
+    "enrich_shrna": 0.11872578141499535
+  },
+  {
+    "drug": "ribavirin",
+    "target": "ADK",
+    "n_celllines": 9,
+    "raw_bracket": 0.9161697998642921,
+    "proj_shrna": 9.812110517587927,
+    "enrich_shrna": 0.08448021757794155
+  },
+  {
+    "drug": "riboflavin",
+    "target": "BLVRB",
+    "n_celllines": 13,
+    "raw_bracket": 0.9196077659726143,
+    "proj_shrna": 1.8487331227232249,
+    "enrich_shrna": 0.05349624863359126
+  },
+  {
+    "drug": "rilmenidine",
+    "target": "ADRA2A",
+    "n_celllines": 57,
+    "raw_bracket": 0.9336839988827705,
+    "proj_shrna": 5.052094920718095,
+    "enrich_shrna": 0.18931607223757752
+  },
+  {
+    "drug": "rimexolone",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9612330235540867,
+    "proj_shrna": 3.719050786051995,
+    "enrich_shrna": 0.1443337534131226
+  },
+  {
+    "drug": "rivaroxaban",
+    "target": "F10",
+    "n_celllines": 14,
+    "raw_bracket": 0.905697301030159,
+    "proj_shrna": 2.989475120473039,
+    "enrich_shrna": 0.09465976355290096
+  },
+  {
+    "drug": "ropinirole",
+    "target": "ADRA2A",
+    "n_celllines": 13,
+    "raw_bracket": 0.9114736840128899,
+    "proj_shrna": 4.819746816005463,
+    "enrich_shrna": 0.028694862824313327
+  },
+  {
+    "drug": "roscovitine",
+    "target": "CDK2",
+    "n_celllines": 18,
+    "raw_bracket": 0.8227741122245789,
+    "proj_crispri": 0.674589350718777,
+    "enrich_crispri": 0.0009952445854994982,
+    "proj_shrna": 3.312196537754894,
+    "enrich_shrna": 0.17124257604793058
+  },
+  {
+    "drug": "rosiglitazone",
+    "target": "FFAR1",
+    "n_celllines": 57,
+    "raw_bracket": 0.9320323169231415,
+    "proj_shrna": 2.7623477046889136,
+    "enrich_shrna": 0.12255294835387875
+  },
+  {
+    "drug": "rosmarinic-acid",
+    "target": "MCL1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9277890250086784,
+    "proj_crispri": 1.5171276643831106,
+    "enrich_crispri": 0.0017141836349792872,
+    "proj_shrna": 4.766831308985368,
+    "enrich_shrna": 0.01144887261223465
+  },
+  {
+    "drug": "rosuvastatin",
+    "target": "HMGCR",
+    "n_celllines": 13,
+    "raw_bracket": 0.8956255540251732,
+    "proj_crispri": 1.2101721621483286,
+    "enrich_crispri": 0.002988170302178633,
+    "proj_shrna": 3.0226073014812593,
+    "enrich_shrna": 0.0646671855918477
+  },
+  {
+    "drug": "rucaparib",
+    "target": "PARP1",
+    "n_celllines": 51,
+    "raw_bracket": 0.9091346636414528,
+    "proj_shrna": 4.452547609508038,
+    "enrich_shrna": 0.009716086836025761
+  },
+  {
+    "drug": "rutin",
+    "target": "AKR1C3",
+    "n_celllines": 13,
+    "raw_bracket": 0.9016591086983681,
+    "proj_shrna": 4.031338196343336,
+    "enrich_shrna": 0.18122638429690952
+  },
+  {
+    "drug": "ruxolitinib",
+    "target": "JAK1",
+    "n_celllines": 19,
+    "raw_bracket": 0.8484907150268555,
+    "proj_shrna": 1.4030191089892596,
+    "enrich_shrna": 0.17945997741698339
+  },
+  {
+    "drug": "ryuvidine",
+    "target": "CDK2",
+    "n_celllines": 14,
+    "raw_bracket": 0.7236287891864777,
+    "proj_crispri": 2.0877642463156643,
+    "enrich_crispri": 1.7910548249311218e-05,
+    "proj_shrna": 9.62838635470841,
+    "enrich_shrna": 0.20283886709571508
+  },
+  {
+    "drug": "saclofen",
+    "target": "GABBR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9545038007199764,
+    "proj_shrna": 5.337450748834854,
+    "enrich_shrna": 0.15726936992610607
+  },
+  {
+    "drug": "safinamide",
+    "target": "MAOB",
+    "n_celllines": 14,
+    "raw_bracket": 0.9144521728157997,
+    "proj_shrna": 3.894139737545789,
+    "enrich_shrna": 0.008084882727139808
+  },
+  {
+    "drug": "salmeterol",
+    "target": "ADRB2",
+    "n_celllines": 13,
+    "raw_bracket": 0.8736619651317596,
+    "proj_shrna": 2.183975849969265,
+    "enrich_shrna": 0.11363074337546042
+  },
+  {
+    "drug": "salubrinal",
+    "target": "EIF2S1",
+    "n_celllines": 8,
+    "raw_bracket": 0.7812843322753906,
+    "proj_crispri": 1.028519306381254,
+    "enrich_crispri": 7.82141249071078e-06
+  },
+  {
+    "drug": "saracatinib",
+    "target": "ABL1",
+    "n_celllines": 19,
+    "raw_bracket": 0.809186652302742,
+    "proj_shrna": 5.413313174631163,
+    "enrich_shrna": 0.28906610076796824
+  },
+  {
+    "drug": "scopolamine",
+    "target": "CHRM1",
+    "n_celllines": 14,
+    "raw_bracket": 0.8648424297571182,
+    "proj_shrna": 1.087703512265132,
+    "enrich_shrna": 0.2523714845871474
+  },
+  {
+    "drug": "scopolamine-n-oxide",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.970856960862875,
+    "proj_shrna": 3.5512956785850034,
+    "enrich_shrna": 0.11685713180965251
+  },
+  {
+    "drug": "scriptaid",
+    "target": "HDAC1",
+    "n_celllines": 15,
+    "raw_bracket": 0.5658890604972839,
+    "proj_shrna": 11.246285507508686,
+    "enrich_shrna": 0.06715560151885658
+  },
+  {
+    "drug": "securinine",
+    "target": "GABRA1",
+    "n_celllines": 16,
+    "raw_bracket": 0.8996313735842705,
+    "proj_shrna": 2.432484061891834,
+    "enrich_shrna": 0.04872073596405713
+  },
+  {
+    "drug": "selumetinib",
+    "target": "MAP2K1",
+    "n_celllines": 56,
+    "raw_bracket": 0.8039185702800751,
+    "proj_shrna": 6.08971658114876,
+    "enrich_shrna": 0.15792829309476986
+  },
+  {
+    "drug": "semaxanib",
+    "target": "FGFR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9073467627167702,
+    "proj_shrna": 3.0247504646197343,
+    "enrich_shrna": 0.039281917800117805
+  },
+  {
+    "drug": "serdemetan",
+    "target": "MDM2",
+    "n_celllines": 56,
+    "raw_bracket": 0.8835490122437477,
+    "proj_shrna": 3.533918244778723,
+    "enrich_shrna": 0.16876242683637432
+  },
+  {
+    "drug": "simvastatin",
+    "target": "HMGCR",
+    "n_celllines": 58,
+    "raw_bracket": 0.9391569308936596,
+    "proj_crispri": 1.2314827608042047,
+    "enrich_crispri": 0.0037797333781217106,
+    "proj_shrna": 5.195392166687479,
+    "enrich_shrna": 0.23575103312314027
+  },
+  {
+    "drug": "sirolimus",
+    "target": "FKBP1A",
+    "n_celllines": 62,
+    "raw_bracket": 0.7834091782569885,
+    "proj_shrna": 3.0499279831906967,
+    "enrich_shrna": 0.04866075468054931
+  },
+  {
+    "drug": "sitagliptin",
+    "target": "DPP4",
+    "n_celllines": 13,
+    "raw_bracket": 0.8986155465245247,
+    "proj_shrna": 2.7839091901595774,
+    "enrich_shrna": 0.007036258095729275
+  },
+  {
+    "drug": "sonidegib",
+    "target": "SMO",
+    "n_celllines": 51,
+    "raw_bracket": 0.8952625915408134,
+    "proj_shrna": 10.131670356918784,
+    "enrich_shrna": 0.35872828458549577
+  },
+  {
+    "drug": "sorafenib",
+    "target": "BRAF",
+    "n_celllines": 20,
+    "raw_bracket": 0.8503029644489288,
+    "proj_shrna": 3.5871989927793804,
+    "enrich_shrna": 0.14870742579504181
+  },
+  {
+    "drug": "spironolactone",
+    "target": "AR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9385156035423279,
+    "proj_shrna": 1.956777001802738,
+    "enrich_shrna": 0.07416256624190343
+  },
+  {
+    "drug": "splitomycin",
+    "target": "SIRT1",
+    "n_celllines": 11,
+    "raw_bracket": 0.8951897248625755,
+    "proj_shrna": 1.9425617163831537,
+    "enrich_shrna": 0.04696359922471416
+  },
+  {
+    "drug": "strychnine",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9348769709467888,
+    "proj_shrna": 1.9596314625098155,
+    "enrich_shrna": 0.1304052117365453
+  },
+  {
+    "drug": "sulfasalazine",
+    "target": "ACAT1",
+    "n_celllines": 7,
+    "raw_bracket": 0.9657737351953983,
+    "proj_shrna": 5.797539855397883,
+    "enrich_shrna": 0.1759657422919645
+  },
+  {
+    "drug": "sulfinpyrazone",
+    "target": "ABCC1",
+    "n_celllines": 8,
+    "raw_bracket": 0.9194659665226936,
+    "proj_shrna": 1.7768062087041991,
+    "enrich_shrna": 0.019104384559128995
+  },
+  {
+    "drug": "sulforaphane",
+    "target": "NFE2L2",
+    "n_celllines": 53,
+    "raw_bracket": 0.8402663618326187,
+    "proj_shrna": 5.680912972886132,
+    "enrich_shrna": 0.09543806386615472
+  },
+  {
+    "drug": "sulindac",
+    "target": "AKR1B1",
+    "n_celllines": 12,
+    "raw_bracket": 0.9424577578902245,
+    "proj_shrna": 2.0681474710052665,
+    "enrich_shrna": 0.08786379636803421
+  },
+  {
+    "drug": "sunitinib",
+    "target": "CSF1R",
+    "n_celllines": 14,
+    "raw_bracket": 0.8498662859201431,
+    "proj_shrna": 2.189289168669627,
+    "enrich_shrna": 0.0003077249962829577
+  },
+  {
+    "drug": "tacedinaline",
+    "target": "HDAC1",
+    "n_celllines": 11,
+    "raw_bracket": 0.6862180829048157,
+    "proj_shrna": 7.311661222848025,
+    "enrich_shrna": 0.26961830887049487
+  },
+  {
+    "drug": "tacrolimus",
+    "target": "FKBP1A",
+    "n_celllines": 56,
+    "raw_bracket": 0.9095634073019028,
+    "proj_shrna": 5.794403818975408,
+    "enrich_shrna": 0.12775374147901974
+  },
+  {
+    "drug": "talipexole",
+    "target": "ADRA2A",
+    "n_celllines": 13,
+    "raw_bracket": 0.9368809834122658,
+    "proj_shrna": 4.03055877563281,
+    "enrich_shrna": 0.05421837316188083
+  },
+  {
+    "drug": "tamibarotene",
+    "target": "RARA",
+    "n_celllines": 14,
+    "raw_bracket": 0.8961137309670448,
+    "proj_shrna": 3.9932918576421317,
+    "enrich_shrna": 0.1331806725425544
+  },
+  {
+    "drug": "tamoxifen",
+    "target": "EBP",
+    "n_celllines": 59,
+    "raw_bracket": 0.9192744344472885,
+    "proj_shrna": 4.377772270897235,
+    "enrich_shrna": 0.2933117602665938
+  },
+  {
+    "drug": "tandutinib",
+    "target": "CSF1R",
+    "n_celllines": 13,
+    "raw_bracket": 0.9041380435228348,
+    "proj_shrna": 1.9606845237505741,
+    "enrich_shrna": 0.02159805775892587
+  },
+  {
+    "drug": "tanespimycin",
+    "target": "HSP90AA1",
+    "n_celllines": 54,
+    "raw_bracket": 0.8077072203159332,
+    "proj_shrna": 5.2358598542028085,
+    "enrich_shrna": 0.08420365273344999
+  },
+  {
+    "drug": "targinine",
+    "target": "NOS3",
+    "n_celllines": 7,
+    "raw_bracket": 0.9169298857450485,
+    "proj_shrna": 9.36831548951921,
+    "enrich_shrna": 0.09255130794385025
+  },
+  {
+    "drug": "telenzepine",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9541010297834873,
+    "proj_shrna": 3.4222422992953887,
+    "enrich_shrna": 0.0966417082559623
+  },
+  {
+    "drug": "telmisartan",
+    "target": "AGTR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9375869296491146,
+    "proj_shrna": 2.0312365975517492,
+    "enrich_shrna": 0.15040854060377118
+  },
+  {
+    "drug": "temozolomide",
+    "target": "MGMT",
+    "n_celllines": 54,
+    "raw_bracket": 0.9248481914401054,
+    "proj_shrna": 3.0693878786316873,
+    "enrich_shrna": 0.09262002690455606
+  },
+  {
+    "drug": "temsirolimus",
+    "target": "MTOR",
+    "n_celllines": 51,
+    "raw_bracket": 0.775482252240181,
+    "proj_crispri": 1.240911662118148,
+    "enrich_crispri": 5.683029337502593e-05,
+    "proj_shrna": 4.8109517654776575,
+    "enrich_shrna": 0.27140258530068095
+  },
+  {
+    "drug": "teniposide",
+    "target": "TOP2A",
+    "n_celllines": 54,
+    "raw_bracket": 0.7885846197605133,
+    "proj_crispri": 1.3714528158077344,
+    "enrich_crispri": 0.0007749245502848622,
+    "proj_shrna": 8.520555166734589,
+    "enrich_shrna": 0.1747151908563902
+  },
+  {
+    "drug": "tenovin-1",
+    "target": "SIRT1",
+    "n_celllines": 14,
+    "raw_bracket": 0.9372974410653114,
+    "proj_shrna": 2.467526973603846,
+    "enrich_shrna": 0.05812798052011203
+  },
+  {
+    "drug": "terbinafine",
+    "target": "SQLE",
+    "n_celllines": 8,
+    "raw_bracket": 0.8880826607346535,
+    "proj_shrna": 5.865975970668452,
+    "enrich_shrna": 0.10750808588335659
+  },
+  {
+    "drug": "terbutaline",
+    "target": "ADRB2",
+    "n_celllines": 8,
+    "raw_bracket": 0.932253822684288,
+    "proj_shrna": 1.485178776617561,
+    "enrich_shrna": 0.01829505820852817
+  },
+  {
+    "drug": "terfenadine",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8153344541788101,
+    "proj_shrna": 1.9070725945326,
+    "enrich_shrna": 0.001381047354469589
+  },
+  {
+    "drug": "terreic-acid-(-)",
+    "target": "BTK",
+    "n_celllines": 15,
+    "raw_bracket": 0.8815882429480553,
+    "proj_shrna": 4.131650532143457,
+    "enrich_shrna": 0.15383203237260634
+  },
+  {
+    "drug": "thalidomide",
+    "target": "TNF",
+    "n_celllines": 57,
+    "raw_bracket": 0.9383659474551678,
+    "proj_shrna": 2.2269131183708297,
+    "enrich_shrna": 0.05894783002535409
+  },
+  {
+    "drug": "thiocolchicoside",
+    "target": "GABRA1",
+    "n_celllines": 12,
+    "raw_bracket": 0.8453359454870224,
+    "proj_shrna": 10.993867566188177,
+    "enrich_shrna": 0.10065112600285886
+  },
+  {
+    "drug": "tiaprofenic-acid",
+    "target": "PTGS2",
+    "n_celllines": 8,
+    "raw_bracket": 0.8493614494800568,
+    "proj_shrna": 1.6600482341434275,
+    "enrich_shrna": 0.026733496134140333
+  },
+  {
+    "drug": "tibolone",
+    "target": "ESR1",
+    "n_celllines": 9,
+    "raw_bracket": 0.850193440914154,
+    "proj_shrna": 6.132210163606538,
+    "enrich_shrna": 0.23894559113699998
+  },
+  {
+    "drug": "ticlopidine",
+    "target": "P2RY12",
+    "n_celllines": 13,
+    "raw_bracket": 0.8996778354048729,
+    "proj_shrna": 2.646585846176514,
+    "enrich_shrna": 0.13172934728575925
+  },
+  {
+    "drug": "tipifarnib",
+    "target": "FNTA",
+    "n_celllines": 51,
+    "raw_bracket": 0.8991172313690186,
+    "proj_crispri": 0.7811379139335892,
+    "enrich_crispri": 0.00038828061462134824
+  },
+  {
+    "drug": "tivantinib",
+    "target": "MET",
+    "n_celllines": 6,
+    "raw_bracket": 0.7307084798812866,
+    "proj_shrna": 3.070298224190871,
+    "enrich_shrna": 0.16049935618358635
+  },
+  {
+    "drug": "tivozanib",
+    "target": "FLT1",
+    "n_celllines": 56,
+    "raw_bracket": 0.9057297185063362,
+    "proj_shrna": 5.438391484039557,
+    "enrich_shrna": 0.1543650159604546
+  },
+  {
+    "drug": "tizanidine",
+    "target": "ADRA2A",
+    "n_celllines": 8,
+    "raw_bracket": 0.8650156557559967,
+    "proj_shrna": 3.616336048713752,
+    "enrich_shrna": 1.575903258800083e-05
+  },
+  {
+    "drug": "tofacitinib",
+    "target": "JAK1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9446482099592686,
+    "proj_shrna": 1.8578821233449838,
+    "enrich_shrna": 0.1171909367308368
+  },
+  {
+    "drug": "tolcapone",
+    "target": "COMT",
+    "n_celllines": 11,
+    "raw_bracket": 0.9310268387198448,
+    "proj_shrna": 2.4726773687384345,
+    "enrich_shrna": 0.14027277856308729
+  },
+  {
+    "drug": "tolterodine",
+    "target": "CHRM1",
+    "n_celllines": 7,
+    "raw_bracket": 0.9663090333342552,
+    "proj_shrna": 3.447823303086417,
+    "enrich_shrna": 0.048704956141803146
+  },
+  {
+    "drug": "topotecan",
+    "target": "TOP1",
+    "n_celllines": 13,
+    "raw_bracket": 0.6569415032863617,
+    "proj_crispri": 1.9761150621161363,
+    "enrich_crispri": 0.00011221771081430864,
+    "proj_shrna": 4.8471255386487035,
+    "enrich_shrna": 0.014211458682944489
+  },
+  {
+    "drug": "toremifene",
+    "target": "ESR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8196335434913635,
+    "proj_shrna": 4.070733753916545,
+    "enrich_shrna": 0.21275459329969237
+  },
+  {
+    "drug": "torin-1",
+    "target": "MTOR",
+    "n_celllines": 19,
+    "raw_bracket": 0.6463354825973511,
+    "proj_crispri": 0.9420213407730142,
+    "enrich_crispri": 0.0007402565458881561,
+    "proj_shrna": 6.819214744700326,
+    "enrich_shrna": 0.17896559224845987
+  },
+  {
+    "drug": "torin-2",
+    "target": "MTOR",
+    "n_celllines": 19,
+    "raw_bracket": 0.6121612787246704,
+    "proj_crispri": 1.2645484230930457,
+    "enrich_crispri": 0.000751555443691903,
+    "proj_shrna": 6.627580192963979,
+    "enrich_shrna": 0.16613250061405793
+  },
+  {
+    "drug": "tosedostat",
+    "target": "ANPEP",
+    "n_celllines": 51,
+    "raw_bracket": 0.7628720104694366,
+    "proj_shrna": 5.1954567786759025,
+    "enrich_shrna": 0.17190673938135692
+  },
+  {
+    "drug": "tozasertib",
+    "target": "AURKA",
+    "n_celllines": 60,
+    "raw_bracket": 0.844861626625061,
+    "proj_crispri": 1.0097095984185622,
+    "enrich_crispri": 0.00016462135662871416,
+    "proj_shrna": 4.5645862654861755,
+    "enrich_shrna": 0.11938686418379607
+  },
+  {
+    "drug": "tracazolate",
+    "target": "GABRA1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9479648508131504,
+    "proj_shrna": 3.1343646427759757,
+    "enrich_shrna": 0.002494829812249147
+  },
+  {
+    "drug": "trametinib",
+    "target": "MAP2K1",
+    "n_celllines": 6,
+    "raw_bracket": 0.6582878828048706,
+    "proj_shrna": 5.2018783072630566,
+    "enrich_shrna": 0.11938118007621146
+  },
+  {
+    "drug": "tranylcypromine",
+    "target": "KDM1A",
+    "n_celllines": 11,
+    "raw_bracket": 0.9058454260230064,
+    "proj_shrna": 3.1492615894837814,
+    "enrich_shrna": 0.056490055508114034
+  },
+  {
+    "drug": "trapidil",
+    "target": "PDGFRA",
+    "n_celllines": 13,
+    "raw_bracket": 0.9472649656236172,
+    "proj_shrna": 4.139131272450472,
+    "enrich_shrna": 0.17643921936566187
+  },
+  {
+    "drug": "treprostinil",
+    "target": "P2RY12",
+    "n_celllines": 13,
+    "raw_bracket": 0.9358738735318184,
+    "proj_shrna": 3.5246237457180634,
+    "enrich_shrna": 0.04135644364913227
+  },
+  {
+    "drug": "tretinoin",
+    "target": "ALDH1A1",
+    "n_celllines": 58,
+    "raw_bracket": 0.9061830416321754,
+    "proj_shrna": 4.021055112780493,
+    "enrich_shrna": 0.1442999244096521
+  },
+  {
+    "drug": "triamcinolone",
+    "target": "NR3C1",
+    "n_celllines": 13,
+    "raw_bracket": 0.901510089635849,
+    "proj_shrna": 2.648022479353807,
+    "enrich_shrna": 0.13934057543339406
+  },
+  {
+    "drug": "triamcinolone-acetonide",
+    "target": "NR3C1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8462732881307602,
+    "proj_shrna": 2.4105511658958028,
+    "enrich_shrna": 0.06227236145033843
+  },
+  {
+    "drug": "triamterene",
+    "target": "SCNN1A",
+    "n_celllines": 14,
+    "raw_bracket": 0.89991195499897,
+    "proj_shrna": 3.1821396075762234,
+    "enrich_shrna": 0.032504746893921244
+  },
+  {
+    "drug": "trichostatin-a",
+    "target": "HDAC1",
+    "n_celllines": 64,
+    "raw_bracket": 0.5498353242874146,
+    "proj_shrna": 9.922128919999869,
+    "enrich_shrna": 0.08538669150713307
+  },
+  {
+    "drug": "triciribine",
+    "target": "AKT1",
+    "n_celllines": 15,
+    "raw_bracket": 0.7573976069688797,
+    "proj_shrna": 3.5422560616618113,
+    "enrich_shrna": 0.1964412380847449
+  },
+  {
+    "drug": "triclabendazole",
+    "target": "DNMT1",
+    "n_celllines": 7,
+    "raw_bracket": 0.9433266595005989,
+    "proj_crispri": 1.0610986087363974,
+    "enrich_crispri": 4.850766222884833e-05,
+    "proj_shrna": 4.227613114175343,
+    "enrich_shrna": 0.02943498254530419
+  },
+  {
+    "drug": "triclosan",
+    "target": "DNMT1",
+    "n_celllines": 13,
+    "raw_bracket": 0.8417569845914841,
+    "proj_crispri": 0.7743370292206831,
+    "enrich_crispri": 1.2287296865298334e-06,
+    "proj_shrna": 4.814569480908223,
+    "enrich_shrna": 0.10994771623114108
+  },
+  {
+    "drug": "triflupromazine",
+    "target": "CHRM1",
+    "n_celllines": 14,
+    "raw_bracket": 0.7802946716547012,
+    "proj_shrna": 2.6751883771720824,
+    "enrich_shrna": 0.0035605548428603445
+  },
+  {
+    "drug": "trifluridine",
+    "target": "TYMS",
+    "n_celllines": 5,
+    "raw_bracket": 0.8306006193161011,
+    "proj_shrna": 1.168996274471283,
+    "enrich_shrna": 0.08543593667360483
+  },
+  {
+    "drug": "tripelennamine",
+    "target": "HRH1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9507317878305912,
+    "proj_shrna": 2.7756737615817633,
+    "enrich_shrna": 0.16064371350934525
+  },
+  {
+    "drug": "triprolidine",
+    "target": "HRH1",
+    "n_celllines": 8,
+    "raw_bracket": 0.8707354217767715,
+    "proj_shrna": 1.3342549172895295,
+    "enrich_shrna": 0.10519944225961808
+  },
+  {
+    "drug": "triptolide",
+    "target": "RELA",
+    "n_celllines": 51,
+    "raw_bracket": 0.5955825746059418,
+    "proj_shrna": 4.23315439295535,
+    "enrich_shrna": 0.019698076228707784
+  },
+  {
+    "drug": "tropicamide",
+    "target": "CHRM3",
+    "n_celllines": 8,
+    "raw_bracket": 0.8723742812871933,
+    "proj_shrna": 2.4741175834621703,
+    "enrich_shrna": 0.13128801026601877
+  },
+  {
+    "drug": "tubastatin-a",
+    "target": "HDAC6",
+    "n_celllines": 9,
+    "raw_bracket": 0.7146724462509155,
+    "proj_shrna": 2.3450662470940085,
+    "enrich_shrna": 0.1225058371523966
+  },
+  {
+    "drug": "tyrphostin-AG-1296",
+    "target": "FLT3",
+    "n_celllines": 13,
+    "raw_bracket": 0.963424626737833,
+    "proj_shrna": 2.054274968802929,
+    "enrich_shrna": 0.09158643650963327
+  },
+  {
+    "drug": "tyrphostin-AG-1478",
+    "target": "EGFR",
+    "n_celllines": 55,
+    "raw_bracket": 0.7319409549236298,
+    "proj_shrna": 5.657554074770673,
+    "enrich_shrna": 0.11683675722407827
+  },
+  {
+    "drug": "tyrphostin-AG-18",
+    "target": "EGFR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9400544948875904,
+    "proj_shrna": 4.834947035480768,
+    "enrich_shrna": 0.19084113513845669
+  },
+  {
+    "drug": "tyrphostin-AG-494",
+    "target": "EGFR",
+    "n_celllines": 13,
+    "raw_bracket": 0.90207140147686,
+    "proj_shrna": 7.8148869050618925,
+    "enrich_shrna": 0.33807029224977114
+  },
+  {
+    "drug": "tyrphostin-AG-825",
+    "target": "ERBB2",
+    "n_celllines": 13,
+    "raw_bracket": 0.9301842972636223,
+    "proj_shrna": 8.581900565288006,
+    "enrich_shrna": 0.2416786247234235
+  },
+  {
+    "drug": "tyrphostin-AG-835",
+    "target": "EGFR",
+    "n_celllines": 13,
+    "raw_bracket": 0.9185953363776207,
+    "proj_shrna": 1.8315773653105283,
+    "enrich_shrna": 0.16491445457969522
+  },
+  {
+    "drug": "tyrphostin-AG-879",
+    "target": "ERBB2",
+    "n_celllines": 14,
+    "raw_bracket": 0.7681469321250916,
+    "proj_shrna": 4.000624014781072,
+    "enrich_shrna": 0.10240077743677833
+  },
+  {
+    "drug": "tyrphostin-AG-99",
+    "target": "EGFR",
+    "n_celllines": 13,
+    "raw_bracket": 0.949104581028223,
+    "proj_shrna": 4.2162306895240755,
+    "enrich_shrna": 0.23054025838472914
+  },
+  {
+    "drug": "ubenimex",
+    "target": "LTA4H",
+    "n_celllines": 13,
+    "raw_bracket": 0.9144533202052116,
+    "proj_shrna": 2.9683702882283773,
+    "enrich_shrna": 0.015030689751339976
+  },
+  {
+    "drug": "valdecoxib",
+    "target": "CA12",
+    "n_celllines": 50,
+    "raw_bracket": 0.8347979336977005,
+    "proj_shrna": 5.1137372988097525,
+    "enrich_shrna": 0.0886734473665598
+  },
+  {
+    "drug": "valproic-acid",
+    "target": "ABAT",
+    "n_celllines": 54,
+    "raw_bracket": 0.9444836936891079,
+    "proj_shrna": 5.9561775052447485,
+    "enrich_shrna": 0.22397185448511792
+  },
+  {
+    "drug": "valsartan",
+    "target": "AGTR1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9212587028741837,
+    "proj_shrna": 1.7500406408157103,
+    "enrich_shrna": 0.1001837253008695
+  },
+  {
+    "drug": "veliparib",
+    "target": "PARP1",
+    "n_celllines": 56,
+    "raw_bracket": 0.9197817295789719,
+    "proj_shrna": 4.032988999072801,
+    "enrich_shrna": 0.050607195721124265
+  },
+  {
+    "drug": "vemurafenib",
+    "target": "BRAF",
+    "n_celllines": 61,
+    "raw_bracket": 0.8401501327753067,
+    "proj_shrna": 10.049079268751411,
+    "enrich_shrna": 0.3223995309172132
+  },
+  {
+    "drug": "vidarabine",
+    "target": "ADA",
+    "n_celllines": 8,
+    "raw_bracket": 0.8736956119537354,
+    "proj_shrna": 2.5667936642255103,
+    "enrich_shrna": 0.025590081603575676
+  },
+  {
+    "drug": "vinblastine",
+    "target": "JUN",
+    "n_celllines": 15,
+    "raw_bracket": 0.7662312239408493,
+    "proj_shrna": 2.497173055580684,
+    "enrich_shrna": 0.08452122935354112
+  },
+  {
+    "drug": "vinburnine",
+    "target": "CHRM1",
+    "n_celllines": 8,
+    "raw_bracket": 0.9014992713928223,
+    "proj_shrna": 1.8095737166170562,
+    "enrich_shrna": 0.040821956662713044
+  },
+  {
+    "drug": "vincamine",
+    "target": "CHRM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9237022623419762,
+    "proj_shrna": 4.355521219663131,
+    "enrich_shrna": 0.09491021226495278
+  },
+  {
+    "drug": "vindesine",
+    "target": "TUBB",
+    "n_celllines": 7,
+    "raw_bracket": 0.7564190477132797,
+    "proj_crispri": 1.0220653645886952,
+    "enrich_crispri": 0.0003168370025619879
+  },
+  {
+    "drug": "vinorelbine",
+    "target": "TUBA1A",
+    "n_celllines": 14,
+    "raw_bracket": 0.8334572166204453,
+    "proj_shrna": 3.3193024199578787,
+    "enrich_shrna": 0.12269661203026772
+  },
+  {
+    "drug": "vorinostat",
+    "target": "HDAC1",
+    "n_celllines": 60,
+    "raw_bracket": 0.4899001121520996,
+    "proj_shrna": 5.597074357163435,
+    "enrich_shrna": 0.054075016300139334
+  },
+  {
+    "drug": "warfarin",
+    "target": "VKORC1",
+    "n_celllines": 14,
+    "raw_bracket": 0.9334430620074272,
+    "proj_shrna": 2.00639119293991,
+    "enrich_shrna": 0.02743924458113245
+  },
+  {
+    "drug": "wortmannin",
+    "target": "PI4KA",
+    "n_celllines": 61,
+    "raw_bracket": 0.7210783958435059,
+    "proj_crispri": 1.5170084706910782,
+    "enrich_crispri": 0.0005309019477650486,
+    "proj_shrna": 4.870345576514637,
+    "enrich_shrna": 0.11261531073911701
+  },
+  {
+    "drug": "xylazine",
+    "target": "ADRA2A",
+    "n_celllines": 13,
+    "raw_bracket": 0.9744923487305641,
+    "proj_shrna": 3.1519350415238967,
+    "enrich_shrna": 0.08947873471720413
+  },
+  {
+    "drug": "yohimbine",
+    "target": "ADRA2A",
+    "n_celllines": 14,
+    "raw_bracket": 0.8971210345625877,
+    "proj_shrna": 2.1925683201669335,
+    "enrich_shrna": 0.0238242345715991
+  },
+  {
+    "drug": "zaldaride",
+    "target": "CALM1",
+    "n_celllines": 13,
+    "raw_bracket": 0.9526892863214016,
+    "proj_shrna": 2.403442628490619,
+    "enrich_shrna": 0.048584557278005036
+  },
+  {
+    "drug": "zamifenacin",
+    "target": "CHRM3",
+    "n_celllines": 8,
+    "raw_bracket": 0.9365141242742538,
+    "proj_shrna": 3.1904462224670818,
+    "enrich_shrna": 0.11364293968314598
+  },
+  {
+    "drug": "zaprinast",
+    "target": "GPR35",
+    "n_celllines": 13,
+    "raw_bracket": 0.9483127221465111,
+    "proj_shrna": 5.9637668165258875,
+    "enrich_shrna": 0.0009148917726495981
+  },
+  {
+    "drug": "zardaverine",
+    "target": "PDE4D",
+    "n_celllines": 13,
+    "raw_bracket": 0.9047096446156502,
+    "proj_shrna": 4.841958574377573,
+    "enrich_shrna": 0.006078922101236339
+  },
+  {
+    "drug": "zebularine",
+    "target": "CDA",
+    "n_celllines": 54,
+    "raw_bracket": 0.9466611705720425,
+    "proj_shrna": 2.8780793392683224,
+    "enrich_shrna": 0.10066129979060534
+  },
+  {
+    "drug": "zosuquidar",
+    "target": "ABCB1",
+    "n_celllines": 14,
+    "raw_bracket": 0.9091763868927956,
+    "proj_shrna": 1.5531032961475981,
+    "enrich_shrna": 0.03818763571713646
+  }
+]
