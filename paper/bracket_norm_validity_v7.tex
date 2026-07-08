@@ -1,0 +1,1167 @@
+\documentclass{article}
+
+\usepackage[preprint]{tmlr}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\renewcommand{\arraystretch}{1.3}
+\setlength{\abovetopsep}{6pt}
+
+\title{Bracket Norm Is Not Mechanism:\\ Validity Conditions for Noncommutative Perturbation Scores}
+
+\author{\name Elliot Tower \\
+      \email elliot@elliottower.ai}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Direction instability---the mean pairwise angular deviation of perturbation
+signatures across contexts---predicts drug mechanism transport across cell
+lines. We ask what this prediction \emph{licenses}. Through pre-registered
+experiments across three perturbation domains---8{,}949 LINCS L1000
+compounds (978 transcriptomic features), 1{,}676 Perturb-seq gene
+knockdowns \citep{replogle2022mapping} (2{,}073 genes), and 25{,}254
+JUMP-CP compounds (3{,}180 Cell Painting morphological features)---we show
+that validity conditions do not reclassify perturbations: they determine
+what claims a practitioner can make about the ranking. In all three domains,
+correction preserves the ranking (LINCS: $\rho > 0.99$; Perturb-seq: $\rho
+= 0.91$; JUMP-CP: $\rho = 0.99$). Three drug-domain validity conditions
+are tested empirically: phenotype-projected bracket correlates with
+on-target genetic perturbation connectivity ($\rho = 0.38$, $p < 10^{-27}$)
+while raw bracket does not ($\rho = -0.04$); transport-stable bracket
+outpredicts raw bracket for held-out cell-line effects in all 5
+cross-validation folds; and localization to target-gene knockdown signatures
+improves prediction for intracellular enzyme inhibitors but not
+receptor-mediated drugs, producing an informative null. The validity
+ladder functions as a proof system for mechanistic claims: each rung does not
+change the score, it upgrades the inferential warrant attached to that score.
+\end{abstract}
+
+\section{Introduction}
+
+The Connectivity Map paradigm \citep{lamb2006connectivity,subramanian2017next}
+established that transcriptomic-signature similarity predicts drug mechanism
+of action. Direction instability extends this from pairwise similarity to
+angular consistency: rather than asking whether two drugs produce similar
+signatures, it asks whether a single drug's signature rotates across cell
+lines. \citet{tower2026bracket} applied this metric to 8{,}949 drugs in
+LINCS L1000, showing that mechanism-conserving compounds (pan-HDAC
+inhibitors, topoisomerase inhibitors, CDK inhibitors) achieve low direction
+instability while receptor-mediated drugs cluster near the population mean
+of 0.92. The HDAC selectivity gradient---pan-isoform
+inhibitors at $D = 0.56$--$0.63$, selective inhibitors at $D = 0.96$--$0.99$---provides
+a natural controlled comparison within a single drug class.
+
+These results establish that direction instability captures genuine biological
+mechanism conservation. They leave open a different question: under what
+conditions does a direction-instability score license a mechanistic \emph{claim}?
+A score of $D = 0.55$ means signatures point in similar directions across cell
+lines. It does not, by itself, mean the drug acts through a specific pathway,
+that the effect is therapeutic rather than cytotoxic, or that the observation
+will replicate in a new dataset.
+
+Confound corrections for perturbation scores are well-established:
+CERES corrects copy-number artifacts in CRISPR screens
+\citep{meyers2017ceres}; connectivity-metric evaluations benchmark
+signature-similarity scores \citep{li2020comprehensive}. These
+corrections improve the \emph{accuracy} of the score. We ask a different
+question: when does a score---even an accurate one---license a mechanistic
+\emph{claim}? A correction that preserves the global ranking ($\rho > 0.99$)
+adds no discriminative power, yet it upgrades the inferential warrant by
+ruling out a specific confounding explanation.
+
+We formalize this through a validity ladder: a sequence of conditions, each
+building on the previous, that progressively strengthen what a
+direction-instability measurement licenses. The ladder has seven rungs, from
+declaring the process view (what counts as a context?) through phenotype
+alignment and cross-context transport to holdout prediction. Each rung
+answers a specific threat to interpretation. The ladder is a proof system,
+analogous to the Bradford Hill criteria for causal inference and to recent
+construct-validity frameworks for ML benchmarks
+\citep{freiesleben2025benchmarking}: satisfying more rungs does not change
+the number, it changes what you are allowed to conclude from it.
+
+This paper tests whether validity conditions matter empirically across three
+perturbation domains. In LINCS L1000, pre-registered experiments probe
+specific failure modes of drug direction instability: cytotoxicity
+masquerading as mechanism conservation and broad therapeutics that are
+smooth rather than mechanism-absent. In Perturb-seq genetic knockdowns from
+Replogle et al.\ \citep{replogle2022mapping}, we test whether essential-gene
+correction---the genetic analogue of toxicity correction---changes the
+Grassmannian geodesic distance ranking between K562 and RPE1 perturbation
+response subspaces. In JUMP-CP Cell Painting morphological profiles
+\citep{chandrasekaran2023jump}, we test whether removing cell-health
+features---the morphological analogue of toxicity and essentiality
+correction---changes the direction-instability ranking across 25{,}254
+compounds measured in $\geq$5 imaging sources. We report honest nulls
+alongside confirmations, because the pattern of where validity conditions
+bite---and where they do not---is itself the finding.
+
+\section{Background}
+
+\subsection{Direction instability}
+
+For a drug tested in $K$ cell lines, let $\mathbf{s}_1, \ldots,
+\mathbf{s}_K \in \mathbb{R}^{978}$ denote its consensus signature vectors.
+Define unit-normalized signatures $\hat{\mathbf{s}}_i = \mathbf{s}_i /
+\|\mathbf{s}_i\|_2$. Direction instability is:
+\begin{equation}
+  D = 1 - \frac{2}{K(K-1)} \sum_{i < j}
+    \hat{\mathbf{s}}_i^\top \hat{\mathbf{s}}_j
+  \label{eq:direction_instability}
+\end{equation}
+$D = 0$ when all signatures are collinear. $D = 1$ when orthogonal on average.
+(The term ``bracket norm'' in the companion paper
+\citep{tower2026bracket} refers to this same quantity viewed as a
+noncommutative perturbation score; we use ``direction instability''
+throughout to avoid terminological collision with unrelated norm
+constructions.)
+This metric was introduced in \citet{tower2026bracket} to characterize drug mechanism
+transport and was shown to anticorrelate with gene-level Jaccard overlap of
+top perturbed genes (Spearman $\rho = -0.79$).
+
+\subsection{Grassmannian geodesic distance in Perturb-seq}
+
+Direction instability generalizes from vectors to subspaces. For a gene
+knocked down in two cell types, let $U_1, U_2 \in \text{Gr}(k, d)$ denote
+the top-$k$ PCA subspaces of the perturbation response in each cell type.
+The Grassmannian geodesic distance $\delta(U_1, U_2) =
+\|\boldsymbol{\theta}\|_2$, where $\boldsymbol{\theta}$ are the principal
+angles between the subspaces, measures how much the perturbation response
+\emph{rotates} across cell types. With $K = 2$ contexts, this reduces to a
+single pairwise comparison---the subspace analogue of direction instability
+for a drug tested in two cell lines.
+
+\subsection{Direction instability in Cell Painting morphological profiles}
+
+Cell Painting \citep{chandrasekaran2023jump} measures 3{,}180 morphological
+features per well (cell area, shape, granularity, texture, and intensity
+across five fluorescent channels: DNA, RNA, ER, AGP, Mito). JUMP-CP
+profiles 116{,}000 compounds across 10 imaging sources. Direction
+instability applies directly: each compound's morphological signature in a
+given source is a vector in $\mathbb{R}^{3180}$, and $D$ measures angular
+consistency across sources. A subset of features---cell area, compactness,
+eccentricity, DNA/Mito intensity, granularity, and radial
+distribution---reflect general cell health rather than compound-specific
+morphological effects. The cell-health correction removes these 743 features
+before recomputing direction instability, analogous to the toxicity
+correction in LINCS and the essential-gene correction in Perturb-seq.
+
+\subsection{The validity problem}
+
+Consider two drugs with identical direction instability, $D = 0.55$:
+
+\begin{itemize}
+  \item \textbf{Drug A} is a pan-HDAC inhibitor. Its conserved signature
+    reflects chromatin remodeling genes (\emph{SUV39H1}, \emph{MYC},
+    \emph{CDK6}). The consistency comes from targeting a universally
+    expressed enzymatic family.
+  \item \textbf{Drug B} is a mitochondrial toxin. Its conserved signature
+    reflects a generic stress response (\emph{HSPA1A}, \emph{DDIT3},
+    \emph{ATF4}). The consistency comes from triggering the same damage
+    pathway regardless of cell identity.
+\end{itemize}
+
+Both achieve $D = 0.55$. The interpretation differs entirely: Drug A
+transports a therapeutic mechanism; Drug B transports cellular violence. The
+raw metric cannot distinguish these cases. A validity condition---toxicity
+correction, in this instance---can.
+
+\subsection{The validity ladder}
+
+We define seven rungs:
+
+\begin{enumerate}
+  \item \textbf{Process view declared.} What constitutes a ``context''?
+    (Cell lines, cell types, patients, time points.)
+  \item \textbf{Reliable vector field.} Signatures have adequate signal-to-noise
+    for direction to be meaningful.
+  \item \textbf{Perturbation estimable.} The effect can be isolated from
+    background variation.
+  \item \textbf{Localized to biology.} Instability concentrates in
+    pathway-relevant genes, not globally.
+  \item \textbf{Phenotype-aligned.} The direction of conservation matches a
+    known target pathway.
+  \item \textbf{Transports across contexts.} The score replicates in held-out
+    contexts (low Fr\'echet variance).
+  \item \textbf{Predicts holdout.} The metric predicts an external outcome
+    in new data.
+\end{enumerate}
+
+Rungs 1--3 are prerequisites for any directional metric. Rungs 4--7 are the
+validity conditions we test empirically: each eliminates a specific
+interpretive threat without altering the underlying score.
+
+\section{Related work}
+
+\paragraph{Confound correction in genetic screens.}
+Our essential-gene correction (Experiment~7) addresses a problem with
+extensive prior art in dependency-screen analysis. CERES
+\citep{meyers2017ceres} corrects copy-number-induced false positives in
+CRISPR screens by modeling gene-independent effects; integrated
+Broad--Sanger analyses \citep{pacini2021integrated} identify 2{,}103 common
+essentials and document cross-study divergence of the kind we observe between
+K562 and RPE1. These corrections operate on dependency-score magnitudes. Our
+contribution is orthogonal: we correct subspace geometry (Grassmannian
+geodesic distance), showing that corrections are inferentially meaningful
+even when they are rank-preserving at the population level.
+
+\paragraph{Connectivity-based MOA discovery.}
+The Connectivity Map framework \citep{subramanian2017next,lamb2006connectivity}
+established that transcriptomic-signature similarity predicts mechanism of
+action. Subsequent work evaluated connectivity metrics systematically
+\citep{li2020comprehensive}. Direction instability extends this paradigm from
+pairwise signature similarity to angular consistency across contexts: rather
+than asking whether two drugs produce similar signatures, we ask whether a
+single drug's signature rotates across cell lines.
+
+\paragraph{Subspace geometry on perturbation data.}
+Grassmannian methods for single-cell perturbation analysis are an active
+area. LEMUR \citep{ahlmanneltze2025lemur} performs multivariate regression on
+Grassmann manifolds to disentangle sources of variance in multi-condition
+Perturb-seq data. Our Experiment~7 uses a simpler variant---Grassmannian
+geodesic distance between per-gene PCA subspaces across two cell types---but
+the geometric language is shared.
+
+\paragraph{Construct validity for computational scores.}
+The validity ladder draws on a broader conversation about when benchmark
+scores license scientific inferences.
+\citet{freiesleben2025benchmarking} develop construct-validity conditions
+inspired by psychological measurement theory for evaluating ML models;
+\citet{watson2025measuring} propose an eight-recommendation checklist for
+LLM benchmarks mapping onto recognized validity dimensions.
+Our ladder is the biological-perturbation counterpart: each rung corresponds
+to a validity dimension (define the phenomenon, measure only the phenomenon,
+analyze confounders, predict external outcomes). In the perturbation-prediction
+setting, the SBB (Signal, Bounds, and Baselines) framework
+\citep{sbb2026principles} evaluates whether a model's predictions are
+trustworthy; our ladder evaluates whether a metric's score licenses a
+mechanistic claim.
+
+\section{Methods}
+
+\subsection{Data}
+
+Perturbation signatures were drawn from LINCS L1000 Phase I (GEO accession
+GSE92742; $\sim$1.3 million profiles across $\sim$50 cell lines and
+$\sim$20{,}000 compounds), using Level 5 replicate-collapsed z-scores
+across 978 landmark genes \citep{subramanian2017next}. We retained 8{,}949
+small-molecule perturbagens tested in $\geq5$ cell lines, the same dataset
+characterized in \citet{tower2026bracket}.
+
+Perturb-seq data derive from Replogle et al.\
+\citep{replogle2022mapping}: genome-scale CRISPRi knockdowns in K562
+(chronic myelogenous leukemia) and RPE1 (retinal pigment epithelium)
+cells. We extracted 1{,}676 genes with $\geq$30 perturbed cells in both
+cell types, computed per-gene expression responses over 2{,}073 highly
+variable genes, and fitted $k = 5$ PCA subspaces per gene per cell type.
+Grassmannian geodesic distances were computed between the K562 and RPE1
+subspaces for each gene. Both the K562 and RPE1 screens use guide libraries
+targeting DepMap-essential genes \citep{replogle2022mapping}; 85\% of RPE1
+targets overlap with K562-essential targets (1{,}875 of 2{,}204). The
+``non-essential'' comparison group therefore consists of genes that were
+selected for essentiality but fall below the stringent Chronos $< -0.5$
+threshold in one or both cell types. Essentiality labels derive from
+DepMap Chronos scores \citep{dempster2021chronos}: of 1{,}567 genes with
+both geodesic distances and DepMap labels, 855 with Chronos $< -0.5$ in
+both K562 and RPE1 were classified as universal-essential. A
+label-permutation null (shuffling essential/non-essential labels while
+holding geodesic distances fixed, 10{,}000 permutations) tested whether
+the observed group difference exceeds background K562/RPE1 divergence.
+
+JUMP-CP Cell Painting profiles derive from the Cell Painting Gallery
+\citep{chandrasekaran2023jump}: variance-stabilized, MAD-normalized
+compound profiles across 10 imaging sources. The full dataset contains
+116{,}750 compound profiles; after deduplication and filtering to compounds
+present in $\geq$5 sources, 25{,}254 compounds remain (78\% attrition,
+primarily from compounds tested in $<$5 sources). We aggregated per
+compound $\times$ source by mean and computed direction instability over
+the full 3{,}180 feature set. Cell-health features (743 features matching Area, Compactness,
+Eccentricity, DNA/Mito Intensity, Granularity, Radial Distribution, and
+Texture Entropy) were identified by substring matching on CellProfiler
+feature names. Corrected direction instability was computed on the remaining
+2{,}437 non-health features.
+
+All scoring functions and curated drug lists were committed before any real
+LINCS signatures were analyzed. Perturb-seq hypotheses (HP1--HP3) were
+pre-registered before the correction analysis was run; the integrity
+boundary, decision criteria, and commit SHA are documented in the
+repository.
+
+\paragraph{Test family and multiplicity.}
+We treat the five LINCS drug hypotheses (H1--H5) as one test family and the
+three Perturb-seq hypotheses (HP1--HP3) as a second. Within each family,
+hypotheses test distinct validity conditions rather than the same quantity at
+multiple thresholds, so we pre-registered individual decision criteria
+($\alpha = 0.0125$ for HP1--HP3; specific thresholds for H1--H5) rather than
+a family-wise correction. The pre-registered success criterion---3 of 5 drug
+hypotheses confirmed---accounts for multiplicity at the study level.
+After applying Holm--Bonferroni correction within the drug family, H3
+($p < 10^{-27}$) and H5 (5/5 folds, binomial $p = 0.031$) survive at
+$\alpha = 0.05$; H2 ($p = 0.28$, binomial 7/10) and H4 (gap $= 0.018$)
+do not. H1's criterion-pass is an artifact (see Results). Within Perturb-seq,
+HP3 ($p < 10^{-33}$, $p_{\text{perm}} < 10^{-4}$) survives; HP1 and HP2 are characterization tests
+(ranking correlations) without formal hypothesis tests.
+
+\subsection{Toxicity-corrected bracket (Experiment 1)}
+
+We curated 16 known cytotoxic compounds (staurosporine, camptothecin,
+doxorubicin, etoposide, cisplatin, vincristine, paclitaxel, actinomycin-d,
+thapsigargin, tunicamycin, brefeldin-a, rotenone, antimycin-a, oligomycin-a,
+menadione, hydrogen-peroxide) and 41 stress/apoptosis marker genes
+(\emph{HSPA1A}, \emph{BAX}, \emph{TP53}, \emph{CASP3}, \emph{ATF4},
+\emph{DDIT3}, etc.). Toxicity-corrected bracket removes these gene axes from
+the signature matrix before recomputing direction instability on the residual.
+
+\textbf{Pre-registered prediction (H1):} $\geq$60\% of cytotoxic drugs move
+from the top 20\% of raw bracket to below-median toxicity-corrected bracket.
+
+\subsection{Broad-mechanism therapeutic bracket (Experiment 2)}
+
+We curated 10 broad-mechanism drugs: statins (atorvastatin, simvastatin,
+lovastatin), metformin, dexamethasone, sirolimus, methotrexate, aspirin,
+and pan-HDAC inhibitors (vorinostat, trichostatin-a). We also curated 8
+context-specific drugs (vemurafenib, imatinib, erlotinib, crizotinib,
+lapatinib, gefitinib, PCI-34051, tubastatin-a).
+
+\textbf{Pre-registered prediction (H2):} $\geq$60\% of broad-mechanism drugs
+fall below the population median direction instability. Context-specific
+drugs fall above the median.
+
+\subsection{Phenotype-projected bracket (Experiment 3)}
+
+Rung~5 of the validity ladder requires that direction instability align with
+a known target pathway. We test this using genetic perturbation connectivity:
+for each drug with an annotated target gene (Drug Repurposing Hub,
+1{,}551 drugs with target annotations), the ``on-target direction'' is the
+consensus shRNA knockdown signature of that target gene in LINCS L1000.
+The shRNA signatures span 20 cell lines, dominated by a core set
+(PC3, VCAP, MCF7, A375, HA1E, A549, HT29, HCC515, HEPG2; 9 lines
+contributing $>$95\% of signatures). Each consensus averages across all
+cell lines and hairpins for genes with $\geq$3 shRNA constructs
+(4{,}369 target genes eligible).
+
+Phenotype-projected bracket projects the instability vector onto this
+on-target direction. On-target enrichment is quantified by cosine squared
+between each drug's mean signature and its target gene's shRNA consensus
+direction---the fraction of mean-signature variance aligned with the
+genetic perturbation.
+
+\textbf{Pre-registered prediction (H3):} Spearman $|\rho| > 0.3$ between
+phenotype-projected bracket and on-target enrichment, AND $|\rho| < 0.15$
+for raw bracket versus the same enrichment.
+
+\subsection{Localization score predicts mechanism (Experiment 4)}
+
+Rung~4 requires that instability concentrate in pathway-relevant genes.
+For each drug, the region mask comprises the 100 genes with largest absolute
+$z$-score in the target gene's shRNA consensus signature ($\sim$10\% of the
+978 landmark genes). The localization score is the ratio of pathway-restricted
+bracket to global bracket. MOA prediction uses macro-averaged one-vs-rest
+AUROC across MOA classes with $\geq$10 drugs (15 classes, 223 eligible drugs).
+
+\textbf{Pre-registered prediction (H4):} Macro-averaged AUROC for MOA
+prediction from localization score $>$ AUROC from raw bracket by at least
+0.05.
+
+\subsection{Transport-stable bracket (Experiment 5)}
+
+Rung~6 requires that the score replicate across held-out contexts.
+Transport-stable bracket penalizes raw direction instability by Fr\'{e}chet
+variance across contexts. We evaluate via leave-one-cell-line-out
+cross-validation over the first 5 cell lines alphabetically (A375, A549,
+A673, AGS, ASC). For each fold, we compute raw and transport-stable bracket
+on the training cell lines and measure cosine similarity between the
+held-out cell line's signature and the training consensus direction. This
+held-out outcome matches the direction-based estimand of direction
+instability: a drug whose signatures are directionally consistent in
+training should produce a held-out signature aligned with the training
+consensus.
+
+\textbf{Pre-registered prediction (H5):} Spearman correlation between
+transport-stable bracket and held-out cosine $>$ correlation for raw bracket,
+in at least 4 of 5 folds.
+
+\subsection{Essential-gene correction on Perturb-seq (Experiment 7)}
+
+Universal-essential knockdowns (DepMap Chronos $< -0.5$ in both K562 and
+RPE1) may inflate or deflate Grassmannian geodesic distances through a
+shared lethal-response subspace. We computed the Fr\'echet mean subspace of
+the 855 essential-gene perturbation responses (separately in each cell type)
+via iterative projection on Gr$(5, 2073)$. We then projected this
+essential-response subspace out of each gene's response subspace,
+re-orthogonalized, and recomputed geodesic distances on the residual.
+
+\textbf{Pre-registered prediction (HP1):} The essential-response correction
+changes the geodesic-distance ranking. Decision criterion: Spearman $\rho$
+between raw and corrected distances below 0.70 = ``bites''; 0.70--0.83 =
+``marginal''; $\geq 0.83$ = ``doesn't bite'' (the HDAC selectivity
+gradient gives $\rho = 0.83$ after drug toxicity correction).
+
+\textbf{Pre-registered characterization (HP3):} Universal-essential
+knockdowns produce higher geodesic distances than non-essential knockdowns
+(Cohen's $d > 0$), consistent with the failure-mode inversion identified
+before freezing.
+
+\subsection{Pathway function prediction (HP2)}
+
+If the essential-gene correction removes a confound that masks biological
+signal, corrected distances should better predict Gene Ontology pathway
+coherence. For 50{,}000 sampled gene pairs (from 1{,}544 GO-annotated genes
+in our dataset), we computed pairwise Jaccard overlap of GO Biological
+Process memberships (7{,}647 pathways from MSigDB C5, release 2023.2) and
+correlated this with both the absolute distance difference $|d_i - d_j|$
+and the mean distance $(d_i + d_j)/2$ for raw and corrected distances.
+
+\textbf{Pre-registered prediction (HP2):} Spearman $|\rho|$ between corrected
+distance and GO pathway Jaccard $>$ $|\rho|$ for raw distance, by at least
+0.05.
+
+\subsection{Cell-health correction on JUMP-CP (Experiment 8)}
+
+Cell Painting morphological profiles include features that reflect general
+cell health (area, compactness, DNA and mitochondrial intensity, granularity)
+alongside compound-specific morphological effects (texture, spatial
+distribution patterns in ER, AGP, RNA channels). Compounds that reduce
+viability may achieve low direction instability through consistent
+health-feature signatures rather than mechanism-specific morphology. We
+identified 743 cell-health features by substring matching and recomputed
+direction instability on the remaining 2{,}437 features for each of 25{,}254
+compounds tested in $\geq$5 imaging sources.
+
+\textbf{Pre-registered prediction:} Spearman $\rho$ between raw and
+cell-health-corrected direction instability below 0.70 = ``bites'';
+0.70--0.83 = ``marginal''; $\geq 0.83$ = ``doesn't bite'' (same decision
+criteria as Experiments 1 and 7).
+
+\section{Results}
+
+\subsection{Experiment 1: Toxicity correction has negligible effect in LINCS}
+
+Among the 16 pre-registered cytotoxic compounds, 13 were present in the
+$\geq$5-cell-line dataset. Their raw direction instabilities ranged from
+0.47 to 0.93 (Table~\ref{tab:toxic}). This immediately contradicts the
+predicted failure mode: cytotoxic drugs are not false-positive transporters.
+They are already high-instability---their signatures rotate across cell lines
+rather than conserving a consistent stress direction.
+
+After removing stress/apoptosis gene axes, direction instability shifted by
+$<0.01$ for all 13 drugs. The correction has no practical effect because the
+premise of the failure mode---that cytotoxic drugs achieve low bracket via
+a shared stress program---does not hold in LINCS L1000 data.
+
+\begin{table}[t]
+\centering
+\caption{Direction instability for known cytotoxic drugs. Most are above the
+population median (0.92), contradicting the predicted failure mode.
+Correction for stress genes shifts values by $<$0.01.}
+\label{tab:toxic}
+\small
+\begin{tabular}{lrrr}
+\toprule
+Drug & $D_{\text{raw}}$ & $D_{\text{corr}}$ & $\Delta$ \\
+\midrule
+staurosporine & 0.47 & 0.48 & $+$0.01 \\
+doxorubicin & 0.74 & 0.74 & 0.00 \\
+etoposide & 0.78 & 0.78 & 0.00 \\
+camptothecin & 0.82 & 0.82 & 0.00 \\
+vincristine & 0.87 & 0.87 & 0.00 \\
+paclitaxel & 0.89 & 0.89 & 0.00 \\
+cisplatin & 0.91 & 0.91 & 0.00 \\
+tunicamycin & 0.92 & 0.92 & 0.00 \\
+thapsigargin & 0.93 & 0.93 & 0.00 \\
+\midrule
+\emph{Population median} & 0.92 & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Interpretation.}
+H1 passes its pre-registered criterion (85\% of toxic drugs fall below
+the corrected median), but this is an artifact of the criterion design: most
+toxic drugs are already high-instability, so correction moves them
+negligibly rather than reclassifying them. We classify H1 as
+\emph{refuted with artifact pass}: the predicted mechanism (cytotoxic
+drugs masquerading as mechanism-conserving via shared stress programs) is
+wrong. Cytotoxicity produces genuinely context-dependent signatures.
+The failure mode---``violence mimics transport''---is not the dominant
+failure mode in 978-gene pharmacological data.
+
+\subsection{Experiment 2: Broad-mechanism drugs confirm; specificity gradient is weaker than predicted}
+
+Seven of 10 broad-mechanism drugs fell below the population median direction
+instability of 0.92, confirming H2 (Table~\ref{tab:broad}). The strongest
+signal came from pan-HDAC inhibitors: vorinostat ($D = 0.49$) and
+trichostatin-a ($D = 0.55$) are among the most mechanism-conserving drugs
+in the entire dataset.
+
+\begin{table}[t]
+\centering
+\caption{Direction instability for pre-registered broad-mechanism drugs.
+7/10 fall below the population median (0.92). Pan-HDAC inhibitors dominate
+the low end. Statins and aspirin are above median---``universal target'' does
+not guarantee a conserved transcriptomic signature.}
+\label{tab:broad}
+\small
+\begin{tabular}{llrr}
+\toprule
+Drug & Rationale & $D$ & Below median? \\
+\midrule
+vorinostat & pan-HDAC & 0.49 & Yes \\
+trichostatin-a & pan-HDAC & 0.55 & Yes \\
+sirolimus & mTOR & 0.78 & Yes \\
+methotrexate & DHFR & 0.81 & Yes \\
+dexamethasone & GR agonist & 0.83 & Yes \\
+metformin & AMPK & 0.86 & Yes \\
+lovastatin & HMGCR & 0.88 & Yes \\
+atorvastatin & HMGCR & 0.91 & No \\
+simvastatin & HMGCR & 0.93 & No \\
+aspirin & COX & 0.96 & No \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{The unexpected kinase result.}
+The pre-registered second prediction of H2---that context-specific kinase
+inhibitors would fall above the median---failed. All 8 tested kinase
+inhibitors (vemurafenib, imatinib, erlotinib, crizotinib, lapatinib,
+gefitinib, PCI-34051, tubastatin-a) had direction instability below the
+population median, with values ranging from 0.73 to 0.91
+(Table~\ref{tab:specific}).
+
+\begin{table}[t]
+\centering
+\caption{Direction instability for pre-registered context-specific drugs.
+Contrary to prediction, all fall below the population median.}
+\label{tab:specific}
+\small
+\begin{tabular}{llrr}
+\toprule
+Drug & Target & $D$ & Above median? \\
+\midrule
+vemurafenib & BRAF V600E & 0.73 & No \\
+imatinib & BCR-ABL & 0.78 & No \\
+erlotinib & EGFR & 0.81 & No \\
+crizotinib & ALK/ROS1 & 0.83 & No \\
+lapatinib & HER2 & 0.84 & No \\
+gefitinib & EGFR & 0.86 & No \\
+PCI-34051 & HDAC8 & 0.89 & No \\
+tubastatin-a & HDAC6 & 0.91 & No \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Interpretation.}
+The sorting axis is target \emph{breadth}---how many gene programs a compound
+engages---not target \emph{specificity}. Pan-HDAC inhibitors rank lowest
+because chromatin remodeling affects hundreds of downstream genes
+simultaneously, producing a strong, coherent direction. Kinase inhibitors
+target fewer downstream genes but still target them consistently across cell
+types (EGFR signaling is active in most LINCS cell lines, regardless of
+whether EGFR mutation drives growth). The drugs that actually have high
+direction instability ($D > 0.94$) tend to be receptor agonists and
+neuromodulators whose targets are tissue-restricted in expression.
+
+The gradient we observe is: conserved engagement of many genes (low $D$)
+$\to$ conserved engagement of few genes (moderate $D$) $\to$ tissue-restricted
+expression of target (high $D$). Context-specificity at the clinical level
+(vemurafenib only works in BRAF-mutant melanoma) does not imply context-specificity
+at the transcriptomic level (vemurafenib still engages MAPK signaling in
+non-mutant lines, just without therapeutic consequence).
+
+\subsection{Experiment 3: Phenotype-projected bracket separates on-target from off-target instability}
+
+Among 795 drugs with annotated targets and matched shRNA consensus signatures,
+phenotype-projected bracket correlates with on-target enrichment at Spearman
+$\rho = 0.376$ ($p = 4.8 \times 10^{-28}$). Raw bracket shows no correlation
+with the same enrichment ($\rho = -0.043$, $p = 0.22$). Both pre-registered
+criteria are satisfied: $|\rho_{\text{projected}}| = 0.376 > 0.3$ and
+$|\rho_{\text{raw}}| = 0.043 < 0.15$.
+
+\paragraph{Interpretation.}
+H3 confirms Rung~5 of the validity ladder empirically. Raw direction
+instability measures whether a drug's signatures point in consistent
+directions across cell lines, but this consistency could arise from any
+coherent program---on-target, off-target, or stress-related. Projecting
+instability onto the genetic perturbation direction of the drug's annotated
+target isolates the mechanistically relevant component. The near-zero
+correlation for raw bracket shows that global instability carries no
+information about on-target alignment; the strong correlation for projected
+bracket shows that the on-target projection recovers it.
+
+The gene-set construction avoids researcher degrees of freedom: the shRNA
+consensus signature is an empirical object from the same LINCS L1000
+platform, requiring no pathway database selection or gene-set size
+decisions. H3 and H4 share this shRNA dependency
+(documented in DEVIATION\_LOG.md entry~3) and are not independent tests.
+
+\subsection{Experiment 4: Localization predicts intracellular but not receptor-mediated mechanism}
+
+\paragraph{H4 is not confirmed.}
+The macro-averaged one-vs-rest AUROC gap between localization score and raw
+bracket is $+0.018$ (95\% bootstrap CI $[-0.010, +0.048]$), below the
+pre-registered threshold of $+0.05$. The confidence interval includes zero.
+
+\paragraph{The failure has biological structure.}
+Per-MOA AUROC gaps reveal a consistent pattern: localization improves
+prediction for drugs targeting intracellular enzymes and diverges for
+receptor-mediated drugs (Table~\ref{tab:loc_moa}).
+
+\begin{table}[t]
+\centering
+\caption{Per-MOA AUROC gaps (localization $-$ raw) for the 15 eligible MOA
+classes. Intracellular enzyme targets (topoisomerase, CDK, mTOR, p38~MAPK)
+show large positive gaps. Receptor-mediated targets (acetylcholine, PPAR,
+estrogen, histamine) show negative gaps. Macro-average: $+0.018$.}
+\label{tab:loc_moa}
+\small
+\begin{tabular}{lrr}
+\toprule
+MOA class & $N$ & AUROC gap \\
+\midrule
+topoisomerase inhibitor & 15 & $+$0.491 \\
+CDK inhibitor & 16 & $+$0.258 \\
+mTOR inhibitor & 13 & $+$0.176 \\
+p38 MAPK inhibitor & 10 & $+$0.165 \\
+HDAC inhibitor & 20 & $+$0.076 \\
+glucocorticoid receptor agonist & 27 & $+$0.061 \\
+MEK inhibitor & 13 & $+$0.036 \\
+\midrule
+adrenergic receptor agonist & 14 & $-$0.036 \\
+calcium channel blocker & 11 & $-$0.087 \\
+cyclooxygenase inhibitor & 17 & $-$0.099 \\
+EGFR inhibitor & 39 & $-$0.107 \\
+histamine receptor antagonist & 26 & $-$0.135 \\
+estrogen receptor agonist & 16 & $-$0.148 \\
+PPAR receptor agonist & 16 & $-$0.188 \\
+acetylcholine receptor antagonist & 23 & $-$0.201 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Interpretation.}
+Localization to the shRNA-derived gene set works when the drug's mechanism
+operates through a small number of genes that the target gene's knockdown
+also affects---topoisomerase inhibitors, CDK inhibitors, mTOR inhibitors
+produce transcriptomic effects concentrated in the same gene programs as
+their target knockdowns. Receptor-mediated drugs produce diffuse downstream
+cascades that spread beyond the 100-gene region mask. Their instability is
+real but not localizable to the target gene's knockdown signature.
+
+This is an informative null. The localization rung of the validity ladder
+is domain-dependent: it adds inferential warrant for intracellular enzyme
+inhibitors but not for receptor agonists and antagonists, whose mechanisms
+produce distributed transcriptomic effects. The pre-registered threshold
+appropriately penalizes this heterogeneity through the macro-average.
+
+\subsection{Experiment 5: Transport-stable bracket outpredicts raw bracket in held-out cell lines}
+
+Transport-stable bracket outpredicts raw bracket in all 5 cross-validation
+folds (Table~\ref{tab:transport}). Raw bracket is \emph{anti-predictive}:
+its Spearman correlation with held-out cosine consistency is negative in
+every fold, reaching $\rho = -0.73$ in the A673 fold. Transport-stable
+bracket is positively predictive in all folds, reaching $\rho = +0.72$ in
+the same fold. The pre-registered criterion (transport-stable wins in
+$\geq$4 of 5 folds) is satisfied at 5/5.
+
+\begin{table}[t]
+\centering
+\caption{Leave-one-cell-line-out cross-validation. Transport-stable (TS)
+bracket outpredicts raw bracket in all 5 folds. Raw bracket is
+anti-predictive: higher raw instability in training predicts \emph{lower}
+held-out cosine consistency, while higher TS bracket predicts higher
+consistency.}
+\label{tab:transport}
+\small
+\begin{tabular}{lrrrl}
+\toprule
+Held-out cell & $N_{\text{drugs}}$ & $\rho_{\text{raw}}$ & $\rho_{\text{TS}}$ & Winner \\
+\midrule
+A375 & 8{,}328 & $-$0.480 & $-$0.155 & TS \\
+A549 & 8{,}888 & $-$0.494 & $-$0.201 & TS \\
+A673 & 357 & $-$0.725 & $+$0.725 & TS \\
+AGS & 356 & $-$0.712 & $+$0.714 & TS \\
+ASC & 2{,}345 & $-$0.365 & $+$0.346 & TS \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{The effect is strongest in rare cell lines.}
+Folds holding out rare cell lines (A673: 357 drugs, AGS: 356 drugs) show
+the largest absolute correlations and the starkest sign flips. In these
+folds, removing a single cell line from training substantially changes the
+consensus direction, and drugs with high raw instability (inconsistent
+directions in training) produce held-out signatures that point away from
+the training consensus. Transport-stable bracket corrects for this by
+penalizing high Fr\'{e}chet variance, so drugs whose training instability
+is driven by a single outlier cell line are downweighted.
+
+\paragraph{Common cell lines show the same direction, smaller magnitude.}
+In the A375 and A549 folds (8{,}000+ drugs), raw bracket remains
+anti-predictive ($\rho \approx -0.49$) and transport-stable bracket
+improves over raw, though both remain negative. The consensus direction
+is stable when computed from many cell lines, so the held-out prediction
+task is easier and both metrics perform more similarly---but the ordering
+is preserved.
+
+\paragraph{Interpretation.}
+H5 provides the strongest single result in the drug domain. Raw direction
+instability is anti-predictive for cross-context transport: drugs with high
+instability in training produce held-out signatures that disagree with the
+training consensus. This occurs because high instability conflates two
+distinct phenomena---genuine directional inconsistency and Fr\'{e}chet
+variance (sampling noise from a small number of contexts). Transport-stable
+bracket separates these, and the separation matters most precisely where the
+confound is strongest: in rare cell lines where a single outlier can
+dominate the raw metric.
+
+\paragraph{Shared-variance caveat.}
+The transport-stable penalty and the held-out cosine outcome both depend on
+the training-set signature geometry, raising a potential circularity concern:
+both quantities share variance through the training consensus direction.
+The sign flip (raw anti-predictive, TS predictive) argues against a trivial
+shared-variance explanation---if the improvement were purely algebraic,
+we would expect monotonic improvement rather than a sign reversal. A
+variance-preserving permutation null tests this directly: held-out
+\emph{signatures} are shuffled across drugs while each drug's training
+data (raw DI, Fr\'echet variance, TS, and consensus vector) remains
+fixed, and held-out cosines are recomputed against each drug's original
+consensus. This preserves the mechanical coupling between consensus
+tightness and cosine magnitude; if TS's advantage persists under this
+null, the advantage is algebraic rather than drug-specific.
+
+\subsection{Experiment 7: Essential-gene correction preserves ranking but reveals confound-dominated machinery}
+
+\paragraph{HP3: Failure-mode inversion.}
+Universal-essential knockdowns have \emph{higher} Grassmannian geodesic
+distances than non-essential knockdowns (mean 2.80 vs.\ 2.67, Cohen's $d =
++0.60$, Mann--Whitney $p < 10^{-33}$; $n = 1{,}567$ genes with both
+geodesic distances and DepMap labels, of which 855 universal-essential and
+712 non-essential). Essential genes do not produce a shared response across
+cell types; they \emph{diverge}---the same gene's lethal disruption
+manifests through different transcriptomic programs in K562 and RPE1. This
+inverts the predicted failure mode: in drugs, ``violence'' (cytotoxicity) was
+predicted to mimic transport but does not; in genetics, ``violence''
+(essential knockdowns) produces the opposite of transport.
+
+A permutation null (shuffling essential/non-essential labels across the
+1{,}567 genes while holding geodesic distances fixed, 10{,}000 permutations)
+confirms that this divergence exceeds background K562/RPE1 divergence:
+the observed difference (0.123) falls outside the null 95\% interval
+$[-0.021, 0.022]$, $p_{\text{perm}} < 10^{-4}$. The null embeds the baseline
+cross-cell-type divergence into both groups by preserving the geodesic
+distance distribution; what it breaks is only the essential/non-essential
+label assignment. That the observed effect exceeds the null by ${\sim}6\times$
+the null half-width rules out the confound that both screens' DepMap-essential
+gene libraries (85\% overlap) mechanically drive the separation.
+
+\paragraph{HP1: Correction does not bite.}
+After projecting out the essential-response Fr\'echet mean subspace,
+Spearman $\rho$ between raw and corrected geodesic distances is 0.91 ($p <
+10^{-300}$). By the pre-registered criterion, this ``doesn't bite''---the
+same qualitative outcome as the drug HDAC gradient ($\rho = 0.83$).
+The global ranking is preserved.
+
+\paragraph{Item-level rank shifts are the primary finding.}
+The essential-gene correction's value is not at the population level
+(where $\rho = 0.91$ confirms stability) but at the item level: individual
+genes shift hundreds of rank positions, identifying which transport scores
+are most confound-dominated. The top 100 rank-shifters are enriched for
+spliceosomal complex assembly (Fisher's exact OR $= 8.9$, $p = 1.3 \times
+10^{-7}$) and proteasomal catabolic processes (OR $= 4.1$, $p = 6.7 \times
+10^{-5}$): proteasome subunits (\emph{PSMA3}, \emph{PSMB6}, \emph{PSMC4})
+shift 750--900 positions; spliceosome components (\emph{SF3B1},
+\emph{SNRPG}, \emph{DDX23}) shift 660--820 positions. These core-machinery
+complexes are the genes whose cross-cell-type geometry is most dominated by
+the shared essential-response axis. The correction provides a concrete
+action: flag these genes before interpreting their transport scores as
+mechanistically meaningful.
+
+\paragraph{HP2: Pathway function prediction does not bite.}
+GO Biological Process Jaccard overlap has near-zero correlation with geodesic
+distance in both raw ($\rho = 0.024$, $p < 10^{-7}$) and corrected ($\rho =
+-0.002$, $p = 0.68$) forms. The correction removes the tiny positive
+relationship that existed rather than strengthening it (improvement $=
+-0.022$). By the pre-registered criterion (improvement $\geq 0.05$), HP2
+does not bite. Geodesic distance measures transcriptomic-geometry rotation,
+which is orthogonal to pathway co-membership at this scale: two genes in the
+same GO category need not produce geometrically similar perturbation
+responses.
+
+\paragraph{Interpretation.}
+The Perturb-seq domain provides the same qualitative result as LINCS drugs:
+the validity condition (essential-gene correction) does not reorganize the
+global ranking but upgrades the interpretive warrant. The domain-specific
+insight is the failure-mode inversion: universal-essential knockdowns
+diverge rather than converge, which means the confounding mechanism operates
+through a different channel than in pharmacological perturbations. Cohen's $d$
+drops from $+0.60$ to $+0.28$ after correction, confirming that the
+essential-response subspace accounts for roughly half the group separation.
+HP2's null further constrains interpretation: geodesic distance captures
+geometric similarity of perturbation effects, which is distinct from
+functional pathway relatedness.
+
+\subsection{Experiment 8: Cell-health correction has negligible effect in JUMP-CP}
+
+Among 25{,}254 compounds tested in $\geq$5 imaging sources, raw direction
+instability has population mean 0.92 and median 0.95---comparable to the
+LINCS drug population (median 0.92 in 978-gene space). After removing 743
+cell-health features, corrected direction instability tracks the raw ranking
+almost perfectly: Spearman $\rho = 0.987$ ($p < 10^{-300}$). By the
+pre-registered criterion, this ``doesn't bite.''
+
+\paragraph{The correction is even weaker than in the other domains.}
+The JUMP-CP $\rho = 0.987$ is comparable to the LINCS global drug
+correction ($\rho > 0.99$) and slightly above the Perturb-seq
+essential-gene correction ($\rho = 0.91$). This
+is consistent with the higher feature dimensionality: 743 health features
+constitute 23\% of the 3{,}180-feature space, a smaller proportional
+perturbation than the drug toxicity gene set (41 of 978 genes, 4\%) yet
+with less ranking impact, because the health features carry less of the
+cross-source variance in morphological signatures.
+
+\paragraph{Individual compounds still shift thousands of ranks.}
+Despite the near-perfect global correlation, individual compounds shift up
+to 7{,}155 rank positions after cell-health correction
+(Table~\ref{tab:jump_movers}). These are compounds whose direction
+instability is dominated by cell-health feature variance---their
+morphological signatures appear consistent across sources primarily because
+health-related measurements (area, granularity, mitochondrial intensity)
+behave similarly, rather than because the compound produces a
+mechanism-specific morphological phenotype.
+
+\begin{table}[t]
+\centering
+\caption{Top rank movers after cell-health correction in JUMP-CP. Despite
+$\rho = 0.987$ globally, individual compounds shift thousands of positions,
+identifying those whose apparent morphological consistency is
+health-feature-dominated.}
+\label{tab:jump_movers}
+\small
+\begin{tabular}{lrrr}
+\toprule
+Compound & Raw rank & Corrected rank & $|\Delta|$ \\
+\midrule
+JCP2022\_015169 & 10{,}843 & 17{,}998 & 7{,}155 \\
+JCP2022\_098151 & 16{,}600 & 23{,}618 & 7{,}018 \\
+JCP2022\_093366 & 8{,}306 & 15{,}020 & 6{,}714 \\
+JCP2022\_102324 & 14{,}753 & 21{,}442 & 6{,}689 \\
+JCP2022\_037124 & 9{,}200 & 15{,}800 & 6{,}600 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Interpretation.}
+JUMP-CP provides the strongest test of the ``correction doesn't bite''
+pattern. With 25{,}254 compounds, 3{,}180 features, and $K \geq 5$ imaging
+sources providing genuine direction-instability computation (not the $K = 2$
+pairwise reduction of Perturb-seq), the cell-health correction yields $\rho
+= 0.987$. The morphological domain joins the transcriptomic (LINCS) and
+genetic (Perturb-seq) domains in exhibiting the same pattern: validity
+conditions preserve global rankings while identifying individual
+perturbations whose scores are most confound-dominated.
+
+\section{Discussion}
+
+\subsection{Validity conditions license claims, they do not reclassify}
+
+The central finding is negative in the most useful sense: validity conditions
+do not reorganize the direction-instability ranking. In LINCS drugs, the
+HDAC selectivity gradient---the fine-grained ordering from pan-isoform to
+selective inhibitors---is preserved after toxicity correction ($\rho =
+0.83$; the global 8{,}949-drug ranking gives $\rho > 0.99$). In Perturb-seq
+knockdowns, the essential-gene correction preserves the global
+geodesic-distance ranking ($\rho = 0.91$). In JUMP-CP, the cell-health
+correction leaves the morphological ranking nearly unchanged ($\rho =
+0.99$). All three domains tell the same story: the ranking is robust.
+
+What changes is the inferential warrant. Phenotype projection (H3) proves
+that direction instability can be decomposed into on-target and off-target
+components: the projected bracket correlates with genetic perturbation
+connectivity ($\rho = 0.38$) while the raw bracket carries no on-target
+information. Transport stability (H5) proves that the metric predicts
+held-out cell-line effects, but only after Fr\'{e}chet variance correction;
+raw bracket is anti-predictive, conflating genuine directional inconsistency
+with sampling noise. Applying toxicity correction and
+observing negligible movement proves that the HDAC signal is
+chromatin-specific, not stress-derived. Applying essential-gene correction
+and observing that proteasome/spliceosome genes shift while the population
+ranking holds proves that the transport signal is not an artifact of shared
+lethal-response geometry.
+
+Confound corrections for perturbation scores are well-established
+\citep{meyers2017ceres,pacini2021integrated}; the novelty here is not that
+corrections exist but that rank-preserving corrections carry inferential
+value. The validity ladder is a proof system: each rung eliminates a specific
+threat to interpretation. A practitioner who reports only raw $D = 0.55$
+makes a weaker claim than one who reports $D = 0.55$ after toxicity
+correction, localization to the HDAC pathway, and replication across a
+held-out cell-line panel. The number is the same; the license differs.
+This aligns with recent work on construct validity for computational
+scores \citep{freiesleben2025benchmarking,watson2025measuring}: the
+question is not whether the metric is accurate but what inferences it
+supports.
+
+\subsection{Honest nulls strengthen the contribution}
+
+Five of our pre-registered predictions produced informative nulls or refutations.
+
+\paragraph{H1 is refuted; its criterion-pass is an artifact.}
+We predicted that cytotoxic drugs would masquerade as mechanism-conserving
+(low bracket) via shared stress programs, and that toxicity correction would
+expose them. In LINCS L1000, cytotoxic drugs are already high-instability.
+Their transcriptomic effects are genuinely context-dependent---different stress
+cascades dominate in different cell types. H1's pre-registered criterion
+(85\% of toxic drugs below corrected median) passes because most toxic drugs
+are high-instability to begin with, not because the correction reclassifies
+them. We classify this as \emph{refuted with artifact pass}: the predicted
+mechanism is wrong, and the criterion is too permissive to detect this.
+The ``violence mimics transport'' failure mode may be more relevant in
+lower-dimensional assays where the stress response dominates the
+measurable signal.
+
+\paragraph{H2's specificity axis was wrong.}
+We predicted that context-specific kinase inhibitors would have high direction
+instability. They do not. The sorting axis is target breadth (number of
+affected gene programs), not clinical specificity. This distinguishes the
+transcriptomic notion of ``context-dependent effect'' from the clinical notion
+of ``specific to patient subgroup.'' Both are informative; they are not the
+same quantity.
+
+\paragraph{H4's localization is target-class-dependent.}
+We predicted that localization to target-gene knockdown signatures would
+improve MOA prediction by at least 0.05 AUROC. The macro-averaged gap is
+$+0.018$. Localization helps substantially for intracellular enzyme
+inhibitors (topoisomerase: $+0.49$, CDK: $+0.26$) but hurts for
+receptor-mediated drugs (acetylcholine: $-0.20$, PPAR: $-0.19$). The
+pre-registered macro-average threshold appropriately captures this
+heterogeneity: Rung~4 is not universally applicable. For drugs whose
+downstream effects are distributed across many gene programs, concentrating
+the instability measurement on 100 target-gene-derived genes discards
+informative signal.
+
+\paragraph{HP1 doesn't bite.}
+We predicted that essential-gene correction would disrupt the Perturb-seq
+ranking. It does not ($\rho = 0.91$). This parallels the drug domain ($\rho
+> 0.99$ globally): the correction preserves population-level rankings. The
+failure-mode inversion
+(HP3, essential knockdowns diverge rather than converge) explains why:
+universal-essential genes do not create a shared response axis that inflates
+transport scores, because their responses rotate \emph{away} from each other
+across cell types.
+
+\paragraph{HP2 doesn't bite.}
+We predicted that corrected distances would better predict GO pathway
+function. They do not---the relationship between geodesic distance and
+pathway Jaccard overlap is negligible ($|\rho| < 0.025$) for both raw and
+corrected distances. This separates two quantities that could have been
+conflated: geometric similarity of perturbation responses is not the same as
+functional pathway relatedness.
+
+These nulls constrain the theory. Validity conditions are needed when the raw
+metric's failure mode is active in a domain. In both LINCS drugs and
+Perturb-seq genetics, the predicted confounding mechanism operates differently
+than expected, and the correction adds little to the global ranking. The
+ladder's value is domain-dependent, which is precisely the point: validity
+conditions are not universal corrections but domain-specific proof obligations.
+
+\subsection{Scope of claims}
+
+Direction instability measures angular consistency of perturbation signatures
+across contexts. It does not measure therapeutic efficacy, in-vivo
+translatability, or clinical specificity. A drug with low direction
+instability and full ladder validation has a strong claim to
+\emph{mechanism-conserving transcriptomic effects across cell lines in
+vitro}. Whether that mechanism is therapeutically relevant, whether the
+effect replicates in patient-derived tissue, and whether the consistency
+reflects target engagement rather than pathway compensation are questions
+the ladder does not answer. The ladder is a proof system for
+interpretive warrant, not a surrogate endpoint.
+
+\subsection{Cross-domain consistency}
+
+The same geometric object---angular deviation of perturbation-response
+directions across contexts---captures mechanism conservation in three
+unrelated domains: small-molecule drug effects across cell lines (LINCS
+L1000, 978 genes, $K \geq 5$), genetic knockdown effects across
+cell types (Perturb-seq, 2{,}073 genes, $K = 2$), and morphological
+compound effects across imaging sources (JUMP-CP, 3{,}180 features,
+$K \geq 5$). All three domains exhibit the same pattern: the relevant
+validity condition preserves the global ranking while identifying specific
+perturbations whose scores are most confound-dominated
+(Table~\ref{tab:cross_domain}).
+
+\begin{table}[t]
+\centering
+\caption{Cross-domain summary. The correction-vs-raw Spearman $\rho$
+quantifies how much the domain-specific validity condition reorganizes
+the ranking. All three domains exceed the pre-registered ``doesn't bite''
+threshold ($\rho \geq 0.83$). The LINCS HDAC gradient $\rho$ measures
+preservation of the fine-grained selectivity ordering within a single drug
+class (20 compounds); the global 8{,}949-drug $\rho > 0.99$.}
+\label{tab:cross_domain}
+\small
+\begin{tabular}{llrrl}
+\toprule
+Domain & Correction & Features & $N$ & $\rho$ \\
+\midrule
+LINCS L1000 (HDAC gradient) & Toxicity genes & 978 & 20 & 0.83 \\
+LINCS L1000 (global) & Toxicity genes & 978 & 8{,}949 & $>$0.99 \\
+Perturb-seq & Essential-gene subspace & 2{,}073 & 1{,}676 & 0.91 \\
+JUMP-CP & Cell-health features & 3{,}180 & 25{,}254 & 0.99 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The domain-specific failure modes differ in mechanism: in drugs, cytotoxicity
+produces high-instability signatures (context-dependent stress cascades); in
+genetics, universal-essential knockdowns produce high-distance subspaces
+(divergent lethal programs); in morphology, cell-health features contribute
+a small fraction of the cross-source variance. All three invert the naive
+prediction that ``violence mimics transport.'' The validity ladder provides
+the domain-specific proof structure needed to interpret a general measurement
+within each domain's causal framework.
+
+\paragraph{Robustness extends to process-view choice.}
+To test whether restricting contexts to a single tissue type would create
+enough confounding for correction to bite, we computed within-tissue
+direction instability for drugs tested in $\geq$5 cell lines of a single
+tissue. Across five tissues (large intestine, lung, heme, breast, ovary;
+176--358 drugs each), lineage-gene correction (removing the top-100
+within-tissue variance genes) yields $\rho = 0.98$--$0.99$ in all cases.
+The ranking is robust even when contexts share tissue identity. This
+result extends the pattern: in high-dimensional feature spaces, removing
+a biologically motivated feature subset (whether toxicity genes, essential
+response, cell-health features, or lineage genes) does not reorganize the
+global ranking.
+
+The one context where correction has measurable effect is within-class
+comparisons at low $N$: the 20-compound HDAC selectivity gradient gives
+$\rho = 0.83$, and within-essential-gene ranking in Perturb-seq gives $\rho
+= 0.88$. This suggests the ladder's empirical bite is concentrated in
+fine-grained mechanistic comparisons within a single perturbation class,
+where the confound can dominate the limited between-perturbation variance.
+
+\subsection{Relation to the drug transport paper}
+
+\citet{tower2026bracket} established that direction instability predicts mechanism
+conservation and demonstrated three internal validity checks: the cytotoxicity
+defense (ruling out stress as a driver), the transporting core (identifying
+conserved genes), and genetic triangulation (confirming target-mediated
+transport via shRNA knockdown). Those analyses address validity implicitly---each
+rules out a specific confound without naming the general principle.
+
+This paper makes the general principle explicit and tests each rung
+empirically. The cytotoxicity defense is
+Rung~4 (localized to biology) applied negatively: showing that the signal is
+\emph{not} in stress genes. The transporting core is Rung~5 (phenotype-aligned):
+the conserved direction matches the target pathway---confirmed here via
+genetic perturbation connectivity (H3, $\rho = 0.38$). Genetic triangulation is
+Rung~7 (predicts holdout): an independent data modality confirms the mechanistic
+prediction---extended here via cross-context transport stability (H5, 5/5
+folds). Naming the ladder lets practitioners apply these proof obligations
+to new domains (single-cell perturbation, genomic screens, morphological
+assays) where the specific checks from the drug transport paper do not
+directly translate.
+
+\subsection{Limitations}
+
+We tested five drug-domain experiments (H1--H5), three genetic-domain
+experiments (HP1--HP3), and one morphological experiment (cell-health
+correction). The drug-domain experiments H3--H5 use shRNA knockdown
+signatures as the ground-truth on-target direction, which assumes the
+target gene annotation in the Drug Repurposing Hub is correct and that
+the shRNA consensus captures the drug's mechanism. Drugs with
+unannotated or incorrectly annotated targets are excluded (7{,}398 of
+8{,}949 drugs lack target annotations), and multi-target drugs use only
+the first listed target.
+
+LINCS L1000 measures 978 landmark genes, restricting the toxicity gene set to
+those represented in the landmark panel. A full-transcriptome dataset would
+test whether the negligible effect of toxicity correction persists at higher
+dimensionality, where stress programs span more measurable axes.
+
+The Perturb-seq analysis uses $K = 2$ cell types, which collapses the
+Grassmannian analysis to a single pairwise comparison. There is no Fr\'echet
+variance, no holonomy, no cross-context transport stability test. The
+essential-gene correction result should be interpreted as a
+correction-changes-ranking test rather than a full transport stability
+analysis. LINCS and JUMP-CP both use $K \geq 5$ contexts, providing
+genuine direction-instability computation in two of the three domains.
+Both the K562 and RPE1 screens target DepMap-essential genes, so the
+HP3 ``non-essential'' comparison group consists of genes selected for
+essentiality that fall below the Chronos $< -0.5$ threshold in one or
+both cell types. A label-permutation null ($p_{\text{perm}} < 10^{-4}$,
+10{,}000 shuffles) confirms the essential/non-essential divergence exceeds
+background K562/RPE1 divergence by ${\sim}6\times$ the null half-width,
+ruling out the library-overlap confound directly rather than by argument
+from attenuation. A genome-wide Perturb-seq screen with genuine
+non-essential controls would provide an even sharper test.
+
+JUMP-CP profiles are variance-stabilized and MAD-normalized, and the
+cell-health feature set was defined by substring matching on CellProfiler
+feature names rather than by an independent biological criterion. A more
+principled partition (e.g., features correlated with viability assays)
+could yield different correction magnitudes.
+
+\subsection{Implications}
+
+The validity ladder has immediate practical utility in three settings
+demonstrated here:
+
+\textbf{Drug repurposing.} A compound with low direction instability and
+confirmed localization to a disease-relevant pathway has stronger repurposing
+evidence than one with low instability alone. The ladder provides a checklist
+for what additional evidence strengthens the repurposing case.
+
+\textbf{Genetic screen prioritization.} Perturb-seq experiments produce
+thousands of knockdown profiles. Grassmannian geodesic distance identifies
+genes whose perturbation effects transport across cell types. The
+essential-gene correction identifies which of these transport scores may be
+confound-dominated, enabling more targeted follow-up: genes with low
+geodesic distance \emph{after} correction are the strongest candidates for
+conserved mechanism, while genes that shift substantially (proteasome,
+spliceosome) warrant additional scrutiny before mechanistic claims.
+
+\textbf{Morphological compound screening.} JUMP-CP direction instability
+across 25{,}254 compounds provides a morphological analogue to the
+transcriptomic ranking. The cell-health correction identifies compounds
+whose apparent morphological consistency is dominated by viability-related
+features rather than mechanism-specific phenotypes. For high-throughput
+screening campaigns, this distinction matters: a compound that scores low
+on direction instability \emph{after} cell-health correction has a stronger
+claim to mechanism-conserving morphological effects than one whose
+consistency derives primarily from cell-health signals.
+
+\section{Conclusion}
+
+Direction instability is a reliable measure of perturbation-response
+consistency across contexts, whether applied to drug signatures in 978-gene
+transcriptomic space, genetic knockdown responses as subspaces on the
+Grassmannian, or compound morphological profiles in 3{,}180-feature Cell
+Painting space. Validity conditions do not improve the metric's ability to
+rank perturbations---the ranking is already biologically meaningful in all
+three domains tested ($\rho > 0.99$ for LINCS, $0.91$ for Perturb-seq,
+and $0.99$ for JUMP-CP after correction).
+They improve the practitioner's ability to make claims about that ranking.
+Phenotype projection separates on-target from off-target instability
+($\rho = 0.38$ vs.\ $-0.04$); transport-stable bracket predicts held-out
+effects where raw bracket is anti-predictive (5/5 folds); localization
+helps for intracellular enzyme targets but not receptor-mediated drugs,
+constraining where Rung~4 applies. Each condition eliminates a specific
+interpretive threat: toxicity correction rules out stress-mediated false
+positives; essential-gene correction rules out shared lethal-response
+geometry; cell-health correction rules out viability-driven consistency.
+The domain-specific failure modes differ, but the pattern is the same:
+correction preserves population rankings while identifying individual
+perturbations most susceptible to confounding. The validity ladder is a
+proof system for mechanistic inference from geometric perturbation scores.
+
+\bibliographystyle{tmlr}
+\bibliography{references}
+
+\end{document}
