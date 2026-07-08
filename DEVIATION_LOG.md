@@ -37,9 +37,11 @@ construction (no GO-BP union, no arbitrary pathway database selection).
 
 - **H5 cross-validation:** Leave-one-cell-line-out. For each fold, compute
   transport_stable_bracket and raw direction_instability on the training
-  cell lines. Predict held-out cell line effect using Spearman rank
-  correlation between the drug's bracket score and its actual signature
-  magnitude in the held-out cell line.
+  cell lines. Held-out outcome is cosine similarity between the held-out
+  cell line's signature and the training-set consensus (mean) direction.
+  This matches the direction-based estimand of DI. Spearman rank
+  correlation between bracket score and held-out cosine is the test
+  statistic.
 
 **Sensitivity analysis (H3, H4): Drug Repurposing Hub MOA grouping.**
 As a secondary check, repeat H3 and H4 using MOA class membership as the

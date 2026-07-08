@@ -12,6 +12,10 @@ the appropriate validity condition (size correction) is applied.
 Data: Steinmetz et al. 2019 Neuropixels + Zatka-Haas et al. 2021 silencing.
 All cached locally from prior work.
 
+Note: n=12 regions is underpowered for a rho>0.6 threshold. Bootstrap CI
+on (rho_corrected - rho_raw) is reported; this is exploratory, not
+confirmatory.
+
 Usage:
     uv run python experiments/06_neural_replication.py --data PATH_TO_BRACKET_NORM_CACHE
     uv run python experiments/06_neural_replication.py --synthetic
@@ -49,13 +53,6 @@ def compute_bracket_norm_per_region(
     Bracket norm = how much the coding direction changes as stimulus
     evidence varies. Operationalized as 1 - mean(pairwise cosine) of
     choice-coding vectors across evidence quartiles.
-
-    Args:
-        activity: region -> (n_trials, n_neurons, n_timebins) array
-        labels: region -> (n_trials,) choice labels
-
-    Returns:
-        region -> {"raw_bn": float, "n_neurons": int, "corrected_bn": float}
     """
     results = {}
     for region in activity:
@@ -103,6 +100,20 @@ def compute_bracket_norm_per_region(
     return results
 
 
+def bootstrap_rho_diff(raw_bns, corrected_bns, silencing, n_boot=5000, seed=42):
+    """Bootstrap 95% CI on (rho_corrected - rho_raw) vs silencing."""
+    rng = np.random.default_rng(seed)
+    n = len(raw_bns)
+    diffs = []
+    for _ in range(n_boot):
+        idx = rng.choice(n, size=n, replace=True)
+        rho_raw = stats.spearmanr(raw_bns[idx], silencing[idx]).statistic
+        rho_corr = stats.spearmanr(corrected_bns[idx], silencing[idx]).statistic
+        diffs.append(rho_corr - rho_raw)
+    diffs = np.array(diffs)
+    return float(np.percentile(diffs, 2.5)), float(np.percentile(diffs, 97.5))
+
+
 def run_synthetic():
     """Estimator unit-test: validates that BN/sqrt(n) removes a planted size confound.
 
@@ -111,7 +122,7 @@ def run_synthetic():
     H6 evidence comes only from the --real Steinmetz path.
     """
     log("=== SYNTHETIC MODE (estimator unit-test, not H6 evidence) ===")
-    rng = np.random.default_rng(seed=20260707_06)
+    rng = np.random.default_rng(seed=2026070706)
 
     n_regions = 20
     neuron_counts = rng.integers(10, 200, size=n_regions)
@@ -185,11 +196,17 @@ def run_real(data_dir: Path, output_dir: Path):
     for region, effect in SILENCING_EFFECTS.items():
         if region in region_bns:
             entry = region_bns[region]
+            raw_bn = entry.get("raw_bn", entry.get("bracket_norm"))
+            n_neurons = entry.get("n_neurons", entry.get("neuron_count"))
+            if raw_bn is None:
+                raise KeyError(f"Region {region}: missing 'raw_bn' or 'bracket_norm' key")
+            if n_neurons is None:
+                raise KeyError(f"Region {region}: missing 'n_neurons' or 'neuron_count' key")
             matched_regions.append({
                 "region": region,
                 "silencing_effect": effect,
-                "raw_bn": entry.get("raw_bn", entry.get("bracket_norm", 0)),
-                "n_neurons": entry.get("n_neurons", entry.get("neuron_count", 1)),
+                "raw_bn": raw_bn,
+                "n_neurons": n_neurons,
             })
 
     if len(matched_regions) < 6:
@@ -207,10 +224,16 @@ def run_real(data_dir: Path, output_dir: Path):
     rho_corr_n, _ = stats.spearmanr(corrected_bns, n_neurons)
 
     log(f"\n=== H6 RESULTS ({len(matched_regions)} matched regions) ===")
+    log(f"NOTE: n={len(matched_regions)} is underpowered for rho>0.6; treat as exploratory")
     log(f"Raw BN vs silencing:        rho={rho_raw:.3f}, p={p_raw:.3e}")
     log(f"BN/sqrt(n) vs silencing:    rho={rho_corr:.3f}, p={p_corr:.3e}")
     log(f"Raw BN vs neuron count:     rho={rho_raw_n:.3f}")
     log(f"BN/sqrt(n) vs neuron count: rho={rho_corr_n:.3f}")
+
+    log(f"\nBootstrapping 95% CI on (rho_corrected - rho_raw)...")
+    ci_lo, ci_hi = bootstrap_rho_diff(raw_bns, corrected_bns, silencing)
+    rho_diff = rho_corr - rho_raw
+    log(f"  rho_corrected - rho_raw = {rho_diff:+.3f}  95% CI [{ci_lo:+.3f}, {ci_hi:+.3f}]")
 
     log(f"\nPer-region breakdown:")
     for r in sorted(matched_regions, key=lambda x: x["silencing_effect"], reverse=True):
@@ -235,6 +258,8 @@ def run_real(data_dir: Path, output_dir: Path):
         "p_corrected_vs_silencing": float(p_corr),
         "rho_raw_vs_neuron_count": float(rho_raw_n),
         "rho_corrected_vs_neuron_count": float(rho_corr_n),
+        "rho_diff": float(rho_diff),
+        "rho_diff_ci_95": [ci_lo, ci_hi],
         "regions": matched_regions,
     }
     with open(output_dir / "neural_replication_results.json", "w") as f:

@@ -10,12 +10,21 @@ held-out cell-line consistency. Uses two outcomes:
 Tests whether DI's AUROC advantage persists on the construction-neutral outcome,
 and whether magnitude-corrected alternatives converge toward DI.
 
+MIN_CELL_LINES = 10 here (vs 5 in experiments 03-05) because this benchmark
+focuses on the most data-rich drugs where metric differences are meaningful,
+while the hypothesis tests use 5 to maximize statistical power on smaller samples.
+
+Decision criteria compare DI against each alternative individually (not
+max-of-others, which would inflate the alternative's apparent performance).
+
 Data: drug_instability_8949.csv from drug-perturbation-geometry/zenodo_v1/
       holdout_prediction.json from drug-perturbation-geometry/results/03_core_defenses/
 
 Usage:
-    uv run python experiments/13_lincs_metric_benchmark.py
+    uv run python experiments/13_lincs_metric_benchmark.py --data PATH_TO_DRUG_REPO
+    uv run python experiments/13_lincs_metric_benchmark.py  # uses default sibling repo path
 """
+import argparse
 import json
 import sys
 from datetime import datetime
@@ -26,10 +35,6 @@ import pandas as pd
 from scipy import stats
 from sklearn.metrics import roc_auc_score
 
-DRUG_REPO = Path(__file__).resolve().parent.parent.parent / "drug-perturbation-geometry"
-INSTABILITY_CSV = DRUG_REPO / "zenodo_v1" / "drug_instability_8949.csv"
-HOLDOUT_JSON = DRUG_REPO / "results" / "03_core_defenses" / "holdout_prediction.json"
-OUTPUT_DIR = Path("results/13_lincs_benchmark")
 
 MIN_CELL_LINES = 10
 CONSISTENCY_THRESHOLD = 0.5
@@ -40,13 +45,7 @@ def log(msg: str):
 
 
 def auroc_for_predictor(predictor: np.ndarray, outcome: np.ndarray, threshold: float, higher_is_worse: bool = True) -> float:
-    """AUROC for binary classification: outcome >= threshold → consistent.
-
-    Args:
-        higher_is_worse: If True (default), higher predictor values indicate
-            less consistency (e.g., DI, magnitude_cv). If False, higher values
-            indicate more consistency (e.g., Jaccard overlap).
-    """
+    """AUROC for binary classification: outcome >= threshold -> consistent."""
     labels = (outcome >= threshold).astype(int)
     if labels.sum() == 0 or labels.sum() == len(labels):
         return np.nan
@@ -61,22 +60,46 @@ def residualize(x: np.ndarray, covariate: np.ndarray) -> np.ndarray:
     return x - cov @ beta
 
 
-def main():
+def bootstrap_auroc_gap(predictor_a, predictor_b, outcome, threshold,
+                        higher_is_worse_a, higher_is_worse_b,
+                        n_boot=2000, seed=42):
+    """Bootstrap 95% CI on (AUROC_a - AUROC_b)."""
+    rng = np.random.default_rng(seed)
+    n = len(predictor_a)
+    gaps = []
+    for _ in range(n_boot):
+        idx = rng.choice(n, size=n, replace=True)
+        auc_a = auroc_for_predictor(predictor_a[idx], outcome[idx], threshold, higher_is_worse_a)
+        auc_b = auroc_for_predictor(predictor_b[idx], outcome[idx], threshold, higher_is_worse_b)
+        if np.isnan(auc_a) or np.isnan(auc_b):
+            continue
+        gaps.append(auc_a - auc_b)
+    if len(gaps) < 100:
+        return np.nan, np.nan
+    gaps = np.array(gaps)
+    return float(np.percentile(gaps, 2.5)), float(np.percentile(gaps, 97.5))
+
+
+def main(drug_repo: Path):
     log("=== EXPERIMENT 13: MULTI-METRIC LOO BENCHMARK ===")
     log("Pre-registered in PREREGISTRATION_COMBINED_PAPER.md")
 
-    if not INSTABILITY_CSV.exists():
-        log(f"ERROR: Per-drug CSV not found at {INSTABILITY_CSV}")
+    instability_csv = drug_repo / "zenodo_v1" / "drug_instability_8949.csv"
+    holdout_json = drug_repo / "results" / "03_core_defenses" / "holdout_prediction.json"
+    output_dir = Path("results/13_lincs_benchmark")
+
+    if not instability_csv.exists():
+        log(f"ERROR: Per-drug CSV not found at {instability_csv}")
         sys.exit(1)
-    if not HOLDOUT_JSON.exists():
-        log(f"ERROR: Holdout results not found at {HOLDOUT_JSON}")
+    if not holdout_json.exists():
+        log(f"ERROR: Holdout results not found at {holdout_json}")
         sys.exit(1)
 
-    df = pd.read_csv(INSTABILITY_CSV)
+    df = pd.read_csv(instability_csv)
     log(f"  Loaded {len(df)} drugs from instability CSV")
     log(f"  Columns: {list(df.columns)}")
 
-    with open(HOLDOUT_JSON) as f:
+    with open(holdout_json) as f:
         holdout = json.load(f)
     log(f"  Loaded {len(holdout)} drugs from holdout prediction")
 
@@ -96,7 +119,6 @@ def main():
         "frechet_variance": merged["frechet_variance"].values,
         "mean_top_gene_jaccard": merged["mean_top_gene_jaccard"].values,
     }
-    # Higher values = worse consistency for these; Jaccard is the opposite
     HIGHER_IS_WORSE = {
         "direction_instability": True,
         "magnitude_cv": True,
@@ -105,12 +127,7 @@ def main():
     }
 
     cosine_outcome = merged["mean_heldout_cosine"].values
-    # mean_top_gene_jaccard is the full-dataset mean pairwise Jaccard (not LOO).
-    # It approximates the LOO held-out Jaccard closely (removing 1 of 10+ cell
-    # lines changes the mean very little). Predictor #4 (same column) is excluded
-    # from Jaccard-outcome comparisons to avoid trivial self-prediction.
     jaccard_outcome = merged["mean_top_gene_jaccard"].values
-
     mean_norm = merged["mean_norm"].values
 
     log("\n--- Predictor correlations ---")
@@ -136,27 +153,38 @@ def main():
         circular = " (CIRCULAR — same column)" if name == "mean_top_gene_jaccard" else ""
         log(f"  {name:30s} AUROC={auc:.4f}{circular}")
 
-    log("\n--- Decision criteria ---")
-    di_cos = cosine_aurocs["direction_instability"]
-    others_cos = {k: v for k, v in cosine_aurocs.items() if k != "direction_instability"}
-    best_other_cos = max(others_cos.values())
-    gap_cos = di_cos - best_other_cos
-    c1 = gap_cos >= 0.02
-    log(f"  Criterion 1 (DI wins on cosine by >= 0.02): gap={gap_cos:.4f} → {'PASS' if c1 else 'FAIL'}")
+    di_pred = predictors["direction_instability"]
 
-    di_jac = jaccard_aurocs["direction_instability"]
-    # Exclude mean_top_gene_jaccard from Jaccard-outcome comparison (circular: same column)
-    others_jac = {k: v for k, v in jaccard_aurocs.items()
-                  if k not in ("direction_instability", "mean_top_gene_jaccard")}
-    best_other_jac_name = max(others_jac, key=others_jac.get)
-    best_other_jac = others_jac[best_other_jac_name]
-    gap_jac = di_jac - best_other_jac
-    c2 = gap_jac > 0
-    log(f"  Criterion 2 (DI wins on Jaccard): gap={gap_jac:.4f} vs {best_other_jac_name} → {'PASS' if c2 else 'FAIL'}")
-    log(f"  (mean_top_gene_jaccard excluded from Jaccard-outcome comparison: circular)")
+    log("\n--- Decision criteria (DI vs each alternative individually) ---")
+    cosine_gaps = {}
+    for name, pred in predictors.items():
+        if name == "direction_instability":
+            continue
+        gap = cosine_aurocs["direction_instability"] - cosine_aurocs[name]
+        ci_lo, ci_hi = bootstrap_auroc_gap(
+            di_pred, pred, cosine_outcome, CONSISTENCY_THRESHOLD,
+            HIGHER_IS_WORSE["direction_instability"], HIGHER_IS_WORSE[name])
+        cosine_gaps[name] = {"gap": float(gap), "ci": [ci_lo, ci_hi]}
+        passes = gap >= 0.02
+        log(f"  DI vs {name:25s} cosine gap={gap:+.4f} 95% CI [{ci_lo:+.4f}, {ci_hi:+.4f}] -> {'PASS' if passes else 'FAIL'} (>=0.02)")
 
-    gap_shrinks = gap_cos > gap_jac
-    log(f"  Criterion 3 (construction gap shrinks): cosine_gap={gap_cos:.4f} > jaccard_gap={gap_jac:.4f} → {'PASS' if gap_shrinks else 'FAIL'}")
+    jaccard_gaps = {}
+    for name, pred in predictors.items():
+        if name in ("direction_instability", "mean_top_gene_jaccard"):
+            continue
+        gap = jaccard_aurocs["direction_instability"] - jaccard_aurocs[name]
+        ci_lo, ci_hi = bootstrap_auroc_gap(
+            di_pred, pred, jaccard_outcome, jaccard_threshold,
+            HIGHER_IS_WORSE["direction_instability"], HIGHER_IS_WORSE[name])
+        jaccard_gaps[name] = {"gap": float(gap), "ci": [ci_lo, ci_hi]}
+        passes = gap > 0
+        log(f"  DI vs {name:25s} Jaccard gap={gap:+.4f} 95% CI [{ci_lo:+.4f}, {ci_hi:+.4f}] -> {'PASS' if passes else 'FAIL'} (>0)")
+
+    c1_all = all(g["gap"] >= 0.02 for g in cosine_gaps.values())
+    c2_all = all(g["gap"] > 0 for g in jaccard_gaps.values())
+
+    log(f"\n  Criterion 1 (DI wins on cosine vs ALL alternatives by >= 0.02): {'PASS' if c1_all else 'FAIL'}")
+    log(f"  Criterion 2 (DI wins on Jaccard vs ALL non-circular alternatives): {'PASS' if c2_all else 'FAIL'}")
 
     log("\n--- Magnitude-corrected alternatives ---")
     corrected_jaccard_aurocs = {}
@@ -167,32 +195,24 @@ def main():
         circular = " (CIRCULAR)" if name == "mean_top_gene_jaccard" else ""
         log(f"  {name:30s} corrected_AUROC={auc:.4f} (raw={jaccard_aurocs[name]:.4f}){circular}")
 
-    corrected_others = {k: v for k, v in corrected_jaccard_aurocs.items()
-                        if k not in ("direction_instability", "mean_top_gene_jaccard")}
-    best_corrected = max(corrected_others.values())
-    corrected_gap = corrected_jaccard_aurocs["direction_instability"] - best_corrected
-    gap_converges = corrected_gap < gap_jac
-    log(f"\n  Criterion 4 (convergence, directional): raw_gap={gap_jac:.4f} → corrected_gap={corrected_gap:.4f} → {'PASS' if gap_converges else 'FAIL'}")
-
     log("\n--- Spearman correlations with mean_norm ---")
     for name, pred in predictors.items():
         rho, p = stats.spearmanr(pred, mean_norm)
         log(f"  {name:30s} rho(mean_norm)={rho:+.4f} (p={p:.2e})")
 
     log("\n--- Summary ---")
-    if c1 and c2:
-        log("  RESULT: DI wins on both outcomes. Advantage is genuine,")
-        log("  not just construction-matched.")
-    elif c1 and not c2:
-        log("  RESULT: DI wins on cosine but not Jaccard. Advantage is")
-        log("  partly/entirely a construction artifact.")
-    elif not c1 and c2:
+    if c1_all and c2_all:
+        log("  RESULT: DI wins on both outcomes vs all alternatives.")
+        log("  Advantage is genuine, not construction-matched.")
+    elif c1_all and not c2_all:
+        log("  RESULT: DI wins on cosine but not Jaccard for all alternatives.")
+        log("  Advantage is partly/entirely a construction artifact.")
+    elif not c1_all and c2_all:
         log("  RESULT: DI does not dominate on cosine but wins on Jaccard.")
-        log("  Unexpected — cosine outcome may have ceiling effects.")
     else:
         log("  RESULT: DI does not dominate on either outcome.")
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
     results = {
         "experiment": "13_lincs_metric_benchmark",
         "preregistered": "PREREGISTRATION_COMBINED_PAPER.md",
@@ -201,24 +221,26 @@ def main():
         "cosine_aurocs": {k: float(v) for k, v in cosine_aurocs.items()},
         "jaccard_aurocs": {k: float(v) for k, v in jaccard_aurocs.items()},
         "corrected_jaccard_aurocs": {k: float(v) for k, v in corrected_jaccard_aurocs.items()},
+        "pairwise_cosine_gaps": cosine_gaps,
+        "pairwise_jaccard_gaps": jaccard_gaps,
         "criteria": {
-            "c1_cosine_gap": float(gap_cos),
-            "c1_pass": bool(c1),
-            "c2_jaccard_gap": float(gap_jac),
-            "c2_best_alternative": best_other_jac_name,
-            "c2_pass": bool(c2),
-            "c3_gap_shrinks": bool(gap_shrinks),
-            "c4_corrected_gap": float(corrected_gap),
-            "c4_gap_converges": bool(gap_converges),
+            "c1_all_cosine_pass": bool(c1_all),
+            "c2_all_jaccard_pass": bool(c2_all),
         },
         "jaccard_threshold": float(jaccard_threshold),
         "cosine_threshold": float(CONSISTENCY_THRESHOLD),
     }
 
-    with open(OUTPUT_DIR / "lincs_benchmark_results.json", "w") as f:
+    with open(output_dir / "lincs_benchmark_results.json", "w") as f:
         json.dump(results, f, indent=2)
-    log(f"\nSaved to {OUTPUT_DIR}/")
+    log(f"\nSaved to {output_dir}/")
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--data", type=Path,
+                        default=Path(__file__).resolve().parent.parent.parent / "drug-perturbation-geometry",
+                        help="Path to drug-perturbation-geometry repo (default: sibling directory)")
+    args = parser.parse_args()
+    main(args.data)

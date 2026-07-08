@@ -13,6 +13,10 @@ Gene-set method (declared in DEVIATION_LOG.md entry 1):
   consensus shRNA knockdown signature of the drug's annotated target gene.
   Sensitivity: Drug Repurposing Hub MOA grouping.
 
+On-target enrichment: cosine squared between mean drug signature and shRNA
+consensus direction. This measures the fraction of mean-signature variance
+aligned with the genetic perturbation direction.
+
 Usage:
     uv run python experiments/03_phenotype_projection.py --synthetic
     uv run python experiments/03_phenotype_projection.py --real --data PATH_TO_LINCS
@@ -38,39 +42,36 @@ def log(msg: str):
 
 def build_shrna_consensus(shrna_sigs, shrna_siginfo):
     """Build consensus shRNA signature per target gene (mean across hairpins and cells)."""
-    sig_id_to_idx = {sid: i for i, sid in enumerate(shrna_siginfo["sig_id"])}
-    gene_sigs = {}
-    for _, row in shrna_siginfo.iterrows():
-        gene = row["pert_iname"]
-        sid = row["sig_id"]
-        if sid in sig_id_to_idx:
-            if gene not in gene_sigs:
-                gene_sigs[gene] = []
-            gene_sigs[gene].append(sig_id_to_idx[sid])
+    sig_ids = list(shrna_siginfo["sig_id"])
+    sig_id_to_idx = {sid: i for i, sid in enumerate(sig_ids)}
+    assert len(set(sig_ids)) == len(sig_ids), "Duplicate sig_ids in shRNA data"
+
+    filtered = shrna_siginfo[shrna_siginfo["sig_id"].isin(sig_id_to_idx)].copy()
+    filtered["_idx"] = filtered["sig_id"].map(sig_id_to_idx)
 
     consensus = {}
-    for gene, indices in gene_sigs.items():
+    for gene, group in filtered.groupby("pert_iname"):
+        indices = group["_idx"].values
         if len(indices) < 3:
             continue
         consensus[gene] = shrna_sigs[indices].mean(axis=0)
     return consensus
 
 
-def compute_on_target_enrichment(drug_sigs_matrix, shrna_direction):
-    """Fraction of drug signature variance along the on-target direction."""
-    mean_sig = drug_sigs_matrix.mean(axis=0)
-    total_var = float(np.var(mean_sig))
-    if total_var < 1e-10:
+def cosine_squared(mean_sig: np.ndarray, direction: np.ndarray) -> float:
+    """Cosine squared between mean drug signature and on-target direction."""
+    norm_sig = np.linalg.norm(mean_sig)
+    norm_dir = np.linalg.norm(direction)
+    if norm_sig < 1e-10 or norm_dir < 1e-10:
         return 0.0
-    direction = shrna_direction / (np.linalg.norm(shrna_direction) + 1e-10)
-    proj = float(mean_sig @ direction)
-    return proj**2 / (total_var * len(mean_sig))
+    cos = float(mean_sig @ direction / (norm_sig * norm_dir))
+    return cos ** 2
 
 
 def run_synthetic():
     """Validate: phenotype-projected bracket correlates with on-target enrichment."""
     log("=== SYNTHETIC MODE ===")
-    rng = np.random.default_rng(seed=20260707_03)
+    rng = np.random.default_rng(seed=2026070703)
     n_genes = 200
     n_contexts = 8
     n_drugs = 100
@@ -144,13 +145,22 @@ def run_real(data_dir: Path, output_dir: Path):
     data = np.load(sigs_path, allow_pickle=True)
     compound_sigs = data["signatures"]
     compound_sig_ids = list(data["sig_ids"])
-    gene_ids = list(data["gene_ids"])
+    compound_gene_ids = list(data["gene_ids"])
+    assert len(set(compound_sig_ids)) == len(compound_sig_ids), "Duplicate sig_ids in compound data"
     log(f"  {compound_sigs.shape[0]:,} signatures x {compound_sigs.shape[1]} genes")
 
     log("Loading shRNA signatures...")
     shrna_data = np.load(shrna_path, allow_pickle=True)
     shrna_sigs = shrna_data["signatures"]
+    shrna_gene_ids = list(shrna_data["gene_ids"])
     log(f"  {shrna_sigs.shape[0]:,} shRNA signatures")
+
+    assert compound_gene_ids == shrna_gene_ids, (
+        f"Gene-axis mismatch: compound has {len(compound_gene_ids)} genes, "
+        f"shRNA has {len(shrna_gene_ids)} genes. "
+        f"First mismatch at index {next(i for i, (a, b) in enumerate(zip(compound_gene_ids, shrna_gene_ids)) if a != b) if compound_gene_ids != shrna_gene_ids else 'N/A'}"
+    )
+    log("  Gene-axis alignment verified: compound and shRNA use identical gene ordering")
 
     log("Loading shRNA sig info...")
     shrna_siginfo = pd.read_csv(shrna_siginfo_path)
@@ -175,17 +185,15 @@ def run_real(data_dir: Path, output_dir: Path):
 
     log("Building drug-cell matrix...")
     sig_id_to_idx = {sid: i for i, sid in enumerate(compound_sig_ids)}
+    filtered = siginfo[siginfo["sig_id"].isin(sig_id_to_idx) & siginfo["pert_iname"].notna()].copy()
+    filtered["_idx"] = filtered["sig_id"].map(sig_id_to_idx)
+
     drug_cell_map = {}
-    for _, row in siginfo.iterrows():
-        sid = row.get("sig_id")
-        drug = row.get("pert_iname", "")
-        cell = row.get("cell_id", "")
-        if sid in sig_id_to_idx and drug:
-            if drug not in drug_cell_map:
-                drug_cell_map[drug] = {}
-            if cell not in drug_cell_map[drug]:
-                drug_cell_map[drug][cell] = []
-            drug_cell_map[drug][cell].append(sig_id_to_idx[sid])
+    for (drug, cell), group in filtered.groupby(["pert_iname", "cell_id"]):
+        if drug not in drug_cell_map:
+            drug_cell_map[drug] = {}
+        indices = group["_idx"].values
+        drug_cell_map[drug][cell] = compound_sigs[indices].mean(axis=0)
 
     log("Computing phenotype-projected brackets...")
     results = []
@@ -205,15 +213,11 @@ def run_real(data_dir: Path, output_dir: Path):
             skipped_few_cells += 1
             continue
 
-        cell_means = []
-        for cell, indices in cells.items():
-            cell_means.append(compound_sigs[indices].mean(axis=0))
-        sigs_matrix = np.array(cell_means)
-
+        sigs_matrix = np.array(list(cells.values()))
         phenotype_dir = shrna_consensus[target]
         raw = direction_instability(sigs_matrix)
         projected = phenotype_projected_bracket(sigs_matrix, phenotype_dir)
-        enrichment = compute_on_target_enrichment(sigs_matrix, phenotype_dir)
+        enrichment = cosine_squared(sigs_matrix.mean(axis=0), phenotype_dir)
 
         results.append({
             "drug": drug,
@@ -244,6 +248,7 @@ def run_real(data_dir: Path, output_dir: Path):
 
     log(f"\n=== H3 RESULTS (PRIMARY: genetic perturbation connectivity) ===")
     log(f"N drugs: {len(results)}")
+    log(f"On-target enrichment: cosine squared (mean drug signature vs shRNA direction)")
     log(f"Spearman correlations with on-target enrichment:")
     log(f"  Raw bracket:       rho={raw_rho:.4f} (p={raw_p:.2e})")
     log(f"  Projected bracket: rho={proj_rho:.4f} (p={proj_p:.2e})")

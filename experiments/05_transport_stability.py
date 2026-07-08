@@ -2,14 +2,18 @@
 
 Tests H5: bracket norm that replicates across contexts (low Frechet variance)
 predicts held-out context effects better than raw bracket. Leave-one-cell-line-out
-cross-validation with rank-based connectivity.
+cross-validation with direction-based held-out outcome (cosine consistency).
 
 Decision criterion (pre-registered): Spearman correlation between transport-stable
 bracket and held-out-context prediction > correlation for raw bracket, in at least
 4/5 cross-validation folds.
 
+Held-out outcome: cosine similarity between the held-out cell line's signature
+and the training-set consensus direction. This matches the direction-based
+estimand of DI (not magnitude, which DI does not measure).
+
 Gene-set method: N/A (no gene sets needed).
-Analytic choices declared in DEVIATION_LOG.md entry 1 before running.
+Analytic choices declared in DEVIATION_LOG.md entries 1-2 before running.
 
 Usage:
     uv run python experiments/05_transport_stability.py --synthetic
@@ -34,42 +38,43 @@ def log(msg: str):
     print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}", flush=True)
 
 
-def build_drug_cell_matrix(signatures, sig_ids, siginfo):
-    """Build {drug: {cell: mean_signature}} mapping."""
-    sig_id_to_idx = {sid: i for i, sid in enumerate(sig_ids)}
-    drug_cell_map = {}
-    for _, row in siginfo.iterrows():
-        sid = row.get("sig_id")
-        drug = row.get("pert_iname", "")
-        cell = row.get("cell_id", "")
-        if sid in sig_id_to_idx and drug:
-            if drug not in drug_cell_map:
-                drug_cell_map[drug] = {}
-            if cell not in drug_cell_map[drug]:
-                drug_cell_map[drug][cell] = []
-            drug_cell_map[drug][cell].append(sig_id_to_idx[sid])
+def cosine_sim(a: np.ndarray, b: np.ndarray) -> float:
+    na = np.linalg.norm(a)
+    nb = np.linalg.norm(b)
+    if na < 1e-10 or nb < 1e-10:
+        return 0.0
+    return float(a @ b / (na * nb))
 
-    drug_cell_means = {}
-    for drug, cells in drug_cell_map.items():
-        if len(cells) < 5:
-            continue
-        cell_means = {}
-        for cell, indices in cells.items():
-            cell_means[cell] = signatures[indices].mean(axis=0)
-        drug_cell_means[drug] = cell_means
-    return drug_cell_means
+
+def build_drug_cell_matrix(signatures, sig_ids, siginfo):
+    """Build {drug: {cell: mean_signature}} mapping via vectorized groupby."""
+    sig_id_set = set(sig_ids)
+    sig_id_to_idx = {sid: i for i, sid in enumerate(sig_ids)}
+    assert len(sig_id_set) == len(sig_ids), "Duplicate sig_ids in compound data"
+
+    filtered = siginfo[siginfo["sig_id"].isin(sig_id_set) & siginfo["pert_iname"].notna()].copy()
+    filtered["_idx"] = filtered["sig_id"].map(sig_id_to_idx)
+
+    drug_cell_map = {}
+    for (drug, cell), group in filtered.groupby(["pert_iname", "cell_id"]):
+        if drug not in drug_cell_map:
+            drug_cell_map[drug] = {}
+        indices = group["_idx"].values
+        drug_cell_map[drug][cell] = signatures[indices].mean(axis=0)
+
+    return {drug: cells for drug, cells in drug_cell_map.items() if len(cells) >= 5}
 
 
 def run_synthetic():
-    """Validate: transport-stable bracket predicts held-out better than raw."""
+    """Validate: transport-stable bracket predicts held-out cosine better than raw."""
     log("=== SYNTHETIC MODE ===")
-    rng = np.random.default_rng(seed=20260707_05)
+    rng = np.random.default_rng(seed=2026070705)
     n_genes = 200
     n_cells = 8
     n_drugs_stable = 40
     n_drugs_unstable = 40
 
-    log("Generating stable drugs (consistent mechanism across contexts)...")
+    log("Generating stable drugs (consistent direction across contexts)...")
     stable_results = []
     for _ in tqdm(range(n_drugs_stable), desc="Stable"):
         shared_mech = rng.standard_normal(n_genes) * 2.0
@@ -79,20 +84,21 @@ def run_synthetic():
         ])
         raw_scores = []
         ts_scores = []
-        holdout_mags = []
+        holdout_cosines = []
         for hold in range(n_cells):
             train_idx = [i for i in range(n_cells) if i != hold]
             train_sigs = sigs[train_idx]
+            consensus = train_sigs.mean(axis=0)
             raw_scores.append(direction_instability(train_sigs))
             ts_scores.append(transport_stable_bracket(train_sigs))
-            holdout_mags.append(float(np.linalg.norm(sigs[hold])))
+            holdout_cosines.append(cosine_sim(sigs[hold], consensus))
         stable_results.append({
             "raw_scores": raw_scores,
             "ts_scores": ts_scores,
-            "holdout_mags": holdout_mags,
+            "holdout_cosines": holdout_cosines,
         })
 
-    log("Generating unstable drugs (inconsistent across contexts)...")
+    log("Generating unstable drugs (inconsistent direction across contexts)...")
     unstable_results = []
     for _ in tqdm(range(n_drugs_unstable), desc="Unstable"):
         sigs = rng.standard_normal((n_cells, n_genes)) * 1.5
@@ -100,17 +106,18 @@ def run_synthetic():
         sigs[active] += rng.standard_normal((3, n_genes)) * 3.0
         raw_scores = []
         ts_scores = []
-        holdout_mags = []
+        holdout_cosines = []
         for hold in range(n_cells):
             train_idx = [i for i in range(n_cells) if i != hold]
             train_sigs = sigs[train_idx]
+            consensus = train_sigs.mean(axis=0)
             raw_scores.append(direction_instability(train_sigs))
             ts_scores.append(transport_stable_bracket(train_sigs))
-            holdout_mags.append(float(np.linalg.norm(sigs[hold])))
+            holdout_cosines.append(cosine_sim(sigs[hold], consensus))
         unstable_results.append({
             "raw_scores": raw_scores,
             "ts_scores": ts_scores,
-            "holdout_mags": holdout_mags,
+            "holdout_cosines": holdout_cosines,
         })
 
     all_results = stable_results + unstable_results
@@ -119,12 +126,12 @@ def run_synthetic():
     for fold in range(n_cells):
         fold_raw = [r["raw_scores"][fold] for r in all_results]
         fold_ts = [r["ts_scores"][fold] for r in all_results]
-        fold_holdout = [r["holdout_mags"][fold] for r in all_results]
+        fold_holdout = [r["holdout_cosines"][fold] for r in all_results]
         raw_corrs.append(stats.spearmanr(fold_raw, fold_holdout).statistic)
         ts_corrs.append(stats.spearmanr(fold_ts, fold_holdout).statistic)
 
     ts_wins = sum(1 for r, t in zip(raw_corrs, ts_corrs) if t > r)
-    log(f"\nPer-fold Spearman correlations with held-out magnitude:")
+    log(f"\nPer-fold Spearman correlations with held-out cosine consistency:")
     for i, (r, t) in enumerate(zip(raw_corrs, ts_corrs)):
         winner = "TS" if t > r else "RAW"
         log(f"  Fold {i}: raw={r:.4f}, transport-stable={t:.4f} [{winner}]")
@@ -184,16 +191,17 @@ def run_real(data_dir: Path, output_dir: Path):
 
             train_sigs = np.array(list(train_cells.values()))
             holdout_sig = cells[holdout_cell]
+            consensus = train_sigs.mean(axis=0)
 
             raw = direction_instability(train_sigs)
             ts = transport_stable_bracket(train_sigs)
-            holdout_mag = float(np.linalg.norm(holdout_sig))
+            holdout_cos = cosine_sim(holdout_sig, consensus)
 
             fold_drugs.append({
                 "drug": drug,
                 "raw_bracket": float(raw),
                 "ts_bracket": float(ts),
-                "holdout_mag": holdout_mag,
+                "holdout_cosine": holdout_cos,
             })
 
         if len(fold_drugs) < 20:
@@ -202,7 +210,7 @@ def run_real(data_dir: Path, output_dir: Path):
 
         raw_vals = [d["raw_bracket"] for d in fold_drugs]
         ts_vals = [d["ts_bracket"] for d in fold_drugs]
-        holdout_vals = [d["holdout_mag"] for d in fold_drugs]
+        holdout_vals = [d["holdout_cosine"] for d in fold_drugs]
 
         raw_rho = stats.spearmanr(raw_vals, holdout_vals).statistic
         ts_rho = stats.spearmanr(ts_vals, holdout_vals).statistic
