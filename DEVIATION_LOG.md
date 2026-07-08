@@ -102,3 +102,71 @@ perturbation object. The paper must state this shared dependency and not
 present H3 and H4 as two independent confirmations of the validity ladder.
 H5 (transport stability) is fully independent of H3/H4 since it uses no
 gene sets or shRNA data
+
+
+## Entry 4: H5-full replaces original 5-fold H5
+
+**Date:** 2026-07-08
+**Status:** Pre-registered extension replaces original 5-fold analysis
+**Applies to:** H5 (transport stability)
+
+### Context
+
+The original H5 used 5 alphabetically-selected cell lines. The full
+leave-one-out (H5-full) was pre-registered in PREREGISTRATION_EXTENDED.md
+(f3c88ed) with two co-primary criteria: (1) TS wins >= 80% of valid folds,
+(2) Wilcoxon signed-rank p < 0.05 on per-fold delta-rho.
+
+### Result
+
+Both co-primary criteria satisfied: 66/66 folds (100%), Wilcoxon
+p = 8.2e-13, mean delta-rho = +1.10 [1.00, 1.19]. Frequency-improvement
+correlation rho = -0.32 (p = 0.009) confirms the rare/common regime
+distinction generalizes. The paper reports H5-full as the primary result
+with the original 5-fold table retained as representative examples.
+
+### What this changes
+
+- H5 is now reported as 66/66 folds (not 5/5)
+- Wilcoxon signed-rank is a co-primary criterion alongside fold-win fraction
+- The "5 alphabetical cell lines" limitation is removed from the paper
+
+## Entry 5: H3-CRISPRi convergent-validity outcome (c)
+
+**Date:** 2026-07-08
+**Status:** Pre-registered outcome realized; interpretation follows frozen decision tree
+**Applies to:** H3-CRISPRi (convergent-validity check, PREREGISTRATION_EXTENDED.md)
+
+### Pre-registration reference
+
+Committed at f3c88ed (tagged prereg-extended-psb) on 2026-07-08 11:56:58,
+before experiments ran (~12:00-12:15). The three-outcome decision logic was
+frozen as:
+- (a) rho_CRISPRi >= 0.376: convergent validity confirmed
+- (b) 0 < rho_CRISPRi < 0.376: robustness confirmed with K562 confound explanation
+- (c) rho_CRISPRi <= 0: interpret via K562-only confound first
+
+### Result
+
+Outcome (c) realized: rho_CRISPRi = -0.12, p = 0.16 (n = 131).
+
+Secondary criterion fired as pre-specified: raw bracket correlates
+positively with CRISPRi enrichment (rho = +0.27, p = 0.002) while
+projected bracket does not — the reverse of the shRNA pattern. This
+indicates the CRISPRi ground truth itself is confounded by K562
+cell-type-specific effects, consistent with the pre-registered
+explanation.
+
+### Interpretation (following frozen decision tree)
+
+The shRNA-based H3 result (rho = 0.38) is un-refuted but not reinforced.
+CRISPRi does not provide independent convergent validity, attributable
+to the pre-registered single-cell-line limitation. The non-significant
+CRISPRi result (p = 0.16, n = 131 vs 795 for shRNA) is underpowered
+and should not be interpreted as evidence against the projection method.
+
+### What this does NOT change
+
+- H3 shRNA result and its Holm-Bonferroni survival are unaffected
+- The pre-registered interpretation was followed exactly as frozen
+- No post-hoc re-analysis or threshold adjustment was performed
