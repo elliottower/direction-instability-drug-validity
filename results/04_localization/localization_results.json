@@ -1,0 +1,6354 @@
+[
+  {
+    "drug": "1,2,3,4,5,6-hexabromocyclohexane",
+    "target": "JAK2",
+    "moa": "JAK inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.9329361915588379,
+    "localization_score": 0.946287167283667
+  },
+  {
+    "drug": "10-DEBC",
+    "target": "PIM1",
+    "moa": "AKT inhibitor",
+    "n_celllines": 53,
+    "raw_bracket": 0.9237321615219116,
+    "localization_score": 1.0016388690184979
+  },
+  {
+    "drug": "10-hydroxycamptothecin",
+    "target": "TOP1",
+    "moa": "topoisomerase inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.9346072897315025,
+    "localization_score": 0.9947030260879813
+  },
+  {
+    "drug": "16,16-dimethylprostaglandin-e2",
+    "target": "HPGD",
+    "moa": "prostanoid receptor agonist",
+    "n_celllines": 51,
+    "raw_bracket": 0.8702561855316162,
+    "localization_score": 1.00043589332293
+  },
+  {
+    "drug": "17-hydroxyprogesterone-caproate",
+    "target": "AR",
+    "moa": "progesterone receptor agonist",
+    "n_celllines": 9,
+    "raw_bracket": 0.9437580034136772,
+    "localization_score": 1.0164588896633042
+  },
+  {
+    "drug": "3,3'-diindolylmethane",
+    "target": "AR",
+    "moa": "CHK inhibitor|cytochrome P450 activator|indoleamine 2,3-dioxygenase inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.8778881430625916,
+    "localization_score": 1.0453556973379332
+  },
+  {
+    "drug": "3-amino-benzamide",
+    "target": "PARP1",
+    "moa": "PARP inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.9272651970386505,
+    "localization_score": 1.0018265655717322
+  },
+  {
+    "drug": "3-methyl-GABA",
+    "target": "ABAT",
+    "moa": "GABA aminotransferase activator",
+    "n_celllines": 9,
+    "raw_bracket": 0.8737562745809555,
+    "localization_score": 1.0386668755457644
+  },
+  {
+    "drug": "4,5,6,7-tetrabromobenzotriazole",
+    "target": "AKT1",
+    "moa": "casein kinase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9627460092306137,
+    "localization_score": 0.9719858865645699
+  },
+  {
+    "drug": "4-iodo-6-phenylpyrimidine",
+    "target": "MIF",
+    "moa": "macrophage migration inhibiting factor inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.9170959442853928,
+    "localization_score": 0.9704515702239134
+  },
+  {
+    "drug": "5-FP",
+    "target": "TYMS",
+    "moa": "thymidylate synthase inhibitor",
+    "n_celllines": 7,
+    "raw_bracket": 0.9079219996929169,
+    "localization_score": 1.0046317706854337
+  },
+  {
+    "drug": "5-aminolevulinic-acid",
+    "target": "ALAD",
+    "moa": "oxidizing agent",
+    "n_celllines": 8,
+    "raw_bracket": 0.9376837275922298,
+    "localization_score": 1.0076890301097394
+  },
+  {
+    "drug": "ABT-737",
+    "target": "BCL2",
+    "moa": "BCL inhibitor",
+    "n_celllines": 55,
+    "raw_bracket": 0.9197835177183151,
+    "localization_score": 0.9671629500013017
+  },
+  {
+    "drug": "AC-55649",
+    "target": "RARA",
+    "moa": "retinoid receptor agonist",
+    "n_celllines": 51,
+    "raw_bracket": 0.9288636445999146,
+    "localization_score": 0.9748420405466054
+  },
+  {
+    "drug": "AG-14361",
+    "target": "PARP1",
+    "moa": "PARP inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.6728529930114746,
+    "localization_score": 0.9232052690324752
+  },
+  {
+    "drug": "AG-490",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor|JAK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8526873886585236,
+    "localization_score": 0.8289922552310455
+  },
+  {
+    "drug": "AM-580",
+    "target": "RARA",
+    "moa": "retinoid receptor agonist",
+    "n_celllines": 58,
+    "raw_bracket": 0.9398793242871761,
+    "localization_score": 0.9711574339973651
+  },
+  {
+    "drug": "AR-A014418",
+    "target": "GSK3B",
+    "moa": "glycogen synthase kinase inhibitor",
+    "n_celllines": 16,
+    "raw_bracket": 0.8459624946117401,
+    "localization_score": 0.8898629775721241
+  },
+  {
+    "drug": "ARC-239",
+    "target": "ADRA2A",
+    "moa": "adrenergic receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8558738082647324,
+    "localization_score": 0.8773821150891297
+  },
+  {
+    "drug": "AS-604850",
+    "target": "PIK3CA",
+    "moa": "PI3K inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.9698283523321152,
+    "localization_score": 0.9905471198263404
+  },
+  {
+    "drug": "AS-703026",
+    "target": "MAP2K1",
+    "moa": "MEK inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.8719498515129089,
+    "localization_score": 0.9574411518959298
+  },
+  {
+    "drug": "AT-7519",
+    "target": "CDK1",
+    "moa": "CDK inhibitor",
+    "n_celllines": 18,
+    "raw_bracket": 0.5598033964633942,
+    "localization_score": 0.9804143817958851
+  },
+  {
+    "drug": "AT-9283",
+    "target": "AURKA",
+    "moa": "Aurora kinase inhibitor|JAK inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.6750549972057343,
+    "localization_score": 0.8753664669602832
+  },
+  {
+    "drug": "AT7867",
+    "target": "AKT2",
+    "moa": "AKT inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.727126806974411,
+    "localization_score": 0.8638546815115643
+  },
+  {
+    "drug": "AZ-10417808",
+    "target": "CASP3",
+    "moa": "caspase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9662484005093575,
+    "localization_score": 0.9660647988380391
+  },
+  {
+    "drug": "AZ-628",
+    "target": "BRAF",
+    "moa": "RAF inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.819538801908493,
+    "localization_score": 0.9203462731351166
+  },
+  {
+    "drug": "BADGE",
+    "target": "PPARG",
+    "moa": "PPAR receptor antagonist",
+    "n_celllines": 15,
+    "raw_bracket": 0.9130711853504181,
+    "localization_score": 0.9273106708639078
+  },
+  {
+    "drug": "BAX-channel-blocker",
+    "target": "BAX",
+    "moa": "cytochrome C release inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.9495760947465897,
+    "localization_score": 0.9978144949547487
+  },
+  {
+    "drug": "BAY-11-7082",
+    "target": "RELA",
+    "moa": "NFkB pathway inhibitor",
+    "n_celllines": 50,
+    "raw_bracket": 0.8730496317148209,
+    "localization_score": 0.9933292847035099
+  },
+  {
+    "drug": "BAY-K-8644-(S)-(-)",
+    "target": "CACNA1C",
+    "moa": "L-type calcium channel activator",
+    "n_celllines": 51,
+    "raw_bracket": 0.9053502008318901,
+    "localization_score": 1.0246448462044886
+  },
+  {
+    "drug": "BI-2536",
+    "target": "BRD4",
+    "moa": "PLK inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.6029588282108307,
+    "localization_score": 0.9743773471858187
+  },
+  {
+    "drug": "BI-78D3",
+    "target": "MAPK8",
+    "moa": "JNK inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.9067429229617119,
+    "localization_score": 0.9650665658183921
+  },
+  {
+    "drug": "BIBU-1361",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.6102917492389679,
+    "localization_score": 0.9318728158565148
+  },
+  {
+    "drug": "BIBX-1382",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8045403957366943,
+    "localization_score": 0.8618601879337511
+  },
+  {
+    "drug": "BIX-02188",
+    "target": "MAP2K5",
+    "moa": "MEK inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.8734133988618851,
+    "localization_score": 0.9756505044436563
+  },
+  {
+    "drug": "BIX-02189",
+    "target": "MAP2K5",
+    "moa": "MEK inhibitor",
+    "n_celllines": 7,
+    "raw_bracket": 0.7643586993217468,
+    "localization_score": 1.029338528928725
+  },
+  {
+    "drug": "BMS-191011",
+    "target": "KCNMA1",
+    "moa": "potassium channel activator",
+    "n_celllines": 55,
+    "raw_bracket": 0.9479903466999531,
+    "localization_score": 0.990143213759951
+  },
+  {
+    "drug": "BMS-345541",
+    "target": "CHUK",
+    "moa": "IKK inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.767929345369339,
+    "localization_score": 0.9337528111550731
+  },
+  {
+    "drug": "BMS-387032",
+    "target": "CDK2",
+    "moa": "CDK inhibitor|cell cycle inhibitor|MCL1 inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.32175499200820923,
+    "localization_score": 0.8415847049907625
+  },
+  {
+    "drug": "BMS-536924",
+    "target": "AKT1",
+    "moa": "IGF-1 inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.8252095878124237,
+    "localization_score": 1.0211477740664952
+  },
+  {
+    "drug": "BMS-754807",
+    "target": "AKT1",
+    "moa": "IGF-1 inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.8622468560934067,
+    "localization_score": 0.9850321459269427
+  },
+  {
+    "drug": "BMS-777607",
+    "target": "AXL",
+    "moa": "AXL kinase inhibitor|c-Met inhibitor|FLT3 inhibitor|hepatocyte growth factor receptor inhibitor|macrophage migration inhibiting factor inhibitor|tyrosine kinase inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.7691224962472916,
+    "localization_score": 0.9248983487086306
+  },
+  {
+    "drug": "BVT-948",
+    "target": "PTPN1",
+    "moa": "tyrosine phosphatase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.7364765703678131,
+    "localization_score": 1.040293657511984
+  },
+  {
+    "drug": "BX-795",
+    "target": "CDK2",
+    "moa": "IKK inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.7787444442510605,
+    "localization_score": 1.051043945009874
+  },
+  {
+    "drug": "BX-912",
+    "target": "CDK2",
+    "moa": "pyruvate dehydrogenase kinase inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.7406839430332184,
+    "localization_score": 0.9474994577163394
+  },
+  {
+    "drug": "CD-1530",
+    "target": "RARG",
+    "moa": "retinoid receptor agonist",
+    "n_celllines": 45,
+    "raw_bracket": 0.7426194250583649,
+    "localization_score": 1.085906398514851
+  },
+  {
+    "drug": "CD-437",
+    "target": "RARG",
+    "moa": "retinoid receptor agonist",
+    "n_celllines": 51,
+    "raw_bracket": 0.7810577005147934,
+    "localization_score": 1.0683345195193175
+  },
+  {
+    "drug": "CGK-733",
+    "target": "ATM",
+    "moa": "ATM kinase inhibitor|ATR kinase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.6672457456588745,
+    "localization_score": 0.9255340958607805
+  },
+  {
+    "drug": "CGP-13501",
+    "target": "GABBR1",
+    "moa": "GABA receptor modulator",
+    "n_celllines": 13,
+    "raw_bracket": 0.9537869617342949,
+    "localization_score": 0.962924902643726
+  },
+  {
+    "drug": "CGP-52411",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.9481605812907219,
+    "localization_score": 0.9581412092078389
+  },
+  {
+    "drug": "CGP-53353",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor|PKC inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.9044442027807236,
+    "localization_score": 0.9241617719771459
+  },
+  {
+    "drug": "CGP-54626",
+    "target": "GABBR1",
+    "moa": "GABA receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.9025316014885902,
+    "localization_score": 1.0035017906069523
+  },
+  {
+    "drug": "CGP-55845",
+    "target": "GABBR1",
+    "moa": "GABA receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9601864404976368,
+    "localization_score": 1.0172699576022068
+  },
+  {
+    "drug": "CGP-57380",
+    "target": "AURKB",
+    "moa": "MAP kinase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.7949409186840057,
+    "localization_score": 1.0374996377530288
+  },
+  {
+    "drug": "CGP-60474",
+    "target": "CDK1",
+    "moa": "CDK inhibitor",
+    "n_celllines": 18,
+    "raw_bracket": 0.5175517499446869,
+    "localization_score": 0.9505787550554512
+  },
+  {
+    "drug": "CGP-7930",
+    "target": "GABBR1",
+    "moa": "GABA receptor modulator",
+    "n_celllines": 13,
+    "raw_bracket": 0.9225726202130318,
+    "localization_score": 1.0263029290687633
+  },
+  {
+    "drug": "CGS-20625",
+    "target": "GABRA1",
+    "moa": "benzodiazepine receptor agonist|GABA benzodiazepine site receptor partial agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.94482396915555,
+    "localization_score": 0.974825211215112
+  },
+  {
+    "drug": "CHIR-99021",
+    "target": "CDK1",
+    "moa": "glycogen synthase kinase inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.7330798208713531,
+    "localization_score": 0.8516975940842856
+  },
+  {
+    "drug": "CI-976",
+    "target": "ACAT1",
+    "moa": "ACAT inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.9308001473546028,
+    "localization_score": 0.9920662935715115
+  },
+  {
+    "drug": "CL-218872",
+    "target": "GABRA1",
+    "moa": "benzodiazepine receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9133702740073204,
+    "localization_score": 0.9747969669064768
+  },
+  {
+    "drug": "CP-724714",
+    "target": "ERBB2",
+    "moa": "EGFR inhibitor|protein tyrosine kinase inhibitor",
+    "n_celllines": 18,
+    "raw_bracket": 0.9226712584495544,
+    "localization_score": 0.9456173685089427
+  },
+  {
+    "drug": "CV-1808",
+    "target": "ADORA2A",
+    "moa": "adenosine receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8954428434371948,
+    "localization_score": 0.9613802148407
+  },
+  {
+    "drug": "CYT387",
+    "target": "JAK1",
+    "moa": "JAK inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.660618782043457,
+    "localization_score": 0.8719166796591353
+  },
+  {
+    "drug": "D-4476",
+    "target": "CSNK1A1",
+    "moa": "TGF beta receptor inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.904901809990406,
+    "localization_score": 0.975228256424775
+  },
+  {
+    "drug": "DAU-5884",
+    "target": "CHRM3",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8638883978128433,
+    "localization_score": 0.9827564392932356
+  },
+  {
+    "drug": "DPPE",
+    "target": "ABCB1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9504969231784344,
+    "localization_score": 0.9637702724987147
+  },
+  {
+    "drug": "DR-2313",
+    "target": "PARP1",
+    "moa": "PARP inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9164914712309837,
+    "localization_score": 1.0039468446164233
+  },
+  {
+    "drug": "DUP-697",
+    "target": "PTGS2",
+    "moa": "cyclooxygenase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9255989864468575,
+    "localization_score": 0.9604055058595186
+  },
+  {
+    "drug": "EBPC",
+    "target": "AKR1B1",
+    "moa": "aldose reductase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9586054645478725,
+    "localization_score": 0.9698466983384488
+  },
+  {
+    "drug": "EMD-66684",
+    "target": "AGTR1",
+    "moa": "angiotensin receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9163980111479759,
+    "localization_score": 0.9667684359321729
+  },
+  {
+    "drug": "ENMD-2076",
+    "target": "AURKA",
+    "moa": "Aurora kinase inhibitor|FLT3 inhibitor|VEGFR inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.6198656260967255,
+    "localization_score": 0.9250803358719037
+  },
+  {
+    "drug": "EO-1428",
+    "target": "MAPK11",
+    "moa": "p38 MAPK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9123416170477867,
+    "localization_score": 0.9750023068143717
+  },
+  {
+    "drug": "ER-27319",
+    "target": "SYK",
+    "moa": "mediator release inhibitor|SYK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.5749573409557343,
+    "localization_score": 0.9576767329794214
+  },
+  {
+    "drug": "EX-527",
+    "target": "SIRT1",
+    "moa": "SIRT inhibitor",
+    "n_celllines": 54,
+    "raw_bracket": 0.9339455515146255,
+    "localization_score": 0.9850787522022975
+  },
+  {
+    "drug": "FK-866",
+    "target": "NAMPT",
+    "moa": "niacinamide phosphoribosyltransferase inhibitor",
+    "n_celllines": 54,
+    "raw_bracket": 0.9342102557420731,
+    "localization_score": 1.0085287276224444
+  },
+  {
+    "drug": "FPL-64176",
+    "target": "CACNA1C",
+    "moa": "calcium channel activator",
+    "n_celllines": 53,
+    "raw_bracket": 0.9434593170881271,
+    "localization_score": 0.9871276529257926
+  },
+  {
+    "drug": "FR-180204",
+    "target": "MAPK1",
+    "moa": "MAP kinase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.9336107447743416,
+    "localization_score": 0.9652903582576354
+  },
+  {
+    "drug": "GANT-58",
+    "target": "GLI1",
+    "moa": "GLI antagonist",
+    "n_celllines": 51,
+    "raw_bracket": 0.9487751089036465,
+    "localization_score": 0.9905200457542672
+  },
+  {
+    "drug": "GANT-61",
+    "target": "GLI1",
+    "moa": "GLI antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.893534779548645,
+    "localization_score": 0.9677432018328832
+  },
+  {
+    "drug": "GBR-12935",
+    "target": "AGTR1",
+    "moa": "dopamine reuptake inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9146226197481155,
+    "localization_score": 0.9814651066723895
+  },
+  {
+    "drug": "GDC-0879",
+    "target": "BRAF",
+    "moa": "RAF inhibitor",
+    "n_celllines": 20,
+    "raw_bracket": 0.9111911803483963,
+    "localization_score": 0.9378344095705237
+  },
+  {
+    "drug": "GDC-0941",
+    "target": "PIK3CA",
+    "moa": "PI3K inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.6842208802700043,
+    "localization_score": 0.8978376901457111
+  },
+  {
+    "drug": "GNF-2",
+    "target": "ABL1",
+    "moa": "Bcr-Abl kinase inhibitor",
+    "n_celllines": 18,
+    "raw_bracket": 0.9374491721391678,
+    "localization_score": 0.9499538070748
+  },
+  {
+    "drug": "GR-235",
+    "target": "NR1H4",
+    "moa": "estrogen receptor agonist|FXR antagonist|progesterone receptor agonist",
+    "n_celllines": 14,
+    "raw_bracket": 0.9142493009567261,
+    "localization_score": 0.9941653169091905
+  },
+  {
+    "drug": "GS-39783",
+    "target": "GABBR1",
+    "moa": "GABA receptor modulator",
+    "n_celllines": 13,
+    "raw_bracket": 0.9582896046340466,
+    "localization_score": 0.998370234872752
+  },
+  {
+    "drug": "GSK-3-inhibitor-IX",
+    "target": "GSK3A",
+    "moa": "glycogen synthase kinase inhibitor|lipoxygenase inhibitor",
+    "n_celllines": 20,
+    "raw_bracket": 0.7778275609016418,
+    "localization_score": 0.9872465675860768
+  },
+  {
+    "drug": "GTP-14564",
+    "target": "CSF1R",
+    "moa": "FLT3 inhibitor|tyrosine kinase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9023422747850418,
+    "localization_score": 0.98669300958886
+  },
+  {
+    "drug": "GW-0742",
+    "target": "PPARD",
+    "moa": "PPAR receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9477218724787235,
+    "localization_score": 0.9955037841208836
+  },
+  {
+    "drug": "GW-1929",
+    "target": "PPARG",
+    "moa": "PPAR receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8695221990346909,
+    "localization_score": 0.9192120967537256
+  },
+  {
+    "drug": "GW-3965",
+    "target": "NR1H2",
+    "moa": "LXR agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8968546092510223,
+    "localization_score": 0.9425103245899348
+  },
+  {
+    "drug": "GW-4064",
+    "target": "NR1H4",
+    "moa": "FXR agonist",
+    "n_celllines": 15,
+    "raw_bracket": 0.9619852304458618,
+    "localization_score": 1.0085314910981389
+  },
+  {
+    "drug": "GW-441756",
+    "target": "NTRK1",
+    "moa": "growth factor receptor inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.8590400815010071,
+    "localization_score": 0.9286330996001263
+  },
+  {
+    "drug": "GW-501516",
+    "target": "PPARA",
+    "moa": "PPAR receptor agonist",
+    "n_celllines": 14,
+    "raw_bracket": 0.9481008872389793,
+    "localization_score": 1.0029743984978083
+  },
+  {
+    "drug": "GW-5074",
+    "target": "NTRK1",
+    "moa": "leucine rich repeat kinase inhibitor|RAF inhibitor",
+    "n_celllines": 18,
+    "raw_bracket": 0.9283848032355309,
+    "localization_score": 1.005199104095552
+  },
+  {
+    "drug": "GW-583340",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9552319645881653,
+    "localization_score": 0.9798974275328927
+  },
+  {
+    "drug": "GW-6471",
+    "target": "PPARA",
+    "moa": "PPAR receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.914023146033287,
+    "localization_score": 1.031873991211635
+  },
+  {
+    "drug": "GW-7647",
+    "target": "PPARA",
+    "moa": "PPAR receptor agonist",
+    "n_celllines": 15,
+    "raw_bracket": 0.8973226845264435,
+    "localization_score": 0.9871079734458156
+  },
+  {
+    "drug": "GW-843682X",
+    "target": "PLK1",
+    "moa": "PLK inhibitor",
+    "n_celllines": 60,
+    "raw_bracket": 0.8820692151784897,
+    "localization_score": 1.0150832432308974
+  },
+  {
+    "drug": "GW-9508",
+    "target": "FFAR1",
+    "moa": "free fatty acid receptor agonist|G protein-coupled receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9140609428286552,
+    "localization_score": 0.9437283184933342
+  },
+  {
+    "drug": "GW-9662",
+    "target": "NCOA2",
+    "moa": "PPAR receptor antagonist",
+    "n_celllines": 14,
+    "raw_bracket": 0.9540187865495682,
+    "localization_score": 1.010006100608941
+  },
+  {
+    "drug": "H-89",
+    "target": "GSG2",
+    "moa": "PKA inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8364713937044144,
+    "localization_score": 1.0441521987001077
+  },
+  {
+    "drug": "HMN-214",
+    "target": "PLK1",
+    "moa": "PLK inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.9092673733830452,
+    "localization_score": 0.9867788296377179
+  },
+  {
+    "drug": "IKK-16",
+    "target": "IKBKB",
+    "moa": "IKK inhibitor",
+    "n_celllines": 12,
+    "raw_bracket": 0.6978560388088226,
+    "localization_score": 0.8849292260222138
+  },
+  {
+    "drug": "IKK-2-inhibitor",
+    "target": "IKBKB",
+    "moa": "IKK inhibitor|SYK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9406850747764111,
+    "localization_score": 0.9814274085531369
+  },
+  {
+    "drug": "IKK-2-inhibitor-V",
+    "target": "IKBKB",
+    "moa": "IKK inhibitor|NFkB pathway inhibitor",
+    "n_celllines": 55,
+    "raw_bracket": 0.7430426776409149,
+    "localization_score": 0.8984487037436265
+  },
+  {
+    "drug": "IRL-2500",
+    "target": "EDNRB",
+    "moa": "endothelin receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9395664595067501,
+    "localization_score": 1.0246488571477046
+  },
+  {
+    "drug": "ITE",
+    "target": "AHR",
+    "moa": "aryl hydrocarbon receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9253843948245049,
+    "localization_score": 0.9760567279736444
+  },
+  {
+    "drug": "JAK3-inhibitor-V",
+    "target": "JAK3",
+    "moa": "JAK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9269294366240501,
+    "localization_score": 0.9655224701820057
+  },
+  {
+    "drug": "JLK-6",
+    "target": "PSEN1",
+    "moa": "gamma secretase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8214225471019745,
+    "localization_score": 0.9370652019835597
+  },
+  {
+    "drug": "JNJ-26481585",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.809188649058342,
+    "localization_score": 0.9492577959330272
+  },
+  {
+    "drug": "JNJ-38877605",
+    "target": "MET",
+    "moa": "tyrosine kinase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8676132410764694,
+    "localization_score": 0.9785211180461214
+  },
+  {
+    "drug": "JNJ-7706621",
+    "target": "AURKA",
+    "moa": "CDK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.6162300109863281,
+    "localization_score": 0.8458079624522568
+  },
+  {
+    "drug": "JX-401",
+    "target": "MAPK14",
+    "moa": "p38 MAPK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8923730999231339,
+    "localization_score": 0.9753822190424847
+  },
+  {
+    "drug": "JZL-184",
+    "target": "MGLL",
+    "moa": "monoacylglucerol lipase inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.9455553963780403,
+    "localization_score": 1.0098964113211397
+  },
+  {
+    "drug": "K-858",
+    "target": "KIF11",
+    "moa": "kinesin-like spindle protein inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.934465117752552,
+    "localization_score": 0.9972866914627312
+  },
+  {
+    "drug": "KI-16425",
+    "target": "LPAR1",
+    "moa": "lysophosphatidic acid receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8868805915117264,
+    "localization_score": 0.9439337631326182
+  },
+  {
+    "drug": "KI-8751",
+    "target": "KDR",
+    "moa": "KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|VEGFR inhibitor",
+    "n_celllines": 11,
+    "raw_bracket": 0.8638651818037033,
+    "localization_score": 0.9743639501491479
+  },
+  {
+    "drug": "KN-62",
+    "target": "AKT1",
+    "moa": "calcium/calmodulin dependent protein kinase inhibitor|purinergic receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8997199982404709,
+    "localization_score": 0.9942042031801455
+  },
+  {
+    "drug": "KN-93",
+    "target": "CAMK2A",
+    "moa": "calcium/calmodulin dependent protein kinase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.846377968788147,
+    "localization_score": 1.0130383272630883
+  },
+  {
+    "drug": "KU-0063794",
+    "target": "MTOR",
+    "moa": "mTOR inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.7511438429355621,
+    "localization_score": 0.9542228766985509
+  },
+  {
+    "drug": "KU-55933",
+    "target": "ATM",
+    "moa": "ATM kinase inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.9237789884209633,
+    "localization_score": 0.9597555050642719
+  },
+  {
+    "drug": "KU-60019",
+    "target": "ATM",
+    "moa": "ATM kinase inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.6823143064975739,
+    "localization_score": 1.0566265011300229
+  },
+  {
+    "drug": "L-161982",
+    "target": "PTGER4",
+    "moa": "prostanoid receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9350986182689667,
+    "localization_score": 0.9895574831428273
+  },
+  {
+    "drug": "L-165041",
+    "target": "PPARD",
+    "moa": "PPAR receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.926199346780777,
+    "localization_score": 1.0068204233123312
+  },
+  {
+    "drug": "L-690330",
+    "target": "IMPA1",
+    "moa": "inositol monophosphatase inhibitor",
+    "n_celllines": 52,
+    "raw_bracket": 0.9226776286959648,
+    "localization_score": 0.9737478277865591
+  },
+  {
+    "drug": "LE-135",
+    "target": "RARB",
+    "moa": "retinoid receptor agonist",
+    "n_celllines": 55,
+    "raw_bracket": 0.9047175645828247,
+    "localization_score": 0.9694841854099991
+  },
+  {
+    "drug": "LFM-A13",
+    "target": "BTK",
+    "moa": "Bruton's tyrosine kinase (BTK) inhibitor",
+    "n_celllines": 55,
+    "raw_bracket": 0.931964747607708,
+    "localization_score": 0.9654982779034338
+  },
+  {
+    "drug": "MDL-29951",
+    "target": "FBP1",
+    "moa": "glutamate receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8562640845775604,
+    "localization_score": 0.9447062983757697
+  },
+  {
+    "drug": "MEK1-2-inhibitor",
+    "target": "MAP2K2",
+    "moa": "MEK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9059251174330711,
+    "localization_score": 0.9712153701635556
+  },
+  {
+    "drug": "MG-132",
+    "target": "PSMB1",
+    "moa": "proteasome inhibitor",
+    "n_celllines": 16,
+    "raw_bracket": 0.565131276845932,
+    "localization_score": 0.9798768727529193
+  },
+  {
+    "drug": "MGCD-265",
+    "target": "AXL",
+    "moa": "VEGFR inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.66071417927742,
+    "localization_score": 0.9856501762367867
+  },
+  {
+    "drug": "MK-1775",
+    "target": "WEE1",
+    "moa": "WEE1 kinase inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.8285963237285614,
+    "localization_score": 1.0545800880542764
+  },
+  {
+    "drug": "MK-2206",
+    "target": "AKT1",
+    "moa": "AKT inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.8237734735012054,
+    "localization_score": 0.944255941961527
+  },
+  {
+    "drug": "MK-5108",
+    "target": "AURKA",
+    "moa": "Aurora kinase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.7496738135814667,
+    "localization_score": 0.8515780974339013
+  },
+  {
+    "drug": "MRS-1220",
+    "target": "ADORA2B",
+    "moa": "adenosine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9546640552580357,
+    "localization_score": 1.0045394802591612
+  },
+  {
+    "drug": "Merck60",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.6573967039585114,
+    "localization_score": 0.8640935204648098
+  },
+  {
+    "drug": "NCS-382",
+    "target": "GABBR1",
+    "moa": "GABA receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.918872781097889,
+    "localization_score": 0.9314967620312744
+  },
+  {
+    "drug": "NFKB-activation-inhibitor-II",
+    "target": "RELA",
+    "moa": "NFkB pathway inhibitor",
+    "n_celllines": 49,
+    "raw_bracket": 0.9222921282052994,
+    "localization_score": 1.0019051692218777
+  },
+  {
+    "drug": "NPC-15199",
+    "target": "PPARG",
+    "moa": "ICAM1 antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.931105449795723,
+    "localization_score": 0.9928245591464212
+  },
+  {
+    "drug": "NSC-3852",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.6447292268276215,
+    "localization_score": 0.8276721271889003
+  },
+  {
+    "drug": "NSC-632839",
+    "target": "SENP2",
+    "moa": "ubiquitin specific protease inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.6079320013523102,
+    "localization_score": 0.9192049066776582
+  },
+  {
+    "drug": "NSC-663284",
+    "target": "CDC25A",
+    "moa": "CDC inhibitor",
+    "n_celllines": 12,
+    "raw_bracket": 0.7364509403705597,
+    "localization_score": 1.0273980701781578
+  },
+  {
+    "drug": "NSC-95397",
+    "target": "CDC25A",
+    "moa": "CDC inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.8986999690532684,
+    "localization_score": 1.0071543897973452
+  },
+  {
+    "drug": "NU-1025",
+    "target": "PARP1",
+    "moa": "PARP inhibitor",
+    "n_celllines": 55,
+    "raw_bracket": 0.9385374374687672,
+    "localization_score": 1.016480130080281
+  },
+  {
+    "drug": "NU-7026",
+    "target": "PRKDC",
+    "moa": "DNA dependent protein kinase inhibitor|mTOR inhibitor|PI3K inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8406644314527512,
+    "localization_score": 0.9917834885064148
+  },
+  {
+    "drug": "NU-7441",
+    "target": "PRKDC",
+    "moa": "DNA dependent protein kinase inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.8501428961753845,
+    "localization_score": 0.9557940559759002
+  },
+  {
+    "drug": "NVP-AEW541",
+    "target": "IGF1R",
+    "moa": "IGF-1 inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.6725797355175018,
+    "localization_score": 0.9804529247589211
+  },
+  {
+    "drug": "NVP-AUY922",
+    "target": "HSP90AA1",
+    "moa": "HSP inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.7154473066329956,
+    "localization_score": 0.9783471326929604
+  },
+  {
+    "drug": "NVP-BEZ235",
+    "target": "ATR",
+    "moa": "mTOR inhibitor|PI3K inhibitor",
+    "n_celllines": 54,
+    "raw_bracket": 0.7287133932113647,
+    "localization_score": 1.0371643711625154
+  },
+  {
+    "drug": "NVP-BGJ398",
+    "target": "FGFR1",
+    "moa": "FGFR inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.7302111685276031,
+    "localization_score": 0.9270786036678662
+  },
+  {
+    "drug": "NVP-TAE684",
+    "target": "ALK",
+    "moa": "ALK tyrosine kinase receptor inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.7063922882080078,
+    "localization_score": 0.897332789595332
+  },
+  {
+    "drug": "OMDM-2",
+    "target": "GPR119",
+    "moa": "FAAH inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9188007786870003,
+    "localization_score": 1.0228554758959854
+  },
+  {
+    "drug": "OSI-027",
+    "target": "MTOR",
+    "moa": "mTOR inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.6748259663581848,
+    "localization_score": 0.9196149942486558
+  },
+  {
+    "drug": "OSI-930",
+    "target": "FLT1",
+    "moa": "KIT inhibitor|VEGFR inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.7140422761440277,
+    "localization_score": 0.9096851103599386
+  },
+  {
+    "drug": "PAC-1",
+    "target": "CASP3",
+    "moa": "caspase activator",
+    "n_celllines": 51,
+    "raw_bracket": 0.7909628301858902,
+    "localization_score": 1.058675712077725
+  },
+  {
+    "drug": "PCI-24781",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.5297595858573914,
+    "localization_score": 0.8011864681958858
+  },
+  {
+    "drug": "PCI-34051",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 12,
+    "raw_bracket": 0.8888733759522438,
+    "localization_score": 0.9947389060746514
+  },
+  {
+    "drug": "PD-0325901",
+    "target": "MAP2K1",
+    "moa": "MEK inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.7619713842868805,
+    "localization_score": 0.8935412852174891
+  },
+  {
+    "drug": "PD-158780",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.7585069090127945,
+    "localization_score": 0.9472835116253636
+  },
+  {
+    "drug": "PD-160170",
+    "target": "NPY1R",
+    "moa": "neuropeptide receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8734456300735474,
+    "localization_score": 0.9593697407654136
+  },
+  {
+    "drug": "PD-173074",
+    "target": "FGFR1",
+    "moa": "FGFR inhibitor|VEGFR inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.7992634028196335,
+    "localization_score": 1.0150706055236303
+  },
+  {
+    "drug": "PD-184352",
+    "target": "MAP2K1",
+    "moa": "MEK inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.8037699609994888,
+    "localization_score": 0.8804633600066919
+  },
+  {
+    "drug": "PD-198306",
+    "target": "MAP2K1",
+    "moa": "MAP kinase inhibitor|MEK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.7227232754230499,
+    "localization_score": 0.9764534597105742
+  },
+  {
+    "drug": "PD-407824",
+    "target": "WEE1",
+    "moa": "PKC inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.7068542242050171,
+    "localization_score": 0.9745772973643917
+  },
+  {
+    "drug": "PD-98059",
+    "target": "AKT1",
+    "moa": "MEK inhibitor",
+    "n_celllines": 58,
+    "raw_bracket": 0.9187418892979622,
+    "localization_score": 0.9970293188266728
+  },
+  {
+    "drug": "PETCM",
+    "target": "CASP3",
+    "moa": "caspase activator",
+    "n_celllines": 8,
+    "raw_bracket": 0.9259842187166214,
+    "localization_score": 0.9441660549335359
+  },
+  {
+    "drug": "PF-04217903",
+    "target": "MET",
+    "moa": "c-Met inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.9310530722141266,
+    "localization_score": 0.9617531482790364
+  },
+  {
+    "drug": "PF-3845",
+    "target": "FAAH",
+    "moa": "FAAH inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.9558081775903702,
+    "localization_score": 0.9920727724517522
+  },
+  {
+    "drug": "PF-431396",
+    "target": "PTK2",
+    "moa": "focal adhesion kinase inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.6687320470809937,
+    "localization_score": 1.010046159076077
+  },
+  {
+    "drug": "PF-477736",
+    "target": "CHEK1",
+    "moa": "CHK inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.7380113899707794,
+    "localization_score": 0.9395220063938321
+  },
+  {
+    "drug": "PF-562271",
+    "target": "PTK2",
+    "moa": "focal adhesion kinase inhibitor",
+    "n_celllines": 17,
+    "raw_bracket": 0.5883099138736725,
+    "localization_score": 0.7850823729300387
+  },
+  {
+    "drug": "PF-750",
+    "target": "FAAH",
+    "moa": "FAAH inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.8753203749656677,
+    "localization_score": 0.9350049222226179
+  },
+  {
+    "drug": "PHA-665752",
+    "target": "MET",
+    "moa": "c-Met inhibitor",
+    "n_celllines": 18,
+    "raw_bracket": 0.878510132431984,
+    "localization_score": 0.9379726007359036
+  },
+  {
+    "drug": "PHA-793887",
+    "target": "CDK1",
+    "moa": "CDK inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.6493022441864014,
+    "localization_score": 0.9672870038639613
+  },
+  {
+    "drug": "PHTPP",
+    "target": "ESR2",
+    "moa": "estrogen receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.962069895118475,
+    "localization_score": 1.0028099232711392
+  },
+  {
+    "drug": "PI-103",
+    "target": "MTOR",
+    "moa": "mTOR inhibitor|PI3K inhibitor",
+    "n_celllines": 59,
+    "raw_bracket": 0.7507245093584061,
+    "localization_score": 0.9873052881079297
+  },
+  {
+    "drug": "PIK-75",
+    "target": "PIK3CA",
+    "moa": "DNA protein kinase inhibitor|PI3K inhibitor",
+    "n_celllines": 54,
+    "raw_bracket": 0.6242894232273102,
+    "localization_score": 0.9107568824934622
+  },
+  {
+    "drug": "PNU-74654",
+    "target": "CTNNB1",
+    "moa": "beta-catenin inhibitor",
+    "n_celllines": 54,
+    "raw_bracket": 0.8614740520715714,
+    "localization_score": 1.0089131865756817
+  },
+  {
+    "drug": "PP-1",
+    "target": "HCK",
+    "moa": "SRC inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8006995320320129,
+    "localization_score": 1.0030364367195497
+  },
+  {
+    "drug": "PP-2",
+    "target": "ABL1",
+    "moa": "SRC inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.8025787770748138,
+    "localization_score": 0.9405747291828931
+  },
+  {
+    "drug": "PPT",
+    "target": "ESR1",
+    "moa": "estrogen receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9307363480329514,
+    "localization_score": 0.9617826718735069
+  },
+  {
+    "drug": "PQ-401",
+    "target": "IGF1R",
+    "moa": "IGF-1 inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8953284993767738,
+    "localization_score": 0.9290003906749394
+  },
+  {
+    "drug": "PU-H71",
+    "target": "HSP90AA1",
+    "moa": "HSP inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.7784838378429413,
+    "localization_score": 0.9741901744622445
+  },
+  {
+    "drug": "QX-314",
+    "target": "MAPK14",
+    "moa": "sodium channel blocker",
+    "n_celllines": 13,
+    "raw_bracket": 0.9432868100702763,
+    "localization_score": 0.982937643561981
+  },
+  {
+    "drug": "R-59022",
+    "target": "DGKA",
+    "moa": "diacylglycerol kinase inhibitor|protein kinase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8224759101867676,
+    "localization_score": 1.0512774211137503
+  },
+  {
+    "drug": "RITA",
+    "target": "MDM2",
+    "moa": "MDM inhibitor",
+    "n_celllines": 50,
+    "raw_bracket": 0.9128579944372177,
+    "localization_score": 1.039065434811129
+  },
+  {
+    "drug": "RS-504393",
+    "target": "CCL2",
+    "moa": "CC chemokine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9445114433765411,
+    "localization_score": 0.9496417059595561
+  },
+  {
+    "drug": "RS-79948",
+    "target": "ADRA2A",
+    "moa": "adrenergic receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8827914595603943,
+    "localization_score": 0.964636424016205
+  },
+  {
+    "drug": "RWJ-21757",
+    "target": "TLR7",
+    "moa": "toll-like receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9646140709519386,
+    "localization_score": 0.9771614998076479
+  },
+  {
+    "drug": "Ro-15-4513",
+    "target": "GABRA1",
+    "moa": "GABA benzodiazepine site receptor inverse agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9632220566272736,
+    "localization_score": 0.9894871443144724
+  },
+  {
+    "drug": "Ro-19-4605",
+    "target": "GABRA1",
+    "moa": "GABA benzodiazepine site receptor inverse agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9387211687862873,
+    "localization_score": 0.9944001065614566
+  },
+  {
+    "drug": "Ro-28-1675",
+    "target": "GCK",
+    "moa": "glucokinase activator",
+    "n_celllines": 51,
+    "raw_bracket": 0.7613986134529114,
+    "localization_score": 1.0028515989597429
+  },
+  {
+    "drug": "Ro-3306",
+    "target": "CDK1",
+    "moa": "CDK inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.6313267648220062,
+    "localization_score": 0.9156883055650373
+  },
+  {
+    "drug": "Ro-90-7501",
+    "target": "APP",
+    "moa": "beta amyloid protein neurotoxicity inhibitor",
+    "n_celllines": 11,
+    "raw_bracket": 0.7469997704029083,
+    "localization_score": 1.0160002215027373
+  },
+  {
+    "drug": "SANT-1",
+    "target": "SHH",
+    "moa": "smoothened receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9697784949094057,
+    "localization_score": 0.9438137072307297
+  },
+  {
+    "drug": "SAR-245409",
+    "target": "MTOR",
+    "moa": "PI3K inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.6010719239711761,
+    "localization_score": 0.7907246239419272
+  },
+  {
+    "drug": "SB-202190",
+    "target": "AKT1",
+    "moa": "p38 MAPK inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.8774388507008553,
+    "localization_score": 1.019567208024662
+  },
+  {
+    "drug": "SB-203580",
+    "target": "AKT1",
+    "moa": "p38 MAPK inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.861395001411438,
+    "localization_score": 0.959896424738493
+  },
+  {
+    "drug": "SB-216763",
+    "target": "CCNA2",
+    "moa": "glycogen synthase kinase inhibitor",
+    "n_celllines": 59,
+    "raw_bracket": 0.8414297848939896,
+    "localization_score": 0.9836158553580927
+  },
+  {
+    "drug": "SB-218078",
+    "target": "CHEK1",
+    "moa": "CHK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.7696923166513443,
+    "localization_score": 0.9515204069635446
+  },
+  {
+    "drug": "SB-225002",
+    "target": "CXCR2",
+    "moa": "CC chemokine receptor antagonist",
+    "n_celllines": 55,
+    "raw_bracket": 0.9221464246511459,
+    "localization_score": 1.0093634644927698
+  },
+  {
+    "drug": "SB-239063",
+    "target": "MAPK11",
+    "moa": "p38 MAPK inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.8259995877742767,
+    "localization_score": 0.9995638611951452
+  },
+  {
+    "drug": "SB-415286",
+    "target": "GSK3A",
+    "moa": "glycogen synthase kinase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8994250148534775,
+    "localization_score": 1.0020873388202343
+  },
+  {
+    "drug": "SB-431542",
+    "target": "ACVR1C",
+    "moa": "TGF beta receptor inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9072833582758904,
+    "localization_score": 1.0015864123356022
+  },
+  {
+    "drug": "SB-525334",
+    "target": "TGFBR1",
+    "moa": "TGF beta receptor inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.8757853284478188,
+    "localization_score": 1.0280793164427822
+  },
+  {
+    "drug": "SB-590885",
+    "target": "BRAF",
+    "moa": "RAF inhibitor",
+    "n_celllines": 18,
+    "raw_bracket": 0.9523072466254234,
+    "localization_score": 0.9737552537713925
+  },
+  {
+    "drug": "SC-10",
+    "target": "PRKCA",
+    "moa": "protein kinase activator",
+    "n_celllines": 13,
+    "raw_bracket": 0.9686927534639835,
+    "localization_score": 0.997379048116101
+  },
+  {
+    "drug": "SC-9",
+    "target": "PRKCA",
+    "moa": "protein tyrosine kinase activator",
+    "n_celllines": 13,
+    "raw_bracket": 0.9374380931258202,
+    "localization_score": 1.0153764467469535
+  },
+  {
+    "drug": "SD-169",
+    "target": "MAPK14",
+    "moa": "p38 MAPK inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8844132795929909,
+    "localization_score": 0.9245239465132838
+  },
+  {
+    "drug": "SGX523",
+    "target": "MET",
+    "moa": "hepatocyte growth factor receptor inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.7266768515110016,
+    "localization_score": 1.056897632384948
+  },
+  {
+    "drug": "SJ-172550",
+    "target": "MDM4",
+    "moa": "MDM inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.8964857012033463,
+    "localization_score": 0.9849188867742514
+  },
+  {
+    "drug": "SKI-II",
+    "target": "SPHK1",
+    "moa": "sphingosine kinase inhibitor",
+    "n_celllines": 55,
+    "raw_bracket": 0.8345967829227448,
+    "localization_score": 0.9511484276000565
+  },
+  {
+    "drug": "SN-38",
+    "target": "TOP1",
+    "moa": "topoisomerase inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.6208919286727905,
+    "localization_score": 1.0872585807708635
+  },
+  {
+    "drug": "SNS-314",
+    "target": "AURKA",
+    "moa": "Aurora kinase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8676718324422836,
+    "localization_score": 0.9229540992068983
+  },
+  {
+    "drug": "SR-95639A",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9461416080594063,
+    "localization_score": 0.9610698178945091
+  },
+  {
+    "drug": "SRC-kinase-inhibitor-I",
+    "target": "CSK",
+    "moa": "SRC inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8959331512451172,
+    "localization_score": 0.9359122925390706
+  },
+  {
+    "drug": "STAT3-inhibitor-VI",
+    "target": "STAT3",
+    "moa": "STAT inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.9361924976110458,
+    "localization_score": 0.9625318822862499
+  },
+  {
+    "drug": "T-0070907",
+    "target": "PPARG",
+    "moa": "PPAR receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9398278594017029,
+    "localization_score": 1.0082584597812172
+  },
+  {
+    "drug": "TAK-715",
+    "target": "MAPK14",
+    "moa": "p38 MAPK inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.9194626435637474,
+    "localization_score": 0.963726474646289
+  },
+  {
+    "drug": "TCS-359",
+    "target": "FLT3",
+    "moa": "FLT3 inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8170650005340576,
+    "localization_score": 1.0570060488430324
+  },
+  {
+    "drug": "TGX-221",
+    "target": "PIK3CB",
+    "moa": "PI3K inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.9099029526114464,
+    "localization_score": 0.9778523755970998
+  },
+  {
+    "drug": "TPCA-1",
+    "target": "IKBKB",
+    "moa": "IKK inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.8079309612512589,
+    "localization_score": 0.996481808175826
+  },
+  {
+    "drug": "TTNPB",
+    "target": "RARA",
+    "moa": "retinoid receptor agonist",
+    "n_celllines": 15,
+    "raw_bracket": 0.8887942656874657,
+    "localization_score": 0.9843216826698284
+  },
+  {
+    "drug": "TW-37",
+    "target": "BCL2",
+    "moa": "BCL inhibitor",
+    "n_celllines": 49,
+    "raw_bracket": 0.765069454908371,
+    "localization_score": 0.9568898097035421
+  },
+  {
+    "drug": "TWS-119",
+    "target": "GSK3B",
+    "moa": "glycogen synthase kinase inhibitor",
+    "n_celllines": 21,
+    "raw_bracket": 0.8541149497032166,
+    "localization_score": 1.0254129177145799
+  },
+  {
+    "drug": "U-0126",
+    "target": "AKT1",
+    "moa": "MEK inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.8223829567432404,
+    "localization_score": 0.9650117687910816
+  },
+  {
+    "drug": "VER-155008",
+    "target": "HSPA1A",
+    "moa": "HSP inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.898839995265007,
+    "localization_score": 0.9975803434511772
+  },
+  {
+    "drug": "VX-702",
+    "target": "IL1B",
+    "moa": "p38 MAPK inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.9312152042984962,
+    "localization_score": 0.9937136032538919
+  },
+  {
+    "drug": "VX-745",
+    "target": "MAPK11",
+    "moa": "p38 MAPK inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.9001844525337219,
+    "localization_score": 1.01430261394255
+  },
+  {
+    "drug": "WAY-161503",
+    "target": "HTR2C",
+    "moa": "serotonin receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.9110212847590446,
+    "localization_score": 0.9726433585182972
+  },
+  {
+    "drug": "WAY-629",
+    "target": "HTR2C",
+    "moa": "serotonin receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.9534996710717678,
+    "localization_score": 0.9969087229603169
+  },
+  {
+    "drug": "WHI-P154",
+    "target": "EGFR",
+    "moa": "JAK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8440496325492859,
+    "localization_score": 0.9354038927029774
+  },
+  {
+    "drug": "WYE-125132",
+    "target": "MTOR",
+    "moa": "mTOR inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.6236203610897064,
+    "localization_score": 0.8891829464980237
+  },
+  {
+    "drug": "WYE-354",
+    "target": "MTOR",
+    "moa": "mTOR inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.8191734105348587,
+    "localization_score": 0.9742152429456529
+  },
+  {
+    "drug": "WZ-3146",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.8483140170574188,
+    "localization_score": 0.9335980237975499
+  },
+  {
+    "drug": "WZ-4002",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.8727863430976868,
+    "localization_score": 0.9113427986553233
+  },
+  {
+    "drug": "XE-991",
+    "target": "KCNQ1",
+    "moa": "potassium channel blocker",
+    "n_celllines": 13,
+    "raw_bracket": 0.9053271263837814,
+    "localization_score": 0.9618029815419927
+  },
+  {
+    "drug": "Y-134",
+    "target": "ESR1",
+    "moa": "estrogen receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8378879576921463,
+    "localization_score": 0.9711384421356333
+  },
+  {
+    "drug": "Y-27632",
+    "target": "PKIA",
+    "moa": "rho associated kinase inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.8992722257971764,
+    "localization_score": 0.9898798885071058
+  },
+  {
+    "drug": "Y-39983",
+    "target": "ROCK1",
+    "moa": "rho associated kinase inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.763485386967659,
+    "localization_score": 0.9471115756484955
+  },
+  {
+    "drug": "YM-155",
+    "target": "BIRC5",
+    "moa": "survivin inhibitor",
+    "n_celllines": 54,
+    "raw_bracket": 0.8021604716777802,
+    "localization_score": 0.9427285158860114
+  },
+  {
+    "drug": "ZD-7155",
+    "target": "AGTR1",
+    "moa": "angiotensin receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9203981310129166,
+    "localization_score": 0.9748316383120124
+  },
+  {
+    "drug": "ZK-164015",
+    "target": "ESR1",
+    "moa": "estrogen receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8848739042878151,
+    "localization_score": 0.9989208253742146
+  },
+  {
+    "drug": "ZK-93423",
+    "target": "GABRA1",
+    "moa": "benzodiazepine receptor agonist",
+    "n_celllines": 14,
+    "raw_bracket": 0.8789800778031349,
+    "localization_score": 0.9949571140709489
+  },
+  {
+    "drug": "ZK-93426",
+    "target": "GABRA1",
+    "moa": "benzodiazepine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9501479119062424,
+    "localization_score": 0.9777017743438091
+  },
+  {
+    "drug": "ZM-306416",
+    "target": "EGFR",
+    "moa": "Abl kinase inhibitor|SRC inhibitor|VEGFR inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9312538579106331,
+    "localization_score": 0.9443030424556845
+  },
+  {
+    "drug": "ZM-323881",
+    "target": "KDR",
+    "moa": "VEGFR inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9404172487556934,
+    "localization_score": 1.0163843890017805
+  },
+  {
+    "drug": "ZM-336372",
+    "target": "BRAF",
+    "moa": "RAF inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.791827842593193,
+    "localization_score": 0.9851374141545552
+  },
+  {
+    "drug": "ZM-39923",
+    "target": "JAK1",
+    "moa": "JAK inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.9244808480143547,
+    "localization_score": 0.9301630484342339
+  },
+  {
+    "drug": "ZM-447439",
+    "target": "AURKA",
+    "moa": "Aurora kinase inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.8943001925945282,
+    "localization_score": 0.9168910282632128
+  },
+  {
+    "drug": "ZSTK-474",
+    "target": "PIK3CB",
+    "moa": "PI3K inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.6905879378318787,
+    "localization_score": 0.9387588259526919
+  },
+  {
+    "drug": "acamprosate",
+    "target": "GABRA1",
+    "moa": "glutamate receptor antagonist",
+    "n_celllines": 10,
+    "raw_bracket": 0.9563509486615658,
+    "localization_score": 0.9805649225058001
+  },
+  {
+    "drug": "acetyl-farnesyl-cysteine",
+    "target": "PPARG",
+    "moa": "methyltransferase inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.9125747159123421,
+    "localization_score": 0.9635668352782111
+  },
+  {
+    "drug": "acitretin",
+    "target": "RARA",
+    "moa": "retinoid receptor agonist",
+    "n_celllines": 15,
+    "raw_bracket": 0.9528073854744434,
+    "localization_score": 0.9715853456394942
+  },
+  {
+    "drug": "acyclovir",
+    "target": "PNP",
+    "moa": "DNA polymerase inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.7584780305624008,
+    "localization_score": 1.0236613129051781
+  },
+  {
+    "drug": "afatinib",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 17,
+    "raw_bracket": 0.7605313360691071,
+    "localization_score": 0.9157446059137362
+  },
+  {
+    "drug": "albendazole",
+    "target": "TUBA1A",
+    "moa": "tubulin polymerization inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.848298117518425,
+    "localization_score": 0.9723232493604282
+  },
+  {
+    "drug": "alda-1",
+    "target": "ALDH2",
+    "moa": "aldehyde dehydrogenase activator",
+    "n_celllines": 51,
+    "raw_bracket": 0.9166131094098091,
+    "localization_score": 0.9489930354324501
+  },
+  {
+    "drug": "alfacalcidol",
+    "target": "CYP27B1",
+    "moa": "vitamin D receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8599119484424591,
+    "localization_score": 0.9784759625030373
+  },
+  {
+    "drug": "alimemazine",
+    "target": "HRH1",
+    "moa": "histamine receptor agonist|histamine receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.7680062502622604,
+    "localization_score": 0.8701165018792093
+  },
+  {
+    "drug": "alisertib",
+    "target": "AURKA",
+    "moa": "Aurora kinase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.7630937397480011,
+    "localization_score": 1.022035231390902
+  },
+  {
+    "drug": "alrestatin",
+    "target": "AKR1B1",
+    "moa": "aldose reductase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9387600235641003,
+    "localization_score": 1.01278092084423
+  },
+  {
+    "drug": "alvespimycin",
+    "target": "HSP90AA1",
+    "moa": "HSP inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.7602144330739975,
+    "localization_score": 0.9396119071934411
+  },
+  {
+    "drug": "alvocidib",
+    "target": "CDK1",
+    "moa": "CDK inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.473086416721344,
+    "localization_score": 0.9364709131439259
+  },
+  {
+    "drug": "amcinonide",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8934498652815819,
+    "localization_score": 0.9570278682611064
+  },
+  {
+    "drug": "aminopentamide",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9668233320116997,
+    "localization_score": 0.9916150200973944
+  },
+  {
+    "drug": "aminopurvalanol-a",
+    "target": "CDK1",
+    "moa": "CDK inhibitor|tyrosine kinase inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.6355984210968018,
+    "localization_score": 0.9637270231775994
+  },
+  {
+    "drug": "amlodipine",
+    "target": "CACNA1C",
+    "moa": "calcium channel blocker",
+    "n_celllines": 13,
+    "raw_bracket": 0.803293839097023,
+    "localization_score": 0.947173577896042
+  },
+  {
+    "drug": "amodiaquine",
+    "target": "HNMT",
+    "moa": "histamine receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8808100074529648,
+    "localization_score": 0.8906079748491287
+  },
+  {
+    "drug": "amonafide",
+    "target": "TOP2A",
+    "moa": "topoisomerase inhibitor",
+    "n_celllines": 12,
+    "raw_bracket": 0.7835444658994675,
+    "localization_score": 0.984432983277662
+  },
+  {
+    "drug": "amperozide",
+    "target": "FAAH",
+    "moa": "dopamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9006620272994041,
+    "localization_score": 1.0098363970639785
+  },
+  {
+    "drug": "amuvatinib",
+    "target": "KIT",
+    "moa": "FLT3 inhibitor|KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|RAD51 inhibitor|RET tyrosine kinase inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.6619344055652618,
+    "localization_score": 0.8668576275369771
+  },
+  {
+    "drug": "andarine",
+    "target": "AR",
+    "moa": "androgen receptor modulator",
+    "n_celllines": 13,
+    "raw_bracket": 0.9565151892602444,
+    "localization_score": 0.969250929548378
+  },
+  {
+    "drug": "antimycin-a",
+    "target": "CYCS",
+    "moa": "ATP synthase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.8852083906531334,
+    "localization_score": 0.9815105562203809
+  },
+  {
+    "drug": "apigenin",
+    "target": "AKR1B1",
+    "moa": "casein kinase inhibitor|cell proliferation inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.8338090032339096,
+    "localization_score": 0.9335268664338349
+  },
+  {
+    "drug": "arctigenin",
+    "target": "CHUK",
+    "moa": "MEK inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.9238422140479088,
+    "localization_score": 0.9643169385064775
+  },
+  {
+    "drug": "arcyriaflavin-a",
+    "target": "CCND1",
+    "moa": "CDK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8765048757195473,
+    "localization_score": 0.9511992915689061
+  },
+  {
+    "drug": "arecaidine-propargyl-ester",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9583165906369686,
+    "localization_score": 0.9716184791429591
+  },
+  {
+    "drug": "argatroban",
+    "target": "F2",
+    "moa": "thrombin inhibitor",
+    "n_celllines": 7,
+    "raw_bracket": 0.9614323452115059,
+    "localization_score": 0.986684019255391
+  },
+  {
+    "drug": "artemether",
+    "target": "ATP1A1",
+    "moa": "antimalarial agent",
+    "n_celllines": 7,
+    "raw_bracket": 0.9271028488874435,
+    "localization_score": 0.992520768379367
+  },
+  {
+    "drug": "aspirin",
+    "target": "AKR1C1",
+    "moa": "cyclooxygenase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.9559719860553741,
+    "localization_score": 0.9899899568530157
+  },
+  {
+    "drug": "ataluren",
+    "target": "DMD",
+    "moa": "CFTR channel agonist|dystrophin stimulant",
+    "n_celllines": 8,
+    "raw_bracket": 0.9585511349141598,
+    "localization_score": 0.9501225706694856
+  },
+  {
+    "drug": "atorvastatin",
+    "target": "AHR",
+    "moa": "HMGCR inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.9243408218026161,
+    "localization_score": 0.9761507235138943
+  },
+  {
+    "drug": "auranofin",
+    "target": "IKBKB",
+    "moa": "NFkB pathway inhibitor",
+    "n_celllines": 44,
+    "raw_bracket": 0.695077657699585,
+    "localization_score": 0.9587379993668036
+  },
+  {
+    "drug": "aurora-a-inhibitor-i",
+    "target": "AURKA",
+    "moa": "Aurora kinase inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.8889533281326294,
+    "localization_score": 1.0183809103723025
+  },
+  {
+    "drug": "azacitidine",
+    "target": "DNMT1",
+    "moa": "DNA methyltransferase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.6752480566501617,
+    "localization_score": 0.8997655308502922
+  },
+  {
+    "drug": "azacyclonol",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9811082128435373,
+    "localization_score": 0.9628730086791342
+  },
+  {
+    "drug": "azathioprine",
+    "target": "HPRT1",
+    "moa": "dehydrogenase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8301770985126495,
+    "localization_score": 0.9082275310334845
+  },
+  {
+    "drug": "azelastine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 7,
+    "raw_bracket": 0.8643394410610199,
+    "localization_score": 0.9504486160275114
+  },
+  {
+    "drug": "barasertib-HQPA",
+    "target": "AURKB",
+    "moa": "Aurora kinase inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.9037878587841988,
+    "localization_score": 0.9244755132571376
+  },
+  {
+    "drug": "belinostat",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.5507833957672119,
+    "localization_score": 0.8651212711885317
+  },
+  {
+    "drug": "bemegride",
+    "target": "GABRA1",
+    "moa": "chemoreceptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9376990497112274,
+    "localization_score": 0.940145072017161
+  },
+  {
+    "drug": "benidipine",
+    "target": "CACNA1C",
+    "moa": "calcium channel blocker",
+    "n_celllines": 7,
+    "raw_bracket": 0.9404615499079227,
+    "localization_score": 0.9639890716389145
+  },
+  {
+    "drug": "benzbromarone",
+    "target": "ABCC1",
+    "moa": "chloride channel blocker",
+    "n_celllines": 9,
+    "raw_bracket": 0.9156337976455688,
+    "localization_score": 0.9405383755508637
+  },
+  {
+    "drug": "benzthiazide",
+    "target": "CA2",
+    "moa": "carbonic anhydrase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.93857616558671,
+    "localization_score": 0.9880966490583554
+  },
+  {
+    "drug": "bergenin",
+    "target": "IL1B",
+    "moa": "interleukin inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.9224148020148277,
+    "localization_score": 1.0206778119931244
+  },
+  {
+    "drug": "betahistine",
+    "target": "HRH1",
+    "moa": "histamine receptor agonist|histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9385479837656021,
+    "localization_score": 0.9868352788555362
+  },
+  {
+    "drug": "betamethasone",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8833919167518616,
+    "localization_score": 0.9214071426503879
+  },
+  {
+    "drug": "betamethasone-acetate",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9272633939981461,
+    "localization_score": 0.9571250088365141
+  },
+  {
+    "drug": "bethanechol",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.9113109186291695,
+    "localization_score": 0.9722493275324531
+  },
+  {
+    "drug": "betulinic-acid",
+    "target": "GPBAR1",
+    "moa": "apoptosis stimulant|NFkB pathway inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.932482548058033,
+    "localization_score": 1.0459173394027659
+  },
+  {
+    "drug": "bezafibrate",
+    "target": "PPARA",
+    "moa": "PPAR receptor agonist",
+    "n_celllines": 15,
+    "raw_bracket": 0.9615563564002514,
+    "localization_score": 0.9965819375061239
+  },
+  {
+    "drug": "bicalutamide",
+    "target": "AR",
+    "moa": "androgen receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9131324663758278,
+    "localization_score": 0.9624928947234328
+  },
+  {
+    "drug": "bimatoprost",
+    "target": "AKR1C3",
+    "moa": "prostanoid receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.9379367232322693,
+    "localization_score": 0.9530435832129033
+  },
+  {
+    "drug": "biotin",
+    "target": "ACACA",
+    "moa": "vitamin B",
+    "n_celllines": 13,
+    "raw_bracket": 0.9180324897170067,
+    "localization_score": 0.9726761006778043
+  },
+  {
+    "drug": "biperiden",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9071659222245216,
+    "localization_score": 0.9993825280064926
+  },
+  {
+    "drug": "bisindolylmaleimide-ix",
+    "target": "AKT1",
+    "moa": "PKC inhibitor",
+    "n_celllines": 12,
+    "raw_bracket": 0.46383213996887207,
+    "localization_score": 0.8264554579319058
+  },
+  {
+    "drug": "bithionol",
+    "target": "ESR1",
+    "moa": "autotaxin inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.7443916201591492,
+    "localization_score": 0.9511455406632124
+  },
+  {
+    "drug": "bortezomib",
+    "target": "PSMA1",
+    "moa": "NFkB pathway inhibitor|proteasome inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.6444034576416016,
+    "localization_score": 1.0758086727067688
+  },
+  {
+    "drug": "bosutinib",
+    "target": "ABL1",
+    "moa": "Abl kinase inhibitor|Bcr-Abl kinase inhibitor|SRC inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.8370328098535538,
+    "localization_score": 0.9670246312236235
+  },
+  {
+    "drug": "brefeldin-a",
+    "target": "ARF1",
+    "moa": "protein synthesis inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.7738810777664185,
+    "localization_score": 1.0069930304222952
+  },
+  {
+    "drug": "brimonidine",
+    "target": "ADRA2A",
+    "moa": "adrenergic receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.92258021235466,
+    "localization_score": 0.9561247008115057
+  },
+  {
+    "drug": "brompheniramine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9278024882078171,
+    "localization_score": 0.9973022192953909
+  },
+  {
+    "drug": "brucine",
+    "target": "CHRM1",
+    "moa": "glycine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.949010580778122,
+    "localization_score": 0.9496555357856111
+  },
+  {
+    "drug": "bucladesine",
+    "target": "PRKACA",
+    "moa": "adenosine receptor agonist|cAMP stimulant",
+    "n_celllines": 56,
+    "raw_bracket": 0.9481521025300026,
+    "localization_score": 0.9791719663975199
+  },
+  {
+    "drug": "budesonide",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8683042526245117,
+    "localization_score": 1.0123726911979685
+  },
+  {
+    "drug": "bumetanide",
+    "target": "CFTR",
+    "moa": "solute carrier family member inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.887989915907383,
+    "localization_score": 0.9545170031185984
+  },
+  {
+    "drug": "buparlisib",
+    "target": "PIK3CA",
+    "moa": "PI3K inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.5529401898384094,
+    "localization_score": 0.9249253271360794
+  },
+  {
+    "drug": "buphenine",
+    "target": "ADRB2",
+    "moa": "adrenergic receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9475463107228279,
+    "localization_score": 0.9744804885435997
+  },
+  {
+    "drug": "buthionine-sulfoximine",
+    "target": "GCLM",
+    "moa": "glutathione transferase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9544814899563789,
+    "localization_score": 1.0103884769029512
+  },
+  {
+    "drug": "calcifediol",
+    "target": "VDR",
+    "moa": "vitamin D receptor agonist",
+    "n_celllines": 15,
+    "raw_bracket": 0.9093541949987411,
+    "localization_score": 1.0107400850791994
+  },
+  {
+    "drug": "calcipotriol",
+    "target": "VDR",
+    "moa": "vitamin D receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.7485677599906921,
+    "localization_score": 0.9602407714125532
+  },
+  {
+    "drug": "calcitriol",
+    "target": "VDR",
+    "moa": "vitamin D receptor agonist",
+    "n_celllines": 59,
+    "raw_bracket": 0.9221717044711113,
+    "localization_score": 0.9810937453429918
+  },
+  {
+    "drug": "camptothecin",
+    "target": "TOP1",
+    "moa": "topoisomerase inhibitor",
+    "n_celllines": 12,
+    "raw_bracket": 0.5754807591438293,
+    "localization_score": 1.162684535883869
+  },
+  {
+    "drug": "canertinib",
+    "target": "AKT1",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.824113517999649,
+    "localization_score": 0.9383907031587304
+  },
+  {
+    "drug": "capecitabine",
+    "target": "TYMS",
+    "moa": "DNA synthesis inhibitor|thymidylate synthase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8880888149142265,
+    "localization_score": 1.003414314974665
+  },
+  {
+    "drug": "capsaicin",
+    "target": "CFTR",
+    "moa": "TRPV agonist",
+    "n_celllines": 53,
+    "raw_bracket": 0.9199592247605324,
+    "localization_score": 0.9770148552615623
+  },
+  {
+    "drug": "carbenoxolone",
+    "target": "GJA1",
+    "moa": "11-beta hydroxysteroid dehydrogenase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.913132794201374,
+    "localization_score": 0.9706303536783777
+  },
+  {
+    "drug": "carbetocin",
+    "target": "OXTR",
+    "moa": "oxytocin receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9481055736541748,
+    "localization_score": 0.9939789391768383
+  },
+  {
+    "drug": "carbidopa",
+    "target": "DDC",
+    "moa": "aromatic L-amino acid decarboxylase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8843177929520607,
+    "localization_score": 0.9699386032443453
+  },
+  {
+    "drug": "carbinoxamine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9162699729204178,
+    "localization_score": 0.9579889275035808
+  },
+  {
+    "drug": "carmofur",
+    "target": "TYMS",
+    "moa": "thymidylate synthase inhibitor",
+    "n_celllines": 7,
+    "raw_bracket": 0.9114006012678146,
+    "localization_score": 0.9520052945684093
+  },
+  {
+    "drug": "carprofen",
+    "target": "PTGS2",
+    "moa": "cyclooxygenase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.967051200568676,
+    "localization_score": 1.0018264801572536
+  },
+  {
+    "drug": "cediranib",
+    "target": "CSF1R",
+    "moa": "KIT inhibitor|VEGFR inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.8333023935556412,
+    "localization_score": 0.9278506552084166
+  },
+  {
+    "drug": "celecoxib",
+    "target": "CA12",
+    "moa": "cyclooxygenase inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.9047372937202454,
+    "localization_score": 0.8999247346971366
+  },
+  {
+    "drug": "cerulenin",
+    "target": "FASN",
+    "moa": "fatty acid synthase inhibitor",
+    "n_celllines": 54,
+    "raw_bracket": 0.7628842443227768,
+    "localization_score": 1.0102499800034357
+  },
+  {
+    "drug": "cetirizine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9248901233077049,
+    "localization_score": 0.9926179497141421
+  },
+  {
+    "drug": "chloramphenicol",
+    "target": "CD55",
+    "moa": "bacterial 50S ribosomal subunit inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8408161550760269,
+    "localization_score": 0.9610570029885221
+  },
+  {
+    "drug": "chloroquine",
+    "target": "MRGPRX1",
+    "moa": "antimalarial agent",
+    "n_celllines": 56,
+    "raw_bracket": 0.9460604004561901,
+    "localization_score": 0.9856722078659602
+  },
+  {
+    "drug": "chlorprothixene",
+    "target": "CHRM1",
+    "moa": "dopamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8084307312965393,
+    "localization_score": 0.9721013274358141
+  },
+  {
+    "drug": "ciglitazone",
+    "target": "PPARG",
+    "moa": "PPAR receptor agonist",
+    "n_celllines": 15,
+    "raw_bracket": 0.9628796689212322,
+    "localization_score": 0.976567967035286
+  },
+  {
+    "drug": "ciprofibrate",
+    "target": "PPARA",
+    "moa": "PPAR receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9629930518567562,
+    "localization_score": 0.9841288915797654
+  },
+  {
+    "drug": "cladribine",
+    "target": "ADA",
+    "moa": "adenosine deaminase inhibitor|ribonucleotide reductase inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.6996690034866333,
+    "localization_score": 0.9368222408011655
+  },
+  {
+    "drug": "clemastine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8671932965517044,
+    "localization_score": 0.9966695337991689
+  },
+  {
+    "drug": "clobenpropit",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9338048025965691,
+    "localization_score": 0.9790039441996351
+  },
+  {
+    "drug": "clocortolone-pivalate",
+    "target": "NR3C1",
+    "moa": "steroid",
+    "n_celllines": 13,
+    "raw_bracket": 0.9277717396616936,
+    "localization_score": 1.0179621439068307
+  },
+  {
+    "drug": "clofarabine",
+    "target": "POLA1",
+    "moa": "ribonucleotide reductase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8103538453578949,
+    "localization_score": 0.843922482627776
+  },
+  {
+    "drug": "clofibrate",
+    "target": "LPL",
+    "moa": "PPAR receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9593904949724674,
+    "localization_score": 0.9512745645557871
+  },
+  {
+    "drug": "clofibric-acid",
+    "target": "PPARA",
+    "moa": "PPAR receptor agonist",
+    "n_celllines": 14,
+    "raw_bracket": 0.9490839466452599,
+    "localization_score": 0.9705500909844244
+  },
+  {
+    "drug": "clomethiazole",
+    "target": "GABRA1",
+    "moa": "GABA receptor antagonist|GABA receptor modulator",
+    "n_celllines": 13,
+    "raw_bracket": 0.9082800969481468,
+    "localization_score": 0.9821437177207063
+  },
+  {
+    "drug": "clomifene",
+    "target": "ESR1",
+    "moa": "estrogen receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.7960855513811111,
+    "localization_score": 0.8788253800974113
+  },
+  {
+    "drug": "clomipramine",
+    "target": "GSTP1",
+    "moa": "serotonin transporter (SERT) inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9081316590309143,
+    "localization_score": 0.9598606969673839
+  },
+  {
+    "drug": "clopidogrel",
+    "target": "P2RY12",
+    "moa": "purinergic receptor antagonist",
+    "n_celllines": 12,
+    "raw_bracket": 0.8623442500829697,
+    "localization_score": 1.0043374271609848
+  },
+  {
+    "drug": "cortisone",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 12,
+    "raw_bracket": 0.8229406923055649,
+    "localization_score": 0.978776066575871
+  },
+  {
+    "drug": "cortisone-acetate",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.961387824267149,
+    "localization_score": 0.9673013985836797
+  },
+  {
+    "drug": "crizotinib",
+    "target": "ALK",
+    "moa": "ALK tyrosine kinase receptor inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.8685662895441055,
+    "localization_score": 0.9122624486268706
+  },
+  {
+    "drug": "cromoglicic-acid",
+    "target": "KCNMA1",
+    "moa": "immunosuppressant",
+    "n_celllines": 8,
+    "raw_bracket": 0.9444017894566059,
+    "localization_score": 1.0257833464179107
+  },
+  {
+    "drug": "curcumin",
+    "target": "APP",
+    "moa": "cyclooxygenase inhibitor|histone acetyltransferase inhibitor|lipoxygenase inhibitor|NFkB pathway inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.7521579563617706,
+    "localization_score": 0.9593027768623897
+  },
+  {
+    "drug": "cytarabine",
+    "target": "POLA1",
+    "moa": "ribonucleotide reductase inhibitor",
+    "n_celllines": 10,
+    "raw_bracket": 0.7830672413110733,
+    "localization_score": 0.7620448749801929
+  },
+  {
+    "drug": "cytochalasin-b",
+    "target": "ACTB",
+    "moa": "microtubule inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.9088426530361176,
+    "localization_score": 0.9672737047280011
+  },
+  {
+    "drug": "dacinostat",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.6045916080474854,
+    "localization_score": 0.8784274625262388
+  },
+  {
+    "drug": "dactinomycin",
+    "target": "POLR2A",
+    "moa": "RNA polymerase inhibitor",
+    "n_celllines": 12,
+    "raw_bracket": 0.42868518829345703,
+    "localization_score": 1.0482690557919863
+  },
+  {
+    "drug": "daidzein",
+    "target": "ESRRA",
+    "moa": "estrogen receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8919736370444298,
+    "localization_score": 0.9676575187622148
+  },
+  {
+    "drug": "danazol",
+    "target": "AR",
+    "moa": "estrogen receptor antagonist|progesterone receptor agonist",
+    "n_celllines": 14,
+    "raw_bracket": 0.9167209938168526,
+    "localization_score": 0.974484503679606
+  },
+  {
+    "drug": "danusertib",
+    "target": "AURKA",
+    "moa": "Aurora kinase inhibitor|growth factor receptor inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.864138051867485,
+    "localization_score": 0.9598724278113124
+  },
+  {
+    "drug": "dapsone",
+    "target": "DHFR",
+    "moa": "bacterial antifolate",
+    "n_celllines": 8,
+    "raw_bracket": 0.893488809466362,
+    "localization_score": 0.9919449917954196
+  },
+  {
+    "drug": "dasatinib",
+    "target": "ABL1",
+    "moa": "Bcr-Abl kinase inhibitor|ephrin inhibitor|KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|SRC inhibitor|tyrosine kinase inhibitor",
+    "n_celllines": 18,
+    "raw_bracket": 0.7844666093587875,
+    "localization_score": 0.9127787559396097
+  },
+  {
+    "drug": "daunorubicin",
+    "target": "TOP2A",
+    "moa": "RNA synthesis inhibitor|topoisomerase inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.5574558675289154,
+    "localization_score": 0.9339230472520484
+  },
+  {
+    "drug": "decitabine",
+    "target": "DNMT1",
+    "moa": "DNA methyltransferase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.9304310530424118,
+    "localization_score": 1.0057091932051243
+  },
+  {
+    "drug": "deferiprone",
+    "target": "UGT1A6",
+    "moa": "chelating agent",
+    "n_celllines": 7,
+    "raw_bracket": 0.972116831690073,
+    "localization_score": 1.0053609835193917
+  },
+  {
+    "drug": "deforolimus",
+    "target": "MTOR",
+    "moa": "mTOR inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.826913058757782,
+    "localization_score": 0.9902488405966021
+  },
+  {
+    "drug": "deracoxib",
+    "target": "PTGS2",
+    "moa": "cyclooxygenase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9573019556701183,
+    "localization_score": 0.9764717441783274
+  },
+  {
+    "drug": "desloratadine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 7,
+    "raw_bracket": 0.8464531153440475,
+    "localization_score": 0.9672522287712135
+  },
+  {
+    "drug": "desmethylclozapine",
+    "target": "HTR2C",
+    "moa": "acetylcholine receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9350117072463036,
+    "localization_score": 1.0091341181504014
+  },
+  {
+    "drug": "desoximetasone",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8917746171355247,
+    "localization_score": 0.9344234081949179
+  },
+  {
+    "drug": "desoxycortone",
+    "target": "NR3C1",
+    "moa": "mineralocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9575709030032158,
+    "localization_score": 1.000664367513825
+  },
+  {
+    "drug": "dexamethasone",
+    "target": "ANXA1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 57,
+    "raw_bracket": 0.8853556662797928,
+    "localization_score": 1.022093264228473
+  },
+  {
+    "drug": "dexrazoxane",
+    "target": "TOP2A",
+    "moa": "chelating agent|topoisomerase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.9581611081957817,
+    "localization_score": 1.0068399914785289
+  },
+  {
+    "drug": "diarylpropionitrile",
+    "target": "ESR2",
+    "moa": "estrogen receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9613556787371635,
+    "localization_score": 0.9891825005584899
+  },
+  {
+    "drug": "diazoxide",
+    "target": "ATP1A1",
+    "moa": "potassium channel activator",
+    "n_celllines": 13,
+    "raw_bracket": 0.9160482734441757,
+    "localization_score": 1.0134593013717992
+  },
+  {
+    "drug": "diclofenac",
+    "target": "AKR1C3",
+    "moa": "cyclooxygenase inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.9384494237601757,
+    "localization_score": 0.9793038352483607
+  },
+  {
+    "drug": "dicycloverine",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.933055929839611,
+    "localization_score": 0.9397143142714216
+  },
+  {
+    "drug": "didanosine",
+    "target": "PNP",
+    "moa": "nucleoside reverse transcriptase inhibitor",
+    "n_celllines": 7,
+    "raw_bracket": 0.9591589421033859,
+    "localization_score": 0.9781267045039584
+  },
+  {
+    "drug": "dienestrol",
+    "target": "ESR1",
+    "moa": "estrogen receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.883491113781929,
+    "localization_score": 0.9532569231432203
+  },
+  {
+    "drug": "diethylstilbestrol",
+    "target": "ESR1",
+    "moa": "estrogen receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8256718218326569,
+    "localization_score": 0.943100418629177
+  },
+  {
+    "drug": "digitoxigenin",
+    "target": "ATP1A1",
+    "moa": "ATPase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.5380451679229736,
+    "localization_score": 1.0105306362095514
+  },
+  {
+    "drug": "digitoxin",
+    "target": "ATP1A1",
+    "moa": "ATPase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.5871279239654541,
+    "localization_score": 0.9984187906812048
+  },
+  {
+    "drug": "digoxin",
+    "target": "ATP1A1",
+    "moa": "ATPase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.563414990901947,
+    "localization_score": 1.0000216873039878
+  },
+  {
+    "drug": "dihydroergotamine",
+    "target": "ADRA2A",
+    "moa": "serotonin receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8847217038273811,
+    "localization_score": 0.9298170251519013
+  },
+  {
+    "drug": "dilazep",
+    "target": "SLC29A1",
+    "moa": "adenosine reuptake inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.7869438827037811,
+    "localization_score": 1.04005895751465
+  },
+  {
+    "drug": "diltiazem",
+    "target": "CACNA1C",
+    "moa": "calcium channel blocker",
+    "n_celllines": 13,
+    "raw_bracket": 0.9036242589354515,
+    "localization_score": 0.9357607260311771
+  },
+  {
+    "drug": "dimercaptosuccinic-acid",
+    "target": "DNMT1",
+    "moa": "chelating agent",
+    "n_celllines": 9,
+    "raw_bracket": 0.9498994499444962,
+    "localization_score": 0.9847546788833984
+  },
+  {
+    "drug": "diphemanil",
+    "target": "CHRM3",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8957318440079689,
+    "localization_score": 0.9941651143512004
+  },
+  {
+    "drug": "diphenhydramine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 7,
+    "raw_bracket": 0.9236925691366196,
+    "localization_score": 0.9077096085709162
+  },
+  {
+    "drug": "diphenidol",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9319763779640198,
+    "localization_score": 0.9763647523220339
+  },
+  {
+    "drug": "dipyridamole",
+    "target": "ADA",
+    "moa": "phosphodiesterase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9156611934304237,
+    "localization_score": 0.9525850000852333
+  },
+  {
+    "drug": "disopyramide",
+    "target": "CHRM1",
+    "moa": "sodium channel blocker",
+    "n_celllines": 13,
+    "raw_bracket": 0.933384120464325,
+    "localization_score": 0.9898310057602413
+  },
+  {
+    "drug": "disulfiram",
+    "target": "ALDH2",
+    "moa": "aldehyde dehydrogenase inhibitor|DNA methyltransferase inhibitor|TRPV agonist",
+    "n_celllines": 7,
+    "raw_bracket": 0.8004221022129059,
+    "localization_score": 1.0133963399484298
+  },
+  {
+    "drug": "docetaxel",
+    "target": "BCL2",
+    "moa": "tubulin polymerization inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8984731361269951,
+    "localization_score": 0.9753614495831916
+  },
+  {
+    "drug": "doconexent",
+    "target": "FFAR1",
+    "moa": "PPAR receptor agonist",
+    "n_celllines": 15,
+    "raw_bracket": 0.9508869685232639,
+    "localization_score": 0.9833645702689858
+  },
+  {
+    "drug": "doramapimod",
+    "target": "MAPK11",
+    "moa": "p38 MAPK inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.650431901216507,
+    "localization_score": 0.9930953091914899
+  },
+  {
+    "drug": "dorsomorphin",
+    "target": "ACVR1",
+    "moa": "AMPK inhibitor",
+    "n_celllines": 55,
+    "raw_bracket": 0.7335564196109772,
+    "localization_score": 1.0614285472263851
+  },
+  {
+    "drug": "dosulepin",
+    "target": "CHRM1",
+    "moa": "norepinephrine reuptake inhibitor|serotonin\u2013norepinephrine reuptake inhibitor (SNRI)|tricyclic antidepressant",
+    "n_celllines": 13,
+    "raw_bracket": 0.9082749783992767,
+    "localization_score": 0.9736542738898707
+  },
+  {
+    "drug": "dovitinib",
+    "target": "CSF1R",
+    "moa": "EGFR inhibitor|FGFR inhibitor|FLT3 inhibitor|PDGFR tyrosine kinase receptor inhibitor|VEGFR inhibitor",
+    "n_celllines": 18,
+    "raw_bracket": 0.8864036649465561,
+    "localization_score": 1.0387464564289175
+  },
+  {
+    "drug": "doxepin",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8295955955982208,
+    "localization_score": 0.9374621923237848
+  },
+  {
+    "drug": "doxercalciferol",
+    "target": "VDR",
+    "moa": "vitamin D receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9235957860946655,
+    "localization_score": 0.9633471952195256
+  },
+  {
+    "drug": "doxorubicin",
+    "target": "TOP2A",
+    "moa": "topoisomerase inhibitor",
+    "n_celllines": 12,
+    "raw_bracket": 0.4762771725654602,
+    "localization_score": 0.8761668234132459
+  },
+  {
+    "drug": "doxylamine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9565016813576221,
+    "localization_score": 0.9695755784028807
+  },
+  {
+    "drug": "droxinostat",
+    "target": "HDAC6",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.6040356159210205,
+    "localization_score": 1.1935297052428075
+  },
+  {
+    "drug": "ebselen",
+    "target": "ALB",
+    "moa": "cyclooxygenase inhibitor|glutathione peroxidase agonist|H+/K+-ATPase inhibitor|nitric oxide synthase inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.9054791778326035,
+    "localization_score": 0.9082081679692907
+  },
+  {
+    "drug": "econazole",
+    "target": "NPY1R",
+    "moa": "lanosterol demethylase inhibitor|sterol demethylase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9269475117325783,
+    "localization_score": 0.9353763944637556
+  },
+  {
+    "drug": "edaravone",
+    "target": "BCL2",
+    "moa": "nootropic agent",
+    "n_celllines": 8,
+    "raw_bracket": 0.9440678171813488,
+    "localization_score": 0.9356246037354204
+  },
+  {
+    "drug": "elesclomol",
+    "target": "HSPA1A",
+    "moa": "oxidative stress inducer",
+    "n_celllines": 51,
+    "raw_bracket": 0.8937871009111404,
+    "localization_score": 0.9658452220490953
+  },
+  {
+    "drug": "embelin",
+    "target": "XIAP",
+    "moa": "HCV inhibitor|XIAP inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9352481812238693,
+    "localization_score": 0.9895108447125821
+  },
+  {
+    "drug": "entacapone",
+    "target": "COMT",
+    "moa": "catechol O methyltransferase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.9273272603750229,
+    "localization_score": 0.9534793734895904
+  },
+  {
+    "drug": "entinostat",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.603680282831192,
+    "localization_score": 0.8517966075387775
+  },
+  {
+    "drug": "enzalutamide",
+    "target": "AR",
+    "moa": "androgen receptor antagonist",
+    "n_celllines": 51,
+    "raw_bracket": 0.9556915163993835,
+    "localization_score": 1.0019428085643598
+  },
+  {
+    "drug": "enzastaurin",
+    "target": "AKT1",
+    "moa": "PKC inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.830452099442482,
+    "localization_score": 0.9767723701715053
+  },
+  {
+    "drug": "epicatechin-gallate-(-)",
+    "target": "BACE1",
+    "moa": "bacterial DNA gyrase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8460797071456909,
+    "localization_score": 0.9674124693850493
+  },
+  {
+    "drug": "epirubicin",
+    "target": "CHD1",
+    "moa": "topoisomerase inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.482189416885376,
+    "localization_score": 1.0292051863854168
+  },
+  {
+    "drug": "eprosartan",
+    "target": "AGTR1",
+    "moa": "angiotensin receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.9613772928714752,
+    "localization_score": 0.9542294846664917
+  },
+  {
+    "drug": "equol",
+    "target": "ESR1",
+    "moa": "estrogen receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.7048610150814056,
+    "localization_score": 0.8716273344312052
+  },
+  {
+    "drug": "erbstatin-analog",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor|tyrosine kinase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8567107915878296,
+    "localization_score": 0.9881795640532095
+  },
+  {
+    "drug": "erlotinib",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.8940449506044388,
+    "localization_score": 0.9411331389979599
+  },
+  {
+    "drug": "erythromycin-estolate",
+    "target": "ABCB1",
+    "moa": "bacterial 50S ribosomal subunit inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8627753555774689,
+    "localization_score": 0.9918245590655345
+  },
+  {
+    "drug": "erythromycin-ethylsuccinate",
+    "target": "ABCB1",
+    "moa": "cytochrome P450 inhibitor|protein synthesis inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9036435931921005,
+    "localization_score": 0.9770413387509864
+  },
+  {
+    "drug": "estradiol",
+    "target": "ESR1",
+    "moa": "estrogen receptor agonist",
+    "n_celllines": 16,
+    "raw_bracket": 0.8782694488763809,
+    "localization_score": 0.8922156411985036
+  },
+  {
+    "drug": "estradiol-benzoate",
+    "target": "ESR1",
+    "moa": "contraceptive agent",
+    "n_celllines": 13,
+    "raw_bracket": 0.903998538851738,
+    "localization_score": 0.9791001398387227
+  },
+  {
+    "drug": "estradiol-cypionate",
+    "target": "ESR1",
+    "moa": "estrogen receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9149722158908844,
+    "localization_score": 0.9560091172469714
+  },
+  {
+    "drug": "estradiol-valerate",
+    "target": "ESR1",
+    "moa": "estrogen receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9552119076251984,
+    "localization_score": 0.9753965348929771
+  },
+  {
+    "drug": "estriol",
+    "target": "ESR1",
+    "moa": "estrogen receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8357856720685959,
+    "localization_score": 0.8720772929599435
+  },
+  {
+    "drug": "estrone",
+    "target": "ESR1",
+    "moa": "estrogen receptor agonist|estrogenic hormone",
+    "n_celllines": 15,
+    "raw_bracket": 0.8855949193239212,
+    "localization_score": 0.9254695369200344
+  },
+  {
+    "drug": "estropipate",
+    "target": "ESR1",
+    "moa": "estrogen receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8968335911631584,
+    "localization_score": 1.029577614010528
+  },
+  {
+    "drug": "etacrynic-acid",
+    "target": "ATP1A1",
+    "moa": "sodium/potassium/chloride transporter inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8358843624591827,
+    "localization_score": 0.9818971838078981
+  },
+  {
+    "drug": "etazolate",
+    "target": "GABRB3",
+    "moa": "phosphodiesterase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8614000976085663,
+    "localization_score": 1.0131975940457083
+  },
+  {
+    "drug": "ethinyl-estradiol",
+    "target": "ESR1",
+    "moa": "estrogen receptor agonist|estrogenic hormone",
+    "n_celllines": 8,
+    "raw_bracket": 0.8710127919912338,
+    "localization_score": 0.9517443332238031
+  },
+  {
+    "drug": "etodolac",
+    "target": "PTGS2",
+    "moa": "cyclooxygenase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.8791206404566765,
+    "localization_score": 0.9953390936752277
+  },
+  {
+    "drug": "etomoxir",
+    "target": "CPT1A",
+    "moa": "carnitine palmitoyltransferase inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.9338604807853699,
+    "localization_score": 0.9709525559117972
+  },
+  {
+    "drug": "etoposide",
+    "target": "TOP2A",
+    "moa": "topoisomerase inhibitor",
+    "n_celllines": 11,
+    "raw_bracket": 0.6053983569145203,
+    "localization_score": 0.887717107357275
+  },
+  {
+    "drug": "eugenol",
+    "target": "AR",
+    "moa": "androgen receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.895846351981163,
+    "localization_score": 0.9980087486481655
+  },
+  {
+    "drug": "everolimus",
+    "target": "MTOR",
+    "moa": "mTOR inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.6671533584594727,
+    "localization_score": 0.865353637852882
+  },
+  {
+    "drug": "ezetimibe",
+    "target": "ANPEP",
+    "moa": "cholesterol inhibitor|Niemann-Pick C1-like 1 protein antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.832342118024826,
+    "localization_score": 0.9191594100806527
+  },
+  {
+    "drug": "fasudil",
+    "target": "PKIA",
+    "moa": "rho associated kinase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8894836977124214,
+    "localization_score": 0.9679407493508306
+  },
+  {
+    "drug": "felodipine",
+    "target": "CFTR",
+    "moa": "calcium channel blocker",
+    "n_celllines": 13,
+    "raw_bracket": 0.9039068520069122,
+    "localization_score": 0.9502998359945033
+  },
+  {
+    "drug": "fenoterol",
+    "target": "ADRB2",
+    "moa": "adrenergic receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.931887686252594,
+    "localization_score": 1.0178611421447248
+  },
+  {
+    "drug": "fenretinide",
+    "target": "RARA",
+    "moa": "apoptosis stimulant|retinoid receptor agonist",
+    "n_celllines": 16,
+    "raw_bracket": 0.8220534473657608,
+    "localization_score": 1.0527789466009916
+  },
+  {
+    "drug": "fexaramine",
+    "target": "NR1H4",
+    "moa": "FXR agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8845911622047424,
+    "localization_score": 0.9438673410786904
+  },
+  {
+    "drug": "fexofenadine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9409911446273327,
+    "localization_score": 0.9497997206100997
+  },
+  {
+    "drug": "flavoxate",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.91236312687397,
+    "localization_score": 0.9692601396953758
+  },
+  {
+    "drug": "floxuridine",
+    "target": "TYMS",
+    "moa": "DNA synthesis inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.834746390581131,
+    "localization_score": 1.0013495449623575
+  },
+  {
+    "drug": "fluconazole",
+    "target": "CYP51A1",
+    "moa": "sterol demethylase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9624917432665825,
+    "localization_score": 0.9818203112774775
+  },
+  {
+    "drug": "flucytosine",
+    "target": "DNMT1",
+    "moa": "other antifungal",
+    "n_celllines": 7,
+    "raw_bracket": 0.910462811589241,
+    "localization_score": 1.0469607672652061
+  },
+  {
+    "drug": "fludarabine",
+    "target": "ADA",
+    "moa": "ribonucleotide reductase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.6987497806549072,
+    "localization_score": 0.9005455991243254
+  },
+  {
+    "drug": "fludroxycortide",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9114022627472878,
+    "localization_score": 0.9849618243710895
+  },
+  {
+    "drug": "flufenamic-acid",
+    "target": "AKR1C3",
+    "moa": "chloride channel blocker",
+    "n_celllines": 13,
+    "raw_bracket": 0.8378054350614548,
+    "localization_score": 0.9587962088405003
+  },
+  {
+    "drug": "flumazenil",
+    "target": "GABRA1",
+    "moa": "benzodiazepine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.928621418774128,
+    "localization_score": 1.007413910891972
+  },
+  {
+    "drug": "flunisolide",
+    "target": "NR3C1",
+    "moa": "cytochrome P450 inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8643980622291565,
+    "localization_score": 0.9312829618251529
+  },
+  {
+    "drug": "fluocinolone-acetonide",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.7794454395771027,
+    "localization_score": 1.0753761329737737
+  },
+  {
+    "drug": "fluocinonide",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8904213979840279,
+    "localization_score": 0.9571904897230773
+  },
+  {
+    "drug": "fluorometholone",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8086408376693726,
+    "localization_score": 1.0243847970279083
+  },
+  {
+    "drug": "fluoxetine",
+    "target": "ANO1",
+    "moa": "selective serotonin reuptake inhibitor (SSRI)",
+    "n_celllines": 12,
+    "raw_bracket": 0.8080058544874191,
+    "localization_score": 0.9811819983843053
+  },
+  {
+    "drug": "fluphenazine",
+    "target": "CALM1",
+    "moa": "dopamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8267800509929657,
+    "localization_score": 0.9890098040399559
+  },
+  {
+    "drug": "flupirtine",
+    "target": "ADRA2A",
+    "moa": "glutamate receptor antagonist",
+    "n_celllines": 14,
+    "raw_bracket": 0.8892674520611763,
+    "localization_score": 0.9766503428494266
+  },
+  {
+    "drug": "flutamide",
+    "target": "AHR",
+    "moa": "androgen receptor antagonist",
+    "n_celllines": 55,
+    "raw_bracket": 0.9326892718672752,
+    "localization_score": 0.9850991946338588
+  },
+  {
+    "drug": "fluticasone-propionate",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9143542423844337,
+    "localization_score": 0.96996842039192
+  },
+  {
+    "drug": "fluvastatin",
+    "target": "HMGCR",
+    "moa": "HMGCR inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.8337794542312622,
+    "localization_score": 0.9215587155961991
+  },
+  {
+    "drug": "foretinib",
+    "target": "FLT1",
+    "moa": "VEGFR inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.7084799408912659,
+    "localization_score": 1.1013738397271957
+  },
+  {
+    "drug": "formoterol",
+    "target": "ADRB2",
+    "moa": "adrenergic receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.896598182618618,
+    "localization_score": 1.0006717917779377
+  },
+  {
+    "drug": "fostamatinib",
+    "target": "SYK",
+    "moa": "SYK inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.8791357353329659,
+    "localization_score": 1.0229226511588343
+  },
+  {
+    "drug": "fulvestrant",
+    "target": "ESR1",
+    "moa": "estrogen receptor antagonist",
+    "n_celllines": 14,
+    "raw_bracket": 0.8090739548206329,
+    "localization_score": 0.9172928910424655
+  },
+  {
+    "drug": "gabazine",
+    "target": "GABRA1",
+    "moa": "GABA receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.900293231010437,
+    "localization_score": 0.9667294110185274
+  },
+  {
+    "drug": "gedunin",
+    "target": "HSP90AA1",
+    "moa": "HSP inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8217857182025909,
+    "localization_score": 1.0398164024635321
+  },
+  {
+    "drug": "gefitinib",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.8713809549808502,
+    "localization_score": 0.913288890854321
+  },
+  {
+    "drug": "geldanamycin",
+    "target": "HSP90AA1",
+    "moa": "HSP inhibitor",
+    "n_celllines": 61,
+    "raw_bracket": 0.7392204999923706,
+    "localization_score": 0.9918061609432367
+  },
+  {
+    "drug": "gemcitabine",
+    "target": "CMPK1",
+    "moa": "ribonucleotide reductase inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.8557871580123901,
+    "localization_score": 0.9243875388066327
+  },
+  {
+    "drug": "gemfibrozil",
+    "target": "LPL",
+    "moa": "lipoprotein lipase activator",
+    "n_celllines": 11,
+    "raw_bracket": 0.9225869253277779,
+    "localization_score": 0.9928695495729095
+  },
+  {
+    "drug": "genistein",
+    "target": "CFTR",
+    "moa": "tyrosine kinase inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.8419948369264603,
+    "localization_score": 0.9071059454458065
+  },
+  {
+    "drug": "gestrinone",
+    "target": "AR",
+    "moa": "progesterone receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8911340162158012,
+    "localization_score": 1.0187056779592707
+  },
+  {
+    "drug": "givinostat",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9138634130358696,
+    "localization_score": 0.9481204980689554
+  },
+  {
+    "drug": "glycopyrrolate",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 9,
+    "raw_bracket": 0.9057841673493385,
+    "localization_score": 0.9601656851203753
+  },
+  {
+    "drug": "gossypol",
+    "target": "BCL2",
+    "moa": "BCL inhibitor|MCL1 inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.9184179678559303,
+    "localization_score": 0.987148632678498
+  },
+  {
+    "drug": "guanaben-acetate",
+    "target": "ADRA2A",
+    "moa": "adrenergic receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9463835544884205,
+    "localization_score": 0.9572660642857326
+  },
+  {
+    "drug": "guanfacine",
+    "target": "ADRA2A",
+    "moa": "adrenergic receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9466573894023895,
+    "localization_score": 0.932978574134418
+  },
+  {
+    "drug": "halcinonide",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9253755956888199,
+    "localization_score": 1.0067975901478408
+  },
+  {
+    "drug": "hesperidin",
+    "target": "AURKB",
+    "moa": "flavanone glycoside",
+    "n_celllines": 13,
+    "raw_bracket": 0.9390931129455566,
+    "localization_score": 0.9837758787988957
+  },
+  {
+    "drug": "hexamethylenebisacetamide",
+    "target": "AKT1",
+    "moa": "AKT inhibitor|differentiation inducer|NFKB pathway inhibitor",
+    "n_celllines": 7,
+    "raw_bracket": 0.8946694284677505,
+    "localization_score": 0.9191640261185459
+  },
+  {
+    "drug": "homatropine",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 9,
+    "raw_bracket": 0.8321594595909119,
+    "localization_score": 1.0320751928954564
+  },
+  {
+    "drug": "homochlorcyclizine",
+    "target": "HRH1",
+    "moa": "antihistamine",
+    "n_celllines": 8,
+    "raw_bracket": 0.8825164064764977,
+    "localization_score": 0.9904645063176245
+  },
+  {
+    "drug": "hydrocortisone",
+    "target": "ANXA1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9268679693341255,
+    "localization_score": 0.972809657983864
+  },
+  {
+    "drug": "hydrocortisone-acetate",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.7236083745956421,
+    "localization_score": 0.9853357055202191
+  },
+  {
+    "drug": "hydrocortisone-valerate",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9479425363242626,
+    "localization_score": 0.9862688518631709
+  },
+  {
+    "drug": "hydroflumethiazide",
+    "target": "ATP1A1",
+    "moa": "sodium/potassium/chloride transporter inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.8359798192977905,
+    "localization_score": 0.9684693442917265
+  },
+  {
+    "drug": "hydroxychloroquine",
+    "target": "TLR7",
+    "moa": "antimalarial agent",
+    "n_celllines": 5,
+    "raw_bracket": 0.9762399401515722,
+    "localization_score": 0.9892482587599072
+  },
+  {
+    "drug": "hydroxyfasudil",
+    "target": "PKIA",
+    "moa": "rho associated kinase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8785808905959129,
+    "localization_score": 0.9914318409988792
+  },
+  {
+    "drug": "hyoscyamine",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9205837845802307,
+    "localization_score": 0.9540673489315165
+  },
+  {
+    "drug": "ibrutinib",
+    "target": "BLK",
+    "moa": "Bruton's tyrosine kinase (BTK) inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.6441753208637238,
+    "localization_score": 1.0356691763663248
+  },
+  {
+    "drug": "ibudilast",
+    "target": "IL1B",
+    "moa": "leukotriene receptor antagonist|phosphodiesterase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9465206041932106,
+    "localization_score": 1.0074083804179705
+  },
+  {
+    "drug": "icosapent",
+    "target": "ACSL3",
+    "moa": "platelet aggregation inhibitor",
+    "n_celllines": 11,
+    "raw_bracket": 0.9516585767269135,
+    "localization_score": 0.985482619936395
+  },
+  {
+    "drug": "idarubicin",
+    "target": "TOP2A",
+    "moa": "topoisomerase inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.8344293385744095,
+    "localization_score": 0.8896135825808978
+  },
+  {
+    "drug": "imatinib",
+    "target": "ABL1",
+    "moa": "Bcr-Abl kinase inhibitor|KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.876224473118782,
+    "localization_score": 0.8960104692273851
+  },
+  {
+    "drug": "imiloxan",
+    "target": "ADRA2A",
+    "moa": "adrenergic receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8704219162464142,
+    "localization_score": 0.9666540815742023
+  },
+  {
+    "drug": "imiquimod",
+    "target": "TLR7",
+    "moa": "interferon inducer|toll-like receptor agonist",
+    "n_celllines": 54,
+    "raw_bracket": 0.9545604735612869,
+    "localization_score": 1.0060925341107652
+  },
+  {
+    "drug": "indapamide",
+    "target": "CA2",
+    "moa": "thiazide diuretic",
+    "n_celllines": 8,
+    "raw_bracket": 0.8814853206276894,
+    "localization_score": 0.9593504175610718
+  },
+  {
+    "drug": "indirubin",
+    "target": "CDK1",
+    "moa": "CDK inhibitor|glycogen synthase kinase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.7202673554420471,
+    "localization_score": 1.0277419524082965
+  },
+  {
+    "drug": "indirubin-3-monoxime",
+    "target": "CDK1",
+    "moa": "CDK inhibitor|glycogen synthase kinase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8155900239944458,
+    "localization_score": 0.9359506055908905
+  },
+  {
+    "drug": "indole-3-carbinol",
+    "target": "AHR",
+    "moa": "aryl hydrocarbon receptor agonist|indoleamine 2,3-dioxygenase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9532402232289314,
+    "localization_score": 0.9718812712383293
+  },
+  {
+    "drug": "ingenol",
+    "target": "PRKCD",
+    "moa": "PKC activator",
+    "n_celllines": 52,
+    "raw_bracket": 0.7447397708892822,
+    "localization_score": 0.9651900491890135
+  },
+  {
+    "drug": "ipratropium",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8499580323696136,
+    "localization_score": 0.9525541658533445
+  },
+  {
+    "drug": "irbesartan",
+    "target": "AGTR1",
+    "moa": "angiotensin receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9320531040430069,
+    "localization_score": 0.9985312081203503
+  },
+  {
+    "drug": "irinotecan",
+    "target": "TOP1",
+    "moa": "topoisomerase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.7449299395084381,
+    "localization_score": 1.0873754250780965
+  },
+  {
+    "drug": "isoliquiritigenin",
+    "target": "GABBR1",
+    "moa": "guanylate cyclase activator",
+    "n_celllines": 51,
+    "raw_bracket": 0.8467496037483215,
+    "localization_score": 1.0386797457655692
+  },
+  {
+    "drug": "isotretinoin",
+    "target": "RARA",
+    "moa": "retinoid receptor agonist",
+    "n_celllines": 15,
+    "raw_bracket": 0.8979155197739601,
+    "localization_score": 0.9543634974626354
+  },
+  {
+    "drug": "isoxsuprine",
+    "target": "ADRB2",
+    "moa": "adrenergic receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9354004040360451,
+    "localization_score": 1.000566519474088
+  },
+  {
+    "drug": "ispinesib",
+    "target": "KIF11",
+    "moa": "kinesin inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.7978947162628174,
+    "localization_score": 0.9905405293351816
+  },
+  {
+    "drug": "isradipine",
+    "target": "CACNA1D",
+    "moa": "calcium channel blocker",
+    "n_celllines": 11,
+    "raw_bracket": 0.8800629079341888,
+    "localization_score": 0.9392566599450302
+  },
+  {
+    "drug": "itopride",
+    "target": "CHRM3",
+    "moa": "dopamine receptor antagonist",
+    "n_celllines": 7,
+    "raw_bracket": 0.9388445429503918,
+    "localization_score": 1.0187258101480163
+  },
+  {
+    "drug": "kenpaullone",
+    "target": "CCNB1",
+    "moa": "CDK inhibitor|glycogen synthase kinase inhibitor",
+    "n_celllines": 16,
+    "raw_bracket": 0.8083464205265045,
+    "localization_score": 0.9844064422852346
+  },
+  {
+    "drug": "ketotifen",
+    "target": "HRH1",
+    "moa": "histamine receptor agonist|leukotriene receptor antagonist|phosphodiesterase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.8845907896757126,
+    "localization_score": 0.9509732542259745
+  },
+  {
+    "drug": "lacidipine",
+    "target": "CACNA1C",
+    "moa": "calcium channel blocker",
+    "n_celllines": 7,
+    "raw_bracket": 0.8871093019843102,
+    "localization_score": 1.0485174268563024
+  },
+  {
+    "drug": "lapatinib",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.862966775894165,
+    "localization_score": 1.0266403909193007
+  },
+  {
+    "drug": "latanoprost",
+    "target": "PTGFR",
+    "moa": "prostanoid receptor agonist",
+    "n_celllines": 7,
+    "raw_bracket": 0.8820457607507706,
+    "localization_score": 0.9424298333205756
+  },
+  {
+    "drug": "latrepirdine",
+    "target": "HRH1",
+    "moa": "glutamate receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.9221679121255875,
+    "localization_score": 0.9963857771142743
+  },
+  {
+    "drug": "leflunomide",
+    "target": "AHR",
+    "moa": "dihydroorotate dehydrogenase inhibitor|PDGFR tyrosine kinase receptor inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9133637472987175,
+    "localization_score": 0.9640331908397423
+  },
+  {
+    "drug": "lenalidomide",
+    "target": "TNF",
+    "moa": "anticancer agent",
+    "n_celllines": 55,
+    "raw_bracket": 0.9354677423834801,
+    "localization_score": 0.9863541514883895
+  },
+  {
+    "drug": "lestaurtinib",
+    "target": "FLT3",
+    "moa": "FLT3 inhibitor|growth factor receptor inhibitor|JAK inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.7081578969955444,
+    "localization_score": 1.0340691687292178
+  },
+  {
+    "drug": "levocabastine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9647685028612614,
+    "localization_score": 0.9787034750235399
+  },
+  {
+    "drug": "levocetirizine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 7,
+    "raw_bracket": 0.9640773087739944,
+    "localization_score": 0.9785392493474271
+  },
+  {
+    "drug": "levofloxacin",
+    "target": "TOP2A",
+    "moa": "bacterial DNA gyrase inhibitor",
+    "n_celllines": 7,
+    "raw_bracket": 0.9210510104894638,
+    "localization_score": 0.9726675016571164
+  },
+  {
+    "drug": "lidocaine",
+    "target": "EGFR",
+    "moa": "histamine receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9196468964219093,
+    "localization_score": 1.015624114270912
+  },
+  {
+    "drug": "linoleic-acid",
+    "target": "FABP4",
+    "moa": "oxidative stress inducer",
+    "n_celllines": 8,
+    "raw_bracket": 0.959220115095377,
+    "localization_score": 0.9811375015389511
+  },
+  {
+    "drug": "linsitinib",
+    "target": "IGF1R",
+    "moa": "IGF-1 inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.9360092431306839,
+    "localization_score": 0.9672228157067577
+  },
+  {
+    "drug": "lithocholic-acid",
+    "target": "GPBAR1",
+    "moa": "FXR antagonist|vitamin D receptor agonist",
+    "n_celllines": 15,
+    "raw_bracket": 0.9196163713932037,
+    "localization_score": 0.9104426340622879
+  },
+  {
+    "drug": "lonidamine",
+    "target": "GCK",
+    "moa": "glucokinase inhibitor",
+    "n_celllines": 55,
+    "raw_bracket": 0.9101516753435135,
+    "localization_score": 1.0005336509971594
+  },
+  {
+    "drug": "loratadine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 7,
+    "raw_bracket": 0.8937030509114265,
+    "localization_score": 0.9724651174252762
+  },
+  {
+    "drug": "losartan",
+    "target": "AGTR1",
+    "moa": "angiotensin receptor antagonist",
+    "n_celllines": 55,
+    "raw_bracket": 0.9565416574478149,
+    "localization_score": 1.0089094119580218
+  },
+  {
+    "drug": "loteprednol",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist|phospholipase inhibitor",
+    "n_celllines": 7,
+    "raw_bracket": 0.9014919027686119,
+    "localization_score": 1.0806617803146619
+  },
+  {
+    "drug": "lovastatin",
+    "target": "HDAC2",
+    "moa": "HMGCR inhibitor",
+    "n_celllines": 58,
+    "raw_bracket": 0.9134735837578773,
+    "localization_score": 0.9834678702955308
+  },
+  {
+    "drug": "loxoprofen",
+    "target": "PTGS2",
+    "moa": "cyclooxygenase inhibitor|prostanoid receptor antagonist",
+    "n_celllines": 7,
+    "raw_bracket": 0.9405248798429966,
+    "localization_score": 1.0026980448882636
+  },
+  {
+    "drug": "lupanine",
+    "target": "INS",
+    "moa": "sodium channel blocker",
+    "n_celllines": 13,
+    "raw_bracket": 0.9367222487926483,
+    "localization_score": 0.9872165088409176
+  },
+  {
+    "drug": "mafenide",
+    "target": "CA12",
+    "moa": "carbonic anhydrase inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.8390883803367615,
+    "localization_score": 0.9151742627117314
+  },
+  {
+    "drug": "masitinib",
+    "target": "FGFR3",
+    "moa": "KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|SRC inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.9018174856901169,
+    "localization_score": 0.9994915230180225
+  },
+  {
+    "drug": "mebendazole",
+    "target": "TUBA1A",
+    "moa": "tubulin polymerization inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.8174996376037598,
+    "localization_score": 0.902707240520269
+  },
+  {
+    "drug": "mebeverine",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9355396404862404,
+    "localization_score": 0.9504117774552117
+  },
+  {
+    "drug": "medrysone",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.918114461004734,
+    "localization_score": 0.9718568468755004
+  },
+  {
+    "drug": "mefenamic-acid",
+    "target": "KCNQ1",
+    "moa": "cyclooxygenase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.9278324544429779,
+    "localization_score": 0.9631993781110787
+  },
+  {
+    "drug": "mepyramine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9603970795869827,
+    "localization_score": 0.9817906759998117
+  },
+  {
+    "drug": "mercaptopurine",
+    "target": "HPRT1",
+    "moa": "immunosuppressant|protein synthesis inhibitor|purine antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8708307594060898,
+    "localization_score": 0.9617451867210566
+  },
+  {
+    "drug": "mestranol",
+    "target": "ESR1",
+    "moa": "estrogen receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.920720785856247,
+    "localization_score": 0.9712307022828154
+  },
+  {
+    "drug": "metformin",
+    "target": "ACACB",
+    "moa": "insulin sensitizer",
+    "n_celllines": 12,
+    "raw_bracket": 0.8989265933632851,
+    "localization_score": 0.9784072416274309
+  },
+  {
+    "drug": "methantheline",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.892792284488678,
+    "localization_score": 0.9308193926936545
+  },
+  {
+    "drug": "methapyrilene",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8736169189214706,
+    "localization_score": 0.9883962013077188
+  },
+  {
+    "drug": "methotrexate",
+    "target": "DHFR",
+    "moa": "dihydrofolate reductase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.7483511567115784,
+    "localization_score": 1.0303256629956123
+  },
+  {
+    "drug": "methoxsalen",
+    "target": "CYP1A1",
+    "moa": "DNA synthesis inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8013659417629242,
+    "localization_score": 1.0500650275337338
+  },
+  {
+    "drug": "methylprednisolone",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 9,
+    "raw_bracket": 0.9058046117424965,
+    "localization_score": 0.9719927866441859
+  },
+  {
+    "drug": "metoclopramide",
+    "target": "CHRM1",
+    "moa": "dopamine receptor antagonist|serotonin receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9577981159090996,
+    "localization_score": 0.9945351618505689
+  },
+  {
+    "drug": "mevastatin",
+    "target": "HMGCR",
+    "moa": "HMGCR inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.8463428020477295,
+    "localization_score": 0.9604559239499253
+  },
+  {
+    "drug": "mexiletine",
+    "target": "PLAU",
+    "moa": "sodium channel blocker",
+    "n_celllines": 13,
+    "raw_bracket": 0.9375145249068737,
+    "localization_score": 1.0136475991726352
+  },
+  {
+    "drug": "mibefradil",
+    "target": "ANO1",
+    "moa": "T-type calcium channel blocker",
+    "n_celllines": 13,
+    "raw_bracket": 0.815157413482666,
+    "localization_score": 1.0051844747526921
+  },
+  {
+    "drug": "midostaurin",
+    "target": "FLT3",
+    "moa": "FLT3 inhibitor|KIT inhibitor|PKC inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.7729292660951614,
+    "localization_score": 0.9785264256178451
+  },
+  {
+    "drug": "mifepristone",
+    "target": "AR",
+    "moa": "glucocorticoid receptor antagonist|progesterone receptor antagonist",
+    "n_celllines": 15,
+    "raw_bracket": 0.8909886404871941,
+    "localization_score": 0.9131488628007093
+  },
+  {
+    "drug": "mifobate",
+    "target": "PPARG",
+    "moa": "PPAR receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8791153952479362,
+    "localization_score": 0.9851708244305709
+  },
+  {
+    "drug": "miglitol",
+    "target": "GAA",
+    "moa": "glucosidase inhibitor",
+    "n_celllines": 7,
+    "raw_bracket": 0.9005617275834084,
+    "localization_score": 0.9203399889249189
+  },
+  {
+    "drug": "mirtazapine",
+    "target": "ADRA2A",
+    "moa": "adrenergic receptor antagonist|serotonin receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9095973148941994,
+    "localization_score": 0.9093748132690678
+  },
+  {
+    "drug": "mitoxantrone",
+    "target": "TOP2A",
+    "moa": "topoisomerase inhibitor",
+    "n_celllines": 11,
+    "raw_bracket": 0.5068918764591217,
+    "localization_score": 1.0075782835010019
+  },
+  {
+    "drug": "mocetinostat",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.7292307019233704,
+    "localization_score": 0.9093206067680464
+  },
+  {
+    "drug": "mometasone",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8984982147812843,
+    "localization_score": 1.0170866075701084
+  },
+  {
+    "drug": "monastrol",
+    "target": "KIF11",
+    "moa": "kinesin inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9714688360691071,
+    "localization_score": 0.9793782480856801
+  },
+  {
+    "drug": "motesanib",
+    "target": "FLT1",
+    "moa": "KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|VEGFR inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.9123714193701744,
+    "localization_score": 0.9422808289045265
+  },
+  {
+    "drug": "moxifloxacin",
+    "target": "TOP2A",
+    "moa": "bacterial DNA gyrase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.941688846796751,
+    "localization_score": 0.9424462495303525
+  },
+  {
+    "drug": "moxonidine",
+    "target": "ADRA2A",
+    "moa": "imidazoline receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9587574154138565,
+    "localization_score": 0.9685268694650191
+  },
+  {
+    "drug": "mycophenolate-mofetil",
+    "target": "IMPDH1",
+    "moa": "dehydrogenase inhibitor|inositol monophosphatase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8372473120689392,
+    "localization_score": 1.001055124844812
+  },
+  {
+    "drug": "mycophenolic-acid",
+    "target": "IMPDH1",
+    "moa": "dehydrogenase inhibitor|inositol monophosphatase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.7880953103303909,
+    "localization_score": 0.9009783868346691
+  },
+  {
+    "drug": "myricetin",
+    "target": "PIK3CG",
+    "moa": "androgen receptor agonist|cytochrome P450 inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.9220053181052208,
+    "localization_score": 0.9292224703786381
+  },
+  {
+    "drug": "nTZDpa",
+    "target": "PPARG",
+    "moa": "PPAR receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9509650431573391,
+    "localization_score": 0.9883671321185163
+  },
+  {
+    "drug": "naloxone",
+    "target": "CREB1",
+    "moa": "opioid receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9033560901880264,
+    "localization_score": 0.9702541028805127
+  },
+  {
+    "drug": "navitoclax",
+    "target": "BCL2",
+    "moa": "BCL inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.9301399663090706,
+    "localization_score": 0.9939390957668303
+  },
+  {
+    "drug": "necrostatin-1",
+    "target": "RIPK1",
+    "moa": "RIPK inhibitor",
+    "n_celllines": 55,
+    "raw_bracket": 0.9228982254862785,
+    "localization_score": 1.0100846373536145
+  },
+  {
+    "drug": "neratinib",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.7885739356279373,
+    "localization_score": 0.9434927439282705
+  },
+  {
+    "drug": "nialamide",
+    "target": "COMT",
+    "moa": "monoamine oxidase inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.7616966515779495,
+    "localization_score": 1.0731956002470195
+  },
+  {
+    "drug": "niclosamide",
+    "target": "STAT3",
+    "moa": "DNA replication inhibitor|STAT inhibitor",
+    "n_celllines": 58,
+    "raw_bracket": 0.8036276996135712,
+    "localization_score": 0.9949029438643505
+  },
+  {
+    "drug": "nicorandil",
+    "target": "KCNJ11",
+    "moa": "nitric oxide donor|potassium channel activator",
+    "n_celllines": 7,
+    "raw_bracket": 0.8406723439693451,
+    "localization_score": 0.9510171710912004
+  },
+  {
+    "drug": "nifedipine",
+    "target": "CACNA1C",
+    "moa": "calcium channel blocker",
+    "n_celllines": 55,
+    "raw_bracket": 0.9155811965465546,
+    "localization_score": 0.986852466067507
+  },
+  {
+    "drug": "niflumic-acid",
+    "target": "ANO1",
+    "moa": "cyclooxygenase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.9756825994700193,
+    "localization_score": 0.9401243670847708
+  },
+  {
+    "drug": "nilotinib",
+    "target": "ABL1",
+    "moa": "Abl kinase inhibitor|Bcr-Abl kinase inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.8935078158974648,
+    "localization_score": 0.8993900825459573
+  },
+  {
+    "drug": "nilutamide",
+    "target": "AR",
+    "moa": "androgen receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9689521994441748,
+    "localization_score": 0.9517292457852129
+  },
+  {
+    "drug": "nimodipine",
+    "target": "CFTR",
+    "moa": "calcium channel blocker",
+    "n_celllines": 57,
+    "raw_bracket": 0.9508068561553955,
+    "localization_score": 0.9776619287542819
+  },
+  {
+    "drug": "nintedanib",
+    "target": "FGFR1",
+    "moa": "FGFR inhibitor|PDGFR tyrosine kinase receptor inhibitor|VEGFR inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.6429385244846344,
+    "localization_score": 0.7625417312966868
+  },
+  {
+    "drug": "nisoldipine",
+    "target": "CACNA1C",
+    "moa": "calcium channel blocker",
+    "n_celllines": 7,
+    "raw_bracket": 0.8575003743171692,
+    "localization_score": 0.9842659967501407
+  },
+  {
+    "drug": "nitrendipine",
+    "target": "CACNA1D",
+    "moa": "calcium channel blocker",
+    "n_celllines": 57,
+    "raw_bracket": 0.9290111884474754,
+    "localization_score": 0.960043482636599
+  },
+  {
+    "drug": "nitrocaramiphen",
+    "target": "CHRM1",
+    "moa": "cholinergic receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9496267735958099,
+    "localization_score": 0.9455575470982517
+  },
+  {
+    "drug": "nobiletin",
+    "target": "MAP2K1",
+    "moa": "MEK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8941754102706909,
+    "localization_score": 0.9762592244090599
+  },
+  {
+    "drug": "norgestimate",
+    "target": "ESR1",
+    "moa": "progesterone receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9396063014864922,
+    "localization_score": 1.0034241952080893
+  },
+  {
+    "drug": "norgestrel",
+    "target": "AR",
+    "moa": "progesterone receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9203278049826622,
+    "localization_score": 0.9800014502408826
+  },
+  {
+    "drug": "nutlin-3",
+    "target": "MDM2",
+    "moa": "MDM inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.9330926313996315,
+    "localization_score": 0.9970497911197944
+  },
+  {
+    "drug": "obatoclax",
+    "target": "BCL2",
+    "moa": "BCL inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.7595994621515274,
+    "localization_score": 0.8951512870102409
+  },
+  {
+    "drug": "octopamine",
+    "target": "F10",
+    "moa": "trace amine associated receptor agonist",
+    "n_celllines": 5,
+    "raw_bracket": 1.0015774000203237,
+    "localization_score": 0.9894480525268532
+  },
+  {
+    "drug": "olaparib",
+    "target": "PARP1",
+    "moa": "PARP inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.905920647084713,
+    "localization_score": 0.9845019777061569
+  },
+  {
+    "drug": "oligomycin-a",
+    "target": "ATP5A1",
+    "moa": "ATP synthase inhibitor|ATPase inhibitor",
+    "n_celllines": 55,
+    "raw_bracket": 0.9291273653507233,
+    "localization_score": 0.9764194986833125
+  },
+  {
+    "drug": "olmesartan",
+    "target": "AGTR1",
+    "moa": "angiotensin receptor antagonist",
+    "n_celllines": 7,
+    "raw_bracket": 0.9393066465854645,
+    "localization_score": 0.9607369554844404
+  },
+  {
+    "drug": "olmesartan-medoxomil",
+    "target": "AGTR1",
+    "moa": "angiotensin receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8708239197731018,
+    "localization_score": 1.0498216084995478
+  },
+  {
+    "drug": "olomoucine",
+    "target": "CDK1",
+    "moa": "CDK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9321329444646835,
+    "localization_score": 0.9721325282674437
+  },
+  {
+    "drug": "olopatadine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 9,
+    "raw_bracket": 0.8580814450979233,
+    "localization_score": 0.9803703476213397
+  },
+  {
+    "drug": "orantinib",
+    "target": "AURKA",
+    "moa": "FGFR inhibitor|PDGFR tyrosine kinase receptor inhibitor|VEGFR inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.9214945957064629,
+    "localization_score": 1.0271660272618788
+  },
+  {
+    "drug": "ouabain",
+    "target": "ATP1A1",
+    "moa": "ATPase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.5918484926223755,
+    "localization_score": 0.9750446897499087
+  },
+  {
+    "drug": "oxotremorine-sesquifumarate",
+    "target": "CHRM1",
+    "moa": "cholinergic receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.9144586101174355,
+    "localization_score": 0.97742268426187
+  },
+  {
+    "drug": "oxybutynin",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.9725709669291973,
+    "localization_score": 1.006332288171673
+  },
+  {
+    "drug": "oxyphenonium",
+    "target": "CHRM1",
+    "moa": "cholinergic receptor antagonist",
+    "n_celllines": 9,
+    "raw_bracket": 0.888310395181179,
+    "localization_score": 1.0605913871709078
+  },
+  {
+    "drug": "paclitaxel",
+    "target": "BCL2",
+    "moa": "tubulin polymerization inhibitor",
+    "n_celllines": 16,
+    "raw_bracket": 0.8730984032154083,
+    "localization_score": 0.9310180448937598
+  },
+  {
+    "drug": "palbociclib",
+    "target": "CDK4",
+    "moa": "CDK inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.7920795977115631,
+    "localization_score": 1.0400224345290527
+  },
+  {
+    "drug": "panobinostat",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.5331078171730042,
+    "localization_score": 0.8271974767625235
+  },
+  {
+    "drug": "paroxetine",
+    "target": "CHRM1",
+    "moa": "selective serotonin reuptake inhibitor (SSRI)",
+    "n_celllines": 13,
+    "raw_bracket": 0.7778706848621368,
+    "localization_score": 1.0574788890345197
+  },
+  {
+    "drug": "parthenolide-(alternate-stereo)",
+    "target": "IKBKB",
+    "moa": "NFkB pathway inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.7988368719816208,
+    "localization_score": 1.1090756343590218
+  },
+  {
+    "drug": "pazopanib",
+    "target": "CSF1R",
+    "moa": "KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|VEGFR inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.9091397523880005,
+    "localization_score": 1.016993809150483
+  },
+  {
+    "drug": "pefloxacin",
+    "target": "TOP2A",
+    "moa": "bacterial DNA gyrase inhibitor",
+    "n_celllines": 7,
+    "raw_bracket": 0.893888995051384,
+    "localization_score": 1.001627678926783
+  },
+  {
+    "drug": "pelitinib",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.7210782170295715,
+    "localization_score": 0.849768116792593
+  },
+  {
+    "drug": "pemetrexed",
+    "target": "ATIC",
+    "moa": "dihydrofolate reductase inhibitor|thymidylate synthase inhibitor",
+    "n_celllines": 50,
+    "raw_bracket": 0.9090394750237465,
+    "localization_score": 0.966852535963821
+  },
+  {
+    "drug": "pepstatin",
+    "target": "CTSB",
+    "moa": "aspartic protease inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.6374744474887848,
+    "localization_score": 1.0358815644233057
+  },
+  {
+    "drug": "perhexiline",
+    "target": "CPT1A",
+    "moa": "carnitine palmitoyltransferase inhibitor",
+    "n_celllines": 49,
+    "raw_bracket": 0.775817409157753,
+    "localization_score": 1.0069138453515827
+  },
+  {
+    "drug": "perphenazine",
+    "target": "CALM1",
+    "moa": "dopamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8296419829130173,
+    "localization_score": 0.9252014289519186
+  },
+  {
+    "drug": "pevonedistat",
+    "target": "NAE1",
+    "moa": "nedd activating enzyme inhibitor",
+    "n_celllines": 52,
+    "raw_bracket": 0.8280781656503677,
+    "localization_score": 1.0485790303768747
+  },
+  {
+    "drug": "phenelzine",
+    "target": "ABAT",
+    "moa": "monoamine oxidase inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.914996400475502,
+    "localization_score": 0.9591067778906742
+  },
+  {
+    "drug": "pheniramine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9752387944608927,
+    "localization_score": 0.968285619526075
+  },
+  {
+    "drug": "phenolphthalein",
+    "target": "UGT1A9",
+    "moa": "indicator dye",
+    "n_celllines": 13,
+    "raw_bracket": 0.8589129596948624,
+    "localization_score": 0.9881855126847668
+  },
+  {
+    "drug": "phenylbutyrate",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 11,
+    "raw_bracket": 0.9682583101093769,
+    "localization_score": 0.9908430245548753
+  },
+  {
+    "drug": "piceatannol",
+    "target": "ATP5A1",
+    "moa": "SYK inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.8008954524993896,
+    "localization_score": 1.017235321575173
+  },
+  {
+    "drug": "picotamide",
+    "target": "TBXA2R",
+    "moa": "thromboxane receptor antagonist|thromboxane synthase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9485030733048916,
+    "localization_score": 1.004338886734084
+  },
+  {
+    "drug": "pifithrin-alpha",
+    "target": "TP53",
+    "moa": "TP53 inhibitor",
+    "n_celllines": 55,
+    "raw_bracket": 0.9485156647861004,
+    "localization_score": 0.962239160590685
+  },
+  {
+    "drug": "pifithrin-mu",
+    "target": "HSPA1A",
+    "moa": "HSP inhibitor",
+    "n_celllines": 57,
+    "raw_bracket": 0.8238950669765472,
+    "localization_score": 0.9699579288813724
+  },
+  {
+    "drug": "pilocarpine",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor agonist",
+    "n_celllines": 7,
+    "raw_bracket": 0.8928579017519951,
+    "localization_score": 0.9986384462962005
+  },
+  {
+    "drug": "pinocembrin",
+    "target": "CYP1B1",
+    "moa": "cytochrome P450 inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9689887668937445,
+    "localization_score": 0.9866525011213341
+  },
+  {
+    "drug": "pioglitazone",
+    "target": "PPARG",
+    "moa": "insulin sensitizer|PPAR receptor agonist",
+    "n_celllines": 15,
+    "raw_bracket": 0.9438113160431385,
+    "localization_score": 0.9919456502845102
+  },
+  {
+    "drug": "piperidolate",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9149177372455597,
+    "localization_score": 0.9261530423333636
+  },
+  {
+    "drug": "pirarubicin",
+    "target": "TOP2A",
+    "moa": "topoisomerase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.7347306609153748,
+    "localization_score": 0.9906933182225464
+  },
+  {
+    "drug": "pirenzepine",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9456469640135765,
+    "localization_score": 0.9679394101855172
+  },
+  {
+    "drug": "pirfenidone",
+    "target": "FURIN",
+    "moa": "TGF beta receptor inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9559085965156555,
+    "localization_score": 1.0051151022120988
+  },
+  {
+    "drug": "pirinixic-acid",
+    "target": "PPARA",
+    "moa": "PPAR receptor agonist",
+    "n_celllines": 15,
+    "raw_bracket": 0.9557902999222279,
+    "localization_score": 0.9640920425756127
+  },
+  {
+    "drug": "pitavastatin",
+    "target": "HMGCR",
+    "moa": "HMGCR inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.6595001518726349,
+    "localization_score": 0.9913801942622928
+  },
+  {
+    "drug": "podophyllotoxin",
+    "target": "IGF1R",
+    "moa": "microtubule inhibitor|tubulin polymerization inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.7764242887496948,
+    "localization_score": 0.898652857409791
+  },
+  {
+    "drug": "polydatin",
+    "target": "ICAM1",
+    "moa": "ICAM1 expression inhibitor",
+    "n_celllines": 7,
+    "raw_bracket": 0.9791720882058144,
+    "localization_score": 1.0051422360716948
+  },
+  {
+    "drug": "ponatinib",
+    "target": "ABL1",
+    "moa": "Bcr-Abl kinase inhibitor|FLT3 inhibitor|PDGFR tyrosine kinase receptor inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.7000400424003601,
+    "localization_score": 0.7991426873158268
+  },
+  {
+    "drug": "pramipexole",
+    "target": "ADRA2A",
+    "moa": "dopamine receptor agonist",
+    "n_celllines": 7,
+    "raw_bracket": 0.8154375851154327,
+    "localization_score": 1.0385172145798054
+  },
+  {
+    "drug": "pravastatin",
+    "target": "HMGCR",
+    "moa": "HMGCR inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.8846074417233467,
+    "localization_score": 0.9298194312320439
+  },
+  {
+    "drug": "prednisolone",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9365252405405045,
+    "localization_score": 1.0041328843853008
+  },
+  {
+    "drug": "prednisolone-acetate",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9024880304932594,
+    "localization_score": 0.9466807338796213
+  },
+  {
+    "drug": "prednisolone-hemisuccinate",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9065200015902519,
+    "localization_score": 1.0015568041223937
+  },
+  {
+    "drug": "pregnenolone",
+    "target": "SULT2B1",
+    "moa": "glutamate receptor modulator",
+    "n_celllines": 15,
+    "raw_bracket": 0.887253113090992,
+    "localization_score": 0.9097047130926886
+  },
+  {
+    "drug": "probucol",
+    "target": "ABCA1",
+    "moa": "atherogenesis inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9503277130424976,
+    "localization_score": 0.9689411851831473
+  },
+  {
+    "drug": "procainamide",
+    "target": "DNMT1",
+    "moa": "sodium channel blocker",
+    "n_celllines": 13,
+    "raw_bracket": 0.9261219501495361,
+    "localization_score": 1.0409098538604178
+  },
+  {
+    "drug": "procaterol",
+    "target": "ADRB2",
+    "moa": "adrenergic receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9279438182711601,
+    "localization_score": 0.9794169585368795
+  },
+  {
+    "drug": "profenamine",
+    "target": "CHRM1",
+    "moa": "butyrylcholinesterase inhibitor|cholinergic receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8439536988735199,
+    "localization_score": 1.0402207053671524
+  },
+  {
+    "drug": "proguanil",
+    "target": "DHFR",
+    "moa": "dihydrofolate reductase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9490411542356014,
+    "localization_score": 1.0148499058678806
+  },
+  {
+    "drug": "promethazine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 51,
+    "raw_bracket": 0.9141528010368347,
+    "localization_score": 0.9690646956997091
+  },
+  {
+    "drug": "propantheline",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8632134050130844,
+    "localization_score": 0.878090784190949
+  },
+  {
+    "drug": "propofol",
+    "target": "FAAH",
+    "moa": "benzodiazepine receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9636149294674397,
+    "localization_score": 0.9679518155933481
+  },
+  {
+    "drug": "pterostilbene",
+    "target": "PTGS2",
+    "moa": "cyclooxygenase inhibitor|PPAR receptor agonist",
+    "n_celllines": 10,
+    "raw_bracket": 0.8859022781252861,
+    "localization_score": 1.0145750777618183
+  },
+  {
+    "drug": "purmorphamine",
+    "target": "SMO",
+    "moa": "smoothened receptor agonist",
+    "n_celllines": 55,
+    "raw_bracket": 0.9172021374106407,
+    "localization_score": 0.9700979052910428
+  },
+  {
+    "drug": "purvalanol-a",
+    "target": "CDK1",
+    "moa": "CDK inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.4681536555290222,
+    "localization_score": 1.1118827039659092
+  },
+  {
+    "drug": "purvalanol-b",
+    "target": "CDK2",
+    "moa": "tyrosine kinase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.9081190899014473,
+    "localization_score": 1.0078747560183055
+  },
+  {
+    "drug": "pyrazinamide",
+    "target": "FASN",
+    "moa": "fatty acid synthase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8760401085019112,
+    "localization_score": 0.9321165731487263
+  },
+  {
+    "drug": "pyrazolanthrone",
+    "target": "MAPK10",
+    "moa": "JNK inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.882314570248127,
+    "localization_score": 1.0573394577338617
+  },
+  {
+    "drug": "pyrimethamine",
+    "target": "DHFR",
+    "moa": "dihydrofolate reductase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9058150723576546,
+    "localization_score": 1.0101840783445866
+  },
+  {
+    "drug": "pyroxamide",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.6701794266700745,
+    "localization_score": 0.9554755555199802
+  },
+  {
+    "drug": "pyrvinium-pamoate",
+    "target": "AR",
+    "moa": "androgen receptor antagonist",
+    "n_celllines": 51,
+    "raw_bracket": 0.6872899234294891,
+    "localization_score": 0.8187272422240187
+  },
+  {
+    "drug": "quercetin",
+    "target": "ATP5A1",
+    "moa": "polar auxin transport inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.9094854593276978,
+    "localization_score": 0.9808362432705313
+  },
+  {
+    "drug": "quizartinib",
+    "target": "CSF1R",
+    "moa": "FLT3 inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.9438101798295975,
+    "localization_score": 0.9918336107364503
+  },
+  {
+    "drug": "raloxifene",
+    "target": "ESR1",
+    "moa": "estrogen receptor antagonist|selective estrogen receptor modulator (SERM)",
+    "n_celllines": 13,
+    "raw_bracket": 0.8147050738334656,
+    "localization_score": 0.9213050746011828
+  },
+  {
+    "drug": "raltitrexed",
+    "target": "FPGS",
+    "moa": "thymidylate synthase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8718034029006958,
+    "localization_score": 0.931417374187037
+  },
+  {
+    "drug": "resorcinol",
+    "target": "CA12",
+    "moa": "phosphodiesterase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9337476566433907,
+    "localization_score": 1.034734905363106
+  },
+  {
+    "drug": "resveratrol",
+    "target": "CSNK2A1",
+    "moa": "cytochrome P450 inhibitor|SIRT activator",
+    "n_celllines": 57,
+    "raw_bracket": 0.9325097650289536,
+    "localization_score": 0.9851912852018669
+  },
+  {
+    "drug": "retinol",
+    "target": "ALDH1A1",
+    "moa": "retinoid receptor ligand",
+    "n_celllines": 15,
+    "raw_bracket": 0.8739742934703827,
+    "localization_score": 0.9630605546102531
+  },
+  {
+    "drug": "reversine",
+    "target": "AURKB",
+    "moa": "Aurora kinase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.8435767740011215,
+    "localization_score": 1.0195584538605678
+  },
+  {
+    "drug": "ribavirin",
+    "target": "ADK",
+    "moa": "antiviral",
+    "n_celllines": 9,
+    "raw_bracket": 0.9161697998642921,
+    "localization_score": 0.9829863775036966
+  },
+  {
+    "drug": "riboflavin",
+    "target": "BLVRB",
+    "moa": "vitamin B",
+    "n_celllines": 13,
+    "raw_bracket": 0.9196077659726143,
+    "localization_score": 1.023742659313858
+  },
+  {
+    "drug": "rilmenidine",
+    "target": "ADRA2A",
+    "moa": "adrenergic receptor agonist|imidazoline receptor agonist",
+    "n_celllines": 57,
+    "raw_bracket": 0.9336839988827705,
+    "localization_score": 0.9609433105794273
+  },
+  {
+    "drug": "rimexolone",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9612330235540867,
+    "localization_score": 1.0025021409897588
+  },
+  {
+    "drug": "rivaroxaban",
+    "target": "F10",
+    "moa": "coagulation factor inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.905697301030159,
+    "localization_score": 0.953797690788615
+  },
+  {
+    "drug": "ropinirole",
+    "target": "ADRA2A",
+    "moa": "dopamine receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9114736840128899,
+    "localization_score": 0.990136348090124
+  },
+  {
+    "drug": "roscovitine",
+    "target": "CDK2",
+    "moa": "CDK inhibitor",
+    "n_celllines": 18,
+    "raw_bracket": 0.8227741122245789,
+    "localization_score": 0.8992342286312834
+  },
+  {
+    "drug": "rosiglitazone",
+    "target": "FFAR1",
+    "moa": "insulin sensitizer|PPAR receptor agonist",
+    "n_celllines": 57,
+    "raw_bracket": 0.9320323169231415,
+    "localization_score": 0.97865505055907
+  },
+  {
+    "drug": "rosmarinic-acid",
+    "target": "MCL1",
+    "moa": "GABA transaminase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9277890250086784,
+    "localization_score": 0.9825594765612105
+  },
+  {
+    "drug": "rosuvastatin",
+    "target": "HMGCR",
+    "moa": "HMGCR inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8956255540251732,
+    "localization_score": 0.9666306285477688
+  },
+  {
+    "drug": "rucaparib",
+    "target": "PARP1",
+    "moa": "PARP inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.9091346636414528,
+    "localization_score": 0.9927368828580561
+  },
+  {
+    "drug": "rutin",
+    "target": "AKR1C3",
+    "moa": "antioxidant|capillary stabilizing agent|nitric oxide scavenger",
+    "n_celllines": 13,
+    "raw_bracket": 0.9016591086983681,
+    "localization_score": 0.9596189386928891
+  },
+  {
+    "drug": "ruxolitinib",
+    "target": "JAK1",
+    "moa": "JAK inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.8484907150268555,
+    "localization_score": 0.9736197914032373
+  },
+  {
+    "drug": "ryuvidine",
+    "target": "CDK2",
+    "moa": "histone lysine methyltransferase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.7236287891864777,
+    "localization_score": 0.9615571514017592
+  },
+  {
+    "drug": "saclofen",
+    "target": "GABBR1",
+    "moa": "GABA receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9545038007199764,
+    "localization_score": 0.983718481608319
+  },
+  {
+    "drug": "safinamide",
+    "target": "MAOB",
+    "moa": "dopamine reuptake inhibitor|glutamate inhibitor|monoamine oxidase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.9144521728157997,
+    "localization_score": 1.0340642636042312
+  },
+  {
+    "drug": "salmeterol",
+    "target": "ADRB2",
+    "moa": "adrenergic receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8736619651317596,
+    "localization_score": 0.9919814379085057
+  },
+  {
+    "drug": "saracatinib",
+    "target": "ABL1",
+    "moa": "SRC inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.809186652302742,
+    "localization_score": 0.9093105195223071
+  },
+  {
+    "drug": "scopolamine",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 14,
+    "raw_bracket": 0.8648424297571182,
+    "localization_score": 0.8742547394282973
+  },
+  {
+    "drug": "scopolamine-n-oxide",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.970856960862875,
+    "localization_score": 0.9816601342397209
+  },
+  {
+    "drug": "scriptaid",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.5658890604972839,
+    "localization_score": 0.9109267253160745
+  },
+  {
+    "drug": "securinine",
+    "target": "GABRA1",
+    "moa": "GABA receptor antagonist|TP53 activator",
+    "n_celllines": 16,
+    "raw_bracket": 0.8996313735842705,
+    "localization_score": 1.0060617502560882
+  },
+  {
+    "drug": "selumetinib",
+    "target": "MAP2K1",
+    "moa": "MEK inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.8039185702800751,
+    "localization_score": 0.8557124920449581
+  },
+  {
+    "drug": "semaxanib",
+    "target": "FGFR1",
+    "moa": "VEGFR inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9073467627167702,
+    "localization_score": 0.9723874429707485
+  },
+  {
+    "drug": "serdemetan",
+    "target": "MDM2",
+    "moa": "MDM inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.8835490122437477,
+    "localization_score": 0.9202842302490098
+  },
+  {
+    "drug": "simvastatin",
+    "target": "HMGCR",
+    "moa": "HMGCR inhibitor",
+    "n_celllines": 58,
+    "raw_bracket": 0.9391569308936596,
+    "localization_score": 0.9706085114355573
+  },
+  {
+    "drug": "sirolimus",
+    "target": "FKBP1A",
+    "moa": "mTOR inhibitor",
+    "n_celllines": 62,
+    "raw_bracket": 0.7834091782569885,
+    "localization_score": 0.9885689422658097
+  },
+  {
+    "drug": "sitagliptin",
+    "target": "DPP4",
+    "moa": "dipeptidyl peptidase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.8986155465245247,
+    "localization_score": 1.0447684675128095
+  },
+  {
+    "drug": "sonidegib",
+    "target": "SMO",
+    "moa": "smoothened receptor antagonist",
+    "n_celllines": 51,
+    "raw_bracket": 0.8952625915408134,
+    "localization_score": 0.9682352740170155
+  },
+  {
+    "drug": "sorafenib",
+    "target": "BRAF",
+    "moa": "FLT3 inhibitor|KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|RAF inhibitor|RET tyrosine kinase inhibitor|VEGFR inhibitor",
+    "n_celllines": 20,
+    "raw_bracket": 0.8503029644489288,
+    "localization_score": 0.9589442107587095
+  },
+  {
+    "drug": "spironolactone",
+    "target": "AR",
+    "moa": "mineralocorticoid receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9385156035423279,
+    "localization_score": 0.9898349731377097
+  },
+  {
+    "drug": "splitomycin",
+    "target": "SIRT1",
+    "moa": "SIRT inhibitor",
+    "n_celllines": 11,
+    "raw_bracket": 0.8951897248625755,
+    "localization_score": 0.975626642260353
+  },
+  {
+    "drug": "strychnine",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9348769709467888,
+    "localization_score": 0.9692777715079289
+  },
+  {
+    "drug": "sulfasalazine",
+    "target": "ACAT1",
+    "moa": "cyclooxygenase inhibitor",
+    "n_celllines": 7,
+    "raw_bracket": 0.9657737351953983,
+    "localization_score": 1.0022208086203572
+  },
+  {
+    "drug": "sulfinpyrazone",
+    "target": "ABCC1",
+    "moa": "uricosuric blocker",
+    "n_celllines": 8,
+    "raw_bracket": 0.9194659665226936,
+    "localization_score": 1.0197500202437215
+  },
+  {
+    "drug": "sulforaphane",
+    "target": "NFE2L2",
+    "moa": "anticancer agent|aryl hydrocarbon receptor antagonist",
+    "n_celllines": 53,
+    "raw_bracket": 0.8402663618326187,
+    "localization_score": 0.9708653877921318
+  },
+  {
+    "drug": "sulindac",
+    "target": "AKR1B1",
+    "moa": "cyclooxygenase inhibitor",
+    "n_celllines": 12,
+    "raw_bracket": 0.9424577578902245,
+    "localization_score": 0.97985852179753
+  },
+  {
+    "drug": "sunitinib",
+    "target": "CSF1R",
+    "moa": "FLT3 inhibitor|KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|RET tyrosine kinase inhibitor|VEGFR inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.8498662859201431,
+    "localization_score": 0.9646837061427744
+  },
+  {
+    "drug": "tacedinaline",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 11,
+    "raw_bracket": 0.6862180829048157,
+    "localization_score": 0.877436119306558
+  },
+  {
+    "drug": "tacrolimus",
+    "target": "FKBP1A",
+    "moa": "calcineurin inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.9095634073019028,
+    "localization_score": 0.9941963408870811
+  },
+  {
+    "drug": "talipexole",
+    "target": "ADRA2A",
+    "moa": "adrenergic receptor agonist|dopamine receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9368809834122658,
+    "localization_score": 0.9808791349822022
+  },
+  {
+    "drug": "tamibarotene",
+    "target": "RARA",
+    "moa": "retinoid receptor agonist",
+    "n_celllines": 14,
+    "raw_bracket": 0.8961137309670448,
+    "localization_score": 0.9439532447604435
+  },
+  {
+    "drug": "tamoxifen",
+    "target": "EBP",
+    "moa": "estrogen receptor antagonist|selective estrogen receptor modulator (SERM)",
+    "n_celllines": 59,
+    "raw_bracket": 0.9192744344472885,
+    "localization_score": 0.9637658779465159
+  },
+  {
+    "drug": "tandutinib",
+    "target": "CSF1R",
+    "moa": "FLT3 inhibitor|KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9041380435228348,
+    "localization_score": 0.9727182689696235
+  },
+  {
+    "drug": "tanespimycin",
+    "target": "HSP90AA1",
+    "moa": "HSP inhibitor",
+    "n_celllines": 54,
+    "raw_bracket": 0.8077072203159332,
+    "localization_score": 1.0322888137648971
+  },
+  {
+    "drug": "targinine",
+    "target": "NOS3",
+    "moa": "nitric oxide synthase inhibitor",
+    "n_celllines": 7,
+    "raw_bracket": 0.9169298857450485,
+    "localization_score": 0.9404439874766721
+  },
+  {
+    "drug": "telenzepine",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9541010297834873,
+    "localization_score": 0.98411576351511
+  },
+  {
+    "drug": "telmisartan",
+    "target": "AGTR1",
+    "moa": "angiotensin receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9375869296491146,
+    "localization_score": 0.9442920960741763
+  },
+  {
+    "drug": "temozolomide",
+    "target": "MGMT",
+    "moa": "DNA alkylating agent",
+    "n_celllines": 54,
+    "raw_bracket": 0.9248481914401054,
+    "localization_score": 1.0063882257701204
+  },
+  {
+    "drug": "temsirolimus",
+    "target": "MTOR",
+    "moa": "mTOR inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.775482252240181,
+    "localization_score": 0.9801484128132321
+  },
+  {
+    "drug": "teniposide",
+    "target": "TOP2A",
+    "moa": "topoisomerase inhibitor",
+    "n_celllines": 54,
+    "raw_bracket": 0.7885846197605133,
+    "localization_score": 0.8765550201623106
+  },
+  {
+    "drug": "tenovin-1",
+    "target": "SIRT1",
+    "moa": "SIRT inhibitor|TP53 activator",
+    "n_celllines": 14,
+    "raw_bracket": 0.9372974410653114,
+    "localization_score": 1.0021187114827559
+  },
+  {
+    "drug": "terbinafine",
+    "target": "SQLE",
+    "moa": "fungal squalene epoxidase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8880826607346535,
+    "localization_score": 0.9481845501808078
+  },
+  {
+    "drug": "terbutaline",
+    "target": "ADRB2",
+    "moa": "adrenergic receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.932253822684288,
+    "localization_score": 0.9903828803502801
+  },
+  {
+    "drug": "terfenadine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8153344541788101,
+    "localization_score": 0.96116146216304
+  },
+  {
+    "drug": "terreic-acid-(-)",
+    "target": "BTK",
+    "moa": "Bruton's tyrosine kinase (BTK) inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.8815882429480553,
+    "localization_score": 0.9855519094983078
+  },
+  {
+    "drug": "thalidomide",
+    "target": "TNF",
+    "moa": "tumor necrosis factor production inhibitor",
+    "n_celllines": 57,
+    "raw_bracket": 0.9383659474551678,
+    "localization_score": 0.9954760019297418
+  },
+  {
+    "drug": "thiocolchicoside",
+    "target": "GABRA1",
+    "moa": "GABA receptor antagonist",
+    "n_celllines": 12,
+    "raw_bracket": 0.8453359454870224,
+    "localization_score": 0.9396289252150577
+  },
+  {
+    "drug": "tiaprofenic-acid",
+    "target": "PTGS2",
+    "moa": "cyclooxygenase inhibitor",
+    "n_celllines": 8,
+    "raw_bracket": 0.8493614494800568,
+    "localization_score": 1.0350672745858478
+  },
+  {
+    "drug": "tibolone",
+    "target": "ESR1",
+    "moa": "androgen receptor agonist|estrogen receptor agonist|progesterone receptor agonist",
+    "n_celllines": 9,
+    "raw_bracket": 0.850193440914154,
+    "localization_score": 0.9148088153299674
+  },
+  {
+    "drug": "ticlopidine",
+    "target": "P2RY12",
+    "moa": "purinergic receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.8996778354048729,
+    "localization_score": 0.9682405236188685
+  },
+  {
+    "drug": "tivantinib",
+    "target": "MET",
+    "moa": "tyrosine kinase inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.7307084798812866,
+    "localization_score": 1.0000672145303457
+  },
+  {
+    "drug": "tivozanib",
+    "target": "FLT1",
+    "moa": "VEGFR inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.9057297185063362,
+    "localization_score": 0.9992237896463361
+  },
+  {
+    "drug": "tizanidine",
+    "target": "ADRA2A",
+    "moa": "adrenergic receptor agonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8650156557559967,
+    "localization_score": 1.0260579555446285
+  },
+  {
+    "drug": "tofacitinib",
+    "target": "JAK1",
+    "moa": "JAK inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9446482099592686,
+    "localization_score": 0.9980445511333748
+  },
+  {
+    "drug": "tolcapone",
+    "target": "COMT",
+    "moa": "catechol O methyltransferase inhibitor",
+    "n_celllines": 11,
+    "raw_bracket": 0.9310268387198448,
+    "localization_score": 0.9669897657981906
+  },
+  {
+    "drug": "tolterodine",
+    "target": "CHRM1",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 7,
+    "raw_bracket": 0.9663090333342552,
+    "localization_score": 0.9790372514984159
+  },
+  {
+    "drug": "topotecan",
+    "target": "TOP1",
+    "moa": "topoisomerase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.6569415032863617,
+    "localization_score": 1.1856843433462478
+  },
+  {
+    "drug": "toremifene",
+    "target": "ESR1",
+    "moa": "estrogen receptor antagonist|selective estrogen receptor modulator (SERM)",
+    "n_celllines": 13,
+    "raw_bracket": 0.8196335434913635,
+    "localization_score": 0.8768329078058745
+  },
+  {
+    "drug": "torin-1",
+    "target": "MTOR",
+    "moa": "mTOR inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.6463354825973511,
+    "localization_score": 0.8862263929964929
+  },
+  {
+    "drug": "torin-2",
+    "target": "MTOR",
+    "moa": "mTOR inhibitor",
+    "n_celllines": 19,
+    "raw_bracket": 0.6121612787246704,
+    "localization_score": 0.8326804839011517
+  },
+  {
+    "drug": "tosedostat",
+    "target": "ANPEP",
+    "moa": "peptidase inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.7628720104694366,
+    "localization_score": 0.9904310095849489
+  },
+  {
+    "drug": "tozasertib",
+    "target": "AURKA",
+    "moa": "Aurora kinase inhibitor|Bcr-Abl kinase inhibitor|FLT3 inhibitor|JAK inhibitor",
+    "n_celllines": 60,
+    "raw_bracket": 0.844861626625061,
+    "localization_score": 0.9870958972165786
+  },
+  {
+    "drug": "tracazolate",
+    "target": "GABRA1",
+    "moa": "GABA receptor modulator",
+    "n_celllines": 13,
+    "raw_bracket": 0.9479648508131504,
+    "localization_score": 1.0193961208630684
+  },
+  {
+    "drug": "trametinib",
+    "target": "MAP2K1",
+    "moa": "MEK inhibitor",
+    "n_celllines": 6,
+    "raw_bracket": 0.6582878828048706,
+    "localization_score": 0.8642675031088609
+  },
+  {
+    "drug": "tranylcypromine",
+    "target": "KDM1A",
+    "moa": "monoamine oxidase inhibitor",
+    "n_celllines": 11,
+    "raw_bracket": 0.9058454260230064,
+    "localization_score": 0.9803611047378767
+  },
+  {
+    "drug": "trapidil",
+    "target": "PDGFRA",
+    "moa": "PDGFR tyrosine kinase receptor inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9472649656236172,
+    "localization_score": 0.970613341178349
+  },
+  {
+    "drug": "treprostinil",
+    "target": "P2RY12",
+    "moa": "prostanoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9358738735318184,
+    "localization_score": 0.9960053216734078
+  },
+  {
+    "drug": "tretinoin",
+    "target": "ALDH1A1",
+    "moa": "retinoid receptor agonist|retinoid receptor ligand",
+    "n_celllines": 58,
+    "raw_bracket": 0.9061830416321754,
+    "localization_score": 0.973750074089937
+  },
+  {
+    "drug": "triamcinolone",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.901510089635849,
+    "localization_score": 0.9452201758704123
+  },
+  {
+    "drug": "triamcinolone-acetonide",
+    "target": "NR3C1",
+    "moa": "glucocorticoid receptor agonist|immunosuppressant",
+    "n_celllines": 8,
+    "raw_bracket": 0.8462732881307602,
+    "localization_score": 1.0263692496108505
+  },
+  {
+    "drug": "triamterene",
+    "target": "SCNN1A",
+    "moa": "sodium channel blocker",
+    "n_celllines": 14,
+    "raw_bracket": 0.89991195499897,
+    "localization_score": 0.9969905733814154
+  },
+  {
+    "drug": "trichostatin-a",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 64,
+    "raw_bracket": 0.5498353242874146,
+    "localization_score": 0.9209922787783156
+  },
+  {
+    "drug": "triciribine",
+    "target": "AKT1",
+    "moa": "AKT inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.7573976069688797,
+    "localization_score": 0.9148766608261302
+  },
+  {
+    "drug": "triclabendazole",
+    "target": "DNMT1",
+    "moa": "microtubule inhibitor",
+    "n_celllines": 7,
+    "raw_bracket": 0.9433266595005989,
+    "localization_score": 1.0243113085425384
+  },
+  {
+    "drug": "triclosan",
+    "target": "DNMT1",
+    "moa": "antibacterial agent",
+    "n_celllines": 13,
+    "raw_bracket": 0.8417569845914841,
+    "localization_score": 1.0061662237071038
+  },
+  {
+    "drug": "triflupromazine",
+    "target": "CHRM1",
+    "moa": "dopamine receptor antagonist",
+    "n_celllines": 14,
+    "raw_bracket": 0.7802946716547012,
+    "localization_score": 1.0452433891090234
+  },
+  {
+    "drug": "trifluridine",
+    "target": "TYMS",
+    "moa": "DNA directed DNA polymerase inhibitor|thymidylate synthase inhibitor",
+    "n_celllines": 5,
+    "raw_bracket": 0.8306006193161011,
+    "localization_score": 0.9229118081549943
+  },
+  {
+    "drug": "tripelennamine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9507317878305912,
+    "localization_score": 0.971260555924426
+  },
+  {
+    "drug": "triprolidine",
+    "target": "HRH1",
+    "moa": "histamine receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8707354217767715,
+    "localization_score": 0.9997561867379926
+  },
+  {
+    "drug": "triptolide",
+    "target": "RELA",
+    "moa": "RNA polymerase inhibitor",
+    "n_celllines": 51,
+    "raw_bracket": 0.5955825746059418,
+    "localization_score": 0.9855750738011858
+  },
+  {
+    "drug": "tropicamide",
+    "target": "CHRM3",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.8723742812871933,
+    "localization_score": 0.9089846658533873
+  },
+  {
+    "drug": "tubastatin-a",
+    "target": "HDAC6",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 9,
+    "raw_bracket": 0.7146724462509155,
+    "localization_score": 0.953166515626827
+  },
+  {
+    "drug": "tyrphostin-AG-1296",
+    "target": "FLT3",
+    "moa": "FLT3 inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.963424626737833,
+    "localization_score": 0.9641323919171711
+  },
+  {
+    "drug": "tyrphostin-AG-1478",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 55,
+    "raw_bracket": 0.7319409549236298,
+    "localization_score": 0.9193583856717767
+  },
+  {
+    "drug": "tyrphostin-AG-18",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor|tyrosine kinase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9400544948875904,
+    "localization_score": 0.9622636217914265
+  },
+  {
+    "drug": "tyrphostin-AG-494",
+    "target": "EGFR",
+    "moa": "EGFR inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.90207140147686,
+    "localization_score": 0.9224840839865387
+  },
+  {
+    "drug": "tyrphostin-AG-825",
+    "target": "ERBB2",
+    "moa": "protein tyrosine kinase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9301842972636223,
+    "localization_score": 0.9782850196035198
+  },
+  {
+    "drug": "tyrphostin-AG-835",
+    "target": "EGFR",
+    "moa": "protein tyrosine kinase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9185953363776207,
+    "localization_score": 0.963284591748814
+  },
+  {
+    "drug": "tyrphostin-AG-879",
+    "target": "ERBB2",
+    "moa": "tyrosine kinase inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.7681469321250916,
+    "localization_score": 1.0265618066126307
+  },
+  {
+    "drug": "tyrphostin-AG-99",
+    "target": "EGFR",
+    "moa": "tyrosine kinase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.949104581028223,
+    "localization_score": 0.9514067840721832
+  },
+  {
+    "drug": "ubenimex",
+    "target": "LTA4H",
+    "moa": "leukotriene synthesis inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9144533202052116,
+    "localization_score": 1.0104148220038764
+  },
+  {
+    "drug": "valdecoxib",
+    "target": "CA12",
+    "moa": "cyclooxygenase inhibitor",
+    "n_celllines": 50,
+    "raw_bracket": 0.8347979336977005,
+    "localization_score": 1.028263420837769
+  },
+  {
+    "drug": "valproic-acid",
+    "target": "ABAT",
+    "moa": "benzodiazepine receptor agonist|HDAC inhibitor",
+    "n_celllines": 54,
+    "raw_bracket": 0.9444836936891079,
+    "localization_score": 0.9829870962985157
+  },
+  {
+    "drug": "valsartan",
+    "target": "AGTR1",
+    "moa": "angiotensin receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9212587028741837,
+    "localization_score": 0.9872009251976862
+  },
+  {
+    "drug": "veliparib",
+    "target": "PARP1",
+    "moa": "PARP inhibitor",
+    "n_celllines": 56,
+    "raw_bracket": 0.9197817295789719,
+    "localization_score": 0.9955768771571208
+  },
+  {
+    "drug": "vemurafenib",
+    "target": "BRAF",
+    "moa": "RAF inhibitor",
+    "n_celllines": 61,
+    "raw_bracket": 0.8401501327753067,
+    "localization_score": 0.9188132579821676
+  },
+  {
+    "drug": "vidarabine",
+    "target": "ADA",
+    "moa": "antiviral",
+    "n_celllines": 8,
+    "raw_bracket": 0.8736956119537354,
+    "localization_score": 0.9378085478551907
+  },
+  {
+    "drug": "vinblastine",
+    "target": "JUN",
+    "moa": "microtubule inhibitor|tubulin polymerization inhibitor",
+    "n_celllines": 15,
+    "raw_bracket": 0.7662312239408493,
+    "localization_score": 0.9423176841279755
+  },
+  {
+    "drug": "vinburnine",
+    "target": "CHRM1",
+    "moa": "adrenergic receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.9014992713928223,
+    "localization_score": 1.0405639936215374
+  },
+  {
+    "drug": "vincamine",
+    "target": "CHRM1",
+    "moa": "adrenergic receptor antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9237022623419762,
+    "localization_score": 0.9853094946419149
+  },
+  {
+    "drug": "vinorelbine",
+    "target": "TUBA1A",
+    "moa": "tubulin polymerization inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.8334572166204453,
+    "localization_score": 0.9037794520657422
+  },
+  {
+    "drug": "vorinostat",
+    "target": "HDAC1",
+    "moa": "HDAC inhibitor",
+    "n_celllines": 60,
+    "raw_bracket": 0.4899001121520996,
+    "localization_score": 0.9525783656724045
+  },
+  {
+    "drug": "warfarin",
+    "target": "VKORC1",
+    "moa": "vitamin K antagonist",
+    "n_celllines": 14,
+    "raw_bracket": 0.9334430620074272,
+    "localization_score": 0.9943057170622724
+  },
+  {
+    "drug": "wortmannin",
+    "target": "PI4KA",
+    "moa": "PI3K inhibitor",
+    "n_celllines": 61,
+    "raw_bracket": 0.7210783958435059,
+    "localization_score": 0.8969511364485512
+  },
+  {
+    "drug": "xylazine",
+    "target": "ADRA2A",
+    "moa": "adrenergic receptor agonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9744923487305641,
+    "localization_score": 1.0117177527566619
+  },
+  {
+    "drug": "yohimbine",
+    "target": "ADRA2A",
+    "moa": "adrenergic receptor antagonist",
+    "n_celllines": 14,
+    "raw_bracket": 0.8971210345625877,
+    "localization_score": 0.958865030860053
+  },
+  {
+    "drug": "zaldaride",
+    "target": "CALM1",
+    "moa": "calmodulin antagonist",
+    "n_celllines": 13,
+    "raw_bracket": 0.9526892863214016,
+    "localization_score": 0.9857313012245151
+  },
+  {
+    "drug": "zamifenacin",
+    "target": "CHRM3",
+    "moa": "acetylcholine receptor antagonist",
+    "n_celllines": 8,
+    "raw_bracket": 0.9365141242742538,
+    "localization_score": 0.9274173077980873
+  },
+  {
+    "drug": "zaprinast",
+    "target": "GPR35",
+    "moa": "phosphodiesterase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9483127221465111,
+    "localization_score": 1.0031929548229896
+  },
+  {
+    "drug": "zardaverine",
+    "target": "PDE4D",
+    "moa": "phosphodiesterase inhibitor",
+    "n_celllines": 13,
+    "raw_bracket": 0.9047096446156502,
+    "localization_score": 1.0375167198774538
+  },
+  {
+    "drug": "zebularine",
+    "target": "CDA",
+    "moa": "DNA methyltransferase inhibitor",
+    "n_celllines": 54,
+    "raw_bracket": 0.9466611705720425,
+    "localization_score": 0.9953681570271551
+  },
+  {
+    "drug": "zosuquidar",
+    "target": "ABCB1",
+    "moa": "P glycoprotein inhibitor",
+    "n_celllines": 14,
+    "raw_bracket": 0.9091763868927956,
+    "localization_score": 1.024978482529881
+  }
+]
