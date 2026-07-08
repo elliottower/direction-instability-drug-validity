@@ -344,8 +344,10 @@ domains use different data sources, perturbation types, and geometric
 estimands (vector cosines vs.\ Grassmannian geodesics), making a joint
 family overly conservative. After Holm--Bonferroni
 correction within the drug family, H3 ($p < 10^{-27}$) and H5
-($p_{\text{perm}} < 10^{-3}$) survive at $\alpha = 0.05$; H2 ($p = 0.28$)
-and H4 (gap $= 0.018$) do not; H1's criterion-pass is an artifact.
+($p_{\text{Wilcoxon}} = 8.2 \times 10^{-13}$; also
+$p_{\text{perm}} < 10^{-3}$ on the preliminary 5-fold analysis) survive
+at $\alpha = 0.05$; H2 ($p = 0.28$) and H4 (gap $= 0.018$) do not;
+H1's criterion-pass is an artifact.
 Within Perturb-seq, HP3 ($p_{\text{perm}} < 10^{-4}$) survives.
 
 \subsection{Phenotype-projected bracket (Experiment 3)}
@@ -359,10 +361,11 @@ on-target direction. On-target enrichment is quantified by cosine squared
 between each drug's mean signature and its target gene's shRNA consensus.
 
 shRNA signatures have well-documented off-target effects, which add noise
-to the on-target direction. This makes the H3 correlation a
-\emph{conservative} estimate: CRISPR knockout signatures would provide a
-cleaner ground truth, but fewer are available in LINCS L1000. The
-significant correlation despite shRNA noise strengthens the result.
+to the on-target direction. The shRNA consensus averages across
+${\sim}20$ cell lines, producing a cell-type-agnostic on-target
+direction at the cost of off-target contamination. A convergent-validity
+check using CRISPRi signatures (single cell type, cleaner
+loss-of-function but cell-type-specific) is reported in the Results.
 
 \textbf{Pre-registered prediction (H3):} Spearman $|\rho| > 0.3$ between
 phenotype-projected bracket and on-target enrichment, AND $|\rho| < 0.15$
@@ -511,37 +514,29 @@ phenotype-projected bracket using CRISPRi loss-of-function signatures
 \citep{replogle2022mapping} as the on-target
 direction. The projected-bracket correlation with on-target enrichment
 did not reach significance (Spearman $\rho = -0.12$, $p = 0.16$,
-$n = 131$), corresponding to pre-registered outcome~(c). The
-pre-registered secondary criterion identifies the likely cause: raw
+$n = 131$), corresponding to pre-registered outcome~(c). On the
+114-drug matched subset (drugs with both ground truths), shRNA
+projection yields $\rho = 0.42$ while CRISPRi projection yields
+$\rho = -0.14$, confirming that the ground-truth source---not the
+drug set---drives the difference.
+
+The pre-registered secondary criterion points to the likely cause: raw
 bracket correlated positively with CRISPRi enrichment
 ($\rho = +0.27$, $p = 0.002$) while projected bracket did not---the
-reverse of the shRNA pattern---indicating that the K562-only CRISPRi
-directions are confounded by cell-type-specific effects rather than
-the projection failing. The positive raw-bracket/CRISPRi correlation
-likely arises because K562 is a leukemia line where many drug targets
-are highly expressed; drugs with high raw instability across many cell
-lines coincidentally match K562-specific CRISPRi signatures, producing
-a spurious correlation that the phenotype projection amplifies rather
-than removes. On the 114-drug matched subset, shRNA
-projection ($\rho = 0.42$) and CRISPRi projection ($\rho = -0.14$)
-diverge, confirming that the ground-truth source drives the difference.
+reverse of the shRNA pattern. This reversal is consistent with the
+pre-registered K562-only confound: CRISPRi signatures derive from a
+single hematopoietic cell type, so the CRISPRi ``on-target direction''
+captures cell-type-specific effects rather than cross-context
+mechanism---a confound that multi-cell-line shRNA consensus avoids by
+averaging across ${\sim}20$ cell lines. One plausible explanation for
+the positive raw-bracket/CRISPRi correlation, which we did not test
+directly, is that K562 expresses many drug targets at high levels,
+producing spurious alignment between raw instability and K562-specific
+signatures.
 
-We report CRISPRi as not providing independent convergent validity for
-H3, attributable to the pre-registered single-cell-line limitation.
-The shRNA-based H3 result stands on its original evidence rather than
-being reinforced. CRISPRi signatures derive from a single hematopoietic
-cell type, so the CRISPRi ``on-target direction'' captures
-cell-type-specific effects rather than cross-context mechanism---a
-confound that multi-cell-line shRNA consensus avoids by averaging
-across ${\sim}20$ cell lines. A post-hoc power calculation shows
-$>$99\% power to detect $\rho = 0.376$ at $n = 131$ ($\alpha = 0.05$,
-one-sided); the CRISPRi 95\% CI $[-0.29, 0.05]$ excludes the shRNA
-effect size entirely, and the two correlations differ significantly
-($z = 5.47$, $p < 10^{-7}$). The CRISPRi result is therefore a
-genuine divergence from the shRNA finding, not an underpowered null.
-The K562-only confound is the pre-registered explanation for this
-divergence: drugs tested across many cell lines are poorly matched by
-an on-target direction from a single hematopoietic context.
+CRISPRi does not provide independent convergent validity for H3. The
+shRNA-based result stands on its original evidence rather than being
+reinforced.
 
 \subsection{Experiment 5: Transport-stable bracket outpredicts raw bracket in held-out cell lines}
 
@@ -845,7 +840,8 @@ confound-dominated.
 \centering
 \caption{Cross-domain summary. All three domains exceed the ``doesn't
 bite'' threshold ($\rho \geq 0.83$). The LINCS HDAC gradient $\rho$
-measures fine-grained ordering within a single drug class (20 compounds);
+measures fine-grained ordering within a single drug class (6 compounds
+in the selectivity gradient, Figure~\ref{fig:hdac});
 the global 8{,}949-drug $\rho > 0.99$. H5 (transport stability) tests
 predictive validity rather than rank preservation; the 66-fold
 leave-one-out result (Table~\ref{tab:scorecard}) provides the strongest
@@ -856,7 +852,7 @@ domain-specific evidence for LINCS.}
 \toprule
 Domain & Correction & $N$ & $\rho$ \\
 \midrule
-LINCS (HDAC gradient) & Toxicity genes & 20 & 0.83 \\
+LINCS (HDAC gradient) & Toxicity genes & 6 & 0.83 \\
 LINCS (global) & Toxicity genes & 8{,}949 & $>$0.99 \\
 Perturb-seq & Essential-gene subspace & 1{,}676 & 0.91 \\
 JUMP-CP & Cell-health features & 25{,}254 & 0.99 \\
@@ -880,14 +876,15 @@ system for interpretive warrant, not a surrogate endpoint.
 
 The drug experiments H3--H5 depend on shRNA knockdown signatures as
 ground-truth on-target directions. shRNA has well-documented off-target
-effects, which add noise to the ground truth and make H3's $\rho = 0.38$
-a conservative estimate. A CRISPRi convergent-validity check did not
+effects, which add noise to the ground truth. A CRISPRi
+convergent-validity check did not
 independently confirm the phenotype-projection result ($\rho = -0.12$,
-$p = 0.16$, $n = 131$; 95\% CI excludes shRNA $\rho = 0.376$,
-$z = 5.47$, $p < 10^{-7}$); this genuine divergence is attributable to
-the K562-only confound (CRISPRi signatures from a single cell type are
-poor on-target directions for drugs acting in non-hematopoietic contexts).
-The shRNA H3 result is not refuted but neither is it reinforced. Drugs with unannotated targets
+$p = 0.16$, $n = 131$); the matched 114-drug comparison (shRNA
+$\rho = 0.42$ vs.\ CRISPRi $\rho = -0.14$) points to the
+pre-registered K562-only confound (CRISPRi signatures from a single
+cell type are poor on-target directions for drugs acting in
+non-hematopoietic contexts). The shRNA H3 result is not refuted but
+neither is it reinforced. Drugs with unannotated targets
 (7{,}398 of 8{,}949) are excluded from H3 and H4, limiting these rungs
 to 17\% of the dataset. LINCS measures 978 landmark genes, restricting
 the toxicity gene set to the landmark panel.
