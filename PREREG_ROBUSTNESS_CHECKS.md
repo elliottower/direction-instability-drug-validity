@@ -120,6 +120,45 @@ the distinction is distributed rather than item-level.
 
 ---
 
+## R9-DAG: Dose-direction stability (DAG separability assumption)
+
+**Motivation:** The causal DAG (Figure 1) assumes cosine normalization
+blocks the magnitude path, which requires that signature *direction* does
+not depend on perturbation *magnitude* (dose). This linearity/separability
+assumption is untested. If direction shifts systematically with dose, the
+DAG's identification claim is invalid in that regime.
+
+**Analysis:** For all drug×cell-line pairs profiled at ≥2 distinct doses
+in LINCS L1000 (estimated ~6,000 pairs, ~1,400 drugs):
+
+1. Compute the mean signature at each dose level within each drug×cell pair.
+2. Normalize each dose-level signature to unit length.
+3. Compute pairwise cosine similarity between all dose pairs within each
+   drug×cell combination.
+4. Report: (a) overall distribution of within-pair cosines, (b) cosine
+   stratified by dose ratio (fold-change between doses), (c) fraction of
+   pairs where cosine < 0.5 (direction "breaks" — the signature points in
+   a substantially different direction at different doses).
+
+**Sanity check:** If directions were random (no dose-stability), the
+expected cosine in 978 dimensions is ~0 (orthogonal). If directions are
+perfectly stable, cosine = 1.0. The population median should be well above
+0.5 for the assumption to hold.
+
+**Report:** Full distribution, median, and the fraction of pairs where the
+assumption fails (cosine < 0.5). Stratify by dose ratio to identify
+whether high dose ratios (e.g., 100×) produce more direction instability
+than low dose ratios (e.g., 2×). If >20% of pairs show cosine < 0.5, we
+add a limitation stating the DAG's separability assumption is violated for
+a substantial fraction of drugs.
+
+**Success criterion:** Median within-pair cosine > 0.7 and <20% of pairs
+below 0.5. If both are met, the assumption holds for the majority of the
+dataset. If either fails, report which dose regimes break down and add a
+limitation.
+
+---
+
 ## Writing-only changes (no pre-registration needed)
 
 The following are purely expository changes that do not involve new data analysis:
@@ -136,6 +175,6 @@ The following are purely expository changes that do not involve new data analysi
 
 ## Commitment
 
-All quantitative results from R2, R3, R6, R8 will be reported in the paper
-regardless of whether they support or weaken the original claims. Negative
-results will be reported as limitations.
+All quantitative results from R2, R3, R6, R8, R9-DAG will be reported in
+the paper regardless of whether they support or weaken the original claims.
+Negative results will be reported as limitations.
