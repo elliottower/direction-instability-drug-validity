@@ -3,7 +3,7 @@
 **Date:** 2026-07-09
 **Status:** PRE-REGISTERED (frozen before any PRISM data is downloaded or analyzed)
 **Intended use:** Future study, NOT included in the current BMC MRM submission.
-**Commit SHA:** (filled after commit)
+**Commit SHA:** 468cfdd
 
 ## Rationale
 
