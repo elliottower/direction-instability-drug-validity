@@ -1,0 +1,25 @@
+{
+  "title": "Bracket Norm Is Not Mechanism: Validity Conditions for Noncommutative Perturbation Scores",
+  "upload_type": "software",
+  "description": "Characterizes when bracket norm becomes scientifically meaningful by proposing validity-conditioned variants and demonstrating five failure modes empirically.",
+  "creators": [
+    {
+      "name": "Tower, Elliot",
+      "orcid": "0000-0001-7004-8884"
+    }
+  ],
+  "license": "MIT",
+  "keywords": [
+    "bracket norm",
+    "drug perturbation",
+    "validity conditions",
+    "noncommutative geometry"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/elliottower/direction-instability-drug-validity",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
