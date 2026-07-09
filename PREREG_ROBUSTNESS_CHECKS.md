@@ -17,10 +17,11 @@ inherited from the companion paper. A reviewer asks whether the H5 result
 **Analysis:** Re-run the full 66-fold leave-one-cell-line-out cross-validation
 at λ ∈ {0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 5.0}.
 
-**Sanity check (λ=0):** At λ=0, TS ≡ raw DI, so TS should win ~50% of folds
-(tie-breaking noise). If λ=0 shows TS winning ≥80% of folds, there is a bug
-in the computation (e.g., ties broken in TS's favor). Assert this before
-interpreting other λ values.
+**Sanity check (λ=0):** At λ=0, TS ≡ raw DI exactly (TS = raw − 0·Var = raw),
+so TS wins **0 of 66 folds** (strict inequality on identical score vectors
+is deterministically False). If λ=0 shows *any* fold win, ties are being
+broken in TS's favor — a bug. Assert exactly 0 wins before interpreting
+other λ values. Wilcoxon is skipped at λ=0 (all Δρ = 0 is degenerate).
 
 **Report:** For each λ: number of folds TS wins, Wilcoxon p-value, mean Δρ.
 Present as a table or supplementary figure.

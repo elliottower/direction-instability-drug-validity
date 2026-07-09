@@ -197,15 +197,21 @@ def run_real(data_dir: Path, output_dir: Path):
         ts_rhos = [f["ts_spearman"] for f in fold_results]
         improvements = np.array([t - r for r, t in zip(raw_rhos, ts_rhos)])
 
-        wilcoxon_result = stats.wilcoxon(improvements, alternative="greater")
+        if lam == 0.0:
+            wilcoxon_stat = float("nan")
+            wilcoxon_p = float("nan")
+        else:
+            wilcoxon_result = stats.wilcoxon(improvements, alternative="greater")
+            wilcoxon_stat = float(wilcoxon_result.statistic)
+            wilcoxon_p = float(wilcoxon_result.pvalue)
 
         result = {
             "lambda": lam,
             "n_valid_folds": n_valid,
             "ts_wins": ts_wins,
             "win_fraction": float(frac),
-            "wilcoxon_statistic": float(wilcoxon_result.statistic),
-            "wilcoxon_p": float(wilcoxon_result.pvalue),
+            "wilcoxon_statistic": wilcoxon_stat,
+            "wilcoxon_p": wilcoxon_p,
             "mean_delta_rho": float(np.mean(improvements)),
             "std_delta_rho": float(np.std(improvements)),
             "mean_raw_rho": float(np.mean(raw_rhos)),
@@ -217,15 +223,16 @@ def run_real(data_dir: Path, output_dir: Path):
         log(f"  lambda={lam:.2f}: wins={ts_wins}/{n_valid} ({frac:.0%}), "
             f"p={wilcoxon_result.pvalue:.2e}, mean_delta={np.mean(improvements):.4f}")
 
-    # Sanity check: at lambda=0, TS ≡ raw, so win fraction should be ~50%
+    # Sanity check: at lambda=0, TS ≡ raw exactly, so 0/N folds should win
     lam0_result = next((r for r in lambda_results if r["lambda"] == 0.0), None)
     if lam0_result is not None:
-        lam0_frac = lam0_result["win_fraction"]
-        if lam0_frac >= 0.80:
-            log(f"WARNING: lambda=0 shows TS winning {lam0_frac:.0%} of folds. "
-                f"At lambda=0, TS≡raw, so this indicates a bug (ties broken in TS's favor).")
+        lam0_wins = lam0_result["ts_wins"]
+        if lam0_wins > 0:
+            log(f"FATAL: lambda=0 shows TS winning {lam0_wins} folds. "
+                f"At lambda=0, TS≡raw exactly, so any win indicates ties broken "
+                f"in TS's favor — a bug. Do not interpret other lambda values.")
         else:
-            log(f"Sanity check PASSED: lambda=0 win fraction = {lam0_frac:.0%} (expected ~50%)")
+            log(f"Sanity check PASSED: lambda=0 wins = 0/{lam0_result['n_valid_folds']} (expected exactly 0)")
 
     # Save results
     output_dir.mkdir(parents=True, exist_ok=True)
