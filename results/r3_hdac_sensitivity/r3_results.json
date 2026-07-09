@@ -1,0 +1,229 @@
+{
+  "a1_full_set": {
+    "label": "full_set",
+    "n_drugs": 795,
+    "rho_proj": 0.3756370369503523,
+    "p_proj": 4.805491865876767e-28,
+    "rho_raw": -0.043271822254660024,
+    "p_raw": 0.22294579221431723
+  },
+  "a2_hdac_removed": {
+    "label": "hdac_removed",
+    "n_drugs": 775,
+    "rho_proj": 0.37592230531859755,
+    "p_proj": 2.020969889896658e-27,
+    "rho_raw": -0.038468405761234115,
+    "p_raw": 0.2848073035023697,
+    "n_hdac_removed": 20,
+    "hdac_drug_names": [
+      "JNJ-26481585",
+      "Merck60",
+      "NSC-3852",
+      "PCI-24781",
+      "PCI-34051",
+      "belinostat",
+      "dacinostat",
+      "droxinostat",
+      "entinostat",
+      "givinostat",
+      "lovastatin",
+      "mocetinostat",
+      "panobinostat",
+      "phenylbutyrate",
+      "pyroxamide",
+      "scriptaid",
+      "tacedinaline",
+      "trichostatin-a",
+      "tubastatin-a",
+      "vorinostat"
+    ],
+    "hdac_targets": [
+      "HDAC1",
+      "HDAC2",
+      "HDAC6"
+    ],
+    "missed_synonyms": [],
+    "passes_primary": true
+  },
+  "a3_top20_raw_removed": {
+    "label": "top20_raw_removed",
+    "n_drugs": 775,
+    "rho_proj": 0.3866772878786706,
+    "p_proj": 4.8143745227346805e-29,
+    "rho_raw": -0.05515283460040267,
+    "p_raw": 0.12501011395784142,
+    "removed_drugs": [
+      "BMS-387032",
+      "dactinomycin",
+      "bisindolylmaleimide-ix",
+      "purvalanol-a",
+      "alvocidib",
+      "doxorubicin",
+      "epirubicin",
+      "vorinostat",
+      "mitoxantrone",
+      "CGP-60474",
+      "PCI-24781",
+      "panobinostat",
+      "digitoxigenin",
+      "trichostatin-a",
+      "belinostat",
+      "buparlisib",
+      "daunorubicin",
+      "AT-7519",
+      "digoxin",
+      "MG-132"
+    ],
+    "raw_bracket_range_removed": [
+      0.32175499200820923,
+      0.565131276845932
+    ],
+    "passes_criterion": true
+  },
+  "a3b_top20_projected_removed": {
+    "label": "top20_projected_removed",
+    "n_drugs": 775,
+    "rho_proj": 0.34988664691946175,
+    "p_proj": 9.7733370694118e-24,
+    "rho_raw": -0.03081432729316349,
+    "p_raw": 0.39163648311894117,
+    "removed_drugs": [
+      "hexamethylenebisacetamide",
+      "levofloxacin",
+      "JNJ-7706621",
+      "latanoprost",
+      "amonafide",
+      "artemether",
+      "miglitol",
+      "mitoxantrone",
+      "pirarubicin",
+      "scriptaid",
+      "estradiol-cypionate",
+      "daunorubicin",
+      "cytarabine",
+      "thiocolchicoside",
+      "nutlin-3",
+      "PF-562271",
+      "mocetinostat",
+      "panobinostat",
+      "PIK-75",
+      "deforolimus"
+    ],
+    "projected_bracket_range_removed": [
+      10.191821569051498,
+      22.500250881626492
+    ],
+    "passes_criterion": true
+  },
+  "a4_bootstrap": {
+    "rho_proj_bootstrap": {
+      "point": 0.3756370369503523,
+      "ci_lo": 0.31458421294488564,
+      "ci_hi": 0.43295473427477055,
+      "se": 0.030520714161817154,
+      "n_bootstrap": 1000
+    },
+    "rho_raw_bootstrap": {
+      "point": -0.043271822254660024,
+      "ci_lo": -0.10716853207837765,
+      "ci_hi": 0.028454123260921744,
+      "se": 0.03462547579271858,
+      "n_bootstrap": 1000
+    },
+    "ci_excludes_zero_proj": true,
+    "ci_excludes_zero_raw": false
+  },
+  "a5_drug_pairs": {
+    "n_total_pairs": 2592,
+    "top_pairs": [
+      {
+        "high_drug": "hexamethylenebisacetamide",
+        "high_target": "AKT1",
+        "high_raw_bracket": 0.8946694284677505,
+        "high_projected_bracket": 22.500250881626492,
+        "high_on_target_enrichment": 0.38933555080945226,
+        "high_n_celllines": 7,
+        "low_drug": "eugenol",
+        "low_target": "AR",
+        "low_raw_bracket": 0.895846351981163,
+        "low_projected_bracket": 0.8041947382901397,
+        "low_on_target_enrichment": 0.009713548897014812,
+        "low_n_celllines": 8,
+        "raw_bracket_diff": 0.0011769235134124756,
+        "projected_bracket_diff": 21.696056143336353
+      },
+      {
+        "high_drug": "hexamethylenebisacetamide",
+        "high_target": "AKT1",
+        "high_raw_bracket": 0.8946694284677505,
+        "high_projected_bracket": 22.500250881626492,
+        "high_on_target_enrichment": 0.38933555080945226,
+        "high_n_celllines": 7,
+        "low_drug": "pyrimethamine",
+        "low_target": "DHFR",
+        "low_raw_bracket": 0.9058150723576546,
+        "low_projected_bracket": 0.8281982722572792,
+        "low_on_target_enrichment": 0.03308355864506951,
+        "low_n_celllines": 13,
+        "raw_bracket_diff": 0.011145643889904022,
+        "projected_bracket_diff": 21.672052609369214
+      },
+      {
+        "high_drug": "hexamethylenebisacetamide",
+        "high_target": "AKT1",
+        "high_raw_bracket": 0.8946694284677505,
+        "high_projected_bracket": 22.500250881626492,
+        "high_on_target_enrichment": 0.38933555080945226,
+        "high_n_celllines": 7,
+        "low_drug": "dapsone",
+        "low_target": "DHFR",
+        "low_raw_bracket": 0.893488809466362,
+        "low_projected_bracket": 0.8801924974790641,
+        "low_on_target_enrichment": 0.0026131586070643614,
+        "low_n_celllines": 8,
+        "raw_bracket_diff": 0.0011806190013885498,
+        "projected_bracket_diff": 21.620058384147427
+      },
+      {
+        "high_drug": "hexamethylenebisacetamide",
+        "high_target": "AKT1",
+        "high_raw_bracket": 0.8946694284677505,
+        "high_projected_bracket": 22.500250881626492,
+        "high_on_target_enrichment": 0.38933555080945226,
+        "high_n_celllines": 7,
+        "low_drug": "hydroxyfasudil",
+        "low_target": "PKIA",
+        "low_raw_bracket": 0.8785808905959129,
+        "low_projected_bracket": 0.8886316461222512,
+        "low_on_target_enrichment": 0.0031234619795181967,
+        "low_n_celllines": 8,
+        "raw_bracket_diff": 0.016088537871837616,
+        "projected_bracket_diff": 21.61161923550424
+      },
+      {
+        "high_drug": "hexamethylenebisacetamide",
+        "high_target": "AKT1",
+        "high_raw_bracket": 0.8946694284677505,
+        "high_projected_bracket": 22.500250881626492,
+        "high_on_target_enrichment": 0.38933555080945226,
+        "high_n_celllines": 7,
+        "low_drug": "17-hydroxyprogesterone-caproate",
+        "low_target": "AR",
+        "low_raw_bracket": 0.9437580034136772,
+        "low_projected_bracket": 0.9997033683790101,
+        "low_on_target_enrichment": 0.02058150001575143,
+        "low_n_celllines": 9,
+        "raw_bracket_diff": 0.049088574945926666,
+        "projected_bracket_diff": 21.500547513247483
+      }
+    ],
+    "passes_exploratory": true
+  },
+  "summary": {
+    "passes_primary": true,
+    "passes_a3": true,
+    "passes_a3b": true,
+    "passes_secondary": true,
+    "passes_exploratory": true
+  }
+}

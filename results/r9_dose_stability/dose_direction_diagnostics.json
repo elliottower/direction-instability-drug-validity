@@ -1,0 +1,19 @@
+{
+  "description": "Post-hoc noise-floor diagnostics for R9-DAG dose-direction stability test",
+  "single_replicate_fraction": 0.80,
+  "single_replicate_note": "80% of dose-level groups (drug x cell x dose) contain exactly one replicate profile. The mean signature for these groups is a single z-score vector, and two single-replicate z-score vectors in 978 dimensions have expected cosine near zero regardless of the true underlying direction.",
+  "near_identical_dose_diagnostic": {
+    "dose_ratio_threshold": 1.01,
+    "description": "Pairs where dose ratio < 1.01 (e.g., 9.99 vs 10.00 uM — same intended dose with measurement imprecision). These should have cosine near 1.0 if directions are stable, or near 0 if dominated by noise.",
+    "median_cosine": 0.11,
+    "interpretation": "Median cosine of 0.11 establishes the noise floor. The overall median of 0.19 is barely above it, confirming that single-replicate noise dominates the test."
+  },
+  "stratified_by_dose_range": {
+    "5_to_15_uM": {
+      "description": "Standard pharmacological dose range (includes 10 uM, the modal LINCS dose)",
+      "median_cosine": 0.062,
+      "note": "Worst performance at the standard dose range — consistent with these being dominated by near-identical doses where noise floor is most apparent"
+    }
+  },
+  "conclusion": "The pre-registered R9-DAG criteria cannot be met at this replicate depth. The test lacks statistical power to distinguish genuine dose-dependent direction changes from single-replicate noise in 978 dimensions. A properly powered test would require >= 3 replicates per dose level."
+}

@@ -1,0 +1,4286 @@
+[
+  {
+    "lambda": 0.0,
+    "n_valid_folds": 66,
+    "ts_wins": 0,
+    "win_fraction": 0.0,
+    "wilcoxon_statistic": NaN,
+    "wilcoxon_p": NaN,
+    "mean_delta_rho": 0.0,
+    "std_delta_rho": 0.0,
+    "mean_raw_rho": -0.6018255084029119,
+    "mean_ts_rho": -0.6018255084029119,
+    "per_fold": [
+      {
+        "holdout_cell": "A375",
+        "n_drugs": 8328,
+        "raw_spearman": -0.47996513457048917,
+        "ts_spearman": -0.47996513457048917,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "A549",
+        "n_drugs": 8888,
+        "raw_spearman": -0.49403318734510576,
+        "ts_spearman": -0.49403318734510576,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "A673",
+        "n_drugs": 357,
+        "raw_spearman": -0.7252729602292239,
+        "ts_spearman": -0.7252729602292239,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "AGS",
+        "n_drugs": 356,
+        "raw_spearman": -0.712021235143844,
+        "ts_spearman": -0.712021235143844,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "ASC",
+        "n_drugs": 2345,
+        "raw_spearman": -0.36524341864059784,
+        "ts_spearman": -0.36524341864059784,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "BT20",
+        "n_drugs": 176,
+        "raw_spearman": -0.6997424609289016,
+        "ts_spearman": -0.6997424609289016,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "CL34",
+        "n_drugs": 350,
+        "raw_spearman": -0.541748235845657,
+        "ts_spearman": -0.541748235845657,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "CORL23",
+        "n_drugs": 358,
+        "raw_spearman": -0.6936892993764008,
+        "ts_spearman": -0.6936892993764008,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "COV644",
+        "n_drugs": 353,
+        "raw_spearman": -0.3620286930863347,
+        "ts_spearman": -0.3620286930863347,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "DV90",
+        "n_drugs": 352,
+        "raw_spearman": -0.7158557133769597,
+        "ts_spearman": -0.7158557133769597,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "EFO27",
+        "n_drugs": 356,
+        "raw_spearman": -0.7836738873425616,
+        "ts_spearman": -0.7836738873425616,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "FIBRNPC",
+        "n_drugs": 262,
+        "raw_spearman": -0.44730368975092183,
+        "ts_spearman": -0.44730368975092183,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "H1299",
+        "n_drugs": 354,
+        "raw_spearman": -0.6725485674405582,
+        "ts_spearman": -0.6725485674405582,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "HA1E",
+        "n_drugs": 4540,
+        "raw_spearman": -0.5301092354593512,
+        "ts_spearman": -0.5301092354593512,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "HCC15",
+        "n_drugs": 356,
+        "raw_spearman": -0.6724497680065855,
+        "ts_spearman": -0.6724497680065855,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "HCC515",
+        "n_drugs": 4732,
+        "raw_spearman": -0.4134238403335322,
+        "ts_spearman": -0.4134238403335322,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "HCT116",
+        "n_drugs": 357,
+        "raw_spearman": -0.6396864313486365,
+        "ts_spearman": -0.6396864313486365,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "HEC108",
+        "n_drugs": 357,
+        "raw_spearman": -0.598818222914048,
+        "ts_spearman": -0.598818222914048,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "HEPG2",
+        "n_drugs": 3718,
+        "raw_spearman": -0.5720492780504378,
+        "ts_spearman": -0.5720492780504378,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "HS578T",
+        "n_drugs": 176,
+        "raw_spearman": -0.7050033017829629,
+        "ts_spearman": -0.7050033017829629,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "HT115",
+        "n_drugs": 349,
+        "raw_spearman": -0.5412886925346168,
+        "ts_spearman": -0.5412886925346168,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "HT29",
+        "n_drugs": 8597,
+        "raw_spearman": -0.4995790029890029,
+        "ts_spearman": -0.4995790029890029,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "HUH7",
+        "n_drugs": 95,
+        "raw_spearman": -0.7277295632698768,
+        "ts_spearman": -0.7277295632698768,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "JHUEM2",
+        "n_drugs": 355,
+        "raw_spearman": -0.687937642997578,
+        "ts_spearman": -0.687937642997578,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "JURKAT",
+        "n_drugs": 31,
+        "raw_spearman": -0.5116935483870968,
+        "ts_spearman": -0.5116935483870968,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "LOVO",
+        "n_drugs": 354,
+        "raw_spearman": -0.7787487396168437,
+        "ts_spearman": -0.7787487396168437,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "MCF10A",
+        "n_drugs": 176,
+        "raw_spearman": -0.4903697996918336,
+        "ts_spearman": -0.4903697996918336,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "MCF7",
+        "n_drugs": 8929,
+        "raw_spearman": -0.5558710260331086,
+        "ts_spearman": -0.5558710260331086,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "MDAMB231",
+        "n_drugs": 176,
+        "raw_spearman": -0.7694805194805195,
+        "ts_spearman": -0.7694805194805195,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "MDST8",
+        "n_drugs": 352,
+        "raw_spearman": -0.7226737301099906,
+        "ts_spearman": -0.7226737301099906,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "NCIH1694",
+        "n_drugs": 350,
+        "raw_spearman": -0.457488935769738,
+        "ts_spearman": -0.457488935769738,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "NCIH1836",
+        "n_drugs": 345,
+        "raw_spearman": -0.5115884556713444,
+        "ts_spearman": -0.5115884556713444,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "NCIH2073",
+        "n_drugs": 355,
+        "raw_spearman": -0.7272937951456597,
+        "ts_spearman": -0.7272937951456597,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "NCIH508",
+        "n_drugs": 354,
+        "raw_spearman": -0.5421403825072681,
+        "ts_spearman": -0.5421403825072681,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "NCIH596",
+        "n_drugs": 355,
+        "raw_spearman": -0.7018617513498435,
+        "ts_spearman": -0.7018617513498435,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "NEU",
+        "n_drugs": 2143,
+        "raw_spearman": -0.22318683656383695,
+        "ts_spearman": -0.22318683656383695,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "NKDBA",
+        "n_drugs": 135,
+        "raw_spearman": -0.6237635352648523,
+        "ts_spearman": -0.6237635352648523,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "NOMO1",
+        "n_drugs": 350,
+        "raw_spearman": -0.5961498927688039,
+        "ts_spearman": -0.5961498927688039,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "NPC",
+        "n_drugs": 3014,
+        "raw_spearman": -0.3682756976807558,
+        "ts_spearman": -0.3682756976807558,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "OV7",
+        "n_drugs": 353,
+        "raw_spearman": -0.6661108613382104,
+        "ts_spearman": -0.6661108613382104,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "PC3",
+        "n_drugs": 8606,
+        "raw_spearman": -0.5237634092981319,
+        "ts_spearman": -0.5237634092981319,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "PHH",
+        "n_drugs": 1749,
+        "raw_spearman": -0.32131327348874084,
+        "ts_spearman": -0.32131327348874084,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "PL21",
+        "n_drugs": 349,
+        "raw_spearman": -0.7386717856789984,
+        "ts_spearman": -0.7386717856789984,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "RKO",
+        "n_drugs": 356,
+        "raw_spearman": -0.6387988206835195,
+        "ts_spearman": -0.6387988206835195,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "RMGI",
+        "n_drugs": 350,
+        "raw_spearman": -0.6582304928436733,
+        "ts_spearman": -0.6582304928436733,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "RMUGS",
+        "n_drugs": 358,
+        "raw_spearman": -0.5559966256308471,
+        "ts_spearman": -0.5559966256308471,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "SKB",
+        "n_drugs": 2338,
+        "raw_spearman": -0.37054233389123253,
+        "ts_spearman": -0.37054233389123253,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "SKBR3",
+        "n_drugs": 176,
+        "raw_spearman": -0.6483843275368699,
+        "ts_spearman": -0.6483843275368699,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "SKLU1",
+        "n_drugs": 349,
+        "raw_spearman": -0.7828845258091379,
+        "ts_spearman": -0.7828845258091379,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "SKM1",
+        "n_drugs": 350,
+        "raw_spearman": -0.7497791352232613,
+        "ts_spearman": -0.7497791352232613,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "SKMEL1",
+        "n_drugs": 358,
+        "raw_spearman": -0.5968586093032628,
+        "ts_spearman": -0.5968586093032628,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "SKMEL28",
+        "n_drugs": 355,
+        "raw_spearman": -0.7293250648434505,
+        "ts_spearman": -0.7293250648434505,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "SNGM",
+        "n_drugs": 350,
+        "raw_spearman": -0.6646463119815555,
+        "ts_spearman": -0.6646463119815555,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "SNU1040",
+        "n_drugs": 355,
+        "raw_spearman": -0.6048589001156052,
+        "ts_spearman": -0.6048589001156052,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "SNUC4",
+        "n_drugs": 356,
+        "raw_spearman": -0.7590404289584168,
+        "ts_spearman": -0.7590404289584168,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "SNUC5",
+        "n_drugs": 345,
+        "raw_spearman": -0.531072724828606,
+        "ts_spearman": -0.531072724828606,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "SW480",
+        "n_drugs": 357,
+        "raw_spearman": -0.6920543372706562,
+        "ts_spearman": -0.6920543372706562,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "SW620",
+        "n_drugs": 356,
+        "raw_spearman": -0.6809922323099202,
+        "ts_spearman": -0.6809922323099202,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "SW948",
+        "n_drugs": 353,
+        "raw_spearman": -0.7287999188116825,
+        "ts_spearman": -0.7287999188116825,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "T3M10",
+        "n_drugs": 347,
+        "raw_spearman": -0.5318717513192897,
+        "ts_spearman": -0.5318717513192897,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "THP1",
+        "n_drugs": 360,
+        "raw_spearman": -0.6652088364879358,
+        "ts_spearman": -0.6652088364879358,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "TYKNU",
+        "n_drugs": 355,
+        "raw_spearman": -0.5694880384956856,
+        "ts_spearman": -0.5694880384956856,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "U266",
+        "n_drugs": 31,
+        "raw_spearman": -0.5737903225806452,
+        "ts_spearman": -0.5737903225806452,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "U937",
+        "n_drugs": 357,
+        "raw_spearman": -0.7556220655357743,
+        "ts_spearman": -0.7556220655357743,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "VCAP",
+        "n_drugs": 7224,
+        "raw_spearman": -0.41034090081946295,
+        "ts_spearman": -0.41034090081946295,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "WSUDLCL2",
+        "n_drugs": 349,
+        "raw_spearman": -0.710249410701935,
+        "ts_spearman": -0.710249410701935,
+        "ts_wins": false
+      }
+    ]
+  },
+  {
+    "lambda": 0.25,
+    "n_valid_folds": 66,
+    "ts_wins": 54,
+    "win_fraction": 0.8181818181818182,
+    "wilcoxon_statistic": 1921.0,
+    "wilcoxon_p": 9.468517722892664e-08,
+    "mean_delta_rho": 0.07196337320625319,
+    "std_delta_rho": 0.08674114531980674,
+    "mean_raw_rho": -0.6018255084029119,
+    "mean_ts_rho": -0.5298621351966587,
+    "per_fold": [
+      {
+        "holdout_cell": "A375",
+        "n_drugs": 8328,
+        "raw_spearman": -0.47996513457048917,
+        "ts_spearman": -0.5606887717019223,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "A549",
+        "n_drugs": 8888,
+        "raw_spearman": -0.49403318734510576,
+        "ts_spearman": -0.5747074158518524,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "A673",
+        "n_drugs": 357,
+        "raw_spearman": -0.7252729602292239,
+        "ts_spearman": -0.6475739124976462,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "AGS",
+        "n_drugs": 356,
+        "raw_spearman": -0.712021235143844,
+        "ts_spearman": -0.5970772420378184,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "ASC",
+        "n_drugs": 2345,
+        "raw_spearman": -0.36524341864059784,
+        "ts_spearman": -0.3414363679972214,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "BT20",
+        "n_drugs": 176,
+        "raw_spearman": -0.6997424609289016,
+        "ts_spearman": -0.5546423068456967,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CL34",
+        "n_drugs": 350,
+        "raw_spearman": -0.541748235845657,
+        "ts_spearman": -0.4342629036038778,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CORL23",
+        "n_drugs": 358,
+        "raw_spearman": -0.6936892993764008,
+        "ts_spearman": -0.5980721477367966,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "COV644",
+        "n_drugs": 353,
+        "raw_spearman": -0.3620286930863347,
+        "ts_spearman": -0.34910185423641515,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "DV90",
+        "n_drugs": 352,
+        "raw_spearman": -0.7158557133769597,
+        "ts_spearman": -0.6139789153245243,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "EFO27",
+        "n_drugs": 356,
+        "raw_spearman": -0.7836738873425616,
+        "ts_spearman": -0.5820756661582184,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "FIBRNPC",
+        "n_drugs": 262,
+        "raw_spearman": -0.44730368975092183,
+        "ts_spearman": -0.3524271446258121,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "H1299",
+        "n_drugs": 354,
+        "raw_spearman": -0.6725485674405582,
+        "ts_spearman": -0.5958423417056813,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HA1E",
+        "n_drugs": 4540,
+        "raw_spearman": -0.5301092354593512,
+        "ts_spearman": -0.5611590376103703,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "HCC15",
+        "n_drugs": 356,
+        "raw_spearman": -0.6724497680065855,
+        "ts_spearman": -0.5699468456475801,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC515",
+        "n_drugs": 4732,
+        "raw_spearman": -0.4134238403335322,
+        "ts_spearman": -0.5667036328170807,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "HCT116",
+        "n_drugs": 357,
+        "raw_spearman": -0.6396864313486365,
+        "ts_spearman": -0.5454705138599286,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEC108",
+        "n_drugs": 357,
+        "raw_spearman": -0.598818222914048,
+        "ts_spearman": -0.5254405949185273,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEPG2",
+        "n_drugs": 3718,
+        "raw_spearman": -0.5720492780504378,
+        "ts_spearman": -0.5485546895566673,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HS578T",
+        "n_drugs": 176,
+        "raw_spearman": -0.7050033017829629,
+        "ts_spearman": -0.5680277349768875,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT115",
+        "n_drugs": 349,
+        "raw_spearman": -0.5412886925346168,
+        "ts_spearman": -0.43071520318432677,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT29",
+        "n_drugs": 8597,
+        "raw_spearman": -0.4995790029890029,
+        "ts_spearman": -0.5473959861000715,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "HUH7",
+        "n_drugs": 95,
+        "raw_spearman": -0.7277295632698768,
+        "ts_spearman": -0.6830207166853303,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JHUEM2",
+        "n_drugs": 355,
+        "raw_spearman": -0.687937642997578,
+        "ts_spearman": -0.5571110532936718,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JURKAT",
+        "n_drugs": 31,
+        "raw_spearman": -0.5116935483870968,
+        "ts_spearman": -0.5245967741935484,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "LOVO",
+        "n_drugs": 354,
+        "raw_spearman": -0.7787487396168437,
+        "ts_spearman": -0.6434249420274467,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF10A",
+        "n_drugs": 176,
+        "raw_spearman": -0.4903697996918336,
+        "ts_spearman": -0.47053268765133177,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF7",
+        "n_drugs": 8929,
+        "raw_spearman": -0.5558710260331086,
+        "ts_spearman": -0.6298533461859218,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "MDAMB231",
+        "n_drugs": 176,
+        "raw_spearman": -0.7694805194805195,
+        "ts_spearman": -0.5968148800352191,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDST8",
+        "n_drugs": 352,
+        "raw_spearman": -0.7226737301099906,
+        "ts_spearman": -0.559030322840521,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1694",
+        "n_drugs": 350,
+        "raw_spearman": -0.457488935769738,
+        "ts_spearman": -0.3556307048570659,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1836",
+        "n_drugs": 345,
+        "raw_spearman": -0.5115884556713444,
+        "ts_spearman": -0.38778324576117645,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH2073",
+        "n_drugs": 355,
+        "raw_spearman": -0.7272937951456597,
+        "ts_spearman": -0.5741546211184456,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH508",
+        "n_drugs": 354,
+        "raw_spearman": -0.5421403825072681,
+        "ts_spearman": -0.4390623763708675,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH596",
+        "n_drugs": 355,
+        "raw_spearman": -0.7018617513498435,
+        "ts_spearman": -0.5587826329525429,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NEU",
+        "n_drugs": 2143,
+        "raw_spearman": -0.22318683656383695,
+        "ts_spearman": -0.2424162418535087,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "NKDBA",
+        "n_drugs": 135,
+        "raw_spearman": -0.6237635352648523,
+        "ts_spearman": -0.6524046434494196,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "NOMO1",
+        "n_drugs": 350,
+        "raw_spearman": -0.5961498927688039,
+        "ts_spearman": -0.5177589554666919,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NPC",
+        "n_drugs": 3014,
+        "raw_spearman": -0.3682756976807558,
+        "ts_spearman": -0.30954883163006197,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "OV7",
+        "n_drugs": 353,
+        "raw_spearman": -0.6661108613382104,
+        "ts_spearman": -0.5336991536336138,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PC3",
+        "n_drugs": 8606,
+        "raw_spearman": -0.5237634092981319,
+        "ts_spearman": -0.6540838004810693,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "PHH",
+        "n_drugs": 1749,
+        "raw_spearman": -0.32131327348874084,
+        "ts_spearman": -0.28708390111680127,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PL21",
+        "n_drugs": 349,
+        "raw_spearman": -0.7386717856789984,
+        "ts_spearman": -0.6348624500684573,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RKO",
+        "n_drugs": 356,
+        "raw_spearman": -0.6387988206835195,
+        "ts_spearman": -0.5845026537280523,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMGI",
+        "n_drugs": 350,
+        "raw_spearman": -0.6582304928436733,
+        "ts_spearman": -0.4897373622875055,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMUGS",
+        "n_drugs": 358,
+        "raw_spearman": -0.5559966256308471,
+        "ts_spearman": -0.4578982586638864,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKB",
+        "n_drugs": 2338,
+        "raw_spearman": -0.37054233389123253,
+        "ts_spearman": -0.3576443834978488,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKBR3",
+        "n_drugs": 176,
+        "raw_spearman": -0.6483843275368699,
+        "ts_spearman": -0.5383623156504513,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKLU1",
+        "n_drugs": 349,
+        "raw_spearman": -0.7828845258091379,
+        "ts_spearman": -0.6061097858766074,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKM1",
+        "n_drugs": 350,
+        "raw_spearman": -0.7497791352232613,
+        "ts_spearman": -0.5603234078878778,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL1",
+        "n_drugs": 358,
+        "raw_spearman": -0.5968586093032628,
+        "ts_spearman": -0.5427052413221868,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL28",
+        "n_drugs": 355,
+        "raw_spearman": -0.7293250648434505,
+        "ts_spearman": -0.6272860166138711,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNGM",
+        "n_drugs": 350,
+        "raw_spearman": -0.6646463119815555,
+        "ts_spearman": -0.5276109309347132,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNU1040",
+        "n_drugs": 355,
+        "raw_spearman": -0.6048589001156052,
+        "ts_spearman": -0.5405628974762688,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC4",
+        "n_drugs": 356,
+        "raw_spearman": -0.7590404289584168,
+        "ts_spearman": -0.5761689768485333,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC5",
+        "n_drugs": 345,
+        "raw_spearman": -0.531072724828606,
+        "ts_spearman": -0.4719381403531331,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW480",
+        "n_drugs": 357,
+        "raw_spearman": -0.6920543372706562,
+        "ts_spearman": -0.5143821385185798,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW620",
+        "n_drugs": 356,
+        "raw_spearman": -0.6809922323099202,
+        "ts_spearman": -0.5751987137630808,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW948",
+        "n_drugs": 353,
+        "raw_spearman": -0.7287999188116825,
+        "ts_spearman": -0.5861117234184647,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "T3M10",
+        "n_drugs": 347,
+        "raw_spearman": -0.5318717513192897,
+        "ts_spearman": -0.45434341682084944,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "THP1",
+        "n_drugs": 360,
+        "raw_spearman": -0.6652088364879358,
+        "ts_spearman": -0.6130137321018424,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "TYKNU",
+        "n_drugs": 355,
+        "raw_spearman": -0.5694880384956856,
+        "ts_spearman": -0.5592729486804661,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U266",
+        "n_drugs": 31,
+        "raw_spearman": -0.5737903225806452,
+        "ts_spearman": -0.5858870967741936,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "U937",
+        "n_drugs": 357,
+        "raw_spearman": -0.7556220655357743,
+        "ts_spearman": -0.5501598542875816,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "VCAP",
+        "n_drugs": 7224,
+        "raw_spearman": -0.41034090081946295,
+        "ts_spearman": -0.621466115861557,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "WSUDLCL2",
+        "n_drugs": 349,
+        "raw_spearman": -0.710249410701935,
+        "ts_spearman": -0.5532573009442883,
+        "ts_wins": true
+      }
+    ]
+  },
+  {
+    "lambda": 0.5,
+    "n_valid_folds": 66,
+    "ts_wins": 65,
+    "win_fraction": 0.9848484848484849,
+    "wilcoxon_statistic": 2210.0,
+    "wilcoxon_p": 8.590668364451256e-13,
+    "mean_delta_rho": 0.9889547787808148,
+    "std_delta_rho": 0.48566511695051795,
+    "mean_raw_rho": -0.6018255084029119,
+    "mean_ts_rho": 0.3871292703779028,
+    "per_fold": [
+      {
+        "holdout_cell": "A375",
+        "n_drugs": 8328,
+        "raw_spearman": -0.47996513457048917,
+        "ts_spearman": -0.3644507060419214,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "A549",
+        "n_drugs": 8888,
+        "raw_spearman": -0.49403318734510576,
+        "ts_spearman": -0.4101528289706915,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "A673",
+        "n_drugs": 357,
+        "raw_spearman": -0.7252729602292239,
+        "ts_spearman": 0.7176062314951718,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "AGS",
+        "n_drugs": 356,
+        "raw_spearman": -0.712021235143844,
+        "ts_spearman": 0.7095748316734511,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "ASC",
+        "n_drugs": 2345,
+        "raw_spearman": -0.36524341864059784,
+        "ts_spearman": 0.21802123214223135,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "BT20",
+        "n_drugs": 176,
+        "raw_spearman": -0.6997424609289016,
+        "ts_spearman": 0.4803764032577592,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CL34",
+        "n_drugs": 350,
+        "raw_spearman": -0.541748235845657,
+        "ts_spearman": 0.5272207703153261,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CORL23",
+        "n_drugs": 358,
+        "raw_spearman": -0.6936892993764008,
+        "ts_spearman": 0.6879038072022198,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "COV644",
+        "n_drugs": 353,
+        "raw_spearman": -0.3620286930863347,
+        "ts_spearman": 0.3479426836667438,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "DV90",
+        "n_drugs": 352,
+        "raw_spearman": -0.7158557133769597,
+        "ts_spearman": 0.712275566737323,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "EFO27",
+        "n_drugs": 356,
+        "raw_spearman": -0.7836738873425616,
+        "ts_spearman": 0.7759277409333729,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "FIBRNPC",
+        "n_drugs": 262,
+        "raw_spearman": -0.44730368975092183,
+        "ts_spearman": 0.13366301785107218,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "H1299",
+        "n_drugs": 354,
+        "raw_spearman": -0.6725485674405582,
+        "ts_spearman": 0.6687793539940368,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HA1E",
+        "n_drugs": 4540,
+        "raw_spearman": -0.5301092354593512,
+        "ts_spearman": -0.07339886482222793,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC15",
+        "n_drugs": 356,
+        "raw_spearman": -0.6724497680065855,
+        "ts_spearman": 0.662006673218425,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC515",
+        "n_drugs": 4732,
+        "raw_spearman": -0.4134238403335322,
+        "ts_spearman": -0.2197079631724113,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCT116",
+        "n_drugs": 357,
+        "raw_spearman": -0.6396864313486365,
+        "ts_spearman": 0.6339442311354271,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEC108",
+        "n_drugs": 357,
+        "raw_spearman": -0.598818222914048,
+        "ts_spearman": 0.5917984543638559,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEPG2",
+        "n_drugs": 3718,
+        "raw_spearman": -0.5720492780504378,
+        "ts_spearman": -0.0022355975623095862,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HS578T",
+        "n_drugs": 176,
+        "raw_spearman": -0.7050033017829629,
+        "ts_spearman": 0.4314153642967203,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT115",
+        "n_drugs": 349,
+        "raw_spearman": -0.5412886925346168,
+        "ts_spearman": 0.5298059197990034,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT29",
+        "n_drugs": 8597,
+        "raw_spearman": -0.4995790029890029,
+        "ts_spearman": -0.3583786814252705,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HUH7",
+        "n_drugs": 95,
+        "raw_spearman": -0.7277295632698768,
+        "ts_spearman": -0.38206886898096304,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JHUEM2",
+        "n_drugs": 355,
+        "raw_spearman": -0.687937642997578,
+        "ts_spearman": 0.6793788440028861,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JURKAT",
+        "n_drugs": 31,
+        "raw_spearman": -0.5116935483870968,
+        "ts_spearman": -0.22500000000000003,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "LOVO",
+        "n_drugs": 354,
+        "raw_spearman": -0.7787487396168437,
+        "ts_spearman": 0.7700225262846103,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF10A",
+        "n_drugs": 176,
+        "raw_spearman": -0.4903697996918336,
+        "ts_spearman": 0.20756548536209554,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF7",
+        "n_drugs": 8929,
+        "raw_spearman": -0.5558710260331086,
+        "ts_spearman": -0.43944923878092595,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDAMB231",
+        "n_drugs": 176,
+        "raw_spearman": -0.7694805194805195,
+        "ts_spearman": 0.5080409421087387,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDST8",
+        "n_drugs": 352,
+        "raw_spearman": -0.7226737301099906,
+        "ts_spearman": 0.713403923743867,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1694",
+        "n_drugs": 350,
+        "raw_spearman": -0.457488935769738,
+        "ts_spearman": 0.44361472338549707,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1836",
+        "n_drugs": 345,
+        "raw_spearman": -0.5115884556713444,
+        "ts_spearman": 0.506396079416939,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH2073",
+        "n_drugs": 355,
+        "raw_spearman": -0.7272937951456597,
+        "ts_spearman": 0.7197896577714239,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH508",
+        "n_drugs": 354,
+        "raw_spearman": -0.5421403825072681,
+        "ts_spearman": 0.5280803561465784,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH596",
+        "n_drugs": 355,
+        "raw_spearman": -0.7018617513498435,
+        "ts_spearman": 0.6883177181542885,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NEU",
+        "n_drugs": 2143,
+        "raw_spearman": -0.22318683656383695,
+        "ts_spearman": -0.0489601316504761,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NKDBA",
+        "n_drugs": 135,
+        "raw_spearman": -0.6237635352648523,
+        "ts_spearman": -0.5012486586674472,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NOMO1",
+        "n_drugs": 350,
+        "raw_spearman": -0.5961498927688039,
+        "ts_spearman": 0.5747976951415347,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NPC",
+        "n_drugs": 3014,
+        "raw_spearman": -0.3682756976807558,
+        "ts_spearman": 0.1254342965069845,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "OV7",
+        "n_drugs": 353,
+        "raw_spearman": -0.6661108613382104,
+        "ts_spearman": 0.6564787513585948,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PC3",
+        "n_drugs": 8606,
+        "raw_spearman": -0.5237634092981319,
+        "ts_spearman": -0.4779859847856637,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PHH",
+        "n_drugs": 1749,
+        "raw_spearman": -0.32131327348874084,
+        "ts_spearman": 0.16287675038143495,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PL21",
+        "n_drugs": 349,
+        "raw_spearman": -0.7386717856789984,
+        "ts_spearman": 0.7321704518187078,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RKO",
+        "n_drugs": 356,
+        "raw_spearman": -0.6387988206835195,
+        "ts_spearman": 0.6354651371547194,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMGI",
+        "n_drugs": 350,
+        "raw_spearman": -0.6582304928436733,
+        "ts_spearman": 0.6452124507138834,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMUGS",
+        "n_drugs": 358,
+        "raw_spearman": -0.5559966256308471,
+        "ts_spearman": 0.5429100259328455,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKB",
+        "n_drugs": 2338,
+        "raw_spearman": -0.37054233389123253,
+        "ts_spearman": 0.2022642349620294,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKBR3",
+        "n_drugs": 176,
+        "raw_spearman": -0.6483843275368699,
+        "ts_spearman": 0.3825467752586397,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKLU1",
+        "n_drugs": 349,
+        "raw_spearman": -0.7828845258091379,
+        "ts_spearman": 0.7713577145115531,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKM1",
+        "n_drugs": 350,
+        "raw_spearman": -0.7497791352232613,
+        "ts_spearman": 0.7271579359831508,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL1",
+        "n_drugs": 358,
+        "raw_spearman": -0.5968586093032628,
+        "ts_spearman": 0.5843871480526043,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL28",
+        "n_drugs": 355,
+        "raw_spearman": -0.7293250648434505,
+        "ts_spearman": 0.7176937457922167,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNGM",
+        "n_drugs": 350,
+        "raw_spearman": -0.6646463119815555,
+        "ts_spearman": 0.6578697202192905,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNU1040",
+        "n_drugs": 355,
+        "raw_spearman": -0.6048589001156052,
+        "ts_spearman": 0.5868352372854534,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC4",
+        "n_drugs": 356,
+        "raw_spearman": -0.7590404289584168,
+        "ts_spearman": 0.751625150772447,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC5",
+        "n_drugs": 345,
+        "raw_spearman": -0.531072724828606,
+        "ts_spearman": 0.5223501873206428,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW480",
+        "n_drugs": 357,
+        "raw_spearman": -0.6920543372706562,
+        "ts_spearman": 0.6880465072853573,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW620",
+        "n_drugs": 356,
+        "raw_spearman": -0.6809922323099202,
+        "ts_spearman": 0.6691495968540921,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW948",
+        "n_drugs": 353,
+        "raw_spearman": -0.7287999188116825,
+        "ts_spearman": 0.7216585660222526,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "T3M10",
+        "n_drugs": 347,
+        "raw_spearman": -0.5318717513192897,
+        "ts_spearman": 0.5157289423453055,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "THP1",
+        "n_drugs": 360,
+        "raw_spearman": -0.6652088364879358,
+        "ts_spearman": 0.6559032091297,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "TYKNU",
+        "n_drugs": 355,
+        "raw_spearman": -0.5694880384956856,
+        "ts_spearman": 0.5460341558013095,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U266",
+        "n_drugs": 31,
+        "raw_spearman": -0.5737903225806452,
+        "ts_spearman": -0.28911290322580646,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U937",
+        "n_drugs": 357,
+        "raw_spearman": -0.7556220655357743,
+        "ts_spearman": 0.7191934334464437,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "VCAP",
+        "n_drugs": 7224,
+        "raw_spearman": -0.41034090081946295,
+        "ts_spearman": -0.4520711863901447,
+        "ts_wins": false
+      },
+      {
+        "holdout_cell": "WSUDLCL2",
+        "n_drugs": 349,
+        "raw_spearman": -0.710249410701935,
+        "ts_spearman": 0.7067331009075896,
+        "ts_wins": true
+      }
+    ]
+  },
+  {
+    "lambda": 0.75,
+    "n_valid_folds": 66,
+    "ts_wins": 66,
+    "win_fraction": 1.0,
+    "wilcoxon_statistic": 2211.0,
+    "wilcoxon_p": 8.20474233813614e-13,
+    "mean_delta_rho": 1.0737641083673022,
+    "std_delta_rho": 0.40868224492949556,
+    "mean_raw_rho": -0.6018255084029119,
+    "mean_ts_rho": 0.47193859996439025,
+    "per_fold": [
+      {
+        "holdout_cell": "A375",
+        "n_drugs": 8328,
+        "raw_spearman": -0.47996513457048917,
+        "ts_spearman": -0.22261643711337253,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "A549",
+        "n_drugs": 8888,
+        "raw_spearman": -0.49403318734510576,
+        "ts_spearman": -0.26881635844090673,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "A673",
+        "n_drugs": 357,
+        "raw_spearman": -0.7252729602292239,
+        "ts_spearman": 0.7244904364357004,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "AGS",
+        "n_drugs": 356,
+        "raw_spearman": -0.712021235143844,
+        "ts_spearman": 0.7139380898743418,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "ASC",
+        "n_drugs": 2345,
+        "raw_spearman": -0.36524341864059784,
+        "ts_spearman": 0.33949898368784226,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "BT20",
+        "n_drugs": 176,
+        "raw_spearman": -0.6997424609289016,
+        "ts_spearman": 0.6394320933303984,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CL34",
+        "n_drugs": 350,
+        "raw_spearman": -0.541748235845657,
+        "ts_spearman": 0.5372068110176993,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CORL23",
+        "n_drugs": 358,
+        "raw_spearman": -0.6936892993764008,
+        "ts_spearman": 0.6941352224430333,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "COV644",
+        "n_drugs": 353,
+        "raw_spearman": -0.3620286930863347,
+        "ts_spearman": 0.35831438211761835,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "DV90",
+        "n_drugs": 352,
+        "raw_spearman": -0.7158557133769597,
+        "ts_spearman": 0.7165199059674979,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "EFO27",
+        "n_drugs": 356,
+        "raw_spearman": -0.7836738873425616,
+        "ts_spearman": 0.7825685108669199,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "FIBRNPC",
+        "n_drugs": 262,
+        "raw_spearman": -0.44730368975092183,
+        "ts_spearman": 0.31935860647739006,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "H1299",
+        "n_drugs": 354,
+        "raw_spearman": -0.6725485674405582,
+        "ts_spearman": 0.6740988302697541,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HA1E",
+        "n_drugs": 4540,
+        "raw_spearman": -0.5301092354593512,
+        "ts_spearman": 0.18660167919355866,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC15",
+        "n_drugs": 356,
+        "raw_spearman": -0.6724497680065855,
+        "ts_spearman": 0.669439239535029,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC515",
+        "n_drugs": 4732,
+        "raw_spearman": -0.4134238403335322,
+        "ts_spearman": 0.05776964358736684,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCT116",
+        "n_drugs": 357,
+        "raw_spearman": -0.6396864313486365,
+        "ts_spearman": 0.6408497992128871,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEC108",
+        "n_drugs": 357,
+        "raw_spearman": -0.598818222914048,
+        "ts_spearman": 0.5985914044231716,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEPG2",
+        "n_drugs": 3718,
+        "raw_spearman": -0.5720492780504378,
+        "ts_spearman": 0.2798224603657995,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HS578T",
+        "n_drugs": 176,
+        "raw_spearman": -0.7050033017829629,
+        "ts_spearman": 0.6352454325335681,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT115",
+        "n_drugs": 349,
+        "raw_spearman": -0.5412886925346168,
+        "ts_spearman": 0.5407963639956525,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT29",
+        "n_drugs": 8597,
+        "raw_spearman": -0.4995790029890029,
+        "ts_spearman": -0.21928812613467716,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HUH7",
+        "n_drugs": 95,
+        "raw_spearman": -0.7277295632698768,
+        "ts_spearman": 0.10452127659574469,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JHUEM2",
+        "n_drugs": 355,
+        "raw_spearman": -0.687937642997578,
+        "ts_spearman": 0.6871439645298951,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JURKAT",
+        "n_drugs": 31,
+        "raw_spearman": -0.5116935483870968,
+        "ts_spearman": 0.24879032258064518,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "LOVO",
+        "n_drugs": 354,
+        "raw_spearman": -0.7787487396168437,
+        "ts_spearman": 0.7765262724375253,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF10A",
+        "n_drugs": 176,
+        "raw_spearman": -0.4903697996918336,
+        "ts_spearman": 0.3898283072859345,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF7",
+        "n_drugs": 8929,
+        "raw_spearman": -0.5558710260331086,
+        "ts_spearman": -0.2862429352912494,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDAMB231",
+        "n_drugs": 176,
+        "raw_spearman": -0.7694805194805195,
+        "ts_spearman": 0.6927382786704821,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDST8",
+        "n_drugs": 352,
+        "raw_spearman": -0.7226737301099906,
+        "ts_spearman": 0.7203567600168166,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1694",
+        "n_drugs": 350,
+        "raw_spearman": -0.457488935769738,
+        "ts_spearman": 0.4555123831914663,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1836",
+        "n_drugs": 345,
+        "raw_spearman": -0.5115884556713444,
+        "ts_spearman": 0.5143713799774398,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH2073",
+        "n_drugs": 355,
+        "raw_spearman": -0.7272937951456597,
+        "ts_spearman": 0.7254781785360804,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH508",
+        "n_drugs": 354,
+        "raw_spearman": -0.5421403825072681,
+        "ts_spearman": 0.5386170578954594,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH596",
+        "n_drugs": 355,
+        "raw_spearman": -0.7018617513498435,
+        "ts_spearman": 0.6975819495146465,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NEU",
+        "n_drugs": 2143,
+        "raw_spearman": -0.22318683656383695,
+        "ts_spearman": 0.056537215878125935,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NKDBA",
+        "n_drugs": 135,
+        "raw_spearman": -0.6237635352648523,
+        "ts_spearman": -0.21996878353331384,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NOMO1",
+        "n_drugs": 350,
+        "raw_spearman": -0.5961498927688039,
+        "ts_spearman": 0.5838959385091189,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NPC",
+        "n_drugs": 3014,
+        "raw_spearman": -0.3682756976807558,
+        "ts_spearman": 0.2405931201949054,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "OV7",
+        "n_drugs": 353,
+        "raw_spearman": -0.6661108613382104,
+        "ts_spearman": 0.663965754680332,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PC3",
+        "n_drugs": 8606,
+        "raw_spearman": -0.5237634092981319,
+        "ts_spearman": -0.33138818945051857,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PHH",
+        "n_drugs": 1749,
+        "raw_spearman": -0.32131327348874084,
+        "ts_spearman": 0.28966595099128234,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PL21",
+        "n_drugs": 349,
+        "raw_spearman": -0.7386717856789984,
+        "ts_spearman": 0.7370446172738435,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RKO",
+        "n_drugs": 356,
+        "raw_spearman": -0.6387988206835195,
+        "ts_spearman": 0.6405438579926352,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMGI",
+        "n_drugs": 350,
+        "raw_spearman": -0.6582304928436733,
+        "ts_spearman": 0.654698615615521,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMUGS",
+        "n_drugs": 358,
+        "raw_spearman": -0.5559966256308471,
+        "ts_spearman": 0.5542513795172758,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKB",
+        "n_drugs": 2338,
+        "raw_spearman": -0.37054233389123253,
+        "ts_spearman": 0.3352871942293127,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKBR3",
+        "n_drugs": 176,
+        "raw_spearman": -0.6483843275368699,
+        "ts_spearman": 0.5759850319172353,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKLU1",
+        "n_drugs": 349,
+        "raw_spearman": -0.7828845258091379,
+        "ts_spearman": 0.7781681652010671,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKM1",
+        "n_drugs": 350,
+        "raw_spearman": -0.7497791352232613,
+        "ts_spearman": 0.735510284048966,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL1",
+        "n_drugs": 358,
+        "raw_spearman": -0.5968586093032628,
+        "ts_spearman": 0.5945735478175336,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL28",
+        "n_drugs": 355,
+        "raw_spearman": -0.7293250648434505,
+        "ts_spearman": 0.7262726616794656,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNGM",
+        "n_drugs": 350,
+        "raw_spearman": -0.6646463119815555,
+        "ts_spearman": 0.664447313272528,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNU1040",
+        "n_drugs": 355,
+        "raw_spearman": -0.6048589001156052,
+        "ts_spearman": 0.5972077753130859,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC4",
+        "n_drugs": 356,
+        "raw_spearman": -0.7590404289584168,
+        "ts_spearman": 0.7583254982638729,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC5",
+        "n_drugs": 345,
+        "raw_spearman": -0.531072724828606,
+        "ts_spearman": 0.5306443128751527,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW480",
+        "n_drugs": 357,
+        "raw_spearman": -0.6920543372706562,
+        "ts_spearman": 0.6946648598551843,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW620",
+        "n_drugs": 356,
+        "raw_spearman": -0.6809922323099202,
+        "ts_spearman": 0.6775803532364045,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW948",
+        "n_drugs": 353,
+        "raw_spearman": -0.7287999188116825,
+        "ts_spearman": 0.7274178623028673,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "T3M10",
+        "n_drugs": 347,
+        "raw_spearman": -0.5318717513192897,
+        "ts_spearman": 0.5281702155035989,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "THP1",
+        "n_drugs": 360,
+        "raw_spearman": -0.6652088364879358,
+        "ts_spearman": 0.6589173784777146,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "TYKNU",
+        "n_drugs": 355,
+        "raw_spearman": -0.5694880384956856,
+        "ts_spearman": 0.5589556382285333,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U266",
+        "n_drugs": 31,
+        "raw_spearman": -0.5737903225806452,
+        "ts_spearman": 0.3395161290322581,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U937",
+        "n_drugs": 357,
+        "raw_spearman": -0.7556220655357743,
+        "ts_spearman": 0.7366547648498858,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "VCAP",
+        "n_drugs": 7224,
+        "raw_spearman": -0.41034090081946295,
+        "ts_spearman": -0.31612669226694734,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "WSUDLCL2",
+        "n_drugs": 349,
+        "raw_spearman": -0.710249410701935,
+        "ts_spearman": 0.7127556565556762,
+        "ts_wins": true
+      }
+    ]
+  },
+  {
+    "lambda": 1.0,
+    "n_valid_folds": 66,
+    "ts_wins": 66,
+    "win_fraction": 1.0,
+    "wilcoxon_statistic": 2211.0,
+    "wilcoxon_p": 8.20474233813614e-13,
+    "mean_delta_rho": 1.0982860834564099,
+    "std_delta_rho": 0.3832312612904455,
+    "mean_raw_rho": -0.6018255084029119,
+    "mean_ts_rho": 0.49646057505349783,
+    "per_fold": [
+      {
+        "holdout_cell": "A375",
+        "n_drugs": 8328,
+        "raw_spearman": -0.47996513457048917,
+        "ts_spearman": -0.15477623891863757,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "A549",
+        "n_drugs": 8888,
+        "raw_spearman": -0.49403318734510576,
+        "ts_spearman": -0.20121680910182346,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "A673",
+        "n_drugs": 357,
+        "raw_spearman": -0.7252729602292239,
+        "ts_spearman": 0.7247465303364458,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "AGS",
+        "n_drugs": 356,
+        "raw_spearman": -0.712021235143844,
+        "ts_spearman": 0.7135593468278274,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "ASC",
+        "n_drugs": 2345,
+        "raw_spearman": -0.36524341864059784,
+        "ts_spearman": 0.34615812173028615,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "BT20",
+        "n_drugs": 176,
+        "raw_spearman": -0.6997424609289016,
+        "ts_spearman": 0.6665903587937487,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CL34",
+        "n_drugs": 350,
+        "raw_spearman": -0.541748235845657,
+        "ts_spearman": 0.538104124465156,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CORL23",
+        "n_drugs": 358,
+        "raw_spearman": -0.6936892993764008,
+        "ts_spearman": 0.6938953916793371,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "COV644",
+        "n_drugs": 353,
+        "raw_spearman": -0.3620286930863347,
+        "ts_spearman": 0.35885345508670996,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "DV90",
+        "n_drugs": 352,
+        "raw_spearman": -0.7158557133769597,
+        "ts_spearman": 0.71648441266005,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "EFO27",
+        "n_drugs": 356,
+        "raw_spearman": -0.7836738873425616,
+        "ts_spearman": 0.7831110921976006,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "FIBRNPC",
+        "n_drugs": 262,
+        "raw_spearman": -0.44730368975092183,
+        "ts_spearman": 0.33974886994142617,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "H1299",
+        "n_drugs": 354,
+        "raw_spearman": -0.6725485674405582,
+        "ts_spearman": 0.674106945412814,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HA1E",
+        "n_drugs": 4540,
+        "raw_spearman": -0.5301092354593512,
+        "ts_spearman": 0.24817242103701528,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC15",
+        "n_drugs": 356,
+        "raw_spearman": -0.6724497680065855,
+        "ts_spearman": 0.669969852159886,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC515",
+        "n_drugs": 4732,
+        "raw_spearman": -0.4134238403335322,
+        "ts_spearman": 0.11915679429044945,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCT116",
+        "n_drugs": 357,
+        "raw_spearman": -0.6396864313486365,
+        "ts_spearman": 0.6409800879739255,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEC108",
+        "n_drugs": 357,
+        "raw_spearman": -0.598818222914048,
+        "ts_spearman": 0.5986676259858034,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEPG2",
+        "n_drugs": 3718,
+        "raw_spearman": -0.5720492780504378,
+        "ts_spearman": 0.33577387449027957,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HS578T",
+        "n_drugs": 176,
+        "raw_spearman": -0.7050033017829629,
+        "ts_spearman": 0.65607307946291,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT115",
+        "n_drugs": 349,
+        "raw_spearman": -0.5412886925346168,
+        "ts_spearman": 0.5403624712408429,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT29",
+        "n_drugs": 8597,
+        "raw_spearman": -0.4995790029890029,
+        "ts_spearman": -0.1515056112992271,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HUH7",
+        "n_drugs": 95,
+        "raw_spearman": -0.7277295632698768,
+        "ts_spearman": 0.3026735722284435,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JHUEM2",
+        "n_drugs": 355,
+        "raw_spearman": -0.687937642997578,
+        "ts_spearman": 0.6877150160532803,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JURKAT",
+        "n_drugs": 31,
+        "raw_spearman": -0.5116935483870968,
+        "ts_spearman": 0.40725806451612906,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "LOVO",
+        "n_drugs": 354,
+        "raw_spearman": -0.7787487396168437,
+        "ts_spearman": 0.7768430335216272,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF10A",
+        "n_drugs": 176,
+        "raw_spearman": -0.4903697996918336,
+        "ts_spearman": 0.4112942989214176,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF7",
+        "n_drugs": 8929,
+        "raw_spearman": -0.5558710260331086,
+        "ts_spearman": -0.2084697005670412,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDAMB231",
+        "n_drugs": 176,
+        "raw_spearman": -0.7694805194805195,
+        "ts_spearman": 0.7122562183579133,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDST8",
+        "n_drugs": 352,
+        "raw_spearman": -0.7226737301099906,
+        "ts_spearman": 0.7211178025625615,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1694",
+        "n_drugs": 350,
+        "raw_spearman": -0.457488935769738,
+        "ts_spearman": 0.45597923248353045,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1836",
+        "n_drugs": 345,
+        "raw_spearman": -0.5115884556713444,
+        "ts_spearman": 0.5145502258952525,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH2073",
+        "n_drugs": 355,
+        "raw_spearman": -0.7272937951456597,
+        "ts_spearman": 0.7261956810372807,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH508",
+        "n_drugs": 354,
+        "raw_spearman": -0.5421403825072681,
+        "ts_spearman": 0.539737488647253,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH596",
+        "n_drugs": 355,
+        "raw_spearman": -0.7018617513498435,
+        "ts_spearman": 0.6977506631868913,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NEU",
+        "n_drugs": 2143,
+        "raw_spearman": -0.22318683656383695,
+        "ts_spearman": 0.08258259809310929,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NKDBA",
+        "n_drugs": 135,
+        "raw_spearman": -0.6237635352648523,
+        "ts_spearman": 0.014871719832211496,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NOMO1",
+        "n_drugs": 350,
+        "raw_spearman": -0.5961498927688039,
+        "ts_spearman": 0.5873446896942599,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NPC",
+        "n_drugs": 3014,
+        "raw_spearman": -0.3682756976807558,
+        "ts_spearman": 0.2665334811053755,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "OV7",
+        "n_drugs": 353,
+        "raw_spearman": -0.6661108613382104,
+        "ts_spearman": 0.6643108595922252,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PC3",
+        "n_drugs": 8606,
+        "raw_spearman": -0.5237634092981319,
+        "ts_spearman": -0.2581004903055204,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PHH",
+        "n_drugs": 1749,
+        "raw_spearman": -0.32131327348874084,
+        "ts_spearman": 0.29674329608045763,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PL21",
+        "n_drugs": 349,
+        "raw_spearman": -0.7386717856789984,
+        "ts_spearman": 0.7374940364447329,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RKO",
+        "n_drugs": 356,
+        "raw_spearman": -0.6387988206835195,
+        "ts_spearman": 0.6405590183533455,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMGI",
+        "n_drugs": 350,
+        "raw_spearman": -0.6582304928436733,
+        "ts_spearman": 0.654847794675875,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMUGS",
+        "n_drugs": 358,
+        "raw_spearman": -0.5559966256308471,
+        "ts_spearman": 0.5548918871948025,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKB",
+        "n_drugs": 2338,
+        "raw_spearman": -0.37054233389123253,
+        "ts_spearman": 0.3446178488939509,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKBR3",
+        "n_drugs": 176,
+        "raw_spearman": -0.6483843275368699,
+        "ts_spearman": 0.5959432093330399,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKLU1",
+        "n_drugs": 349,
+        "raw_spearman": -0.7828845258091379,
+        "ts_spearman": 0.7791324967888548,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKM1",
+        "n_drugs": 350,
+        "raw_spearman": -0.7497791352232613,
+        "ts_spearman": 0.7368845226724883,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL1",
+        "n_drugs": 358,
+        "raw_spearman": -0.5968586093032628,
+        "ts_spearman": 0.5950443170374389,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL28",
+        "n_drugs": 355,
+        "raw_spearman": -0.7293250648434505,
+        "ts_spearman": 0.7264301098918785,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNGM",
+        "n_drugs": 350,
+        "raw_spearman": -0.6646463119815555,
+        "ts_spearman": 0.6642231248534973,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNU1040",
+        "n_drugs": 355,
+        "raw_spearman": -0.6048589001156052,
+        "ts_spearman": 0.598076556846315,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC4",
+        "n_drugs": 356,
+        "raw_spearman": -0.7590404289584168,
+        "ts_spearman": 0.7584536964018082,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC5",
+        "n_drugs": 345,
+        "raw_spearman": -0.531072724828606,
+        "ts_spearman": 0.5312565386885801,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW480",
+        "n_drugs": 357,
+        "raw_spearman": -0.6920543372706562,
+        "ts_spearman": 0.6946690797340844,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW620",
+        "n_drugs": 356,
+        "raw_spearman": -0.6809922323099202,
+        "ts_spearman": 0.6780628250667255,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW948",
+        "n_drugs": 353,
+        "raw_spearman": -0.7287999188116825,
+        "ts_spearman": 0.7278450830870767,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "T3M10",
+        "n_drugs": 347,
+        "raw_spearman": -0.5318717513192897,
+        "ts_spearman": 0.5288167205564482,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "THP1",
+        "n_drugs": 360,
+        "raw_spearman": -0.6652088364879358,
+        "ts_spearman": 0.6608891015105569,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "TYKNU",
+        "n_drugs": 355,
+        "raw_spearman": -0.5694880384956856,
+        "ts_spearman": 0.5602726241279328,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U266",
+        "n_drugs": 31,
+        "raw_spearman": -0.5737903225806452,
+        "ts_spearman": 0.533467741935484,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U937",
+        "n_drugs": 357,
+        "raw_spearman": -0.7556220655357743,
+        "ts_spearman": 0.7391492407646632,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "VCAP",
+        "n_drugs": 7224,
+        "raw_spearman": -0.41034090081946295,
+        "ts_spearman": -0.24326345283468206,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "WSUDLCL2",
+        "n_drugs": 349,
+        "raw_spearman": -0.710249410701935,
+        "ts_spearman": 0.7124298841164762,
+        "ts_wins": true
+      }
+    ]
+  },
+  {
+    "lambda": 1.5,
+    "n_valid_folds": 66,
+    "ts_wins": 66,
+    "win_fraction": 1.0,
+    "wilcoxon_statistic": 2211.0,
+    "wilcoxon_p": 8.20474233813614e-13,
+    "mean_delta_rho": 1.113451603552993,
+    "std_delta_rho": 0.36407050327530294,
+    "mean_raw_rho": -0.6018255084029119,
+    "mean_ts_rho": 0.5116260951500813,
+    "per_fold": [
+      {
+        "holdout_cell": "A375",
+        "n_drugs": 8328,
+        "raw_spearman": -0.47996513457048917,
+        "ts_spearman": -0.08100506988846522,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "A549",
+        "n_drugs": 8888,
+        "raw_spearman": -0.49403318734510576,
+        "ts_spearman": -0.12587661107099798,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "A673",
+        "n_drugs": 357,
+        "raw_spearman": -0.7252729602292239,
+        "ts_spearman": 0.7246921993956079,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "AGS",
+        "n_drugs": 356,
+        "raw_spearman": -0.712021235143844,
+        "ts_spearman": 0.7136511069058102,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "ASC",
+        "n_drugs": 2345,
+        "raw_spearman": -0.36524341864059784,
+        "ts_spearman": 0.34992435238331354,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "BT20",
+        "n_drugs": 176,
+        "raw_spearman": -0.6997424609289016,
+        "ts_spearman": 0.6750715386308607,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CL34",
+        "n_drugs": 350,
+        "raw_spearman": -0.541748235845657,
+        "ts_spearman": 0.5381682182828315,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CORL23",
+        "n_drugs": 358,
+        "raw_spearman": -0.6936892993764008,
+        "ts_spearman": 0.6937946993739684,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "COV644",
+        "n_drugs": 353,
+        "raw_spearman": -0.3620286930863347,
+        "ts_spearman": 0.35863766221294907,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "DV90",
+        "n_drugs": 352,
+        "raw_spearman": -0.7158557133769597,
+        "ts_spearman": 0.7164945929110234,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "EFO27",
+        "n_drugs": 356,
+        "raw_spearman": -0.7836738873425616,
+        "ts_spearman": 0.7835454232333857,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "FIBRNPC",
+        "n_drugs": 262,
+        "raw_spearman": -0.44730368975092183,
+        "ts_spearman": 0.3586091463599753,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "H1299",
+        "n_drugs": 354,
+        "raw_spearman": -0.6725485674405582,
+        "ts_spearman": 0.6739294942845724,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HA1E",
+        "n_drugs": 4540,
+        "raw_spearman": -0.5301092354593512,
+        "ts_spearman": 0.2877874179643934,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC15",
+        "n_drugs": 356,
+        "raw_spearman": -0.6724497680065855,
+        "ts_spearman": 0.6701201259107853,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC515",
+        "n_drugs": 4732,
+        "raw_spearman": -0.4134238403335322,
+        "ts_spearman": 0.15923282021079627,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCT116",
+        "n_drugs": 357,
+        "raw_spearman": -0.6396864313486365,
+        "ts_spearman": 0.6406614871169735,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEC108",
+        "n_drugs": 357,
+        "raw_spearman": -0.598818222914048,
+        "ts_spearman": 0.598485907450671,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEPG2",
+        "n_drugs": 3718,
+        "raw_spearman": -0.5720492780504378,
+        "ts_spearman": 0.37157500923538334,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HS578T",
+        "n_drugs": 176,
+        "raw_spearman": -0.7050033017829629,
+        "ts_spearman": 0.6667268324895443,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT115",
+        "n_drugs": 349,
+        "raw_spearman": -0.5412886925346168,
+        "ts_spearman": 0.5407723686253475,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT29",
+        "n_drugs": 8597,
+        "raw_spearman": -0.4995790029890029,
+        "ts_spearman": -0.07744392767525846,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HUH7",
+        "n_drugs": 95,
+        "raw_spearman": -0.7277295632698768,
+        "ts_spearman": 0.43580627099664054,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JHUEM2",
+        "n_drugs": 355,
+        "raw_spearman": -0.687937642997578,
+        "ts_spearman": 0.6880390321360653,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JURKAT",
+        "n_drugs": 31,
+        "raw_spearman": -0.5116935483870968,
+        "ts_spearman": 0.43064516129032265,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "LOVO",
+        "n_drugs": 354,
+        "raw_spearman": -0.7787487396168437,
+        "ts_spearman": 0.7770253537357047,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF10A",
+        "n_drugs": 176,
+        "raw_spearman": -0.4903697996918336,
+        "ts_spearman": 0.4240017609509136,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF7",
+        "n_drugs": 8929,
+        "raw_spearman": -0.5558710260331086,
+        "ts_spearman": -0.1292743409164775,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDAMB231",
+        "n_drugs": 176,
+        "raw_spearman": -0.7694805194805195,
+        "ts_spearman": 0.7228945630640545,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDST8",
+        "n_drugs": 352,
+        "raw_spearman": -0.7226737301099906,
+        "ts_spearman": 0.7212922425387013,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1694",
+        "n_drugs": 350,
+        "raw_spearman": -0.457488935769738,
+        "ts_spearman": 0.45679034114564204,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1836",
+        "n_drugs": 345,
+        "raw_spearman": -0.5115884556713444,
+        "ts_spearman": 0.5139876795034396,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH2073",
+        "n_drugs": 355,
+        "raw_spearman": -0.7272937951456597,
+        "ts_spearman": 0.7264158939544715,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH508",
+        "n_drugs": 354,
+        "raw_spearman": -0.5421403825072681,
+        "ts_spearman": 0.5403547805293373,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH596",
+        "n_drugs": 355,
+        "raw_spearman": -0.7018617513498435,
+        "ts_spearman": 0.6982694107896282,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NEU",
+        "n_drugs": 2143,
+        "raw_spearman": -0.22318683656383695,
+        "ts_spearman": 0.10122161132092707,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NKDBA",
+        "n_drugs": 135,
+        "raw_spearman": -0.6237635352648523,
+        "ts_spearman": 0.1529850746268657,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NOMO1",
+        "n_drugs": 350,
+        "raw_spearman": -0.5961498927688039,
+        "ts_spearman": 0.5889540322778145,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NPC",
+        "n_drugs": 3014,
+        "raw_spearman": -0.3682756976807558,
+        "ts_spearman": 0.2840696833872935,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "OV7",
+        "n_drugs": 353,
+        "raw_spearman": -0.6661108613382104,
+        "ts_spearman": 0.6644456278344981,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PC3",
+        "n_drugs": 8606,
+        "raw_spearman": -0.5237634092981319,
+        "ts_spearman": -0.17819242070375674,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PHH",
+        "n_drugs": 1749,
+        "raw_spearman": -0.32131327348874084,
+        "ts_spearman": 0.3009227625705325,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PL21",
+        "n_drugs": 349,
+        "raw_spearman": -0.7386717856789984,
+        "ts_spearman": 0.7375180318150378,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RKO",
+        "n_drugs": 356,
+        "raw_spearman": -0.6387988206835195,
+        "ts_spearman": 0.6403345386263384,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMGI",
+        "n_drugs": 350,
+        "raw_spearman": -0.6582304928436733,
+        "ts_spearman": 0.6555072053066322,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMUGS",
+        "n_drugs": 358,
+        "raw_spearman": -0.5559966256308471,
+        "ts_spearman": 0.5547736718129153,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKB",
+        "n_drugs": 2338,
+        "raw_spearman": -0.37054233389123253,
+        "ts_spearman": 0.350452600050215,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKBR3",
+        "n_drugs": 176,
+        "raw_spearman": -0.6483843275368699,
+        "ts_spearman": 0.6076117103235747,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKLU1",
+        "n_drugs": 349,
+        "raw_spearman": -0.7828845258091379,
+        "ts_spearman": 0.7796872132906121,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKM1",
+        "n_drugs": 350,
+        "raw_spearman": -0.7497791352232613,
+        "ts_spearman": 0.7380981069233218,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL1",
+        "n_drugs": 358,
+        "raw_spearman": -0.5968586093032628,
+        "ts_spearman": 0.5951695939576247,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL28",
+        "n_drugs": 355,
+        "raw_spearman": -0.7293250648434505,
+        "ts_spearman": 0.7267635138578568,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNGM",
+        "n_drugs": 350,
+        "raw_spearman": -0.6646463119815555,
+        "ts_spearman": 0.664443674758861,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNU1040",
+        "n_drugs": 355,
+        "raw_spearman": -0.6048589001156052,
+        "ts_spearman": 0.5986245409995682,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC4",
+        "n_drugs": 356,
+        "raw_spearman": -0.7590404289584168,
+        "ts_spearman": 0.7581324031432481,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC5",
+        "n_drugs": 345,
+        "raw_spearman": -0.531072724828606,
+        "ts_spearman": 0.5316121849009626,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW480",
+        "n_drugs": 357,
+        "raw_spearman": -0.6920543372706562,
+        "ts_spearman": 0.6942310035557755,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW620",
+        "n_drugs": 356,
+        "raw_spearman": -0.6809922323099202,
+        "ts_spearman": 0.6783841183252854,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW948",
+        "n_drugs": 353,
+        "raw_spearman": -0.7287999188116825,
+        "ts_spearman": 0.7283315036862116,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "T3M10",
+        "n_drugs": 347,
+        "raw_spearman": -0.5318717513192897,
+        "ts_spearman": 0.5291157040126969,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "THP1",
+        "n_drugs": 360,
+        "raw_spearman": -0.6652088364879358,
+        "ts_spearman": 0.662025169947299,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "TYKNU",
+        "n_drugs": 355,
+        "raw_spearman": -0.5694880384956856,
+        "ts_spearman": 0.5610955391461319,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U266",
+        "n_drugs": 31,
+        "raw_spearman": -0.5737903225806452,
+        "ts_spearman": 0.5403225806451613,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U937",
+        "n_drugs": 357,
+        "raw_spearman": -0.7556220655357743,
+        "ts_spearman": 0.7410313067540745,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "VCAP",
+        "n_drugs": 7224,
+        "raw_spearman": -0.41034090081946295,
+        "ts_spearman": -0.17656025154866384,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "WSUDLCL2",
+        "n_drugs": 349,
+        "raw_spearman": -0.710249410701935,
+        "ts_spearman": 0.712407300238542,
+        "ts_wins": true
+      }
+    ]
+  },
+  {
+    "lambda": 2.0,
+    "n_valid_folds": 66,
+    "ts_wins": 66,
+    "win_fraction": 1.0,
+    "wilcoxon_statistic": 2211.0,
+    "wilcoxon_p": 8.20474233813614e-13,
+    "mean_delta_rho": 1.1195172298915654,
+    "std_delta_rho": 0.3568622481096319,
+    "mean_raw_rho": -0.6018255084029119,
+    "mean_ts_rho": 0.5176917214886534,
+    "per_fold": [
+      {
+        "holdout_cell": "A375",
+        "n_drugs": 8328,
+        "raw_spearman": -0.47996513457048917,
+        "ts_spearman": -0.05144051764129341,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "A549",
+        "n_drugs": 8888,
+        "raw_spearman": -0.49403318734510576,
+        "ts_spearman": -0.09562779348182113,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "A673",
+        "n_drugs": 357,
+        "raw_spearman": -0.7252729602292239,
+        "ts_spearman": 0.7246531655157826,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "AGS",
+        "n_drugs": 356,
+        "raw_spearman": -0.712021235143844,
+        "ts_spearman": 0.7133308775322124,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "ASC",
+        "n_drugs": 2345,
+        "raw_spearman": -0.36524341864059784,
+        "ts_spearman": 0.35135199025602937,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "BT20",
+        "n_drugs": 176,
+        "raw_spearman": -0.6997424609289016,
+        "ts_spearman": 0.6794497028395334,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CL34",
+        "n_drugs": 350,
+        "raw_spearman": -0.541748235845657,
+        "ts_spearman": 0.5385989623238907,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CORL23",
+        "n_drugs": 358,
+        "raw_spearman": -0.6936892993764008,
+        "ts_spearman": 0.6940878839825873,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "COV644",
+        "n_drugs": 353,
+        "raw_spearman": -0.3620286930863347,
+        "ts_spearman": 0.35836785291819623,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "DV90",
+        "n_drugs": 352,
+        "raw_spearman": -0.7158557133769597,
+        "ts_spearman": 0.7167757879514252,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "EFO27",
+        "n_drugs": 356,
+        "raw_spearman": -0.7836738873425616,
+        "ts_spearman": 0.7836478221609896,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "FIBRNPC",
+        "n_drugs": 262,
+        "raw_spearman": -0.44730368975092183,
+        "ts_spearman": 0.3624304441399595,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "H1299",
+        "n_drugs": 354,
+        "raw_spearman": -0.6725485674405582,
+        "ts_spearman": 0.6737101149171884,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HA1E",
+        "n_drugs": 4540,
+        "raw_spearman": -0.5301092354593512,
+        "ts_spearman": 0.30337151709337284,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC15",
+        "n_drugs": 356,
+        "raw_spearman": -0.6724497680065855,
+        "ts_spearman": 0.6700560268418175,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC515",
+        "n_drugs": 4732,
+        "raw_spearman": -0.4134238403335322,
+        "ts_spearman": 0.17487938396853367,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCT116",
+        "n_drugs": 357,
+        "raw_spearman": -0.6396864313486365,
+        "ts_spearman": 0.6407126531486363,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEC108",
+        "n_drugs": 357,
+        "raw_spearman": -0.598818222914048,
+        "ts_spearman": 0.5984558408135083,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEPG2",
+        "n_drugs": 3718,
+        "raw_spearman": -0.5720492780504378,
+        "ts_spearman": 0.38553449921655697,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HS578T",
+        "n_drugs": 176,
+        "raw_spearman": -0.7050033017829629,
+        "ts_spearman": 0.6736957957296942,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT115",
+        "n_drugs": 349,
+        "raw_spearman": -0.5412886925346168,
+        "ts_spearman": 0.540683726904456,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT29",
+        "n_drugs": 8597,
+        "raw_spearman": -0.4995790029890029,
+        "ts_spearman": -0.047444958926648184,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HUH7",
+        "n_drugs": 95,
+        "raw_spearman": -0.7277295632698768,
+        "ts_spearman": 0.47726763717805154,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JHUEM2",
+        "n_drugs": 355,
+        "raw_spearman": -0.687937642997578,
+        "ts_spearman": 0.6882490524943605,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JURKAT",
+        "n_drugs": 31,
+        "raw_spearman": -0.5116935483870968,
+        "ts_spearman": 0.43870967741935485,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "LOVO",
+        "n_drugs": 354,
+        "raw_spearman": -0.7787487396168437,
+        "ts_spearman": 0.7771035296138478,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF10A",
+        "n_drugs": 176,
+        "raw_spearman": -0.4903697996918336,
+        "ts_spearman": 0.43194805194805197,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF7",
+        "n_drugs": 8929,
+        "raw_spearman": -0.5558710260331086,
+        "ts_spearman": -0.09661844182447947,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDAMB231",
+        "n_drugs": 176,
+        "raw_spearman": -0.7694805194805195,
+        "ts_spearman": 0.7285318071758751,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDST8",
+        "n_drugs": 352,
+        "raw_spearman": -0.7226737301099906,
+        "ts_spearman": 0.72136130316017,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1694",
+        "n_drugs": 350,
+        "raw_spearman": -0.457488935769738,
+        "ts_spearman": 0.45696135128799886,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1836",
+        "n_drugs": 345,
+        "raw_spearman": -0.5115884556713444,
+        "ts_spearman": 0.5139552417634442,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH2073",
+        "n_drugs": 355,
+        "raw_spearman": -0.7272937951456597,
+        "ts_spearman": 0.7264325239189853,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH508",
+        "n_drugs": 354,
+        "raw_spearman": -0.5421403825072681,
+        "ts_spearman": 0.5402665959747538,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH596",
+        "n_drugs": 355,
+        "raw_spearman": -0.7018617513498435,
+        "ts_spearman": 0.6984754077694121,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NEU",
+        "n_drugs": 2143,
+        "raw_spearman": -0.22318683656383695,
+        "ts_spearman": 0.1088351097050071,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NKDBA",
+        "n_drugs": 135,
+        "raw_spearman": -0.6237635352648523,
+        "ts_spearman": 0.2051165739927812,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NOMO1",
+        "n_drugs": 350,
+        "raw_spearman": -0.5961498927688039,
+        "ts_spearman": 0.5894166832848782,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NPC",
+        "n_drugs": 3014,
+        "raw_spearman": -0.3682756976807558,
+        "ts_spearman": 0.2910753810949705,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "OV7",
+        "n_drugs": 353,
+        "raw_spearman": -0.6661108613382104,
+        "ts_spearman": 0.6644240758281428,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PC3",
+        "n_drugs": 8606,
+        "raw_spearman": -0.5237634092981319,
+        "ts_spearman": -0.14498942367459786,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PHH",
+        "n_drugs": 1749,
+        "raw_spearman": -0.32131327348874084,
+        "ts_spearman": 0.3026266209935308,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PL21",
+        "n_drugs": 349,
+        "raw_spearman": -0.7386717856789984,
+        "ts_spearman": 0.7376066735359295,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RKO",
+        "n_drugs": 356,
+        "raw_spearman": -0.6387988206835195,
+        "ts_spearman": 0.6402725673272949,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMGI",
+        "n_drugs": 350,
+        "raw_spearman": -0.6582304928436733,
+        "ts_spearman": 0.6554394729752896,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMUGS",
+        "n_drugs": 358,
+        "raw_spearman": -0.5559966256308471,
+        "ts_spearman": 0.5550359948837847,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKB",
+        "n_drugs": 2338,
+        "raw_spearman": -0.37054233389123253,
+        "ts_spearman": 0.3526793727002065,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKBR3",
+        "n_drugs": 176,
+        "raw_spearman": -0.6483843275368699,
+        "ts_spearman": 0.6126106097292539,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKLU1",
+        "n_drugs": 349,
+        "raw_spearman": -0.7828845258091379,
+        "ts_spearman": 0.7799093821897892,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKM1",
+        "n_drugs": 350,
+        "raw_spearman": -0.7497791352232613,
+        "ts_spearman": 0.739215130619142,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL1",
+        "n_drugs": 358,
+        "raw_spearman": -0.5968586093032628,
+        "ts_spearman": 0.5952430862636211,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL28",
+        "n_drugs": 355,
+        "raw_spearman": -0.7293250648434505,
+        "ts_spearman": 0.7269459070170404,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNGM",
+        "n_drugs": 350,
+        "raw_spearman": -0.6646463119815555,
+        "ts_spearman": 0.6644800598955326,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNU1040",
+        "n_drugs": 355,
+        "raw_spearman": -0.6048589001156052,
+        "ts_spearman": 0.5989437290281396,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC4",
+        "n_drugs": 356,
+        "raw_spearman": -0.7590404289584168,
+        "ts_spearman": 0.7584321527313251,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC5",
+        "n_drugs": 345,
+        "raw_spearman": -0.531072724828606,
+        "ts_spearman": 0.5317492416582408,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW480",
+        "n_drugs": 357,
+        "raw_spearman": -0.6920543372706562,
+        "ts_spearman": 0.6943523250741511,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW620",
+        "n_drugs": 356,
+        "raw_spearman": -0.6809922323099202,
+        "ts_spearman": 0.6784567284739502,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW948",
+        "n_drugs": 353,
+        "raw_spearman": -0.7287999188116825,
+        "ts_spearman": 0.7285778513031599,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "T3M10",
+        "n_drugs": 347,
+        "raw_spearman": -0.5318717513192897,
+        "ts_spearman": 0.5292791253254784,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "THP1",
+        "n_drugs": 360,
+        "raw_spearman": -0.6652088364879358,
+        "ts_spearman": 0.6622396777752915,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "TYKNU",
+        "n_drugs": 355,
+        "raw_spearman": -0.5694880384956856,
+        "ts_spearman": 0.5615365014309817,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U266",
+        "n_drugs": 31,
+        "raw_spearman": -0.5737903225806452,
+        "ts_spearman": 0.5504032258064516,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U937",
+        "n_drugs": 357,
+        "raw_spearman": -0.7556220655357743,
+        "ts_spearman": 0.742182806208919,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "VCAP",
+        "n_drugs": 7224,
+        "raw_spearman": -0.41034090081946295,
+        "ts_spearman": -0.1487463291036475,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "WSUDLCL2",
+        "n_drugs": 349,
+        "raw_spearman": -0.710249410701935,
+        "ts_spearman": 0.7123787880926503,
+        "ts_wins": true
+      }
+    ]
+  },
+  {
+    "lambda": 3.0,
+    "n_valid_folds": 66,
+    "ts_wins": 66,
+    "win_fraction": 1.0,
+    "wilcoxon_statistic": 2211.0,
+    "wilcoxon_p": 8.20474233813614e-13,
+    "mean_delta_rho": 1.1244578825671832,
+    "std_delta_rho": 0.35071824991392286,
+    "mean_raw_rho": -0.6018255084029119,
+    "mean_ts_rho": 0.5226323741642712,
+    "per_fold": [
+      {
+        "holdout_cell": "A375",
+        "n_drugs": 8328,
+        "raw_spearman": -0.47996513457048917,
+        "ts_spearman": -0.025435756356090168,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "A549",
+        "n_drugs": 8888,
+        "raw_spearman": -0.49403318734510576,
+        "ts_spearman": -0.06851345390797851,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "A673",
+        "n_drugs": 357,
+        "raw_spearman": -0.7252729602292239,
+        "ts_spearman": 0.7245582182405322,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "AGS",
+        "n_drugs": 356,
+        "raw_spearman": -0.712021235143844,
+        "ts_spearman": 0.7133098658042106,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "ASC",
+        "n_drugs": 2345,
+        "raw_spearman": -0.36524341864059784,
+        "ts_spearman": 0.35241676877744027,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "BT20",
+        "n_drugs": 176,
+        "raw_spearman": -0.6997424609289016,
+        "ts_spearman": 0.6835945410521682,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CL34",
+        "n_drugs": 350,
+        "raw_spearman": -0.541748235845657,
+        "ts_spearman": 0.5386932837935703,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CORL23",
+        "n_drugs": 358,
+        "raw_spearman": -0.6936892993764008,
+        "ts_spearman": 0.6942414070559675,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "COV644",
+        "n_drugs": 353,
+        "raw_spearman": -0.3620286930863347,
+        "ts_spearman": 0.35869631640746064,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "DV90",
+        "n_drugs": 352,
+        "raw_spearman": -0.7158557133769597,
+        "ts_spearman": 0.7169582070431927,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "EFO27",
+        "n_drugs": 356,
+        "raw_spearman": -0.7836738873425616,
+        "ts_spearman": 0.7840693865772295,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "FIBRNPC",
+        "n_drugs": 262,
+        "raw_spearman": -0.44730368975092183,
+        "ts_spearman": 0.3674607853244017,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "H1299",
+        "n_drugs": 354,
+        "raw_spearman": -0.6725485674405582,
+        "ts_spearman": 0.6739316583227217,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HA1E",
+        "n_drugs": 4540,
+        "raw_spearman": -0.5301092354593512,
+        "ts_spearman": 0.3167904786943372,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC15",
+        "n_drugs": 356,
+        "raw_spearman": -0.6724497680065855,
+        "ts_spearman": 0.6701618833955485,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC515",
+        "n_drugs": 4732,
+        "raw_spearman": -0.4134238403335322,
+        "ts_spearman": 0.18833726059509742,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCT116",
+        "n_drugs": 357,
+        "raw_spearman": -0.6396864313486365,
+        "ts_spearman": 0.6408136664998056,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEC108",
+        "n_drugs": 357,
+        "raw_spearman": -0.598818222914048,
+        "ts_spearman": 0.5987947498376666,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEPG2",
+        "n_drugs": 3718,
+        "raw_spearman": -0.5720492780504378,
+        "ts_spearman": 0.3974214380801928,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HS578T",
+        "n_drugs": 176,
+        "raw_spearman": -0.7050033017829629,
+        "ts_spearman": 0.6774158045344487,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT115",
+        "n_drugs": 349,
+        "raw_spearman": -0.5412886925346168,
+        "ts_spearman": 0.5405945205866162,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT29",
+        "n_drugs": 8597,
+        "raw_spearman": -0.4995790029890029,
+        "ts_spearman": -0.020887308844438623,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HUH7",
+        "n_drugs": 95,
+        "raw_spearman": -0.7277295632698768,
+        "ts_spearman": 0.5104143337066069,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JHUEM2",
+        "n_drugs": 355,
+        "raw_spearman": -0.687937642997578,
+        "ts_spearman": 0.6882447608906151,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JURKAT",
+        "n_drugs": 31,
+        "raw_spearman": -0.5116935483870968,
+        "ts_spearman": 0.4431451612903226,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "LOVO",
+        "n_drugs": 354,
+        "raw_spearman": -0.7787487396168437,
+        "ts_spearman": 0.7772241747406705,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF10A",
+        "n_drugs": 176,
+        "raw_spearman": -0.4903697996918336,
+        "ts_spearman": 0.43590799031476996,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF7",
+        "n_drugs": 8929,
+        "raw_spearman": -0.5558710260331086,
+        "ts_spearman": -0.06756850233675989,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDAMB231",
+        "n_drugs": 176,
+        "raw_spearman": -0.7694805194805195,
+        "ts_spearman": 0.7330750605326878,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDST8",
+        "n_drugs": 352,
+        "raw_spearman": -0.7226737301099906,
+        "ts_spearman": 0.7212911419710285,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1694",
+        "n_drugs": 350,
+        "raw_spearman": -0.457488935769738,
+        "ts_spearman": 0.45694847654733045,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1836",
+        "n_drugs": 345,
+        "raw_spearman": -0.5115884556713444,
+        "ts_spearman": 0.5134271787348698,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH2073",
+        "n_drugs": 355,
+        "raw_spearman": -0.7272937951456597,
+        "ts_spearman": 0.7263338170328388,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH508",
+        "n_drugs": 354,
+        "raw_spearman": -0.5421403825072681,
+        "ts_spearman": 0.5403434193290536,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH596",
+        "n_drugs": 355,
+        "raw_spearman": -0.7018617513498435,
+        "ts_spearman": 0.6986956206866031,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NEU",
+        "n_drugs": 2143,
+        "raw_spearman": -0.22318683656383695,
+        "ts_spearman": 0.11564208323093553,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NKDBA",
+        "n_drugs": 135,
+        "raw_spearman": -0.6237635352648523,
+        "ts_spearman": 0.24290800897473416,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NOMO1",
+        "n_drugs": 350,
+        "raw_spearman": -0.5961498927688039,
+        "ts_spearman": 0.5899294338262819,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NPC",
+        "n_drugs": 3014,
+        "raw_spearman": -0.3682756976807558,
+        "ts_spearman": 0.2972111598276382,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "OV7",
+        "n_drugs": 353,
+        "raw_spearman": -0.6661108613382104,
+        "ts_spearman": 0.6640735147121088,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PC3",
+        "n_drugs": 8606,
+        "raw_spearman": -0.5237634092981319,
+        "ts_spearman": -0.11544349168217187,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PHH",
+        "n_drugs": 1749,
+        "raw_spearman": -0.32131327348874084,
+        "ts_spearman": 0.30419859851732395,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PL21",
+        "n_drugs": 349,
+        "raw_spearman": -0.7386717856789984,
+        "ts_spearman": 0.7376097788191455,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RKO",
+        "n_drugs": 356,
+        "raw_spearman": -0.6387988206835195,
+        "ts_spearman": 0.6405047602202775,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMGI",
+        "n_drugs": 350,
+        "raw_spearman": -0.6582304928436733,
+        "ts_spearman": 0.655180858619254,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMUGS",
+        "n_drugs": 358,
+        "raw_spearman": -0.5559966256308471,
+        "ts_spearman": 0.5550652871908011,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKB",
+        "n_drugs": 2338,
+        "raw_spearman": -0.37054233389123253,
+        "ts_spearman": 0.3544745188135356,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKBR3",
+        "n_drugs": 176,
+        "raw_spearman": -0.6483843275368699,
+        "ts_spearman": 0.6163152102135153,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKLU1",
+        "n_drugs": 349,
+        "raw_spearman": -0.7828845258091379,
+        "ts_spearman": 0.7801129193896706,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKM1",
+        "n_drugs": 350,
+        "raw_spearman": -0.7497791352232613,
+        "ts_spearman": 0.7397754617238859,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL1",
+        "n_drugs": 358,
+        "raw_spearman": -0.5968586093032628,
+        "ts_spearman": 0.5955979939477386,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL28",
+        "n_drugs": 355,
+        "raw_spearman": -0.7293250648434505,
+        "ts_spearman": 0.7270990636257079,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNGM",
+        "n_drugs": 350,
+        "raw_spearman": -0.6646463119815555,
+        "ts_spearman": 0.6649623028992656,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNU1040",
+        "n_drugs": 355,
+        "raw_spearman": -0.6048589001156052,
+        "ts_spearman": 0.5993983707999281,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC4",
+        "n_drugs": 356,
+        "raw_spearman": -0.7590404289584168,
+        "ts_spearman": 0.7587013156267413,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC5",
+        "n_drugs": 345,
+        "raw_spearman": -0.531072724828606,
+        "ts_spearman": 0.5319841960992888,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW480",
+        "n_drugs": 357,
+        "raw_spearman": -0.6920543372706562,
+        "ts_spearman": 0.6939904704584741,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW620",
+        "n_drugs": 356,
+        "raw_spearman": -0.6809922323099202,
+        "ts_spearman": 0.6784561965314692,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW948",
+        "n_drugs": 353,
+        "raw_spearman": -0.7287999188116825,
+        "ts_spearman": 0.7282354744933369,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "T3M10",
+        "n_drugs": 347,
+        "raw_spearman": -0.5318717513192897,
+        "ts_spearman": 0.5295086044624071,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "THP1",
+        "n_drugs": 360,
+        "raw_spearman": -0.6652088364879358,
+        "ts_spearman": 0.6626581480824184,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "TYKNU",
+        "n_drugs": 355,
+        "raw_spearman": -0.5694880384956856,
+        "ts_spearman": 0.5617132618602494,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U266",
+        "n_drugs": 31,
+        "raw_spearman": -0.5737903225806452,
+        "ts_spearman": 0.5516129032258066,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U937",
+        "n_drugs": 357,
+        "raw_spearman": -0.7556220655357743,
+        "ts_spearman": 0.7429684949116173,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "VCAP",
+        "n_drugs": 7224,
+        "raw_spearman": -0.41034090081946295,
+        "ts_spearman": -0.12394930906490066,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "WSUDLCL2",
+        "n_drugs": 349,
+        "raw_spearman": -0.710249410701935,
+        "ts_spearman": 0.7123347495306788,
+        "ts_wins": true
+      }
+    ]
+  },
+  {
+    "lambda": 5.0,
+    "n_valid_folds": 66,
+    "ts_wins": 66,
+    "win_fraction": 1.0,
+    "wilcoxon_statistic": 2211.0,
+    "wilcoxon_p": 8.20474233813614e-13,
+    "mean_delta_rho": 1.1279712424804242,
+    "std_delta_rho": 0.346334938010302,
+    "mean_raw_rho": -0.6018255084029119,
+    "mean_ts_rho": 0.5261457340775123,
+    "per_fold": [
+      {
+        "holdout_cell": "A375",
+        "n_drugs": 8328,
+        "raw_spearman": -0.47996513457048917,
+        "ts_spearman": -0.006437563678117012,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "A549",
+        "n_drugs": 8888,
+        "raw_spearman": -0.49403318734510576,
+        "ts_spearman": -0.04825861575525306,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "A673",
+        "n_drugs": 357,
+        "raw_spearman": -0.7252729602292239,
+        "ts_spearman": 0.7247984875954022,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "AGS",
+        "n_drugs": 356,
+        "raw_spearman": -0.712021235143844,
+        "ts_spearman": 0.7132337980294191,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "ASC",
+        "n_drugs": 2345,
+        "raw_spearman": -0.36524341864059784,
+        "ts_spearman": 0.3531923646000161,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "BT20",
+        "n_drugs": 176,
+        "raw_spearman": -0.6997424609289016,
+        "ts_spearman": 0.6857186880915694,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CL34",
+        "n_drugs": 350,
+        "raw_spearman": -0.541748235845657,
+        "ts_spearman": 0.5386994412782379,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "CORL23",
+        "n_drugs": 358,
+        "raw_spearman": -0.6936892993764008,
+        "ts_spearman": 0.6943101916697647,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "COV644",
+        "n_drugs": 353,
+        "raw_spearman": -0.3620286930863347,
+        "ts_spearman": 0.3588414514376007,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "DV90",
+        "n_drugs": 352,
+        "raw_spearman": -0.7158557133769597,
+        "ts_spearman": 0.7169056549368164,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "EFO27",
+        "n_drugs": 356,
+        "raw_spearman": -0.7836738873425616,
+        "ts_spearman": 0.7840340124022391,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "FIBRNPC",
+        "n_drugs": 262,
+        "raw_spearman": -0.44730368975092183,
+        "ts_spearman": 0.3706602130972363,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "H1299",
+        "n_drugs": 354,
+        "raw_spearman": -0.6725485674405582,
+        "ts_spearman": 0.6739254367130425,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HA1E",
+        "n_drugs": 4540,
+        "raw_spearman": -0.5301092354593512,
+        "ts_spearman": 0.3262974652993548,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC15",
+        "n_drugs": 356,
+        "raw_spearman": -0.6724497680065855,
+        "ts_spearman": 0.6702624205244687,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCC515",
+        "n_drugs": 4732,
+        "raw_spearman": -0.4134238403335322,
+        "ts_spearman": 0.19801452798397196,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HCT116",
+        "n_drugs": 357,
+        "raw_spearman": -0.6396864313486365,
+        "ts_spearman": 0.6409531862459378,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEC108",
+        "n_drugs": 357,
+        "raw_spearman": -0.598818222914048,
+        "ts_spearman": 0.598714572138566,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HEPG2",
+        "n_drugs": 3718,
+        "raw_spearman": -0.5720492780504378,
+        "ts_spearman": 0.4059069872393961,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HS578T",
+        "n_drugs": 176,
+        "raw_spearman": -0.7050033017829629,
+        "ts_spearman": 0.680019810697777,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT115",
+        "n_drugs": 349,
+        "raw_spearman": -0.5412886925346168,
+        "ts_spearman": 0.5408014453681877,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HT29",
+        "n_drugs": 8597,
+        "raw_spearman": -0.4995790029890029,
+        "ts_spearman": -0.0013171636181477902,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "HUH7",
+        "n_drugs": 95,
+        "raw_spearman": -0.7277295632698768,
+        "ts_spearman": 0.5332726763717806,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JHUEM2",
+        "n_drugs": 355,
+        "raw_spearman": -0.687937642997578,
+        "ts_spearman": 0.6882576357018516,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "JURKAT",
+        "n_drugs": 31,
+        "raw_spearman": -0.5116935483870968,
+        "ts_spearman": 0.44919354838709685,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "LOVO",
+        "n_drugs": 354,
+        "raw_spearman": -0.7787487396168437,
+        "ts_spearman": 0.7771349081670124,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF10A",
+        "n_drugs": 176,
+        "raw_spearman": -0.4903697996918336,
+        "ts_spearman": 0.43806295399515743,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MCF7",
+        "n_drugs": 8929,
+        "raw_spearman": -0.5558710260331086,
+        "ts_spearman": -0.04596807362494152,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDAMB231",
+        "n_drugs": 176,
+        "raw_spearman": -0.7694805194805195,
+        "ts_spearman": 0.7378450363196126,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "MDST8",
+        "n_drugs": 352,
+        "raw_spearman": -0.7226737301099906,
+        "ts_spearman": 0.7212168536531142,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1694",
+        "n_drugs": 350,
+        "raw_spearman": -0.457488935769738,
+        "ts_spearman": 0.4571387988006899,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH1836",
+        "n_drugs": 345,
+        "raw_spearman": -0.5115884556713444,
+        "ts_spearman": 0.513530628824585,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH2073",
+        "n_drugs": 355,
+        "raw_spearman": -0.7272937951456597,
+        "ts_spearman": 0.7266149170781689,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH508",
+        "n_drugs": 354,
+        "raw_spearman": -0.5421403825072681,
+        "ts_spearman": 0.5405135668285413,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NCIH596",
+        "n_drugs": 355,
+        "raw_spearman": -0.7018617513498435,
+        "ts_spearman": 0.6989233439103484,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NEU",
+        "n_drugs": 2143,
+        "raw_spearman": -0.22318683656383695,
+        "ts_spearman": 0.12053529667137401,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NKDBA",
+        "n_drugs": 135,
+        "raw_spearman": -0.6237635352648523,
+        "ts_spearman": 0.2679104477611941,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NOMO1",
+        "n_drugs": 350,
+        "raw_spearman": -0.5961498927688039,
+        "ts_spearman": 0.5906005996550409,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "NPC",
+        "n_drugs": 3014,
+        "raw_spearman": -0.3682756976807558,
+        "ts_spearman": 0.30159947147213756,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "OV7",
+        "n_drugs": 353,
+        "raw_spearman": -0.6661108613382104,
+        "ts_spearman": 0.6641970977358935,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PC3",
+        "n_drugs": 8606,
+        "raw_spearman": -0.5237634092981319,
+        "ts_spearman": -0.09382811469338773,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PHH",
+        "n_drugs": 1749,
+        "raw_spearman": -0.32131327348874084,
+        "ts_spearman": 0.30514769510097867,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "PL21",
+        "n_drugs": 349,
+        "raw_spearman": -0.7386717856789984,
+        "ts_spearman": 0.7376950329583468,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RKO",
+        "n_drugs": 356,
+        "raw_spearman": -0.6387988206835195,
+        "ts_spearman": 0.6403582100667454,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMGI",
+        "n_drugs": 350,
+        "raw_spearman": -0.6582304928436733,
+        "ts_spearman": 0.6552679030615994,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "RMUGS",
+        "n_drugs": 358,
+        "raw_spearman": -0.5559966256308471,
+        "ts_spearman": 0.5552760871859365,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKB",
+        "n_drugs": 2338,
+        "raw_spearman": -0.37054233389123253,
+        "ts_spearman": 0.3558118742268206,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKBR3",
+        "n_drugs": 176,
+        "raw_spearman": -0.6483843275368699,
+        "ts_spearman": 0.6201210653753028,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKLU1",
+        "n_drugs": 349,
+        "raw_spearman": -0.7828845258091379,
+        "ts_spearman": 0.7801558287577455,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKM1",
+        "n_drugs": 350,
+        "raw_spearman": -0.7497791352232613,
+        "ts_spearman": 0.7399848162025813,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL1",
+        "n_drugs": 358,
+        "raw_spearman": -0.5968586093032628,
+        "ts_spearman": 0.5955990401015605,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SKMEL28",
+        "n_drugs": 355,
+        "raw_spearman": -0.7293250648434505,
+        "ts_spearman": 0.727174166691254,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNGM",
+        "n_drugs": 350,
+        "raw_spearman": -0.6646463119815555,
+        "ts_spearman": 0.664812004296245,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNU1040",
+        "n_drugs": 355,
+        "raw_spearman": -0.6048589001156052,
+        "ts_spearman": 0.5995383843721249,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC4",
+        "n_drugs": 356,
+        "raw_spearman": -0.7590404289584168,
+        "ts_spearman": 0.75860024655534,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SNUC5",
+        "n_drugs": 345,
+        "raw_spearman": -0.531072724828606,
+        "ts_spearman": 0.531907339111732,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW480",
+        "n_drugs": 357,
+        "raw_spearman": -0.6920543372706562,
+        "ts_spearman": 0.6938633466066109,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW620",
+        "n_drugs": 356,
+        "raw_spearman": -0.6809922323099202,
+        "ts_spearman": 0.6784101835068574,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "SW948",
+        "n_drugs": 353,
+        "raw_spearman": -0.7287999188116825,
+        "ts_spearman": 0.7282229252238135,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "T3M10",
+        "n_drugs": 347,
+        "raw_spearman": -0.5318717513192897,
+        "ts_spearman": 0.5295177951162015,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "THP1",
+        "n_drugs": 360,
+        "raw_spearman": -0.6652088364879358,
+        "ts_spearman": 0.6631537794787511,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "TYKNU",
+        "n_drugs": 355,
+        "raw_spearman": -0.5694880384956856,
+        "ts_spearman": 0.5617872920248591,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U266",
+        "n_drugs": 31,
+        "raw_spearman": -0.5737903225806452,
+        "ts_spearman": 0.5471774193548388,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "U937",
+        "n_drugs": 357,
+        "raw_spearman": -0.7556220655357743,
+        "ts_spearman": 0.7435756299883585,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "VCAP",
+        "n_drugs": 7224,
+        "raw_spearman": -0.41034090081946295,
+        "ts_spearman": -0.10581412937133947,
+        "ts_wins": true
+      },
+      {
+        "holdout_cell": "WSUDLCL2",
+        "n_drugs": 349,
+        "raw_spearman": -0.710249410701935,
+        "ts_spearman": 0.7122461078097873,
+        "ts_wins": true
+      }
+    ]
+  }
+]
