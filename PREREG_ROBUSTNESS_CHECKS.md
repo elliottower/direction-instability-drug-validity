@@ -15,15 +15,21 @@ inherited from the companion paper. A reviewer asks whether the H5 result
 (66/66 folds, Wilcoxon p=8.2e-13) is robust to λ choice.
 
 **Analysis:** Re-run the full 66-fold leave-one-cell-line-out cross-validation
-at λ ∈ {0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 5.0}.
+at λ ∈ {0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 5.0}.
+
+**Sanity check (λ=0):** At λ=0, TS ≡ raw DI, so TS should win ~50% of folds
+(tie-breaking noise). If λ=0 shows TS winning ≥80% of folds, there is a bug
+in the computation (e.g., ties broken in TS's favor). Assert this before
+interpreting other λ values.
 
 **Report:** For each λ: number of folds TS wins, Wilcoxon p-value, mean Δρ.
 Present as a table or supplementary figure.
 
 **Success criterion (pre-registered):** TS wins ≥80% of folds AND Wilcoxon
-p < 0.05 for at least 5 of the 8 λ values tested. If fewer than 5 pass,
-we report this as evidence that H5 is λ-sensitive and the specific λ=1.0
-result should be interpreted cautiously.
+p < 0.05 for at least 5 of the 8 non-zero λ values tested. If fewer than 5
+pass, we report this as evidence that H5 is λ-sensitive and the specific
+λ=1.0 result should be interpreted cautiously. (λ=0 is a sanity check only
+and is excluded from this count.)
 
 **No-go criterion:** If only λ=1.0 passes, we add a limitation paragraph
 stating the result is not robust to penalty weight choice.
@@ -40,15 +46,37 @@ by these drugs.
 - (a) Remove all drugs with "HDAC" in the target field from the 795-drug H3
   dataset and recompute Spearman ρ between projected_bracket and
   on_target_enrichment.
-- (b) Remove the top 20 drugs with lowest raw_bracket (most consistent drugs
-  regardless of class) and recompute.
+- (b) Remove the top 20 drugs with lowest raw_bracket (most directionally
+  consistent drugs regardless of class) and recompute.
+- (b2) Remove the top 20 drugs with highest projected_bracket (most
+  phenotype-aligned drugs) and recompute. This directly addresses Reviewer 3's
+  concern: whether the projected correlation is carried by a handful of
+  ultra-clean drugs rather than a broad signal.
 - (c) Bootstrap 95% CI (1000 resamples) on the full 795-drug set.
 
-**Report:** All three analyses reported in full.
+**HDAC filter validation:** The HDAC filter uses substring match on the
+free-text target field ("HDAC" in target.upper()). Before computing:
+1. Assert the number of removed drugs is in [10, 40]. If outside this range,
+   the filter is silently under- or over-selecting and results are invalid.
+2. Log the name and target annotation of every removed drug so a reviewer
+   can verify the filter caught the intended class.
+3. Check for known synonyms ("histone deacetylase", "class I HDAC",
+   "pan-HDAC") and log any drugs matching these patterns that were NOT
+   caught by the primary filter.
 
-**Success criterion:** ρ > 0.20 after HDAC removal (analysis a). If ρ drops
+**Report:** All four sensitivity analyses (a, b, b2, c) reported in full.
+
+**Success criterion for (a):** ρ > 0.20 after HDAC removal. If ρ drops
 below 0.20, we report that H3 is partially driven by the HDAC calibration
 standard and add a limitation.
+
+**Success criterion for (b):** ρ_proj > 0.20 after removing top-20 by
+raw_bracket. If ρ drops below 0.20, we report that H3 is driven by
+outlier-consistent drugs.
+
+**Success criterion for (b2):** ρ_proj > 0.20 after removing top-20 by
+projected_bracket. If ρ drops below 0.20, we report that H3 is driven by
+a small number of phenotype-aligned drugs rather than a broad signal.
 
 ---
 
