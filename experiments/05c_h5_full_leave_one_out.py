@@ -25,7 +25,7 @@ from scipy import stats
 from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from geometry.bracket_norm import direction_instability, transport_stable_bracket
+from geometry.direction_instability import direction_instability, transport_stable_instability
 
 
 def log(msg: str):
@@ -92,16 +92,16 @@ def run_synthetic():
             consensus = train_sigs.mean(axis=0)
             fold_drugs.append({
                 "drug": drug,
-                "raw_bracket": float(direction_instability(train_sigs)),
-                "ts_bracket": float(transport_stable_bracket(train_sigs)),
+                "raw_instability": float(direction_instability(train_sigs)),
+                "ts_instability": float(transport_stable_instability(train_sigs)),
                 "holdout_cosine": cosine_sim(holdout_sig, consensus),
             })
 
         if len(fold_drugs) < 20:
             continue
 
-        raw_vals = [d["raw_bracket"] for d in fold_drugs]
-        ts_vals = [d["ts_bracket"] for d in fold_drugs]
+        raw_vals = [d["raw_instability"] for d in fold_drugs]
+        ts_vals = [d["ts_instability"] for d in fold_drugs]
         holdout_vals = [d["holdout_cosine"] for d in fold_drugs]
         raw_rho = stats.spearmanr(raw_vals, holdout_vals).statistic
         ts_rho = stats.spearmanr(ts_vals, holdout_vals).statistic
@@ -169,13 +169,13 @@ def run_real(data_dir: Path, output_dir: Path):
             consensus = train_sigs.mean(axis=0)
 
             raw = direction_instability(train_sigs)
-            ts = transport_stable_bracket(train_sigs)
+            ts = transport_stable_instability(train_sigs)
             holdout_cos = cosine_sim(holdout_sig, consensus)
 
             fold_drugs.append({
                 "drug": drug,
-                "raw_bracket": float(raw),
-                "ts_bracket": float(ts),
+                "raw_instability": float(raw),
+                "ts_instability": float(ts),
                 "holdout_cosine": holdout_cos,
             })
 
@@ -183,8 +183,8 @@ def run_real(data_dir: Path, output_dir: Path):
             log(f"    Skipping {holdout_cell}: only {len(fold_drugs)} drugs")
             continue
 
-        raw_vals = [d["raw_bracket"] for d in fold_drugs]
-        ts_vals = [d["ts_bracket"] for d in fold_drugs]
+        raw_vals = [d["raw_instability"] for d in fold_drugs]
+        ts_vals = [d["ts_instability"] for d in fold_drugs]
         holdout_vals = [d["holdout_cosine"] for d in fold_drugs]
 
         raw_rho = stats.spearmanr(raw_vals, holdout_vals).statistic

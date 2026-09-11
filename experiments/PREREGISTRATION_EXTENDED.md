@@ -179,6 +179,70 @@ should shRNA inflation be considered.
 
 ---
 
+## Experiment R3: HDAC-Removal Sensitivity and Drug Pair Search for H3
+
+**Commit SHA:** f4bc40bcd41f0bd5cb85742e4bbab003c8f40306
+**Pre-registered:** 2026-07-08, before script execution.
+
+### Motivation
+
+The original H3 result (Spearman rho = 0.376 between phenotype-projected
+bracket and on-target enrichment) might be driven by HDAC inhibitors, a
+pharmacological class known for strong, consistent transcriptomic signatures.
+HDAC drugs have high projected_bracket (mean 6.69 vs 4.00 population) and
+moderate enrichment, so they could inflate the correlation. This experiment
+tests whether H3 survives HDAC removal and other perturbations.
+
+A secondary goal is to find a concrete non-HDAC drug pair illustrating the
+discriminative power of phenotype projection: two drugs with similar raw
+direction instability but divergent projected_bracket and on-target enrichment.
+
+### Analyses (frozen before running)
+
+**A1: Full-set reproduction.** Spearman rho between projected_bracket and
+on_target_enrichment for all 795 drugs; separately for raw_bracket vs
+on_target_enrichment. Expected: rho_proj ~ 0.376, rho_raw ~ -0.043.
+
+**A2: HDAC removal.** Remove all drugs with "HDAC" in the target field
+(expected ~20 drugs). Recompute both Spearman correlations. If rho_proj
+drops below 0.3, HDAC drives the result.
+
+**A3: Top-20 removal.** Remove the 20 drugs with the lowest raw_bracket
+(most directionally consistent). Recompute both Spearman correlations.
+Tests whether outlier-consistent drugs inflate or deflate the result.
+
+**A4: Bootstrap CI.** 1000 bootstrap resamples of the full 795-drug set.
+Report 95% percentile CI for rho_proj and rho_raw.
+
+**A5: Drug pair search.** From non-HDAC drugs, find pairs where:
+- raw_bracket values are within 0.05 of each other
+- One drug has projected_bracket above the 75th percentile AND
+  on_target_enrichment above the 75th percentile
+- The other drug has projected_bracket below the 25th percentile AND
+  on_target_enrichment below the 25th percentile
+- Report the top 3-5 pairs ranked by the absolute difference in
+  projected_bracket, with all six fields plus n_celllines.
+
+### Decision criteria
+
+- **PRIMARY:** rho_proj after HDAC removal remains > 0.3 (the original
+  pre-registered threshold from H3). If it drops below 0.3, the H3
+  result depends on HDAC inhibitors and requires qualification.
+- **SECONDARY:** Bootstrap 95% CI for rho_proj excludes zero.
+- **EXPLORATORY:** At least one non-HDAC drug pair satisfying the A5
+  criteria exists.
+
+### Data
+
+Pre-computed results from Experiment 03 (03_phenotype_projection.py):
+results/03_phenotype_projection/phenotype_projection_results.json
+(795 drugs, fields: drug, target, n_celllines, raw_bracket,
+projected_bracket, on_target_enrichment).
+
+No new data is loaded. All analyses operate on the pre-computed JSON.
+
+---
+
 ## NOT pre-registered for PSB (future work)
 
 ### sci-Plex (dose-as-context)

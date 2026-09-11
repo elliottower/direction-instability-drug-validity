@@ -1,12 +1,12 @@
-"""Experiment 03: Phenotype-projected bracket separates mechanism from noise.
+"""Experiment 03: Phenotype-projected instability separates mechanism from noise.
 
-Tests H3: for drugs with known target pathways, phenotype-projected bracket
+Tests H3: for drugs with known target pathways, phenotype-projected instability
 (instability projected onto the target pathway direction) correlates with
-on-target activity, while raw bracket does not.
+on-target activity, while raw direction instability does not.
 
 Decision criterion (pre-registered): Spearman |rho| > 0.3 between
-phenotype-projected bracket and on-target gene enrichment, AND |rho| < 0.15
-for raw bracket vs same enrichment.
+phenotype-projected instability and on-target gene enrichment, AND |rho| < 0.15
+for raw direction instability vs same enrichment.
 
 Gene-set method (declared in DEVIATION_LOG.md entry 1):
   Primary: genetic perturbation connectivity — phenotype_direction is the
@@ -33,7 +33,7 @@ from scipy import stats
 from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from geometry.bracket_norm import direction_instability, phenotype_projected_bracket
+from geometry.direction_instability import direction_instability, phenotype_projected_instability
 
 
 def log(msg: str):
@@ -69,7 +69,7 @@ def cosine_squared(mean_sig: np.ndarray, direction: np.ndarray) -> float:
 
 
 def run_synthetic():
-    """Validate: phenotype-projected bracket correlates with on-target enrichment."""
+    """Validate: phenotype-projected instability correlates with on-target enrichment."""
     log("=== SYNTHETIC MODE ===")
     rng = np.random.default_rng(seed=2026070703)
     n_genes = 200
@@ -93,25 +93,25 @@ def run_synthetic():
             sigs[ctx] += rng.standard_normal(n_genes) * rng.uniform(0, 2)
 
         raw = direction_instability(sigs)
-        projected = phenotype_projected_bracket(sigs, phenotype_dir)
+        projected = phenotype_projected_instability(sigs, phenotype_dir)
         enrichment = on_target_strength
 
         results.append({
-            "raw_bracket": raw,
-            "projected_bracket": projected,
+            "raw_instability": raw,
+            "projected_instability": projected,
             "on_target_enrichment": enrichment,
         })
 
-    raw_vals = [r["raw_bracket"] for r in results]
-    proj_vals = [r["projected_bracket"] for r in results]
+    raw_vals = [r["raw_instability"] for r in results]
+    proj_vals = [r["projected_instability"] for r in results]
     enrich_vals = [r["on_target_enrichment"] for r in results]
 
     raw_rho, raw_p = stats.spearmanr(raw_vals, enrich_vals)
     proj_rho, proj_p = stats.spearmanr(proj_vals, enrich_vals)
 
     log(f"\nSpearman correlations with on-target enrichment:")
-    log(f"  Raw bracket:       rho={raw_rho:.4f} (p={raw_p:.2e})")
-    log(f"  Projected bracket: rho={proj_rho:.4f} (p={proj_p:.2e})")
+    log(f"  Direction instability:       rho={raw_rho:.4f} (p={raw_p:.2e})")
+    log(f"  Projected instability: rho={proj_rho:.4f} (p={proj_p:.2e})")
 
     pass_proj = abs(proj_rho) > 0.3
     pass_raw = abs(raw_rho) < 0.15
@@ -121,7 +121,7 @@ def run_synthetic():
     log(f"  |raw rho| < 0.15:      {abs(raw_rho):.4f} -> {'PASS' if pass_raw else 'FAIL'}")
 
     if pass_proj and pass_raw:
-        log("  H3 PASS: projected bracket correlates with on-target, raw does not")
+        log("  H3 PASS: projected instability correlates with on-target, raw does not")
     else:
         log("  H3 FAIL")
 
@@ -195,7 +195,7 @@ def run_real(data_dir: Path, output_dir: Path):
         indices = group["_idx"].values
         drug_cell_map[drug][cell] = compound_sigs[indices].mean(axis=0)
 
-    log("Computing phenotype-projected brackets...")
+    log("Computing phenotype-projected instabilitys...")
     results = []
     skipped_no_target = 0
     skipped_no_shrna = 0
@@ -216,15 +216,15 @@ def run_real(data_dir: Path, output_dir: Path):
         sigs_matrix = np.array(list(cells.values()))
         phenotype_dir = shrna_consensus[target]
         raw = direction_instability(sigs_matrix)
-        projected = phenotype_projected_bracket(sigs_matrix, phenotype_dir)
+        projected = phenotype_projected_instability(sigs_matrix, phenotype_dir)
         enrichment = cosine_squared(sigs_matrix.mean(axis=0), phenotype_dir)
 
         results.append({
             "drug": drug,
             "target": target,
             "n_celllines": len(cells),
-            "raw_bracket": float(raw),
-            "projected_bracket": float(projected),
+            "raw_instability": float(raw),
+            "projected_instability": float(projected),
             "on_target_enrichment": float(enrichment),
         })
 
@@ -239,8 +239,8 @@ def run_real(data_dir: Path, output_dir: Path):
         log("ERROR: too few drugs to compute correlations")
         sys.exit(1)
 
-    raw_vals = [r["raw_bracket"] for r in results]
-    proj_vals = [r["projected_bracket"] for r in results]
+    raw_vals = [r["raw_instability"] for r in results]
+    proj_vals = [r["projected_instability"] for r in results]
     enrich_vals = [r["on_target_enrichment"] for r in results]
 
     raw_rho, raw_p = stats.spearmanr(raw_vals, enrich_vals)
@@ -250,8 +250,8 @@ def run_real(data_dir: Path, output_dir: Path):
     log(f"N drugs: {len(results)}")
     log(f"On-target enrichment: cosine squared (mean drug signature vs shRNA direction)")
     log(f"Spearman correlations with on-target enrichment:")
-    log(f"  Raw bracket:       rho={raw_rho:.4f} (p={raw_p:.2e})")
-    log(f"  Projected bracket: rho={proj_rho:.4f} (p={proj_p:.2e})")
+    log(f"  Direction instability:       rho={raw_rho:.4f} (p={raw_p:.2e})")
+    log(f"  Projected instability: rho={proj_rho:.4f} (p={proj_p:.2e})")
 
     pass_proj = abs(proj_rho) > 0.3
     pass_raw = abs(raw_rho) < 0.15
@@ -261,7 +261,7 @@ def run_real(data_dir: Path, output_dir: Path):
     log(f"  |raw rho| < 0.15:      {abs(raw_rho):.4f} -> {'PASS' if pass_raw else 'FAIL'}")
 
     if pass_proj and pass_raw:
-        log("  H3 CONFIRMED: projected bracket correlates with on-target, raw does not")
+        log("  H3 CONFIRMED: projected instability correlates with on-target, raw does not")
     else:
         log("  H3 NOT CONFIRMED")
         if not pass_proj:

@@ -3,9 +3,9 @@ requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "bracket-norm-validity"
+name = "direction-instability-validity"
 version = "0.1.0"
-description = "Bracket Norm Is Not Mechanism: Validity Conditions for Noncommutative Perturbation Scores"
+description = "Construct Validity for Cross-Context Consistency Scores: Nine Pre-Registered Confound Tests Across 36,000 Drug and Genetic Perturbations"
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.24",

@@ -1,4 +1,4 @@
-"""Experiment 01: Toxic perturbations have high raw bracket but fail validity filtering.
+"""Experiment 01: Toxic perturbations have high raw direction instability but fail validity filtering.
 
 Tests H1: known cytotoxic compounds rank highly by raw direction instability
 but drop after toxicity correction. This demonstrates failure mode 1:
@@ -6,7 +6,7 @@ but drop after toxicity correction. This demonstrates failure mode 1:
 
 Uses LINCS L1000 data already extracted for the drug transport paper.
 Curates a toxicity gene set from known stress/apoptosis markers, then
-shows raw vs corrected bracket for known toxic vs therapeutic drugs.
+shows raw vs corrected instability for known toxic vs therapeutic drugs.
 
 Usage:
     uv run python experiments/01_toxicity_failure.py --data PATH_TO_LINCS
@@ -23,9 +23,9 @@ from scipy import stats
 from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from geometry.bracket_norm import (
+from geometry.direction_instability import (
     direction_instability,
-    toxicity_corrected_bracket,
+    toxicity_corrected_instability,
 )
 
 
@@ -88,7 +88,7 @@ def run_synthetic():
         for ctx in range(n_contexts):
             sigs[ctx, :n_stress] = shared_stress + rng.standard_normal(n_stress) * 0.3
         raw = direction_instability(sigs)
-        corrected = toxicity_corrected_bracket(sigs, stress_idx)
+        corrected = toxicity_corrected_instability(sigs, stress_idx)
         results_toxic.append({"raw": raw, "corrected": corrected})
 
     log("Generating synthetic therapeutic drugs (consistent mechanism in non-stress genes)...")
@@ -99,7 +99,7 @@ def run_synthetic():
         for ctx in range(n_contexts):
             sigs[ctx, target_start:target_start + 20] = shared_mech + rng.standard_normal(20) * 0.3
         raw = direction_instability(sigs)
-        corrected = toxicity_corrected_bracket(sigs, stress_idx)
+        corrected = toxicity_corrected_instability(sigs, stress_idx)
         results_therapeutic.append({"raw": raw, "corrected": corrected})
 
     raw_toxic = [r["raw"] for r in results_toxic]
@@ -111,7 +111,7 @@ def run_synthetic():
     log(f"Corrected:        toxic={np.mean(corr_toxic):.4f}, therapeutic={np.mean(corr_ther):.4f}")
     log(f"(Low = stable/transporting. High = unstable/context-dependent.)")
 
-    log(f"\nKey insight: BOTH have low raw bracket (both look like they transport).")
+    log(f"\nKey insight: BOTH have low raw direction instability (both look like they transport).")
     log(f"But after removing stress genes:")
     log(f"  Toxic: instability RISES (stress was the only consistent signal)")
     log(f"  Therapeutic: instability stays LOW (mechanism is in non-stress genes)")
@@ -123,7 +123,7 @@ def run_synthetic():
     log(f"  Therapeutic: {corr_increase_ther:+.4f} (should stay same or decrease)")
 
     u_corr, p_corr = stats.mannwhitneyu(corr_toxic, corr_ther, alternative="greater")
-    log(f"\nCorrected bracket: toxic > therapeutic p={p_corr:.2e}")
+    log(f"\nCorrected instability: toxic > therapeutic p={p_corr:.2e}")
 
     toxic_exposed = sum(1 for t, c in zip(raw_toxic, corr_toxic) if c > t + 0.05)
     ther_preserved = sum(1 for t, c in zip(raw_ther, corr_ther) if c < t + 0.05)
@@ -198,7 +198,7 @@ def run_real(data_dir: Path, output_dir: Path):
                 drug_sig_map[drug][cell] = []
             drug_sig_map[drug][cell].append(sig_id_to_idx[sid])
 
-    log("Computing bracket norms...")
+    log("Computing direction instabilitys...")
     results = []
     for drug_name, cell_sigs in tqdm(drug_sig_map.items(), desc="Drugs"):
         if len(cell_sigs) < 5:
@@ -209,7 +209,7 @@ def run_real(data_dir: Path, output_dir: Path):
         sigs_matrix = np.array(cell_means)
 
         raw = direction_instability(sigs_matrix)
-        corrected = toxicity_corrected_bracket(sigs_matrix, stress_indices)
+        corrected = toxicity_corrected_instability(sigs_matrix, stress_indices)
 
         is_toxic = drug_name.lower() in [d.lower() for d in KNOWN_CYTOTOXIC]
         is_therapeutic = drug_name.lower() in [d.lower() for d in KNOWN_BROAD_THERAPEUTICS]
@@ -217,8 +217,8 @@ def run_real(data_dir: Path, output_dir: Path):
         results.append({
             "drug": drug_name,
             "n_celllines": len(cell_sigs),
-            "raw_bracket": float(raw),
-            "corrected_bracket": float(corrected),
+            "raw_instability": float(raw),
+            "corrected_instability": float(corrected),
             "is_toxic": is_toxic,
             "is_therapeutic": is_therapeutic,
             "moa": drug_labels.get(drug_name, {}).get("moa", "unknown"),
@@ -232,8 +232,8 @@ def run_real(data_dir: Path, output_dir: Path):
 
     toxic_drugs = [r for r in results if r["is_toxic"]]
     therapeutic_drugs = [r for r in results if r["is_therapeutic"]]
-    all_raw = [r["raw_bracket"] for r in results]
-    all_corr = [r["corrected_bracket"] for r in results]
+    all_raw = [r["raw_instability"] for r in results]
+    all_corr = [r["corrected_instability"] for r in results]
 
     log(f"\n=== H1 RESULTS ===")
     log(f"Known cytotoxic found: {len(toxic_drugs)}")
@@ -243,14 +243,14 @@ def run_real(data_dir: Path, output_dir: Path):
         p80 = np.percentile(all_raw, 80)
         median_corr = np.median(all_corr)
 
-        toxic_in_top20 = sum(1 for d in toxic_drugs if d["raw_bracket"] > p80)
-        toxic_below_median = sum(1 for d in toxic_drugs if d["corrected_bracket"] < median_corr)
+        toxic_in_top20 = sum(1 for d in toxic_drugs if d["raw_instability"] > p80)
+        toxic_below_median = sum(1 for d in toxic_drugs if d["corrected_instability"] < median_corr)
 
-        log(f"\nToxic drugs in top 20% raw bracket: {toxic_in_top20}/{len(toxic_drugs)}")
+        log(f"\nToxic drugs in top 20% raw direction instability: {toxic_in_top20}/{len(toxic_drugs)}")
         log(f"Toxic drugs below median corrected: {toxic_below_median}/{len(toxic_drugs)}")
-        raw_strs = [f"{d['drug']}={d['raw_bracket']:.3f}" for d in toxic_drugs]
-        corr_strs = [f"{d['drug']}={d['corrected_bracket']:.3f}" for d in toxic_drugs]
-        log(f"  Raw brackets: {raw_strs}")
+        raw_strs = [f"{d['drug']}={d['raw_instability']:.3f}" for d in toxic_drugs]
+        corr_strs = [f"{d['drug']}={d['corrected_instability']:.3f}" for d in toxic_drugs]
+        log(f"  Direction instabilitys: {raw_strs}")
         log(f"  Corrected:    {corr_strs}")
 
         fraction_pass = toxic_below_median / len(toxic_drugs) if toxic_drugs else 0
@@ -260,9 +260,9 @@ def run_real(data_dir: Path, output_dir: Path):
             log(f"\n  H1 NOT CONFIRMED: only {fraction_pass:.0%} drop (needed >=60%)")
 
     if therapeutic_drugs:
-        log(f"\nTherapeutic drugs raw brackets:")
-        for d in sorted(therapeutic_drugs, key=lambda x: x["raw_bracket"]):
-            log(f"  {d['drug']:20s} raw={d['raw_bracket']:.4f} corrected={d['corrected_bracket']:.4f}")
+        log(f"\nTherapeutic drugs raw direction instabilitys:")
+        for d in sorted(therapeutic_drugs, key=lambda x: x["raw_instability"]):
+            log(f"  {d['drug']:20s} raw={d['raw_instability']:.4f} corrected={d['corrected_instability']:.4f}")
 
     log(f"\nResults saved to {output_dir / 'toxicity_results.json'}")
 

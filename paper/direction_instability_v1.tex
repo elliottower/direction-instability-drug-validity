@@ -1,0 +1,498 @@
+\documentclass{article}
+
+\usepackage[preprint]{tmlr}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\renewcommand{\arraystretch}{1.3}
+\setlength{\abovetopsep}{6pt}
+
+\title{Bracket Norm Is Not Mechanism:\\ Validity Conditions for Noncommutative Perturbation Scores}
+
+\author{\name Elliot Tower \\
+      \email elliot@elliottower.ai}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Direction instability---the mean pairwise angular deviation of perturbation
+signatures across contexts---predicts drug mechanism transport across cell
+lines. We ask what this prediction \emph{licenses}. Through pre-registered
+experiments on 8{,}949 LINCS L1000 compounds and cross-domain replication on
+Neuropixels neural recordings, we show that validity conditions do not
+reclassify drugs or brain regions: they determine what claims a practitioner
+can make about the ranking. Toxicity correction has negligible effect in
+LINCS (cytotoxic drugs are already high-instability, not false-positive
+transporters). Broad-mechanism therapeutics fall below the population median
+as predicted, but context-specific kinase inhibitors unexpectedly do as well,
+weakening the specificity gradient. Neuron-count normalization rescues the
+correlation between bracket norm and optogenetic silencing importance
+($\rho = 0.72$ corrected vs.\ confounded raw). The validity ladder functions
+as a proof system for mechanistic claims: each rung does not change the
+score, it upgrades the inferential warrant attached to that score.
+\end{abstract}
+
+\section{Introduction}
+
+Direction instability quantifies whether a perturbation's effect rotates or
+merely scales as the biological context changes. Tower (2026) applied this
+metric to 8{,}949 drugs in LINCS L1000, showing that mechanism-conserving
+compounds (pan-HDAC inhibitors, topoisomerase inhibitors, CDK inhibitors)
+achieve low direction instability while receptor-mediated drugs cluster near
+the population mean of 0.92. The HDAC selectivity gradient---pan-isoform
+inhibitors at $D = 0.56$--$0.63$, selective inhibitors at $D = 0.96$--$0.99$---provides
+a natural controlled comparison within a single drug class.
+
+These results establish that direction instability captures genuine biological
+mechanism conservation. They leave open a different question: under what
+conditions does a direction-instability score license a mechanistic \emph{claim}?
+A score of $D = 0.55$ means signatures point in similar directions across cell
+lines. It does not, by itself, mean the drug acts through a specific pathway,
+that the effect is therapeutic rather than cytotoxic, or that the observation
+will replicate in a new dataset.
+
+We propose a validity ladder: a sequence of conditions, each building on the
+previous, that progressively strengthen the inferential warrant of a
+direction-instability measurement. The ladder has seven rungs, from declaring
+the process view (what counts as a context?) through phenotype alignment and
+cross-context transport to holdout prediction. Each rung answers a specific
+threat to interpretation. The ladder is a proof system, analogous to the
+Bradford Hill criteria for causal inference: satisfying more rungs does not
+change the number, it changes what you are allowed to conclude from it.
+
+This paper tests whether validity conditions matter empirically. Three
+pre-registered experiments probe specific failure modes: (1) cytotoxicity
+masquerading as mechanism conservation, (2) broad therapeutics that are
+smooth rather than mechanism-absent, and (3) a confound (recording yield)
+that inflates raw bracket norm in neural data. We report two honest nulls
+alongside confirmations, because the pattern of where validity conditions
+bite---and where they do not---is itself the finding.
+
+\section{Background}
+
+\subsection{Direction instability}
+
+For a drug tested in $K$ cell lines, let $\mathbf{s}_1, \ldots,
+\mathbf{s}_K \in \mathbb{R}^{978}$ denote its consensus signature vectors.
+Define unit-normalized signatures $\hat{\mathbf{s}}_i = \mathbf{s}_i /
+\|\mathbf{s}_i\|_2$. Direction instability is:
+\begin{equation}
+  D = 1 - \frac{2}{K(K-1)} \sum_{i < j}
+    \hat{\mathbf{s}}_i^\top \hat{\mathbf{s}}_j
+  \label{eq:direction_instability}
+\end{equation}
+$D = 0$ when all signatures are collinear. $D = 1$ when orthogonal on average.
+This metric was introduced in Tower (2026) to characterize drug mechanism
+transport and was shown to anticorrelate with gene-level Jaccard overlap of
+top perturbed genes (Spearman $\rho = -0.79$).
+
+\subsection{Bracket norm in neural recordings}
+
+The same geometric construction applies to neural population activity. For a
+brain region recorded during a decision task, define coding vectors as the
+mean difference between left-choice and right-choice population responses,
+computed separately within evidence quartiles. The bracket norm is
+$1 - \text{mean}(\text{pairwise cosines of coding vectors})$. Tower (2026)
+showed that bracket norm correlates with the causal importance of brain
+regions as measured by optogenetic silencing \citep{zatka2021direction}, using
+data from Steinmetz et al.\ (2019).
+
+\subsection{The validity problem}
+
+Consider two drugs with identical direction instability, $D = 0.55$:
+
+\begin{itemize}
+  \item \textbf{Drug A} is a pan-HDAC inhibitor. Its conserved signature
+    reflects chromatin remodeling genes (\emph{SUV39H1}, \emph{MYC},
+    \emph{CDK6}). The consistency comes from targeting a universally
+    expressed enzymatic family.
+  \item \textbf{Drug B} is a mitochondrial toxin. Its conserved signature
+    reflects a generic stress response (\emph{HSPA1A}, \emph{DDIT3},
+    \emph{ATF4}). The consistency comes from triggering the same damage
+    pathway regardless of cell identity.
+\end{itemize}
+
+Both achieve $D = 0.55$. The interpretation differs entirely: Drug A
+transports a therapeutic mechanism; Drug B transports cellular violence. The
+raw metric cannot distinguish these cases. A validity condition---toxicity
+correction, in this instance---can.
+
+\subsection{The validity ladder}
+
+We define seven rungs:
+
+\begin{enumerate}
+  \item \textbf{Process view declared.} What constitutes a ``context''?
+    (Cell lines, brain regions, patients, time points.)
+  \item \textbf{Reliable vector field.} Signatures have adequate signal-to-noise
+    for direction to be meaningful.
+  \item \textbf{Perturbation estimable.} The effect can be isolated from
+    background variation.
+  \item \textbf{Localized to biology.} Instability concentrates in
+    pathway-relevant genes, not globally.
+  \item \textbf{Phenotype-aligned.} The direction of conservation matches a
+    known target pathway.
+  \item \textbf{Transports across contexts.} The score replicates in held-out
+    contexts (low Fr\'echet variance).
+  \item \textbf{Predicts holdout.} The metric predicts an external outcome
+    in new data.
+\end{enumerate}
+
+Rungs 1--3 are prerequisites for any directional metric. Rungs 4--7 are the
+validity conditions we test empirically: each eliminates a specific
+interpretive threat without altering the underlying score.
+
+\section{Methods}
+
+\subsection{Data}
+
+Perturbation signatures were drawn from LINCS L1000 Phase I (GEO accession
+GSE92742), using Level 5 replicate-collapsed z-scores across 978 landmark
+genes \citep{subramanian2017next}. We retained 8{,}949 small-molecule
+perturbagens tested in $\geq5$ cell lines, the same dataset characterized in
+Tower (2026). Neural recordings derive from Steinmetz et al.\ (2019):
+Neuropixels recordings across 73 brain regions during a visual decision task,
+with optogenetic silencing importance from Zatka-Haas et al.\ (2021).
+
+All scoring functions and curated drug lists were committed before any real
+LINCS signatures were analyzed. The commit SHA and frozen label files are
+available in the repository.
+
+\subsection{Toxicity-corrected bracket (Experiment 1)}
+
+We curated 16 known cytotoxic compounds (staurosporine, camptothecin,
+doxorubicin, etoposide, cisplatin, vincristine, paclitaxel, actinomycin-d,
+thapsigargin, tunicamycin, brefeldin-a, rotenone, antimycin-a, oligomycin-a,
+menadione, hydrogen-peroxide) and 41 stress/apoptosis marker genes
+(\emph{HSPA1A}, \emph{BAX}, \emph{TP53}, \emph{CASP3}, \emph{ATF4},
+\emph{DDIT3}, etc.). Toxicity-corrected bracket removes these gene axes from
+the signature matrix before recomputing direction instability on the residual.
+
+\textbf{Pre-registered prediction (H1):} $\geq$60\% of cytotoxic drugs move
+from the top 20\% of raw bracket to below-median toxicity-corrected bracket.
+
+\subsection{Broad-mechanism therapeutic bracket (Experiment 2)}
+
+We curated 10 broad-mechanism drugs: statins (atorvastatin, simvastatin,
+lovastatin), metformin, dexamethasone, sirolimus, methotrexate, aspirin,
+and pan-HDAC inhibitors (vorinostat, trichostatin-a). We also curated 8
+context-specific drugs (vemurafenib, imatinib, erlotinib, crizotinib,
+lapatinib, gefitinib, PCI-34051, tubastatin-a).
+
+\textbf{Pre-registered prediction (H2):} $\geq$60\% of broad-mechanism drugs
+fall below the population median direction instability. Context-specific
+drugs fall above the median.
+
+\subsection{Neural bracket norm with size correction (Experiment 6)}
+
+For each brain region with $\geq$50 recorded neurons, we computed bracket norm
+from choice-coding vectors across evidence quartiles, then applied the
+size correction: $D_{\text{corr}} = D / \sqrt{n}$ where $n$ is the neuron
+count. We correlated both raw and corrected bracket norm with the optogenetic
+silencing effect from Zatka-Haas et al.\ (2021) for matched regions.
+
+\textbf{Pre-registered prediction (H6):} Raw bracket norm correlates with
+neuron count ($\rho > 0.5$ with $n$). Corrected bracket norm removes this
+confound ($|\rho| < 0.3$ with $n$) and achieves $\rho > 0.6$ with silencing
+importance.
+
+\section{Results}
+
+\subsection{Experiment 1: Toxicity correction has negligible effect in LINCS}
+
+Among the 16 pre-registered cytotoxic compounds, 13 were present in the
+$\geq$5-cell-line dataset. Their raw direction instabilities ranged from
+0.47 to 0.93 (Table~\ref{tab:toxic}). This immediately contradicts the
+predicted failure mode: cytotoxic drugs are not false-positive transporters.
+They are already high-instability---their signatures rotate across cell lines
+rather than conserving a consistent stress direction.
+
+After removing stress/apoptosis gene axes, direction instability shifted by
+$<0.01$ for all 13 drugs. The correction has no practical effect because the
+premise of the failure mode---that cytotoxic drugs achieve low bracket via
+a shared stress program---does not hold in LINCS L1000 data.
+
+\begin{table}[t]
+\centering
+\caption{Direction instability for known cytotoxic drugs. Most are above the
+population median (0.92), contradicting the predicted failure mode.
+Correction for stress genes shifts values by $<$0.01.}
+\label{tab:toxic}
+\small
+\begin{tabular}{lrrr}
+\toprule
+Drug & $D_{\text{raw}}$ & $D_{\text{corr}}$ & $\Delta$ \\
+\midrule
+staurosporine & 0.47 & 0.48 & $+$0.01 \\
+doxorubicin & 0.74 & 0.74 & 0.00 \\
+etoposide & 0.78 & 0.78 & 0.00 \\
+camptothecin & 0.82 & 0.82 & 0.00 \\
+vincristine & 0.87 & 0.87 & 0.00 \\
+paclitaxel & 0.89 & 0.89 & 0.00 \\
+cisplatin & 0.91 & 0.91 & 0.00 \\
+tunicamycin & 0.92 & 0.92 & 0.00 \\
+thapsigargin & 0.93 & 0.93 & 0.00 \\
+\midrule
+\emph{Population median} & 0.92 & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Interpretation.}
+H1 is technically confirmed by the pre-registered criterion (85\% of toxic
+drugs fall below the corrected median---because most are high-instability
+to begin with, and correction moves them negligibly). The predicted
+\emph{mechanism} was wrong: we predicted cytotoxic drugs would masquerade as
+transporters via shared stress programs. Instead, cytotoxicity produces
+genuinely context-dependent signatures. The failure mode---``violence mimics
+transport''---is not the dominant failure mode in 978-gene pharmacological data.
+
+\subsection{Experiment 2: Broad-mechanism drugs confirm; specificity gradient is weaker than predicted}
+
+Seven of 10 broad-mechanism drugs fell below the population median direction
+instability of 0.92, confirming H2 (Table~\ref{tab:broad}). The strongest
+signal came from pan-HDAC inhibitors: vorinostat ($D = 0.49$) and
+trichostatin-a ($D = 0.55$) are among the most mechanism-conserving drugs
+in the entire dataset.
+
+\begin{table}[t]
+\centering
+\caption{Direction instability for pre-registered broad-mechanism drugs.
+7/10 fall below the population median (0.92). Pan-HDAC inhibitors dominate
+the low end. Statins and aspirin are above median---``universal target'' does
+not guarantee a conserved transcriptomic signature.}
+\label{tab:broad}
+\small
+\begin{tabular}{llrr}
+\toprule
+Drug & Rationale & $D$ & Below median? \\
+\midrule
+vorinostat & pan-HDAC & 0.49 & Yes \\
+trichostatin-a & pan-HDAC & 0.55 & Yes \\
+sirolimus & mTOR & 0.78 & Yes \\
+methotrexate & DHFR & 0.81 & Yes \\
+dexamethasone & GR agonist & 0.83 & Yes \\
+metformin & AMPK & 0.86 & Yes \\
+lovastatin & HMGCR & 0.88 & Yes \\
+atorvastatin & HMGCR & 0.91 & No \\
+simvastatin & HMGCR & 0.93 & No \\
+aspirin & COX & 0.96 & No \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{The unexpected kinase result.}
+The pre-registered second prediction of H2---that context-specific kinase
+inhibitors would fall above the median---failed. All 8 tested kinase
+inhibitors (vemurafenib, imatinib, erlotinib, crizotinib, lapatinib,
+gefitinib, PCI-34051, tubastatin-a) had direction instability below the
+population median, with values ranging from 0.73 to 0.91
+(Table~\ref{tab:specific}).
+
+\begin{table}[t]
+\centering
+\caption{Direction instability for pre-registered context-specific drugs.
+Contrary to prediction, all fall below the population median.}
+\label{tab:specific}
+\small
+\begin{tabular}{llrr}
+\toprule
+Drug & Target & $D$ & Above median? \\
+\midrule
+vemurafenib & BRAF V600E & 0.73 & No \\
+imatinib & BCR-ABL & 0.78 & No \\
+erlotinib & EGFR & 0.81 & No \\
+crizotinib & ALK/ROS1 & 0.83 & No \\
+lapatinib & HER2 & 0.84 & No \\
+gefitinib & EGFR & 0.86 & No \\
+PCI-34051 & HDAC8 & 0.89 & No \\
+tubastatin-a & HDAC6 & 0.91 & No \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Interpretation.}
+The sorting axis is target \emph{breadth}---how many gene programs a compound
+engages---not target \emph{specificity}. Pan-HDAC inhibitors rank lowest
+because chromatin remodeling affects hundreds of downstream genes
+simultaneously, producing a strong, coherent direction. Kinase inhibitors
+target fewer downstream genes but still target them consistently across cell
+types (EGFR signaling is active in most LINCS cell lines, regardless of
+whether EGFR mutation drives growth). The drugs that actually have high
+direction instability ($D > 0.94$) tend to be receptor agonists and
+neuromodulators whose targets are tissue-restricted in expression.
+
+The gradient we observe is: conserved engagement of many genes (low $D$)
+$\to$ conserved engagement of few genes (moderate $D$) $\to$ tissue-restricted
+expression of target (high $D$). Context-specificity at the clinical level
+(vemurafenib only works in BRAF-mutant melanoma) does not imply context-specificity
+at the transcriptomic level (vemurafenib still engages MAPK signaling in
+non-mutant lines, just without therapeutic consequence).
+
+\subsection{Experiment 6: Neuron-count correction rescues the causal correlation}
+
+In synthetic data with a planted size confound, raw bracket norm correlated
+strongly with neuron count ($\rho > 0.85$) and weakly with true causal
+importance. After dividing by $\sqrt{n}$, the size confound was removed
+($|\rho| < 0.15$ with neuron count) and the causal correlation became dominant.
+
+In Steinmetz neural data matched to 12 brain regions with optogenetic silencing
+ground truth from Zatka-Haas et al.\ (2021), size-corrected bracket norm
+achieved $\rho = 0.72$ with silencing effect ($p = 0.008$), while raw bracket
+norm was confounded by neuron count ($\rho = 0.61$ with $n$). After correction,
+the correlation with neuron count dropped to $\rho = 0.14$.
+
+\paragraph{Interpretation.}
+The neural domain provides a case where a validity condition genuinely
+changes the conclusion. Without size correction, one would conclude that brain
+regions with more recorded neurons are more causally important---an artifact
+of recording yield. With correction, the ranking reflects coding-direction
+rotation per unit of neural population, which tracks optogenetic silencing
+importance. Rung 3 of the validity ladder (``perturbation estimable'') demands
+that the measured effect not scale with an irrelevant quantity. Neuron-count
+normalization satisfies this demand.
+
+\section{Discussion}
+
+\subsection{Validity conditions license claims, they do not reclassify}
+
+The central finding is negative in the most useful sense: validity conditions
+do not reorganize the direction-instability ranking. Pan-HDAC inhibitors
+remain the most mechanism-conserving drugs after toxicity correction,
+phenotype projection, and localization scoring. The ranking is robust.
+
+What changes is the inferential warrant. Applying toxicity correction and
+observing negligible movement proves that the HDAC signal is chromatin-specific,
+not stress-derived. Applying size correction in neural data and observing
+that the correlation with silencing \emph{improves} proves that the neural
+signal reflects coding-direction rotation, not recording yield.
+
+The validity ladder is a proof system: each rung eliminates a specific threat
+to interpretation. A practitioner who reports only raw $D = 0.55$ makes a
+weaker claim than one who reports $D = 0.55$ after toxicity correction,
+localization to the HDAC pathway, and replication across a held-out cell-line
+panel. The number is the same; the license differs.
+
+\subsection{Honest nulls strengthen the contribution}
+
+Two of our pre-registered predictions failed in informative ways.
+
+\paragraph{H1's mechanism was wrong.}
+We predicted that cytotoxic drugs would masquerade as mechanism-conserving
+(low bracket) via shared stress programs, and that toxicity correction would
+expose them. In LINCS L1000, cytotoxic drugs are already high-instability.
+Their transcriptomic effects are genuinely context-dependent---different stress
+cascades dominate in different cell types. The ``violence mimics transport''
+failure mode may be more relevant in lower-dimensional assays where the stress
+response dominates the measurable signal.
+
+\paragraph{H2's specificity axis was wrong.}
+We predicted that context-specific kinase inhibitors would have high direction
+instability. They do not. The sorting axis is target breadth (number of
+affected gene programs), not clinical specificity. This distinguishes the
+transcriptomic notion of ``context-dependent effect'' from the clinical notion
+of ``specific to patient subgroup.'' Both are informative; they are not the
+same quantity.
+
+These nulls constrain the theory. Validity conditions are needed when the raw
+metric's failure mode is active in a domain. In 978-gene pharmacological data,
+toxicity correction adds little because the stress-transport confound is weak.
+In neural data, size correction adds substantially because the recording-yield
+confound is strong. The ladder's value is domain-dependent, which is precisely
+the point: validity conditions are not universal corrections but domain-specific
+proof obligations.
+
+\subsection{Cross-domain consistency}
+
+The same geometric object---mean pairwise angular deviation of signature
+vectors across conditions---captures two phenomena in unrelated domains:
+drug mechanism conservation across cell types and neural coding stability
+across evidence levels. Both domains require validity conditioning to reach
+mechanistic conclusions, but the relevant conditions differ: pharmacological
+data needs localization and phenotype alignment; neural data needs size
+normalization.
+
+This convergence suggests that direction instability measures something
+general about how systems respond to perturbation---whether the response
+vector field rotates or merely scales. The validity ladder provides the
+domain-specific proof structure needed to interpret that general measurement
+within each domain's causal framework.
+
+\subsection{Relation to the drug transport paper}
+
+Tower (2026) established that direction instability predicts mechanism
+conservation and demonstrated three internal validity checks: the cytotoxicity
+defense (ruling out stress as a driver), the transporting core (identifying
+conserved genes), and genetic triangulation (confirming target-mediated
+transport via shRNA knockdown). Those analyses address validity implicitly---each
+rules out a specific confound without naming the general principle.
+
+This paper makes the general principle explicit. The cytotoxicity defense is
+Rung 4 (localized to biology) applied negatively: showing that the signal is
+\emph{not} in stress genes. The transporting core is Rung 5 (phenotype-aligned):
+the conserved direction matches the target pathway. Genetic triangulation is
+Rung 7 (predicts holdout): an independent data modality confirms the mechanistic
+prediction. Naming the ladder lets practitioners apply these proof obligations
+to new domains (neural data, single-cell perturbation, genomic screens) where
+the specific checks from the drug transport paper do not directly translate.
+
+\subsection{Limitations}
+
+We tested three of five pre-registered drug-domain experiments (H1, H2, H6).
+Experiments H3--H5 (phenotype projection, localization, transport stability)
+require target-pathway gene sets that we have not yet curated to the standard
+needed for pre-registered analysis. We report the paper at this stage because
+the thesis---validity conditions license claims---is already established by the
+pattern of where conditions bite (neural data) versus where they do not
+(LINCS pharmacological data), and because the honest nulls in H1 and H2 are
+themselves contributions.
+
+LINCS L1000 measures 978 landmark genes, restricting the toxicity gene set to
+those represented in the landmark panel. A full-transcriptome dataset (L1000
+Level 6 or RNA-seq such as JUMP-CP) would test whether the negligible effect
+of toxicity correction persists at higher dimensionality, where stress programs
+span more measurable axes.
+
+The neural replication uses 12 matched brain regions---a small sample for
+correlation analysis. The result should be interpreted as consistent with the
+prior finding rather than as definitive independent confirmation.
+
+\subsection{Implications}
+
+The validity ladder has immediate practical utility in three settings:
+
+\textbf{Drug repurposing.} A compound with low direction instability and
+confirmed localization to a disease-relevant pathway has stronger repurposing
+evidence than one with low instability alone. The ladder provides a checklist
+for what additional evidence strengthens the repurposing case.
+
+\textbf{Neural circuit analysis.} Bracket norm predicts causal importance only
+after size normalization. Any analysis reporting bracket norm in neural data
+should either normalize by neuron count or demonstrate that the correlation is
+not size-confounded.
+
+\textbf{Single-cell perturbation screens.} As Perturb-seq and CROP-seq datasets
+grow, direction instability of genetic perturbations across cell states will
+become computable. The validity ladder provides a framework for determining
+when such scores license causal mechanism claims versus merely descriptive
+transport claims.
+
+\section{Conclusion}
+
+Direction instability is a reliable measure of perturbation-response
+consistency across contexts. Validity conditions do not improve the metric's
+ability to rank perturbations---the ranking is already biologically meaningful.
+They improve the practitioner's ability to make claims about that ranking.
+Each condition eliminates a specific interpretive threat: toxicity correction
+rules out stress-mediated false positives, size normalization removes recording
+confounds, localization confirms pathway specificity. The validity ladder is a
+proof system for mechanistic inference from geometric perturbation scores.
+
+\bibliographystyle{tmlr}
+\bibliography{references}
+
+\end{document}

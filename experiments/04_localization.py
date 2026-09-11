@@ -1,11 +1,11 @@
-"""Experiment 04: Localized bracket predicts mechanism better than global bracket.
+"""Experiment 04: Localized instability predicts mechanism better than global instability.
 
 Tests H4: for drugs targeting specific pathways, the instability concentrates
-in pathway-relevant genes. The localization score (pathway bracket / global
-bracket) predicts MOA annotation better than raw global bracket.
+in pathway-relevant genes. The localization score (pathway instability / global
+instability) predicts MOA annotation better than raw global instability.
 
 Decision criterion (pre-registered): AUROC for MOA prediction from
-localization score > AUROC from raw bracket by at least 0.05.
+localization score > AUROC from raw direction instability by at least 0.05.
 
 AUROC is macro-averaged: one-vs-rest AUROC per MOA class, then unweighted mean.
 Bootstrap 95% CI on the gap is reported.
@@ -32,7 +32,7 @@ from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from geometry.bracket_norm import direction_instability, localization_score
+from geometry.direction_instability import direction_instability, localization_score
 
 
 REGION_MASK_SIZE = 100
@@ -80,7 +80,7 @@ def compute_macro_auroc(drugs, eligible_moas):
         y_true = [1 if d["moa"] == moa else 0 for d in drugs]
         if sum(y_true) < 2 or sum(y_true) == len(y_true):
             continue
-        raw_scores = [d["raw_bracket"] for d in drugs]
+        raw_scores = [d["raw_instability"] for d in drugs]
         loc_scores = [d["localization_score"] for d in drugs]
         raw_aurocs.append(roc_auc_score(y_true, raw_scores))
         loc_aurocs.append(roc_auc_score(y_true, loc_scores))
@@ -102,7 +102,7 @@ def bootstrap_auroc_gap(drugs, eligible_moas, n_boot=2000, seed=42):
 
 
 def run_synthetic():
-    """Validate: localization score predicts MOA better than raw bracket."""
+    """Validate: localization score predicts MOA better than raw direction instability."""
     log("=== SYNTHETIC MODE ===")
     rng = np.random.default_rng(seed=2026070704)
     n_genes = 200
@@ -129,7 +129,7 @@ def run_synthetic():
             raw = direction_instability(sigs)
             loc = localization_score(sigs, region_mask)
 
-            drug_results.append({"raw_bracket": raw, "localization_score": loc, "moa": moa})
+            drug_results.append({"raw_instability": raw, "localization_score": loc, "moa": moa})
 
     log(f"Generated {len(drug_results)} drugs across {n_moa_classes} MOA classes")
 
@@ -138,7 +138,7 @@ def run_synthetic():
     gap = mean_loc - mean_raw
 
     log(f"\nMacro-averaged AUROC for MOA prediction:")
-    log(f"  Raw bracket:        {mean_raw:.4f}")
+    log(f"  Direction instability:        {mean_raw:.4f}")
     log(f"  Localization score:  {mean_loc:.4f}")
     log(f"  Gap:                 {gap:+.4f}")
 
@@ -245,7 +245,7 @@ def run_real(data_dir: Path, output_dir: Path):
             "target": meta["target"],
             "moa": meta["moa"],
             "n_celllines": len(cells),
-            "raw_bracket": float(raw),
+            "raw_instability": float(raw),
             "localization_score": float(loc),
         })
 
@@ -279,7 +279,7 @@ def run_real(data_dir: Path, output_dir: Path):
     log(f"\n=== H4 RESULTS (PRIMARY: shRNA-derived region masks, N={REGION_MASK_SIZE}) ===")
     log(f"N drugs: {len(eligible_drugs)}, N MOA classes: {len(per_moa_raw)}")
     log(f"Macro-averaged AUROC for MOA prediction:")
-    log(f"  Raw bracket:        {mean_raw:.4f}")
+    log(f"  Direction instability:        {mean_raw:.4f}")
     log(f"  Localization score:  {mean_loc:.4f}")
     log(f"  Gap:                 {gap:+.4f}  95% CI [{ci_lo:+.4f}, {ci_hi:+.4f}]")
 

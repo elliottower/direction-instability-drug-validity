@@ -1,7 +1,7 @@
 {
-  "title": "Bracket Norm Is Not Mechanism: Validity Conditions for Noncommutative Perturbation Scores",
+  "title": "Construct Validity for Cross-Context Consistency Scores: Nine Pre-Registered Confound Tests Across 36,000 Drug and Genetic Perturbations",
   "upload_type": "software",
-  "description": "Characterizes when bracket norm becomes scientifically meaningful by proposing validity-conditioned variants and demonstrating five failure modes empirically.",
+  "description": "Nine pre-registered tests of whether direction instability, a cross-context consistency score for drug and genetic perturbations, is confounded by toxicity programs, off-target consistency, or universal-essential effects. Corrections preserve population rankings while reorganizing individual perturbations.",
   "creators": [
     {
       "name": "Tower, Elliot",
@@ -10,10 +10,18 @@
   ],
   "license": "CC-BY-4.0",
   "keywords": [
-    "bracket norm",
-    "drug perturbation",
-    "validity conditions",
-    "noncommutative geometry"
+    "construct validity",
+    "geometric perturbation scores",
+    "mechanistic claims",
+    "direction instability",
+    "perturbation profiling",
+    "pre-registration",
+    "LINCS L1000",
+    "Perturb-seq",
+    "Cell Painting",
+    "rank stability",
+    "Fréchet variance",
+    "Grassmannian geodesic"
   ],
   "related_identifiers": [
     {

@@ -1,11 +1,11 @@
-"""Experiment 05: Transport-stable bracket outpredicts raw bracket for cross-context claims.
+"""Experiment 05: Transport-stable instability outpredicts raw direction instability for cross-context claims.
 
-Tests H5: bracket norm that replicates across contexts (low Frechet variance)
-predicts held-out context effects better than raw bracket. Leave-one-cell-line-out
+Tests H5: direction instability that replicates across contexts (low Frechet variance)
+predicts held-out context effects better than raw direction instability. Leave-one-cell-line-out
 cross-validation with direction-based held-out outcome (cosine consistency).
 
 Decision criterion (pre-registered): Spearman correlation between transport-stable
-bracket and held-out-context prediction > correlation for raw bracket, in at least
+instability and held-out-context prediction > correlation for raw direction instability, in at least
 4/5 cross-validation folds.
 
 Held-out outcome: cosine similarity between the held-out cell line's signature
@@ -31,7 +31,7 @@ from scipy import stats
 from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from geometry.bracket_norm import direction_instability, transport_stable_bracket
+from geometry.direction_instability import direction_instability, transport_stable_instability
 
 
 def log(msg: str):
@@ -66,7 +66,7 @@ def build_drug_cell_matrix(signatures, sig_ids, siginfo):
 
 
 def run_synthetic():
-    """Validate: transport-stable bracket predicts held-out cosine better than raw."""
+    """Validate: transport-stable instability predicts held-out cosine better than raw."""
     log("=== SYNTHETIC MODE ===")
     rng = np.random.default_rng(seed=2026070705)
     n_genes = 200
@@ -90,7 +90,7 @@ def run_synthetic():
             train_sigs = sigs[train_idx]
             consensus = train_sigs.mean(axis=0)
             raw_scores.append(direction_instability(train_sigs))
-            ts_scores.append(transport_stable_bracket(train_sigs))
+            ts_scores.append(transport_stable_instability(train_sigs))
             holdout_cosines.append(cosine_sim(sigs[hold], consensus))
         stable_results.append({
             "raw_scores": raw_scores,
@@ -112,7 +112,7 @@ def run_synthetic():
             train_sigs = sigs[train_idx]
             consensus = train_sigs.mean(axis=0)
             raw_scores.append(direction_instability(train_sigs))
-            ts_scores.append(transport_stable_bracket(train_sigs))
+            ts_scores.append(transport_stable_instability(train_sigs))
             holdout_cosines.append(cosine_sim(sigs[hold], consensus))
         unstable_results.append({
             "raw_scores": raw_scores,
@@ -138,7 +138,7 @@ def run_synthetic():
     log(f"\nTransport-stable wins {ts_wins}/{n_cells} folds")
 
     if ts_wins >= 4:
-        log("  PASS: transport-stable bracket outpredicts raw in >=4/5 folds")
+        log("  PASS: transport-stable instability outpredicts raw in >=4/5 folds")
     else:
         log(f"  FAIL: transport-stable wins only {ts_wins} folds (need >=4)")
 
@@ -194,13 +194,13 @@ def run_real(data_dir: Path, output_dir: Path):
             consensus = train_sigs.mean(axis=0)
 
             raw = direction_instability(train_sigs)
-            ts = transport_stable_bracket(train_sigs)
+            ts = transport_stable_instability(train_sigs)
             holdout_cos = cosine_sim(holdout_sig, consensus)
 
             fold_drugs.append({
                 "drug": drug,
-                "raw_bracket": float(raw),
-                "ts_bracket": float(ts),
+                "raw_instability": float(raw),
+                "ts_instability": float(ts),
                 "holdout_cosine": holdout_cos,
             })
 
@@ -208,8 +208,8 @@ def run_real(data_dir: Path, output_dir: Path):
             log(f"    Skipping fold {fold_idx}: only {len(fold_drugs)} drugs")
             continue
 
-        raw_vals = [d["raw_bracket"] for d in fold_drugs]
-        ts_vals = [d["ts_bracket"] for d in fold_drugs]
+        raw_vals = [d["raw_instability"] for d in fold_drugs]
+        ts_vals = [d["ts_instability"] for d in fold_drugs]
         holdout_vals = [d["holdout_cosine"] for d in fold_drugs]
 
         raw_rho = stats.spearmanr(raw_vals, holdout_vals).statistic
@@ -245,7 +245,7 @@ def run_real(data_dir: Path, output_dir: Path):
         log(f"  (Adjusted threshold to {threshold}/{n_valid_folds} due to fewer valid folds)")
 
     if ts_wins >= threshold:
-        log(f"  H5 CONFIRMED: transport-stable bracket outpredicts raw in {ts_wins}/{n_valid_folds} folds")
+        log(f"  H5 CONFIRMED: transport-stable instability outpredicts raw in {ts_wins}/{n_valid_folds} folds")
     else:
         log(f"  H5 NOT CONFIRMED: transport-stable wins only {ts_wins}/{n_valid_folds} folds (needed {threshold})")
 

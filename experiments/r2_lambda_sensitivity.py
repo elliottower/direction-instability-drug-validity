@@ -1,4 +1,4 @@
-"""Robustness check R2: Lambda sensitivity for transport-stable bracket.
+"""Robustness check R2: Lambda sensitivity for transport-stable instability.
 
 Tests whether the H5-full result (TS outpredicts raw in all 66 folds) is
 robust to the choice of frechet_penalty (lambda) in:
@@ -27,7 +27,7 @@ from scipy import stats
 from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from geometry.bracket_norm import direction_instability, transport_stable_bracket
+from geometry.direction_instability import direction_instability, transport_stable_instability
 
 
 LAMBDA_VALUES = [0.0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 5.0]
@@ -79,12 +79,12 @@ def compute_per_drug_scores(drug_cell_means, holdout_cell, lam):
         consensus = train_sigs.mean(axis=0)
 
         raw = direction_instability(train_sigs)
-        ts = transport_stable_bracket(train_sigs, frechet_penalty=lam)
+        ts = transport_stable_instability(train_sigs, frechet_penalty=lam)
         holdout_cos = cosine_sim(holdout_sig, consensus)
 
         fold_drugs.append({
-            "raw_bracket": float(raw),
-            "ts_bracket": float(ts),
+            "raw_instability": float(raw),
+            "ts_instability": float(ts),
             "holdout_cosine": holdout_cos,
         })
     return fold_drugs
@@ -151,7 +151,7 @@ def run_real(data_dir: Path, output_dir: Path):
             frechet_var = float(np.mean(deviations**2))
 
             fold_drugs.append({
-                "raw_bracket": float(raw),
+                "raw_instability": float(raw),
                 "frechet_var": frechet_var,
                 "holdout_cosine": holdout_cos,
             })
@@ -173,9 +173,9 @@ def run_real(data_dir: Path, output_dir: Path):
         for holdout_cell in valid_cells:
             drugs = fold_data[holdout_cell]
 
-            raw_vals = [d["raw_bracket"] for d in drugs]
+            raw_vals = [d["raw_instability"] for d in drugs]
             # TS = raw - lambda * frechet_var
-            ts_vals = [d["raw_bracket"] - lam * d["frechet_var"] for d in drugs]
+            ts_vals = [d["raw_instability"] - lam * d["frechet_var"] for d in drugs]
             holdout_vals = [d["holdout_cosine"] for d in drugs]
 
             raw_rho = stats.spearmanr(raw_vals, holdout_vals).statistic
@@ -221,7 +221,7 @@ def run_real(data_dir: Path, output_dir: Path):
         lambda_results.append(result)
 
         log(f"  lambda={lam:.2f}: wins={ts_wins}/{n_valid} ({frac:.0%}), "
-            f"p={wilcoxon_result.pvalue:.2e}, mean_delta={np.mean(improvements):.4f}")
+            f"p={wilcoxon_p:.2e}, mean_delta={np.mean(improvements):.4f}")
 
     # Sanity check: at lambda=0, TS ≡ raw exactly, so 0/N folds should win
     lam0_result = next((r for r in lambda_results if r["lambda"] == 0.0), None)
@@ -294,16 +294,16 @@ def run_synthetic():
                 holdout_sig = cells[holdout_cell]
                 consensus = train_sigs.mean(axis=0)
                 fold_drugs.append({
-                    "raw_bracket": float(direction_instability(train_sigs)),
-                    "ts_bracket": float(transport_stable_bracket(train_sigs, frechet_penalty=lam)),
+                    "raw_instability": float(direction_instability(train_sigs)),
+                    "ts_instability": float(transport_stable_instability(train_sigs, frechet_penalty=lam)),
                     "holdout_cosine": cosine_sim(holdout_sig, consensus),
                 })
 
             if len(fold_drugs) < 20:
                 continue
 
-            raw_vals = [d["raw_bracket"] for d in fold_drugs]
-            ts_vals = [d["ts_bracket"] for d in fold_drugs]
+            raw_vals = [d["raw_instability"] for d in fold_drugs]
+            ts_vals = [d["ts_instability"] for d in fold_drugs]
             holdout_vals = [d["holdout_cosine"] for d in fold_drugs]
             raw_rho = stats.spearmanr(raw_vals, holdout_vals).statistic
             ts_rho = stats.spearmanr(ts_vals, holdout_vals).statistic

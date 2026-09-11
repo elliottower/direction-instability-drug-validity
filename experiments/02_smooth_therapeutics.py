@@ -1,8 +1,8 @@
-"""Experiment 02: Successful therapeutics can have low raw bracket.
+"""Experiment 02: Successful therapeutics can have low raw direction instability.
 
 Tests H2: known broad-mechanism drugs (statins, metformin, aspirin,
 dexamethasone, sirolimus) have raw direction instability below the population
-median. Low bracket does not imply irrelevance.
+median. Low instability does not imply irrelevance.
 
 This demonstrates failure mode 2: "useful interventions can be smooth."
 
@@ -21,7 +21,7 @@ from scipy import stats
 from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from geometry.bracket_norm import direction_instability, magnitude_cv
+from geometry.direction_instability import direction_instability, magnitude_cv
 
 
 def log(msg: str):
@@ -54,38 +54,38 @@ CONTEXT_SPECIFIC_DRUGS = {
 
 
 def run_synthetic():
-    """Validate: smooth therapeutics have lower bracket than specific drugs."""
+    """Validate: smooth therapeutics have lower instability than specific drugs."""
     log("=== SYNTHETIC MODE ===")
     rng = np.random.default_rng()
     n_genes = 978
     n_contexts = 10
 
-    broad_brackets = []
-    specific_brackets = []
+    broad_instabilitys = []
+    specific_instabilitys = []
 
     for _ in range(50):
         sigs = rng.standard_normal((n_contexts, n_genes)) * 0.2
         sigs += rng.standard_normal((1, n_genes)) * 1.5
-        broad_brackets.append(direction_instability(sigs))
+        broad_instabilitys.append(direction_instability(sigs))
 
     for _ in range(50):
         sigs = rng.standard_normal((n_contexts, n_genes)) * 0.5
         active_contexts = rng.choice(n_contexts, size=n_contexts // 2, replace=False)
         sigs[active_contexts] += rng.standard_normal((len(active_contexts), n_genes)) * 2.0
-        specific_brackets.append(direction_instability(sigs))
+        specific_instabilitys.append(direction_instability(sigs))
 
-    log(f"Broad mechanism: {np.mean(broad_brackets):.4f} +/- {np.std(broad_brackets):.4f}")
-    log(f"Context-specific: {np.mean(specific_brackets):.4f} +/- {np.std(specific_brackets):.4f}")
+    log(f"Broad mechanism: {np.mean(broad_instabilitys):.4f} +/- {np.std(broad_instabilitys):.4f}")
+    log(f"Context-specific: {np.mean(specific_instabilitys):.4f} +/- {np.std(specific_instabilitys):.4f}")
 
-    u, p = stats.mannwhitneyu(broad_brackets, specific_brackets, alternative="less")
+    u, p = stats.mannwhitneyu(broad_instabilitys, specific_instabilitys, alternative="less")
     log(f"Mann-Whitney U (broad < specific): p={p:.2e}")
 
-    median_all = np.median(broad_brackets + specific_brackets)
-    below = sum(1 for b in broad_brackets if b < median_all)
+    median_all = np.median(broad_instabilitys + specific_instabilitys)
+    below = sum(1 for b in broad_instabilitys if b < median_all)
     log(f"Broad below median: {below}/50 ({100*below/50:.0f}%)")
 
     if below >= 30:
-        log("PASS: broad-mechanism drugs have lower bracket (synthetic)")
+        log("PASS: broad-mechanism drugs have lower instability (synthetic)")
     else:
         log("FAIL: separation not achieved in synthetic data")
         sys.exit(1)
@@ -126,7 +126,7 @@ def run_real(data_dir: Path, output_dir: Path):
             drug_sig_map[drug][cell].append(sig_id_to_idx[sid])
 
     log("Computing direction instability for all drugs with 5+ cell lines...")
-    all_brackets = {}
+    all_instabilitys = {}
     for drug_name, cell_sigs in tqdm(drug_sig_map.items(), desc="Drugs"):
         if len(cell_sigs) < 5:
             continue
@@ -134,37 +134,37 @@ def run_real(data_dir: Path, output_dir: Path):
         for cell, indices in cell_sigs.items():
             cell_means.append(signatures[indices].mean(axis=0))
         sigs_matrix = np.array(cell_means)
-        all_brackets[drug_name] = {
-            "raw_bracket": float(direction_instability(sigs_matrix)),
+        all_instabilitys[drug_name] = {
+            "raw_instability": float(direction_instability(sigs_matrix)),
             "magnitude_cv": float(magnitude_cv(sigs_matrix)),
             "n_celllines": len(cell_sigs),
         }
 
-    all_values = [v["raw_bracket"] for v in all_brackets.values()]
+    all_values = [v["raw_instability"] for v in all_instabilitys.values()]
     population_median = np.median(all_values)
-    log(f"\nPopulation: {len(all_brackets)} drugs, median bracket = {population_median:.4f}")
+    log(f"\nPopulation: {len(all_instabilitys)} drugs, median instability = {population_median:.4f}")
 
     log(f"\n=== H2: BROAD-MECHANISM DRUGS ===")
     broad_found = []
     for drug, reason in BROAD_MECHANISM_DRUGS.items():
-        if drug in all_brackets:
-            b = all_brackets[drug]
-            below = b["raw_bracket"] < population_median
+        if drug in all_instabilitys:
+            b = all_instabilitys[drug]
+            below = b["raw_instability"] < population_median
             broad_found.append({"drug": drug, "reason": reason, **b, "below_median": below})
             marker = "BELOW" if below else "ABOVE"
-            log(f"  {drug:20s} bracket={b['raw_bracket']:.4f} [{marker}] — {reason}")
+            log(f"  {drug:20s} instability={b['raw_instability']:.4f} [{marker}] — {reason}")
         else:
             log(f"  {drug:20s} NOT FOUND in 5+ cell-line set")
 
-    log(f"\n=== CONTEXT-SPECIFIC DRUGS (expected HIGH bracket) ===")
+    log(f"\n=== CONTEXT-SPECIFIC DRUGS (expected HIGH instability) ===")
     specific_found = []
     for drug, reason in CONTEXT_SPECIFIC_DRUGS.items():
-        if drug in all_brackets:
-            b = all_brackets[drug]
-            above = b["raw_bracket"] > population_median
+        if drug in all_instabilitys:
+            b = all_instabilitys[drug]
+            above = b["raw_instability"] > population_median
             specific_found.append({"drug": drug, "reason": reason, **b, "above_median": above})
             marker = "ABOVE" if above else "BELOW"
-            log(f"  {drug:20s} bracket={b['raw_bracket']:.4f} [{marker}] — {reason}")
+            log(f"  {drug:20s} instability={b['raw_instability']:.4f} [{marker}] — {reason}")
 
     n_broad_below = sum(1 for d in broad_found if d["below_median"])
     n_specific_above = sum(1 for d in specific_found if d["above_median"])
@@ -193,7 +193,7 @@ def run_real(data_dir: Path, output_dir: Path):
 
     results = {
         "population_median": float(population_median),
-        "n_drugs_total": len(all_brackets),
+        "n_drugs_total": len(all_instabilitys),
         "broad_mechanism_drugs": [
             {k: make_serializable(v) for k, v in d.items()} for d in broad_found
         ],

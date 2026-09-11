@@ -33,9 +33,9 @@ biological contexts---are used to rank drugs and genes by mechanism
 conservation. These scores predict biological properties, but what
 a given score \emph{licenses} as a mechanistic claim depends on
 validity conditions that the raw number does not encode. We
-propose a construct-validity framework (a ``validity ladder'') that
-specifies which interpretive threats a score has survived, and test
-whether these conditions matter empirically.
+propose a construct-validity framework (a ``validity ladder'') with
+seven conditions, of which three are tested empirically, that
+specifies which interpretive threats a score has survived.
 
 \textbf{Methods:}
 We conducted pre-registered experiments across three perturbation
@@ -92,6 +92,26 @@ inhibitors achieve the lowest scores ($D = 0.14$--$0.19$), with a
 selectivity gradient within the HDAC class (Figure~\ref{fig:hdac})
 that tracks isoform specificity \citep{tower2026atlas}.
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\linewidth]{figures/fig5_hdac.pdf}
+\caption{%
+\textbf{HDAC selectivity gradient: calibration standard for direction
+instability.}
+Pan-HDAC inhibitors \citep{bolden2006anticancer} (panobinostat,
+vorinostat, belinostat) achieve the lowest direction instability
+($D = 0.14$--$0.19$); Class~I-selective entinostat is intermediate
+($D = 0.27$); isoform-selective HDAC6 and HDAC8 inhibitors (tubacin,
+PCI-34051 \citep{balasubramanian2008hdac8}) have the highest instability
+within the class ($D = 0.32$--$0.45$). This gradient, reproduced from
+\citet{tower2026drug}, provides a fine-grained rank ordering within the
+HDAC class: Spearman $\rho = 0.83$ between direction instability and
+selectivity rank across these 6 compounds after toxicity-gene correction.
+The HP1 ``doesn't bite'' threshold ($\rho \geq 0.83$) was calibrated to
+this value.}
+\label{fig:hdac}
+\end{figure}
+
 These rankings establish that the score captures genuine biological signal.
 They leave open a different question: under what conditions does a
 geometric perturbation score license a mechanistic \emph{claim}? A score
@@ -128,9 +148,10 @@ domain-specific instantiation of construct validation, analogous to the
 Bradford Hill criteria for causal inference
 \citep{hill1965environment,freiesleben2025benchmarking}: satisfying more
 rungs does not change the number, it changes what a practitioner is
-warranted in concluding from it. The rung ordering reflects logical dependency---a reliable
-measurement (Rung~2) is prerequisite for meaningful projection (Rung~5),
-and localized signal (Rung~4) precedes phenotype alignment (Rung~5)---rather
+warranted in concluding from it. The rung ordering reflects logical
+dependency: a reliable measurement (Rung~2) is prerequisite for meaningful
+projection (Rung~5), and localized signal (Rung~4) precedes phenotype
+alignment (Rung~5). This ordering captures logical prerequisites rather
 than a strict hierarchy of evidence strength.
 
 This paper tests whether validity conditions matter empirically across three
@@ -317,25 +338,6 @@ inferential warrant attached to it.}
 \label{fig:ladder}
 \end{figure}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.85\linewidth]{figures/fig5_hdac.pdf}
-\caption{%
-\textbf{HDAC selectivity gradient: calibration standard for direction
-instability.}
-Pan-HDAC inhibitors (panobinostat, vorinostat, belinostat) achieve the
-lowest direction instability ($D = 0.14$--$0.19$); Class~I-selective
-entinostat is intermediate ($D = 0.27$); isoform-selective HDAC6 and HDAC8
-inhibitors (tubacin, PCI-34051) have the highest instability within the
-class ($D = 0.32$--$0.45$). This gradient, reproduced from
-\citet{tower2026drug}, provides a fine-grained rank ordering within the
-HDAC class: Spearman $\rho = 0.83$ between direction instability and
-selectivity rank across these 6 compounds after toxicity-gene correction.
-The HP1 ``doesn't bite'' threshold ($\rho \geq 0.83$) was calibrated to
-this value.}
-\label{fig:hdac}
-\end{figure}
-
 \section{Related work}
 
 \paragraph{Construct validity in measurement.}
@@ -386,18 +388,28 @@ subspace geometry and showing that rank-preserving corrections carry
 inferential value. The Connectivity Map framework
 \citep{subramanian2017next,lamb2006connectivity} and subsequent metric
 evaluations \citep{li2020comprehensive} establish the
-transcriptomic-similarity framework that direction instability extends.
+transcriptomic-similarity scoring approach that direction instability extends.
 LEMUR \citep{ahlmanneltze2025lemur} performs multivariate regression on
 Grassmann manifolds for multi-condition Perturb-seq; our Experiment~7 uses
-a simpler Grassmannian geodesic distance.
+a simpler Grassmannian geodesic distance. Raju's geometric coherence
+framework \citep{raju2026shesha} applies related angular measures to
+single-cell CRISPR perturbations; our work differs in testing construct
+validity of such scores rather than using them directly for prediction.
+Pharmacogenomic interaction landscapes \citep{iorio2018unsupervised}
+and retrieval-based profile evaluation \citep{kalinin2025versatile}
+provide complementary perspectives on cross-study consistency.
 
 \paragraph{Metric evaluation in perturbation biology.}
 Prior work has benchmarked connectivity and signature-similarity metrics
 for consistency and predictive value
 \citep{subramanian2017next,li2020comprehensive,napolitano2021reconciling},
-and construct-validity
+construct-validity
 frameworks have been proposed for ML benchmarks and computational scores
-\citep{freiesleben2025benchmarking,watson2025measuring}. These efforts
+\citep{freiesleben2025benchmarking,watson2025measuring}; and recent work
+has shown that simple linear baselines match deep-learning perturbation
+predictors \citep{ahlmanneltze2025baseline}, while neural optimal
+transport \citep{bunne2023cellot} offers an alternative geometric
+approach to perturbation response modeling. These efforts
 evaluate \emph{whether} a metric predicts a downstream label. Our
 contribution is orthogonal: we ask \emph{what a given score licenses}---treating
 validity as a graded, condition-dependent warrant rather than a single
@@ -511,7 +523,10 @@ systems (50+ cell lines vs.\ two specific lines), different perturbation types
 cosines in $\mathbb{R}^{978}$ vs.\ Grassmannian geodesics in Gr$(5, 2073)$),
 and share no data or parameters. A single family across all eight hypotheses
 would be more conservative; we consider it overly so given the absence of
-any shared data or analytic dependence between domains. Experiment~8
+any shared data or analytic dependence between domains. The choice is
+immaterial for the confirmed results: H3 ($p < 10^{-27}$) and H5
+($p = 8.2 \times 10^{-13}$) survive Holm--Bonferroni correction even
+under a single 8-hypothesis family. Experiment~8
 (JUMP-CP) is reported separately because it uses a third data source with
 a distinct geometric estimand. After Holm--Bonferroni
 correction within the drug family, H3 ($p < 10^{-27}$) and H5
@@ -595,7 +610,18 @@ response subspace, re-orthogonalized, and recomputed geodesic distances.
 
 Two pre-registered predictions were tested.
 HP1 required Spearman $\rho$ between raw and corrected distances below
-0.70 (``bites'') or $\geq 0.83$ (``doesn't bite'').
+0.70 (ranking-disruptive, denoted ``bites'') or $\geq 0.83$
+(ranking-preserving, denoted ``doesn't bite''). We use these shorthand
+terms throughout: a correction ``bites'' when it reorganizes the
+population ranking ($\rho < 0.70$) and ``doesn't bite'' when it
+preserves it ($\rho \geq 0.83$). The ranking-preserving threshold of
+0.83 was calibrated to the HDAC selectivity gradient (Figure~\ref{fig:hdac}):
+the finest within-class rank ordering that direction instability
+resolves. The ranking-disruptive threshold of 0.70 was set as a
+round-number boundary below which more than half the variance is
+unexplained ($R^2 < 0.49$), following the companion paper
+\citep{tower2026drug}. Values between 0.70 and 0.83 would require
+further analysis to interpret.
 HP3 predicted that universal-essential knockdowns produce higher geodesic
 distances than non-essential knockdowns (Cohen's $d > 0$).
 
@@ -616,14 +642,14 @@ or $\geq 0.83$ (``doesn't bite'').
 
 \subsection{Supplementary experiments}
 
-Three additional drug-domain experiments are reported in Additional
-file~1. \textbf{Experiment~1}
+Three additional drug-domain experiments are reported in Supplementary
+Experiments. \textbf{Experiment~1}
 (H1, toxicity correction) tests whether cytotoxic drugs masquerade as
 mechanism-conserving. \textbf{Experiment~2} (H2, broad-mechanism drugs)
 tests whether broad-target therapeutics fall below the population median.
 \textbf{Experiment~4} (H4, localization score) tests whether gene-set
 restriction improves MOA prediction. HP2 (GO pathway prediction from
-corrected Perturb-seq distances) is also in Additional file~1.
+corrected Perturb-seq distances) is also in Supplementary Experiments.
 
 \section{Results}
 
@@ -724,13 +750,22 @@ signatures.
 
 CRISPRi does not provide independent convergent validity for H3. The
 shRNA-based result stands on its original evidence rather than being
-reinforced.
+reinforced. An alternative concern is that the H3 correlation is
+partly tautological: both drug signatures and shRNA ground-truth
+signatures derive from the same LINCS platform and largely overlapping
+cell lines, so shared platform-specific variance could inflate the
+association. The near-zero \emph{raw}-bracket correlation
+($\rho = -0.04$) argues against this: if platform sharing drove the
+result, raw bracket should also correlate with shRNA enrichment, since
+it uses the same signatures. The correlation emerges only after
+phenotype projection, suggesting it reflects on-target alignment
+rather than shared platform noise.
 
 \paragraph{HDAC-removal sensitivity.}
 Pan-HDAC inhibitors are the calibration standard for direction instability
 (Figure~\ref{fig:hdac}), so the H3 correlation could be driven by this
 single drug class. To test this, we removed all 20 HDAC-targeting drugs
-(spanning HDAC1, HDAC2, and HDAC6 targets; full list in Additional file~1)
+(spanning HDAC1, HDAC2, and HDAC6 targets; full list in Supplementary Experiments)
 and recomputed the phenotype-projected correlation. The result is
 essentially unchanged: $\rho = 0.3759$ ($n = 775$,
 $p = 2.0 \times 10^{-27}$), compared with $\rho = 0.3756$ on the full
@@ -883,7 +918,7 @@ from stronger variance penalization.}
 \end{figure}
 
 \subsection{Experiment 7: Essential-gene correction preserves ranking
-but reveals confound-dominated machinery}
+but reveals confound-dominated core-machinery genes}
 
 Universal-essential knockdowns have \emph{higher} Grassmannian geodesic
 distances than non-essential knockdowns (mean 2.80 vs.\ 2.67, Cohen's $d =
@@ -946,10 +981,10 @@ vs.\ $\rho > 0.99$ for LINCS). That a proportionally larger feature
 removal barely moves the ranking is stronger evidence for the thesis than
 the drug case: cell-health features carry less of the cross-source
 variance in morphological signatures than stress genes carry in
-transcriptomic signatures. The 78\% attrition from the full JUMP-CP
-dataset (116{,}750 to 25{,}254 compounds) means the retained set is
-biased toward well-replicated compounds; the result may not generalize
-to sparsely-profiled compounds.
+transcriptomic signatures. As noted in Section~4.1, the 78\% attrition
+from the full JUMP-CP dataset (116{,}750 to 25{,}254 compounds) means
+the retained set is biased toward well-replicated compounds; the result
+may not generalize to sparsely-profiled compounds.
 
 One explanation for the negligible effect: in morphological space,
 ``health'' and ``mechanism'' features are less separable than in
@@ -970,7 +1005,7 @@ principled and could yield different correction magnitudes.
 
 \subsection{Summary of supplementary experiments}
 
-Full methods, tables, and discussion appear in Additional file~1.
+Full methods, tables, and discussion appear in Supplementary Experiments.
 
 \textbf{H1 (toxicity correction).} Among 13 cytotoxic drugs, most are already high-instability ($D > 0.87$
 for 9 of 13); toxicity correction shifts values by $<$0.01. The predicted
@@ -1128,10 +1163,7 @@ population rankings. Sample sizes shown below each bar.
 rank-preserving corrections still identify specific confound-dominated
 items. JUMP-CP produces the largest individual shifts (7{,}155
 positions) from a proportionally large feature removal (23\% of
-features), yet population $\rho = 0.987$. The confound mechanisms
-differ across domains (toxicity genes, essential-gene subspaces,
-cell-health features), yet the pattern is the same: population
-rankings preserved, item-level confounds identified.}
+features), yet population $\rho = 0.987$.}
 \label{fig:cross_domain}
 \end{figure}
 
@@ -1200,7 +1232,10 @@ Direction instability measures angular consistency of perturbation signatures
 across contexts. It does not measure therapeutic efficacy, in-vivo
 translatability, or clinical specificity. The validity ladder is a
 construct-validation framework for interpretive warrant, not a surrogate
-endpoint.
+endpoint. The consequential validity facet (whether warrant upgrades
+change practitioner decisions) is illustrated via the daunorubicin/MG-132
+case study but is not empirically tested; a user study or
+decision-simulation experiment would be needed to validate this facet.
 
 The drug experiments H3--H5 depend on shRNA knockdown signatures as
 ground-truth on-target directions. shRNA has well-documented off-target
@@ -1333,6 +1368,8 @@ separability test), deviation log, and all experimental scripts are
 available at
 \url{https://github.com/elliottower/direction-instability-drug-validity}.
 The repository was public before the pre-registration freeze.
+A permanent archive is deposited at Zenodo
+(DOI: \url{https://doi.org/10.5281/zenodo.21284088}).
 
 \subsection*{Competing interests}
 The author declares no competing interests.
@@ -1373,24 +1410,13 @@ PCA: principal component analysis;
 shRNA: short hairpin RNA;
 TS: transport-stable bracket.
 
-\subsection*{Additional files}
-Additional file~1: Supplementary experiments and extended results.
-Full methods, tables, and discussion for Experiments~1, 2, and~4
+\subsection*{Supplementary material}
+Supplementary Experiments and Extended Results (PDF):
+full methods, tables, and discussion for Experiments~1, 2, and~4
 (H1 toxicity correction, H2 broad-mechanism drugs, H4 localization
 score) and HP2 (GO pathway prediction from corrected Perturb-seq
 distances). Includes the complete HDAC drug list used in the
-sensitivity analysis. (Format: PDF)
-
-\subsection*{Companion papers}
-Direction instability and the transport-stable bracket formula are
-defined and validated in a companion paper on LINCS L1000 drug
-transport (submitted to PLOS Computational Biology,
-PCOMPBIOL-S-26-02155; \citep{tower2026drug}). The cross-domain
-direction-instability atlas (LINCS, Perturb-seq, JUMP-CP) is
-described in a companion paper submitted to GigaScience
-(GIGA-D-26-00229; \citep{tower2026atlas}). Both are available as
-Zenodo preprints. The present paper tests construct-validity
-conditions on top of these prior results.
+sensitivity analysis.
 
 \bibliographystyle{unsrtnat}
 \bibliography{references}

@@ -1,7 +1,7 @@
 """Experiment R3: HDAC-removal sensitivity and non-HDAC drug pair search for H3.
 
 Tests whether the H3 result (Spearman rho = 0.376 between phenotype-projected
-bracket and on-target enrichment) survives removal of HDAC inhibitors and
+instability and on-target enrichment) survives removal of HDAC inhibitors and
 other perturbations. Finds concrete non-HDAC drug pairs illustrating the
 discriminative power of phenotype projection.
 
@@ -23,7 +23,7 @@ RESULTS_JSON = Path(__file__).resolve().parent.parent / "results" / "03_phenotyp
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results" / "r3_hdac_sensitivity"
 
 N_BOOTSTRAP = 1000
-RAW_BRACKET_MATCH_TOL = 0.05
+RAW_INSTABILITY_MATCH_TOL = 0.05
 TOP_N_CONSISTENT_REMOVE = 20
 N_PAIRS_REPORT = 5
 
@@ -40,8 +40,8 @@ def spearman_with_pvalue(x, y):
 
 def compute_correlations(drugs: list[dict], label: str) -> dict:
     """Compute projected and raw Spearman correlations for a drug set."""
-    proj = np.array([d["projected_bracket"] for d in drugs])
-    raw = np.array([d["raw_bracket"] for d in drugs])
+    proj = np.array([d["projected_instability"] for d in drugs])
+    raw = np.array([d["raw_instability"] for d in drugs])
     enrich = np.array([d["on_target_enrichment"] for d in drugs])
 
     rho_proj, p_proj = spearman_with_pvalue(proj, enrich)
@@ -85,10 +85,10 @@ def bootstrap_spearman(x: np.ndarray, y: np.ndarray, n_bootstrap: int) -> dict:
 
 
 def find_drug_pairs(drugs: list[dict]) -> list[dict]:
-    """Find non-HDAC drug pairs with similar raw_bracket but divergent projected_bracket and enrichment."""
+    """Find non-HDAC drug pairs with similar raw_instability but divergent projected_instability and enrichment."""
     non_hdac = [d for d in drugs if "HDAC" not in d["target"].upper()]
 
-    proj_vals = np.array([d["projected_bracket"] for d in non_hdac])
+    proj_vals = np.array([d["projected_instability"] for d in non_hdac])
     enrich_vals = np.array([d["on_target_enrichment"] for d in non_hdac])
 
     proj_p75 = float(np.percentile(proj_vals, 75))
@@ -100,41 +100,41 @@ def find_drug_pairs(drugs: list[dict]) -> list[dict]:
 
     # Classify drugs
     high_drugs = [d for d in non_hdac
-                  if d["projected_bracket"] >= proj_p75
+                  if d["projected_instability"] >= proj_p75
                   and d["on_target_enrichment"] >= enrich_p75]
     low_drugs = [d for d in non_hdac
-                 if d["projected_bracket"] <= proj_p25
+                 if d["projected_instability"] <= proj_p25
                  and d["on_target_enrichment"] <= enrich_p25]
 
     log(f"  High-high drugs (proj>=P75 & enrich>=P75): {len(high_drugs)}")
     log(f"  Low-low drugs (proj<=P25 & enrich<=P25): {len(low_drugs)}")
 
-    # Find pairs with similar raw_bracket
+    # Find pairs with similar raw_instability
     pairs = []
     for h in high_drugs:
         for lo in low_drugs:
-            raw_diff = abs(h["raw_bracket"] - lo["raw_bracket"])
-            if raw_diff <= RAW_BRACKET_MATCH_TOL:
-                proj_diff = abs(h["projected_bracket"] - lo["projected_bracket"])
+            raw_diff = abs(h["raw_instability"] - lo["raw_instability"])
+            if raw_diff <= RAW_INSTABILITY_MATCH_TOL:
+                proj_diff = abs(h["projected_instability"] - lo["projected_instability"])
                 pairs.append({
                     "high_drug": h["drug"],
                     "high_target": h["target"],
-                    "high_raw_bracket": h["raw_bracket"],
-                    "high_projected_bracket": h["projected_bracket"],
+                    "high_raw_instability": h["raw_instability"],
+                    "high_projected_instability": h["projected_instability"],
                     "high_on_target_enrichment": h["on_target_enrichment"],
                     "high_n_celllines": h["n_celllines"],
                     "low_drug": lo["drug"],
                     "low_target": lo["target"],
-                    "low_raw_bracket": lo["raw_bracket"],
-                    "low_projected_bracket": lo["projected_bracket"],
+                    "low_raw_instability": lo["raw_instability"],
+                    "low_projected_instability": lo["projected_instability"],
                     "low_on_target_enrichment": lo["on_target_enrichment"],
                     "low_n_celllines": lo["n_celllines"],
-                    "raw_bracket_diff": raw_diff,
-                    "projected_bracket_diff": proj_diff,
+                    "raw_instability_diff": raw_diff,
+                    "projected_instability_diff": proj_diff,
                 })
 
-    # Sort by projected_bracket_diff descending (most dramatic separation)
-    pairs.sort(key=lambda p: p["projected_bracket_diff"], reverse=True)
+    # Sort by projected_instability_diff descending (most dramatic separation)
+    pairs.sort(key=lambda p: p["projected_instability_diff"], reverse=True)
     return pairs
 
 
@@ -172,7 +172,7 @@ def main():
     )
     log(f"  Removed HDAC drugs (name → target):")
     for d in sorted(hdac_drugs, key=lambda x: x["drug"]):
-        log(f"    {d['drug']}: target={d['target']}, raw={d['raw_bracket']:.3f}, proj={d['projected_bracket']:.3f}")
+        log(f"    {d['drug']}: target={d['target']}, raw={d['raw_instability']:.3f}, proj={d['projected_instability']:.3f}")
 
     # Check for known HDAC synonyms missed by substring filter
     hdac_synonyms = ["histone deacetylase", "class i hdac", "class ii hdac", "pan-hdac", "sirtuin"]
@@ -201,42 +201,42 @@ def main():
     log(f"  PRIMARY CRITERION (rho_proj > 0.3 after HDAC removal): {'PASS' if passes_primary else 'FAIL'} (rho={a2['rho_proj']:.4f})")
     all_results["a2_hdac_removed"]["passes_primary"] = passes_primary
 
-    # --- A3: Top-20 most consistent removal (by raw_bracket) ---
-    log("\n--- A3: Top-20 most consistent drug removal (by raw_bracket) ---")
-    sorted_by_raw = sorted(all_drugs, key=lambda d: d["raw_bracket"])
+    # --- A3: Top-20 most consistent removal (by raw_instability) ---
+    log("\n--- A3: Top-20 most consistent drug removal (by raw_instability) ---")
+    sorted_by_raw = sorted(all_drugs, key=lambda d: d["raw_instability"])
     top20_consistent = sorted_by_raw[:TOP_N_CONSISTENT_REMOVE]
     remaining = sorted_by_raw[TOP_N_CONSISTENT_REMOVE:]
 
-    log(f"  Removed {TOP_N_CONSISTENT_REMOVE} drugs with lowest raw_bracket:")
+    log(f"  Removed {TOP_N_CONSISTENT_REMOVE} drugs with lowest raw_instability:")
     for d in top20_consistent:
-        log(f"    {d['drug']}: raw={d['raw_bracket']:.3f}, proj={d['projected_bracket']:.3f}, target={d['target']}")
+        log(f"    {d['drug']}: raw={d['raw_instability']:.3f}, proj={d['projected_instability']:.3f}, target={d['target']}")
 
     a3 = compute_correlations(remaining, "top20_raw_removed")
     a3["removed_drugs"] = [d["drug"] for d in top20_consistent]
-    a3["raw_bracket_range_removed"] = [
-        float(top20_consistent[0]["raw_bracket"]),
-        float(top20_consistent[-1]["raw_bracket"]),
+    a3["raw_instability_range_removed"] = [
+        float(top20_consistent[0]["raw_instability"]),
+        float(top20_consistent[-1]["raw_instability"]),
     ]
     passes_a3 = a3["rho_proj"] > 0.20
     a3["passes_criterion"] = passes_a3
     log(f"  A3 CRITERION (rho_proj > 0.20 after top-20 raw removal): {'PASS' if passes_a3 else 'FAIL'} (rho={a3['rho_proj']:.4f})")
     all_results["a3_top20_raw_removed"] = a3
 
-    # --- A3b: Top-20 most phenotype-aligned removal (by projected_bracket) ---
-    log("\n--- A3b: Top-20 most phenotype-aligned drug removal (by projected_bracket) ---")
-    sorted_by_proj = sorted(all_drugs, key=lambda d: d["projected_bracket"], reverse=True)
+    # --- A3b: Top-20 most phenotype-aligned removal (by projected_instability) ---
+    log("\n--- A3b: Top-20 most phenotype-aligned drug removal (by projected_instability) ---")
+    sorted_by_proj = sorted(all_drugs, key=lambda d: d["projected_instability"], reverse=True)
     top20_projected = sorted_by_proj[:TOP_N_CONSISTENT_REMOVE]
     remaining_proj = sorted_by_proj[TOP_N_CONSISTENT_REMOVE:]
 
-    log(f"  Removed {TOP_N_CONSISTENT_REMOVE} drugs with highest projected_bracket:")
+    log(f"  Removed {TOP_N_CONSISTENT_REMOVE} drugs with highest projected_instability:")
     for d in top20_projected:
-        log(f"    {d['drug']}: proj={d['projected_bracket']:.3f}, raw={d['raw_bracket']:.3f}, enrich={d['on_target_enrichment']:.4f}, target={d['target']}")
+        log(f"    {d['drug']}: proj={d['projected_instability']:.3f}, raw={d['raw_instability']:.3f}, enrich={d['on_target_enrichment']:.4f}, target={d['target']}")
 
     a3b = compute_correlations(remaining_proj, "top20_projected_removed")
     a3b["removed_drugs"] = [d["drug"] for d in top20_projected]
-    a3b["projected_bracket_range_removed"] = [
-        float(top20_projected[-1]["projected_bracket"]),
-        float(top20_projected[0]["projected_bracket"]),
+    a3b["projected_instability_range_removed"] = [
+        float(top20_projected[-1]["projected_instability"]),
+        float(top20_projected[0]["projected_instability"]),
     ]
     passes_a3b = a3b["rho_proj"] > 0.20
     a3b["passes_criterion"] = passes_a3b
@@ -245,8 +245,8 @@ def main():
 
     # --- A4: Bootstrap CI ---
     log("\n--- A4: Bootstrap CI (1000 resamples) ---")
-    proj_arr = np.array([d["projected_bracket"] for d in all_drugs])
-    raw_arr = np.array([d["raw_bracket"] for d in all_drugs])
+    proj_arr = np.array([d["projected_instability"] for d in all_drugs])
+    raw_arr = np.array([d["raw_instability"] for d in all_drugs])
     enrich_arr = np.array([d["on_target_enrichment"] for d in all_drugs])
 
     log("  Bootstrapping rho_proj...")
@@ -276,10 +276,10 @@ def main():
     for i, p in enumerate(top_pairs):
         log(f"\n  Pair {i + 1}:")
         log(f"    HIGH: {p['high_drug']} (target={p['high_target']}, n={p['high_n_celllines']})")
-        log(f"      raw={p['high_raw_bracket']:.3f}, proj={p['high_projected_bracket']:.3f}, enrich={p['high_on_target_enrichment']:.4f}")
+        log(f"      raw={p['high_raw_instability']:.3f}, proj={p['high_projected_instability']:.3f}, enrich={p['high_on_target_enrichment']:.4f}")
         log(f"    LOW:  {p['low_drug']} (target={p['low_target']}, n={p['low_n_celllines']})")
-        log(f"      raw={p['low_raw_bracket']:.3f}, proj={p['low_projected_bracket']:.3f}, enrich={p['low_on_target_enrichment']:.4f}")
-        log(f"    raw_bracket_diff={p['raw_bracket_diff']:.4f}, projected_bracket_diff={p['projected_bracket_diff']:.3f}")
+        log(f"      raw={p['low_raw_instability']:.3f}, proj={p['low_projected_instability']:.3f}, enrich={p['low_on_target_enrichment']:.4f}")
+        log(f"    raw_instability_diff={p['raw_instability_diff']:.4f}, projected_instability_diff={p['projected_instability_diff']:.3f}")
 
     all_results["a5_drug_pairs"] = {
         "n_total_pairs": len(pairs),

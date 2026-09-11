@@ -1,11 +1,11 @@
-"""Experiment 06: Neural bracket norm replication with validity ladder.
+"""Experiment 06: Neural direction instability replication with validity ladder.
 
-Tests H6: Bracket norm predicts optogenetic silencing importance in neural
+Tests H6: Direction instability predicts optogenetic silencing importance in neural
 data, but ONLY after neuron-count correction (BN/sqrt(n)). Without the
 correction, the signal is confounded by recording yield.
 
 This replicates Tower (2026) and demonstrates the validity ladder applied
-to a non-pharmacological domain: the same bracket norm that captures drug
+to a non-pharmacological domain: the same direction instability that captures drug
 mechanism transport also captures neural causal importance, but only when
 the appropriate validity condition (size correction) is applied.
 
@@ -48,9 +48,9 @@ def compute_bracket_norm_per_region(
     labels: dict,
     time_window: slice = slice(15, 35),
 ) -> dict:
-    """Compute bracket norm per brain region.
+    """Compute direction instability per brain region.
 
-    Bracket norm = how much the coding direction changes as stimulus
+    Direction instability = how much the coding direction changes as stimulus
     evidence varies. Operationalized as 1 - mean(pairwise cosine) of
     choice-coding vectors across evidence quartiles.
     """
@@ -157,7 +157,7 @@ def run_synthetic():
 
 
 def run_real(data_dir: Path, output_dir: Path):
-    """Run H6 on cached Steinmetz bracket norm results."""
+    """Run H6 on cached Steinmetz direction instability results."""
     log("=== REAL MODE ===")
 
     cache_files = list(data_dir.glob("*bracket*")) + list(data_dir.glob("*bundle*"))
@@ -174,7 +174,7 @@ def run_real(data_dir: Path, output_dir: Path):
                 break
 
     if not bn_results_path.exists():
-        log("No cached bracket norm results found. Computing from raw Steinmetz data...")
+        log("No cached direction instability results found. Computing from raw Steinmetz data...")
         log("ERROR: Raw Steinmetz data loading not implemented in this script.")
         log("  Copy results from bracket-norm repo: results_bundle/batch3/")
         sys.exit(1)
@@ -243,9 +243,9 @@ def run_real(data_dir: Path, output_dir: Path):
             f"bn/sqrt(n)={bn_corr:.5f}")
 
     if rho_corr > 0.6 and p_corr < 0.05:
-        log(f"\nH6 CONFIRMED: corrected bracket norm predicts silencing (rho={rho_corr:.3f})")
+        log(f"\nH6 CONFIRMED: corrected direction instability predicts silencing (rho={rho_corr:.3f})")
     elif rho_raw > 0.5:
-        log(f"\nH6 PARTIAL: raw bracket correlates but correction doesn't improve")
+        log(f"\nH6 PARTIAL: raw direction instability correlates but correction doesn't improve")
     else:
         log(f"\nH6 NOT CONFIRMED")
 

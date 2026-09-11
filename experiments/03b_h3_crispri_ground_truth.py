@@ -2,7 +2,7 @@
 
 Replaces shRNA consensus signatures with CRISPRi (Replogle et al. 2022)
 expression signatures as the "on-target direction" for phenotype-projected
-bracket. CRISPRi has fewer off-target effects than shRNA, so if H3
+instability. CRISPRi has fewer off-target effects than shRNA, so if H3
 strengthens, this confirms shRNA noise attenuated the original result.
 
 Pre-registered in PREREGISTRATION_EXTENDED.md before running on real data.
@@ -30,7 +30,7 @@ from scipy import stats
 from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from geometry.bracket_norm import direction_instability, phenotype_projected_bracket
+from geometry.direction_instability import direction_instability, phenotype_projected_instability
 
 
 def log(msg: str):
@@ -160,8 +160,8 @@ def run_synthetic():
         shrna_dir = target_dir + rng.standard_normal(n_genes) * 0.4
 
         raw = direction_instability(sigs)
-        proj_crispri = phenotype_projected_bracket(sigs, crispri_dir)
-        proj_shrna = phenotype_projected_bracket(sigs, shrna_dir)
+        proj_crispri = phenotype_projected_instability(sigs, crispri_dir)
+        proj_shrna = phenotype_projected_instability(sigs, shrna_dir)
         enrich_crispri = cosine_squared(sigs.mean(axis=0), crispri_dir)
         enrich_shrna = cosine_squared(sigs.mean(axis=0), shrna_dir)
 
@@ -268,7 +268,7 @@ def run_real(data_dir: Path, perturbseq_path: Path, output_dir: Path):
         f"Check gene-name mapping (shared genes: {len([g for g in landmark_symbols if not g.isdigit()])})"
     )
 
-    log("Computing phenotype-projected brackets with both ground truths...")
+    log("Computing phenotype-projected instabilitys with both ground truths...")
     results = []
     for drug, cells in tqdm(drug_cell_map.items(), desc="Drugs"):
         if drug not in drug_targets or len(cells) < 5:
@@ -289,17 +289,17 @@ def run_real(data_dir: Path, perturbseq_path: Path, output_dir: Path):
             "drug": drug,
             "target": target,
             "n_celllines": len(cells),
-            "raw_bracket": float(raw),
+            "raw_instability": float(raw),
         }
 
         if has_crispri:
             crispri_dir = crispri_consensus[target]
-            entry["proj_crispri"] = float(phenotype_projected_bracket(sigs_matrix, crispri_dir))
+            entry["proj_crispri"] = float(phenotype_projected_instability(sigs_matrix, crispri_dir))
             entry["enrich_crispri"] = float(cosine_squared(mean_sig, crispri_dir))
 
         if has_shrna_gt:
             shrna_dir = shrna_consensus[target]
-            entry["proj_shrna"] = float(phenotype_projected_bracket(sigs_matrix, shrna_dir))
+            entry["proj_shrna"] = float(phenotype_projected_instability(sigs_matrix, shrna_dir))
             entry["enrich_shrna"] = float(cosine_squared(mean_sig, shrna_dir))
 
         results.append(entry)
@@ -324,12 +324,12 @@ def run_real(data_dir: Path, perturbseq_path: Path, output_dir: Path):
             [r["enrich_crispri"] for r in crispri_results],
         )
         rho_raw_c, p_raw_c = stats.spearmanr(
-            [r["raw_bracket"] for r in crispri_results],
+            [r["raw_instability"] for r in crispri_results],
             [r["enrich_crispri"] for r in crispri_results],
         )
         log(f"\nCRISPRi ground truth (n={len(crispri_results)}):")
-        log(f"  Projected bracket rho: {rho_proj_c:.4f} (p={p_proj_c:.2e})")
-        log(f"  Raw bracket rho:       {rho_raw_c:.4f} (p={p_raw_c:.2e})")
+        log(f"  Projected instability rho: {rho_proj_c:.4f} (p={p_proj_c:.2e})")
+        log(f"  Direction instability rho:       {rho_raw_c:.4f} (p={p_raw_c:.2e})")
     else:
         log("\n  Too few drugs with CRISPRi ground truth for correlation")
         rho_proj_c = None
@@ -340,12 +340,12 @@ def run_real(data_dir: Path, perturbseq_path: Path, output_dir: Path):
             [r["enrich_shrna"] for r in shrna_results],
         )
         rho_raw_s, p_raw_s = stats.spearmanr(
-            [r["raw_bracket"] for r in shrna_results],
+            [r["raw_instability"] for r in shrna_results],
             [r["enrich_shrna"] for r in shrna_results],
         )
         log(f"\nshRNA ground truth (n={len(shrna_results)}):")
-        log(f"  Projected bracket rho: {rho_proj_s:.4f} (p={p_proj_s:.2e})")
-        log(f"  Raw bracket rho:       {rho_raw_s:.4f} (p={p_raw_s:.2e})")
+        log(f"  Projected instability rho: {rho_proj_s:.4f} (p={p_proj_s:.2e})")
+        log(f"  Direction instability rho:       {rho_raw_s:.4f} (p={p_raw_s:.2e})")
     else:
         rho_proj_s = None
 

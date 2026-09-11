@@ -176,3 +176,60 @@ explanation for this divergence.
 - H3 shRNA result and its Holm-Bonferroni survival are unaffected
 - The pre-registered interpretation was followed exactly as frozen
 - No post-hoc re-analysis or threshold adjustment was performed
+
+---
+
+## Deviation 6: H5 win test compared oppositely-oriented statistics
+
+**Pre-registered:** Transport-stable instability outpredicts raw direction
+instability in >= 80% of valid leave-one-cell-line-out folds, evaluated as
+`ts_rho > raw_rho` on Spearman correlations against held-out cosine.
+
+**Actual:** H5 is reported as not confirmed.
+
+**Why:** Direction instability measures inconsistency and held-out cosine
+measures agreement, so a working score must correlate negatively with the
+outcome. Transport-stable instability subtracts a Frechet-variance term that
+also grows with inconsistency and grows faster, reversing the sign. The
+registered comparison of signed correlations is therefore satisfiable by
+orientation rather than by prediction, and returns 66/66 for any sufficiently
+large penalty weight. The registration omitted an orientation convention; that
+omission is the deviation.
+
+Compared on predictive strength, |ts_rho| > |raw_rho| in 10 of 66 folds, and
+the transport-stable variant loses in the two largest (A375: 0.155 against
+0.480, n = 8,328; A549: 0.201 against 0.494, n = 8,888).
+
+**When:** Post-analysis.
+
+### What this does NOT change
+
+- The 66-fold computation itself is unchanged; only the comparison is corrected
+- Raw direction instability predicts held-out cell-line agreement, mean Spearman
+  rho = -0.602, correctly signed in all 66 folds
+- The permutation null (p_perm < 10^-3) still establishes that the prediction is
+  drug-specific rather than algebraic
+- No other hypothesis depends on H5
+
+Reproduced by `experiments/audit_h5_orientation_and_hdac.py`; output in
+`results/audit_h5_orientation_and_hdac/audit.json`.
+
+---
+
+## Deviation 7: Figure 5 rebuilt from committed source data
+
+**Pre-registered:** N/A -- figure construction was not specified.
+
+**Actual:** `fig5_hdac()` previously hardcoded six direction-instability values
+(0.14-0.45) and six cell-line counts that reproduce no stored artifact. It now
+reads `results/fig5_hdac_source/fig5_hdac_source.json`, built by
+`experiments/build_fig5_source.py` from this repository's own toxicity-correction
+results, and asserts at build time that every plotted value equals its source row.
+
+Selectivity is recorded as three ordered categories rather than six untied ranks:
+the pan-HDAC inhibitors differ in potency rather than isoform breadth, and the
+relative selectivity of tubacin and PCI-34051 is assay-dependent. All 11
+cross-category comparisons are concordant, Kendall tau_b = 0.856. No significance
+test is reported; six compounds do not support one.
+
+**When:** Post-analysis.

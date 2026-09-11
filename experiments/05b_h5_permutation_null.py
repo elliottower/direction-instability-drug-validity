@@ -1,6 +1,6 @@
 """H5 permutation null: variance-preserving signature shuffle.
 
-Tests whether the transport-stable bracket's advantage over raw DI in
+Tests whether the transport-stable instability's advantage over raw DI in
 predicting held-out cell-line cosine is an algebraic artifact of the
 coupling between Frechet variance and held-out outcome.
 
@@ -28,7 +28,7 @@ from scipy import stats
 from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from geometry.bracket_norm import direction_instability, transport_stable_bracket
+from geometry.direction_instability import direction_instability, transport_stable_instability
 
 
 def log(msg: str):
@@ -90,7 +90,7 @@ def run_permutation(data_dir: Path, output_dir: Path, n_perm: int = 1000):
             holdout_sig = cells[holdout_cell]
             consensus = train_sigs.mean(axis=0)
             raw = direction_instability(train_sigs)
-            ts = transport_stable_bracket(train_sigs)
+            ts = transport_stable_instability(train_sigs)
 
             fold_raw.append(float(raw))
             fold_ts.append(float(ts))

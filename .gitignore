@@ -11,3 +11,9 @@ paper/reference/
 *.log
 *.out
 submissions/
+
+# Peer-review correspondence and internal audits — never tracked
+reviews/
+*.fdb_latexmk
+*.fls
+*.toc
