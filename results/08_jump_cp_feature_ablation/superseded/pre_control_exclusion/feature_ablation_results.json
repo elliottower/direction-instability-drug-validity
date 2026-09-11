@@ -1,0 +1,89 @@
+{
+  "experiment": "08_jump_cp_feature_ablation",
+  "what_it_measures": "cross-site technical reproducibility of a compound ranking under deletion of a frozen morphological feature block; JUMP-CP sources are imaging sites, not cell types",
+  "preregistered": {
+    "bites_below": 0.7,
+    "preserves_at_or_above": 0.83,
+    "min_sources": 5,
+    "plate_type": "COMPOUND"
+  },
+  "n_compounds": 25000,
+  "n_features_total": 3180,
+  "n_features_ablated": 252,
+  "ablated_feature_sha256": "47acd5f00072ee7911c96a7aa181430b4886366d97f531f1d34324e780f9e216",
+  "dropped": {
+    "nonfinite": 0,
+    "zero_norm": 0,
+    "too_few": 0
+  },
+  "spearman_raw_vs_ablated": 0.9976614755769304,
+  "spearman_display": 0.9977,
+  "random_ablation_null": {
+    "n": 200,
+    "median": 0.9998497585559196,
+    "q025": 0.9998031076958386,
+    "q05": 0.999808157919885,
+    "q975": 0.999884249533722,
+    "empirical_p_lower_tail": 0.005
+  },
+  "leave_one_source_out": {
+    "source_1": {
+      "n": 25000,
+      "rho": 0.9977,
+      "note": "fixed cohort; >= MIN_SOURCES-1 remaining sources"
+    },
+    "source_10": {
+      "n": 25000,
+      "rho": 0.9975,
+      "note": "fixed cohort; >= MIN_SOURCES-1 remaining sources"
+    },
+    "source_11": {
+      "n": 25000,
+      "rho": 0.9977,
+      "note": "fixed cohort; >= MIN_SOURCES-1 remaining sources"
+    },
+    "source_2": {
+      "n": 25000,
+      "rho": 0.9976,
+      "note": "fixed cohort; >= MIN_SOURCES-1 remaining sources"
+    },
+    "source_3": {
+      "n": 25000,
+      "rho": 0.9977,
+      "note": "fixed cohort; >= MIN_SOURCES-1 remaining sources"
+    },
+    "source_5": {
+      "n": 25000,
+      "rho": 0.9976,
+      "note": "fixed cohort; >= MIN_SOURCES-1 remaining sources"
+    },
+    "source_6": {
+      "n": 25000,
+      "rho": 0.9977,
+      "note": "fixed cohort; >= MIN_SOURCES-1 remaining sources"
+    },
+    "source_7": {
+      "n": 25000,
+      "rho": 0.9976,
+      "note": "fixed cohort; >= MIN_SOURCES-1 remaining sources"
+    },
+    "source_8": {
+      "n": 25000,
+      "rho": 0.9976,
+      "note": "fixed cohort; >= MIN_SOURCES-1 remaining sources"
+    },
+    "source_9": {
+      "n": 25000,
+      "rho": 0.9976,
+      "note": "fixed cohort; >= MIN_SOURCES-1 remaining sources"
+    }
+  },
+  "percentile_rank_shift": {
+    "median": 0.0104,
+    "p90": 0.0324,
+    "p99": 0.05936,
+    "frac_over_1pct": 0.5128,
+    "frac_over_5pct": 0.0221
+  },
+  "verdict": "doesn't bite"
+}

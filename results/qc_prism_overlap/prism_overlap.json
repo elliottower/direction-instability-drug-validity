@@ -1,0 +1,45 @@
+{
+  "what_this_is": "blinded feasibility count; no viability value, rank shift, compound identity or association is computed",
+  "frozen_before_running": {
+    "min_prism_cell_lines": 100,
+    "min_overlap_to_proceed": 650,
+    "control_plate_fraction": 0.5,
+    "min_sources": 5,
+    "primary_mapping": "exact InChIKey, one-to-one in both directions",
+    "connectivity_role": "sensitivity only; cannot license proceeding"
+  },
+  "inputs": {
+    "script_sha256": "10170a3c478b21ae3d9b887953b542a8021978414a9fd5ad9b3c1ff635fd41bf",
+    "prism_lfc_sha256": "4e9cb6933d6cccc32f83e89383ddc79c79edccfc07aacddc64b9a680ce5bde31",
+    "samples_sha256": "3324dfac93d19ceaeafbe7d9e466127709328777cb2f6c5a465740cd327088e9",
+    "jump_compound_metadata_sha256": "8885960e92ebd99eb33699a79129f517e668d78dd94f0d7478d39c9825bd3c0a"
+  },
+  "jump": {
+    "controls_excluded": 8,
+    "cohort_compounds": 24992,
+    "with_inchikey": 24992,
+    "jcp_with_multiple_inchikeys_excluded": 0,
+    "inchikeys_shared_by_multiple_jcp_excluded": 0,
+    "one_to_one_compounds": 24992
+  },
+  "prism": {
+    "compounds_with_lfc": 1594,
+    "compounds_with_ge_100_lines": 1594,
+    "covered_but_absent_from_bridge": 313,
+    "bridge_ids_unparsed": 0,
+    "lfc_ids_unparsed": 0,
+    "bridge_one_to_one_keys": 1268
+  },
+  "mapping": {
+    "exact_one_to_one": 11,
+    "connectivity_only_unique_both_sides": 7,
+    "connectivity_ambiguous_excluded": 1
+  },
+  "decision": {
+    "threshold": 650,
+    "exact_overlap": 11,
+    "exact_proceed": false,
+    "expanded_overlap": 18,
+    "expanded_proceed_requires_parent_standardization": false
+  }
+}

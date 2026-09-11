@@ -1,0 +1,41 @@
+{
+  "what_this_is": "overlap ceiling between JUMP compounds and PRISM 24Q2",
+  "prism": {
+    "compounds_with_lfc": 1594,
+    "resolved_to_inchikey": 1291
+  },
+  "jump_library": {
+    "compounds": 115795,
+    "exact_prism_overlap": 298,
+    "connectivity_overlap": 632
+  },
+  "by_source_threshold": {
+    ">=1_sources": {
+      "compounds": 115721,
+      "exact_prism_overlap": 298,
+      "connectivity_overlap": 630
+    },
+    ">=2_sources": {
+      "compounds": 112427,
+      "exact_prism_overlap": 255,
+      "connectivity_overlap": 525
+    },
+    ">=3_sources": {
+      "compounds": 111167,
+      "exact_prism_overlap": 253,
+      "connectivity_overlap": 522
+    },
+    ">=4_sources": {
+      "compounds": 60963,
+      "exact_prism_overlap": 153,
+      "connectivity_overlap": 288
+    },
+    ">=5_sources": {
+      "compounds": 24992,
+      "exact_prism_overlap": 11,
+      "connectivity_overlap": 19
+    }
+  },
+  "threshold_required_for_option_e": 650,
+  "conclusion": "the exact-match ceiling over the ENTIRE JUMP library is below the 650 required, and the analysed >=5-source cohort is nearly disjoint from PRISM; no mapping improvement can rescue the test"
+}

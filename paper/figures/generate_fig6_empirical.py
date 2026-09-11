@@ -1,8 +1,19 @@
-"""Generate empirical cross-domain comparison figure (replaces conceptual DAG)."""
+"""Cross-domain comparison figure.
+
+The JUMP-CP bars are read from the deposited Experiment 8 artifacts rather than
+typed in, and asserted against them at build time: a figure that disagrees with
+the table it illustrates is the failure this guards against.
+
+The LINCS and Perturb-seq bars are still literals inherited from earlier drafts.
+They are flagged here because they have no artifact behind them in this
+repository; they should be bound to their source files before submission.
+"""
+import json
+from pathlib import Path
+
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import numpy as np
 
 plt.rcParams.update({
     'font.size': 11,
@@ -13,16 +24,53 @@ plt.rcParams.update({
     'ytick.major.width': 0.8,
 })
 
+RESULTS = Path(__file__).resolve().parents[2] / "results" / "08_jump_cp_feature_ablation"
+_j = json.loads((RESULTS / "feature_ablation_results.json").read_text())
+_rows = (RESULTS / "compound_instability.csv").read_text().splitlines()[1:]
+JUMP_N = int(_j["n_compounds"])
+JUMP_RHO = float(_j["spearman_display"])
+assert len(_rows) == JUMP_N, f"figure source disagrees with the table: {len(_rows)} vs {JUMP_N}"
+
+# max absolute percentile-rank shift, converted to positions, from that same table
+_raw = sorted(range(JUMP_N), key=lambda i: float(_rows[i].split(",")[2]))
+_abl = sorted(range(JUMP_N), key=lambda i: float(_rows[i].split(",")[3]))
+_rank_raw = {v: k for k, v in enumerate(_raw)}
+_rank_abl = {v: k for k, v in enumerate(_abl)}
+JUMP_MAX_SHIFT = max(abs(_rank_raw[i] - _rank_abl[i]) for i in range(JUMP_N))
+
+# LINCS: recomputed from the deposited per-drug table, not typed in.
+_lincs = json.loads((Path(__file__).resolve().parents[2] / "results" /
+                     "01_toxicity_failure" / "toxicity_results.json").read_text())
+_lr = sorted(range(len(_lincs)), key=lambda i: _lincs[i]["raw_instability"])
+_lc = sorted(range(len(_lincs)), key=lambda i: _lincs[i]["corrected_instability"])
+_pr = {v: k for k, v in enumerate(_lr)}
+_pc = {v: k for k, v in enumerate(_lc)}
+LINCS_MAX = max(abs(_pr[i] - _pc[i]) for i in range(len(_lincs)))
+
+import numpy as _np
+from scipy import stats as _st
+
+LINCS_RHO = round(float(_st.spearmanr(
+    [r["raw_instability"] for r in _lincs],
+    [r["corrected_instability"] for r in _lincs]).statistic), 4)
+
+# Perturb-seq: recomputed from the recovered per-gene distances.
+_z = _np.load(Path(__file__).resolve().parents[2] / "results" /
+              "07_perturbseq_correction" / "corrected_distances.npz")
+_raw_d, _corr_d = _z["raw_dists"], _z["corr_dists"]
+PSEQ_RHO = round(float(_st.spearmanr(_raw_d, _corr_d).statistic), 4)
+PSEQ_MAX = int(_np.abs(_st.rankdata(_raw_d) - _st.rankdata(_corr_d)).max())
+
 domains_left = ['LINCS\n(drugs)\nn = 8,949',
                 'Perturb-seq\n(genes)\nn = 1,676',
-                'JUMP-CP\n(compounds)\nn = 25,254']
+                f'JUMP-CP\n(compounds)\nn = {JUMP_N:,}']
 
 domains_right = ['LINCS\ntoxicity genes',
                  'Perturb-seq\nessential-gene\nsubspace',
-                 'JUMP-CP\ncell-health\nfeatures']
+                 'JUMP-CP\nmorphological\nblock']
 
-rho_values = [0.9991, 0.91, 0.987]
-max_rank_shifts = [1281, 900, 7155]
+rho_values = [LINCS_RHO, PSEQ_RHO, JUMP_RHO]
+max_rank_shifts = [LINCS_MAX, PSEQ_MAX, JUMP_MAX_SHIFT]
 
 colors = ['#2166ac', '#4393c3', '#92c5de']
 edge_colors = ['#08519c', '#2171b5', '#4292c6']

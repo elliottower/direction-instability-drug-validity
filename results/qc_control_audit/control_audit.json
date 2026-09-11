@@ -1,0 +1,163 @@
+{
+  "what_this_is": "metadata-only cohort QC; no direction instability is computed here",
+  "release": {
+    "wells": 803853,
+    "eligible_wells": 665553,
+    "distinct_eligible_plates": 1557
+  },
+  "control_rule": {
+    "definition": "exclude DMSO and any compound present on >= 50% of eligible COMPOUND plates",
+    "dmso": "JCP2022_033924",
+    "threshold_frac_plates": 0.5,
+    "n_identified": 8,
+    "identified": [
+      "JCP2022_012818",
+      "JCP2022_025848",
+      "JCP2022_035095",
+      "JCP2022_037716",
+      "JCP2022_046054",
+      "JCP2022_050797",
+      "JCP2022_064022",
+      "JCP2022_085227"
+    ],
+    "max_frac_below_threshold": 0.06872,
+    "separation_note": "controls sit far above the next most frequent compound; the threshold is not near any compound",
+    "top20_by_plate_fraction": [
+      {
+        "jcp": "JCP2022_046054",
+        "plates": 1557,
+        "frac_plates": 1.0
+      },
+      {
+        "jcp": "JCP2022_050797",
+        "plates": 1557,
+        "frac_plates": 1.0
+      },
+      {
+        "jcp": "JCP2022_025848",
+        "plates": 1557,
+        "frac_plates": 1.0
+      },
+      {
+        "jcp": "JCP2022_037716",
+        "plates": 1557,
+        "frac_plates": 1.0
+      },
+      {
+        "jcp": "JCP2022_064022",
+        "plates": 1557,
+        "frac_plates": 1.0
+      },
+      {
+        "jcp": "JCP2022_012818",
+        "plates": 1556,
+        "frac_plates": 0.99936
+      },
+      {
+        "jcp": "JCP2022_085227",
+        "plates": 1461,
+        "frac_plates": 0.93834
+      },
+      {
+        "jcp": "JCP2022_035095",
+        "plates": 1458,
+        "frac_plates": 0.93642
+      },
+      {
+        "jcp": "JCP2022_033954",
+        "plates": 107,
+        "frac_plates": 0.06872
+      },
+      {
+        "jcp": "JCP2022_101934",
+        "plates": 40,
+        "frac_plates": 0.02569
+      },
+      {
+        "jcp": "JCP2022_018628",
+        "plates": 38,
+        "frac_plates": 0.02441
+      },
+      {
+        "jcp": "JCP2022_029611",
+        "plates": 33,
+        "frac_plates": 0.02119
+      },
+      {
+        "jcp": "JCP2022_050997",
+        "plates": 32,
+        "frac_plates": 0.02055
+      },
+      {
+        "jcp": "JCP2022_109350",
+        "plates": 31,
+        "frac_plates": 0.01991
+      },
+      {
+        "jcp": "JCP2022_029868",
+        "plates": 31,
+        "frac_plates": 0.01991
+      },
+      {
+        "jcp": "JCP2022_019441",
+        "plates": 30,
+        "frac_plates": 0.01927
+      },
+      {
+        "jcp": "JCP2022_061774",
+        "plates": 29,
+        "frac_plates": 0.01863
+      },
+      {
+        "jcp": "JCP2022_067216",
+        "plates": 29,
+        "frac_plates": 0.01863
+      },
+      {
+        "jcp": "JCP2022_072565",
+        "plates": 29,
+        "frac_plates": 0.01863
+      },
+      {
+        "jcp": "JCP2022_083372",
+        "plates": 28,
+        "frac_plates": 0.01798
+      }
+    ]
+  },
+  "global_cohort_min_sources_5": {
+    "with_controls": 25000,
+    "without_controls": 24992,
+    "removed": 8
+  },
+  "r6_source_count_bins_control_excluded": {
+    "5-6": 24693,
+    "7-8": 293,
+    "9-10": 6
+  },
+  "sources_per_compound_exact_counts": {
+    "5": 23348,
+    "6": 1345,
+    "7": 262,
+    "8": 31,
+    "9": 3,
+    "10": 3
+  },
+  "wells_per_compound_in_global_cohort": {
+    "min": 5,
+    "max": 1592,
+    "p25": 5.0,
+    "p50": 5.0,
+    "p75": 5.0,
+    "p90": 9.0,
+    "p99": 14.0
+  },
+  "replicate_cohort_control_excluded": {
+    "min_wells_per_source": 2,
+    "min_sources": 3,
+    "n_compounds": 11471,
+    "n_wells": 96237,
+    "max_wells_per_compound": 48,
+    "median_wells_per_compound": 8.0
+  }
+}
