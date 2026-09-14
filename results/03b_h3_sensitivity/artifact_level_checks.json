@@ -1,0 +1,29 @@
+{
+  "what_this_is": "artifact-level checks of H3; the magnitude control and shared-axis null need the LINCS signature matrices, which are not on disk",
+  "n_drugs": 795,
+  "P_vs_enrichment": {
+    "spearman": 0.3756,
+    "p": 4.805491865876767e-28
+  },
+  "rawD_vs_enrichment": {
+    "spearman": -0.0433,
+    "p": 0.22294579221431723
+  },
+  "P_vs_rawD": {
+    "spearman": -0.2475,
+    "p": 1.476243267509607e-12
+  },
+  "P_vs_n_celllines": {
+    "spearman": 0.2555,
+    "p": 2.5950452816044365e-13
+  },
+  "enrichment_vs_n_celllines": {
+    "spearman": 0.2149,
+    "p": 9.210598626770045e-10
+  },
+  "partial_P_vs_enrichment_given_n_celllines": 0.3397,
+  "P_range": [
+    0.422,
+    22.5
+  ]
+}
