@@ -1,0 +1,71 @@
+{
+  "figure": "fig5_hdac",
+  "plotted_quantity": "corrected_instability",
+  "plotted_quantity_note": "Toxicity-gene-corrected direction instability, computed in this repository by experiments/01_toxicity_failure. Lower means the response points the same direction across cell lines.",
+  "selectivity_note": "Three ordered categories. The three pan-HDAC inhibitors differ in potency rather than isoform breadth; tubacin and PCI-34051 are both isoform-selective and their relative selectivity is assay-dependent. Neither pair supports an internal ordering, so both are tied.",
+  "source_file": "results/01_toxicity_failure/toxicity_results.json",
+  "rows": [
+    {
+      "drug": "Panobinostat",
+      "results_key": "panobinostat",
+      "selectivity_category": "Pan-HDAC",
+      "category_rank": 1,
+      "corrected_instability": 0.5336,
+      "raw_instability": 0.5331,
+      "n_celllines": 15
+    },
+    {
+      "drug": "Vorinostat",
+      "results_key": "vorinostat",
+      "selectivity_category": "Pan-HDAC",
+      "category_rank": 1,
+      "corrected_instability": 0.488,
+      "raw_instability": 0.4899,
+      "n_celllines": 60
+    },
+    {
+      "drug": "Belinostat",
+      "results_key": "belinostat",
+      "selectivity_category": "Pan-HDAC",
+      "category_rank": 1,
+      "corrected_instability": 0.5502,
+      "raw_instability": 0.5508,
+      "n_celllines": 13
+    },
+    {
+      "drug": "Entinostat",
+      "results_key": "entinostat",
+      "selectivity_category": "Class I-selective",
+      "category_rank": 2,
+      "corrected_instability": 0.605,
+      "raw_instability": 0.6037,
+      "n_celllines": 14
+    },
+    {
+      "drug": "Tubacin",
+      "results_key": "tubacin",
+      "selectivity_category": "Isoform-selective",
+      "category_rank": 3,
+      "corrected_instability": 0.9014,
+      "raw_instability": 0.9012,
+      "n_celllines": 9
+    },
+    {
+      "drug": "PCI-34051",
+      "results_key": "pci-34051",
+      "selectivity_category": "Isoform-selective",
+      "category_rank": 3,
+      "corrected_instability": 0.8892,
+      "raw_instability": 0.8889,
+      "n_celllines": 12
+    }
+  ],
+  "statistics": {
+    "cross_category_pairs": 11,
+    "concordant": 11,
+    "discordant": 0,
+    "tau_b": 0.8563,
+    "exact_two_sided_p": 0.0333,
+    "n_distinct_category_assignments": 60
+  }
+}

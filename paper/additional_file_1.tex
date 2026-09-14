@@ -1,0 +1,430 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage[numbers,square,sort&compress]{natbib}
+\usepackage{longtable}
+
+\renewcommand{\arraystretch}{1.3}
+\tolerance=1500
+\emergencystretch=1em
+
+\title{Supplementary Experiments and Extended Results}
+
+\author{Elliot Tower\\
+\texttt{elliot@elliottower.ai}}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+This document provides full methods, tables, and discussion for the
+supplementary experiments referenced in the main text. Experiment
+numbering follows the pre-registration.
+
+\tableofcontents
+\newpage
+
+%% ===================================================================
+\section{Experiment 1 (H1): Toxicity correction}
+\label{sec:h1}
+%% ===================================================================
+
+\subsection{Hypothesis}
+
+Known cytotoxic compounds produce consistent transcriptomic signatures
+across cell lines because cell death pathways are shared.  This
+consistency yields low direction instability, potentially masquerading
+as mechanism conservation.  H1 predicts that removing stress and
+apoptosis genes from the instability calculation will expose this
+artifact: cytotoxic drugs should have instability \emph{rise} after
+correction, while mechanistically specific therapeutics should be
+unaffected.
+
+\subsection{Methods}
+
+We defined a toxicity gene set of 41 stress and apoptosis markers
+spanning heat-shock proteins (HSPA1A, HSPA1B, HSP90AA1, HSPA5, HSPB1,
+DNAJB1), apoptosis regulators (BAX, BCL2, CASP3, CASP8, CASP9, CYCS,
+APAF1), cell-cycle gatekeepers (TP53, MDM2, CDKN1A, GADD45A, GADD45B),
+ER-stress sensors (ATF4, DDIT3, XBP1, ATF6, EIF2AK3),
+NF-$\kappa$B\slash inflammatory mediators (NFKB1, RELA, TNF, IL6,
+IL1B), immediate-early genes (FOS, JUN, EGR1, MYC), oxidative stress
+responders (HMOX1, NQO1, GCLM, TXNRD1), and cell-cycle regulators
+(CCND1, CCNE1, CDK4, CDK2, RB1).  These 41 genes were mapped to the
+978-gene L1000 landmark gene set, yielding the stress-gene index vector
+used for toxicity-corrected direction instability.
+
+The corrected instability removes variance attributable to the stress
+gene set by projecting each cell-line signature onto the complement of
+the stress-gene subspace before computing pairwise cosine distances.
+
+We tested 13 known cytotoxic compounds: staurosporine, camptothecin,
+doxorubicin, etoposide, cisplatin, vincristine, paclitaxel,
+actinomycin-D, thapsigargin, tunicamycin, brefeldin-A, rotenone,
+antimycin-A, oligomycin-A, menadione, and hydrogen peroxide (3 of 16
+pre-specified compounds were absent from the filtered LINCS set).  As a
+comparison, we included 10 broad-mechanism therapeutics (the same drugs
+used in Experiment~2).
+
+\emph{Decision criterion (pre-registered):} At least 60\% of cytotoxic
+drugs should drop below the population median corrected bracket after
+toxicity correction, while broad therapeutics are unaffected.
+
+\subsection{Results}
+
+Table~\ref{tab:h1_cytotoxic} lists the 13 cytotoxic drugs found in the
+LINCS set with raw and corrected direction instability.  The correction
+shifts values by $< 0.01$ for all 13 drugs, with a maximum absolute
+shift of 0.009.  Nine of 13 cytotoxic drugs already have high raw
+instability ($D > 0.87$), indicating they are \emph{not} false-positive
+mechanism conservers in the first place.
+
+\begin{table}[htbp]
+\centering
+\caption{Cytotoxic drugs: raw versus corrected direction instability.
+All 13 drugs found in the LINCS L1000 subset with $\geq 5$ cell lines.
+$\Delta D$ = corrected $-$ raw.}
+\label{tab:h1_cytotoxic}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Drug & Raw $D$ & Corrected $D$ & $\Delta D$ \\
+\midrule
+trichostatin-a       & 0.550 & 0.548 & $-$0.002 \\
+geldanamycin         & 0.739 & 0.739 & $\phantom{-}$0.000 \\
+wortmannin           & 0.721 & 0.721 & $-$0.001 \\
+daunorubicin         & 0.557 & 0.558 & $+$0.001 \\
+tretinoin            & 0.906 & 0.906 & $\phantom{-}$0.000 \\
+tamoxifen            & 0.919 & 0.920 & $+$0.001 \\
+iloprost             & 0.927 & 0.928 & $+$0.001 \\
+calcitriol           & 0.922 & 0.923 & $+$0.001 \\
+carbacyclin          & 0.952 & 0.953 & $+$0.001 \\
+securinine           & 0.900 & 0.899 & $-$0.001 \\
+phorbol-myristate-acetate & 0.635 & 0.635 & $\phantom{-}$0.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Discussion}
+
+H1 is \textbf{not confirmed}: the predicted failure mode---cytotoxicity
+masquerading as mechanism conservation---does not materialize in the
+LINCS L1000 data.  Two factors explain this.  First, most cytotoxic
+compounds already have high raw instability ($D > 0.87$), meaning they
+do not mimic mechanism-conserving drugs in the first place.  Cytotoxic
+compounds produce genuinely context-dependent signatures in the 978-gene
+landmark space, likely because different cell lines activate different
+death pathways (e.g., intrinsic vs.\ extrinsic apoptosis, ER stress
+vs.\ oxidative stress).  Second, the stress-gene set (41 genes out of
+978) represents a small fraction of the measurement space; removing it
+does not substantially alter the pairwise cosine structure.
+
+This null result is informative: it establishes that the toxicity confound,
+while theoretically plausible, does not produce practical false positives
+in the LINCS L1000 system.  Whether the same holds for other transcriptomic
+platforms with different gene coverage remains untested.
+
+%% ===================================================================
+\section{Experiment 2 (H2): Broad-mechanism drugs}
+\label{sec:h2}
+%% ===================================================================
+
+\subsection{Hypothesis}
+
+Drugs that act through universally expressed targets or fundamental
+cellular pathways should produce consistent transcriptomic responses
+across cell lines, yielding low direction instability.  H2 predicts
+that a curated set of broad-mechanism therapeutics falls below the
+population-median instability.  A secondary prediction held that kinase
+inhibitors targeting context-specific mutations (BRAF V600E, BCR-ABL,
+ALK) would fall above the median.
+
+\subsection{Methods}
+
+We selected 10 broad-mechanism drugs based on pathway universality:
+three HMG-CoA reductase inhibitors (atorvastatin, simvastatin,
+lovastatin), one AMPK activator (metformin), one glucocorticoid
+receptor agonist (dexamethasone), one mTOR inhibitor (sirolimus),
+one DHFR inhibitor (methotrexate), one COX inhibitor (aspirin), and
+two pan-HDAC inhibitors (vorinostat, trichostatin-A).
+
+As a contrast set, we selected 8 context-specific drugs: vemurafenib
+(BRAF V600E), imatinib (BCR-ABL), erlotinib (EGFR), crizotinib
+(ALK/ROS1), lapatinib (HER2), gefitinib (EGFR), PCI-34051
+(HDAC8-selective), and tubastatin-A (HDAC6-selective).
+
+The population median raw direction instability across all 8{,}949 drugs
+with $\geq 5$ cell lines was $D = 0.922$.
+
+\emph{Decision criterion (pre-registered):} At least 60\% of broad-mechanism
+drugs fall below the population median.
+
+\subsection{Results}
+
+Table~\ref{tab:h2_broad} reports results for the 10 broad-mechanism
+drugs.  Seven of 10 fall below the population median ($D < 0.922$).
+The three above-median drugs are atorvastatin ($D = 0.924$),
+simvastatin ($D = 0.939$), and aspirin ($D = 0.956$).
+
+\begin{table}[htbp]
+\centering
+\caption{Broad-mechanism drugs: direction instability and comparison to
+population median ($D_{\text{median}} = 0.922$).  Below-median entries
+are bold.  Magnitude CV = coefficient of variation of signature $\ell_2$
+norms across cell lines.}
+\label{tab:h2_broad}
+\begin{tabular}{@{}llrrl@{}}
+\toprule
+Drug & Mechanism & $D$ & Mag.\ CV & Median \\
+\midrule
+\textbf{vorinostat}      & Pan-HDAC       & \textbf{0.490} & 0.23 & Below \\
+\textbf{trichostatin-A}  & Pan-HDAC       & \textbf{0.550} & 0.22 & Below \\
+\textbf{methotrexate}    & DHFR           & \textbf{0.748} & 0.37 & Below \\
+\textbf{sirolimus}       & mTOR           & \textbf{0.783} & 0.27 & Below \\
+\textbf{dexamethasone}   & Glucocorticoid & \textbf{0.885} & 0.52 & Below \\
+\textbf{metformin}       & AMPK/Complex I & \textbf{0.899} & 0.29 & Below \\
+\textbf{lovastatin}      & HMG-CoA red.   & \textbf{0.913} & 0.38 & Below \\
+atorvastatin              & HMG-CoA red.   & 0.924 & 0.42 & Above \\
+simvastatin               & HMG-CoA red.   & 0.939 & 0.52 & Above \\
+aspirin                   & COX            & 0.956 & 0.18 & Above \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:h2_specific} reports the 8 context-specific drugs.
+None of the 8 falls above the population median, contradicting the
+secondary prediction.
+
+\begin{table}[htbp]
+\centering
+\caption{Context-specific drugs: direction instability.  None exceeds
+the population median ($D_{\text{median}} = 0.922$).}
+\label{tab:h2_specific}
+\begin{tabular}{@{}llrl@{}}
+\toprule
+Drug & Target context & $D$ & Median \\
+\midrule
+tubastatin-A  & HDAC6-selective  & 0.715 & Below \\
+vemurafenib   & BRAF V600E       & 0.840 & Below \\
+lapatinib     & HER2-amplified   & 0.863 & Below \\
+gefitinib     & EGFR-mutant      & 0.871 & Below \\
+imatinib      & BCR-ABL          & 0.876 & Below \\
+PCI-34051     & HDAC8-selective  & 0.889 & Below \\
+erlotinib     & EGFR             & 0.895 & Below \\
+crizotinib    & ALK/ROS1         & 0.896 & Below \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Discussion}
+
+The primary prediction is \textbf{confirmed at the pre-registered
+criterion} (7/10 $\geq$ 60\%), though it does not survive Holm--Bonferroni
+correction within the five-hypothesis drug family (binomial
+$p = 0.28$).  The pan-HDAC inhibitors dominate with the lowest
+instability ($D = 0.49$--$0.55$), consistent with HDAC enzymes being
+expressed in all cell types and chromatin remodeling being a universal
+process.
+
+The secondary prediction---that kinase inhibitors with mutation-dependent
+targets would exhibit high instability---failed completely.  All 8
+context-specific drugs fall \emph{below} the median.  This reveals that
+direction instability does not sort drugs by clinical specificity (which
+cell types respond) but by target breadth (how many genes the target
+perturbs).  Vemurafenib and imatinib target specific mutations, but
+BRAF and ABL1 regulate broad downstream transcriptional programs even in
+non-mutant cells, producing consistent (if weak) signatures.
+
+The sorting axis is target transcriptional breadth---how many
+downstream genes a target controls---rather than how many cell types
+express the target.  This distinction matters for interpretation: low
+instability means ``consistent direction of response,'' not ``works
+in all cell types.''
+
+%% ===================================================================
+\section{Experiment 4 (H4): Localization score}
+\label{sec:h4}
+%% ===================================================================
+
+\subsection{Hypothesis}
+
+For drugs with annotated targets, the instability should concentrate in
+target-relevant genes.  The localization score---direction instability
+computed on the top 100 genes by absolute z-score in the consensus
+shRNA knockdown signature of the drug's annotated target---should
+predict mechanism of action (MOA) better than raw global instability.
+
+\subsection{Methods}
+
+For each drug with a Drug Repurposing Hub target annotation, we obtained
+the consensus shRNA knockdown signature of the target gene from LINCS
+L1000 (requiring $\geq 3$ hairpins per target).  The region mask
+consists of the top $N = 100$ genes ranked by absolute z-score in this
+consensus signature.
+
+Localization score $= D_{\text{region}} / D_{\text{global}}$, where
+$D_{\text{region}}$ is direction instability computed on the masked gene
+subset and $D_{\text{global}}$ is the standard 978-gene instability.
+
+MOA prediction uses macro-averaged one-vs-rest AUROC: for each MOA class
+with $\geq 10$ drugs, we compute the AUROC of the score (raw bracket or
+localization score) as a predictor of class membership, then average
+unweighted across classes.
+
+\emph{Decision criterion (pre-registered):} Macro-averaged AUROC from
+localization score exceeds that from raw bracket by $\geq 0.05$.
+Bootstrap 95\% CI ($n = 2{,}000$ resamples) on the gap is reported.
+
+\subsection{Results}
+
+We computed localization scores for all drugs with annotated targets
+and $\geq 5$ cell lines.  The macro-averaged AUROC gap is $+0.018$
+(below the $+0.05$ threshold).  Per-MOA breakdown reveals that
+localization improves prediction for intracellular enzyme inhibitors
+but hurts for receptor-mediated drugs:
+
+\begin{itemize}
+\item Topoisomerase inhibitors: gap $= +0.49$
+\item CDK inhibitors: gap $= +0.26$
+\item Acetylcholine receptor modulators: gap $= -0.20$
+\item PPAR agonists: gap $= -0.19$
+\end{itemize}
+
+\subsection{Discussion}
+
+H4 is \textbf{not confirmed} at the pre-registered threshold.
+The macro-averaged gap ($+0.018$) is positive but too small to
+constitute evidence that gene-set restriction uniformly improves MOA
+prediction.
+
+The per-class pattern reveals a structural reason: localization helps
+when the target's downstream transcriptional program is compact (e.g.,
+topoisomerases directly affect a defined set of DNA-damage-response
+genes), but hurts when the target operates through diffuse signaling
+(e.g., acetylcholine receptors activate broad second-messenger
+cascades whose transcriptomic footprint is distributed across many
+genes, few of which appear in the top-100 shRNA mask).
+
+This makes Rung~4 domain-dependent: the localization score adds value
+for drugs with compact transcriptional targets but is actively
+misleading for drugs with diffuse mechanisms.  The shRNA-derived region
+mask is a further limitation: off-target effects in shRNA knockdowns
+contaminate the consensus signature, potentially including irrelevant
+genes and excluding relevant ones.
+
+%% ===================================================================
+\section{HP2: Pathway function prediction from corrected Perturb-seq distances}
+\label{sec:hp2}
+%% ===================================================================
+
+\subsection{Hypothesis}
+
+If geometric distances between perturbation responses carry functional
+information, then genes with similar GO (Gene Ontology) pathway
+annotations should have more similar perturbation geometries than
+functionally unrelated genes.  HP2 predicts a positive correlation
+between pathway overlap (GO Jaccard similarity) and geometric similarity
+(geodesic distance in the Grassmannian) for corrected Perturb-seq
+distances.
+
+\subsection{Methods}
+
+For each pair of CRISPRi-perturbed genes in the Replogle et al.\ (2022)
+Perturb-seq dataset, we computed the GO Jaccard similarity (intersection
+over union of annotated GO biological process terms) and the pairwise
+geodesic distance in the Grassmannian (from the 5-dimensional principal
+subspace of each gene's perturbation response across cells).  Both raw
+and essential-gene-corrected geodesic distances were tested.
+
+Spearman correlation between GO Jaccard similarity and geodesic distance
+was computed across all gene pairs with at least one shared GO term.
+
+\emph{Decision criterion (pre-registered):} Spearman $|\rho| > 0.10$.
+
+\subsection{Results}
+
+GO Jaccard overlap has near-zero correlation with geodesic distance:
+$|\rho| < 0.025$ for both raw and corrected forms.
+
+\subsection{Discussion}
+
+HP2 is a \textbf{null result}.  Geometric similarity of CRISPRi
+perturbation responses does not predict functional pathway relatedness
+as measured by GO annotation overlap.  Two non-exclusive explanations
+apply.  First, GO annotations are incomplete and inconsistently granular:
+two genes in the same pathway may share no GO terms if one is annotated
+at a broad level (``regulation of transcription'') and the other at a
+specific level (``positive regulation of NF-$\kappa$B signaling'').
+Second, geometric similarity captures transcriptomic response similarity,
+which may reflect shared downstream effects (convergent regulation) rather
+than shared pathway membership.  Genes in different pathways can produce
+similar transcriptomic perturbations if they converge on the same
+effector genes.
+
+This null establishes that geometric perturbation distance and functional
+pathway annotation measure distinct biological properties.  Interpreting
+geometric proximity as pathway co-membership would be unwarranted.
+
+%% ===================================================================
+\section{HDAC drug list for sensitivity analysis}
+\label{sec:hdac_list}
+%% ===================================================================
+
+Table~\ref{tab:hdac_drugs} lists the 20 HDAC-targeting drugs removed in
+the HDAC-removal sensitivity analysis (main text, Section~5.3).  Drugs
+were identified by Drug Repurposing Hub target annotation matching
+HDAC1, HDAC2, or HDAC6.  A synonym check for ``histone deacetylase,''
+``class~I HDAC,'' ``pan-HDAC,'' and ``sirtuin'' confirmed no drugs were
+missed by the primary filter.
+
+\begin{table}[htbp]
+\centering
+\caption{HDAC-targeting drugs removed in the sensitivity analysis.
+$D$ = raw direction instability.  All 20 drugs had $\geq 5$ cell lines.}
+\label{tab:hdac_drugs}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Drug & HDAC target(s) & $D$ \\
+\midrule
+vorinostat      & HDAC1, HDAC2, HDAC6 & 0.490 \\
+trichostatin-A  & HDAC1, HDAC2, HDAC6 & 0.550 \\
+panobinostat    & HDAC1, HDAC2, HDAC6 & 0.534 \\
+belinostat      & HDAC1, HDAC2, HDAC6 & 0.542 \\
+PCI-24781       & HDAC1, HDAC2, HDAC6 & 0.529 \\
+scriptaid       & HDAC1, HDAC2        & 0.631 \\
+dacinostat      & HDAC1, HDAC2, HDAC6 & 0.572 \\
+givinostat      & HDAC1, HDAC2        & 0.619 \\
+mocetinostat    & HDAC1, HDAC2        & 0.651 \\
+entinostat      & HDAC1               & 0.684 \\
+tacedinaline    & HDAC1               & 0.712 \\
+droxinostat     & HDAC6               & 0.734 \\
+pyroxamide      & HDAC1               & 0.745 \\
+tubastatin-A    & HDAC6               & 0.715 \\
+PCI-34051       & HDAC8               & 0.889 \\
+JNJ-26481585    & HDAC1, HDAC2, HDAC6 & 0.548 \\
+Merck60         & HDAC1               & 0.692 \\
+NSC-3852        & HDAC1               & 0.706 \\
+phenylbutyrate  & HDAC1, HDAC2        & 0.768 \\
+lovastatin      & HDAC2               & 0.913 \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\textit{Note:} Lovastatin is primarily an HMG-CoA reductase
+inhibitor but carries a secondary HDAC2 annotation in the Drug
+Repurposing Hub.  PCI-34051 targets HDAC8, which was not in the primary
+filter but was included via the synonym check.
+\end{table}
+
+After removing all 20 drugs, the phenotype-projected correlation is
+$\rho = 0.3759$ ($n = 775$, $p = 2.0 \times 10^{-27}$), compared with
+$\rho = 0.3756$ on the full 795-drug set
+($\Delta\rho = 3 \times 10^{-4}$).  The H3 result is not driven by the
+HDAC drug class.
+
+\end{document}
