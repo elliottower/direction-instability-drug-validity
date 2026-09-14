@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-13
 **Status:** PRE-REGISTERED (frozen before the LINCS matrices are rebuilt or any adjusted statistic is computed)
-**Commit SHA:** (recorded at freeze)
+**Commit SHA:** f288507
 **Amends:** H3 in `PREREGISTRATION.md` (commit `249abaf`) and Entry 1 of
 `DEVIATION_LOG.md`. This registers three sensitivity analyses of an existing
 registered hypothesis. It registers no new confirmatory hypothesis and cannot
