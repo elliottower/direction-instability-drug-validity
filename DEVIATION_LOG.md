@@ -233,3 +233,92 @@ cross-category comparisons are concordant, Kendall tau_b = 0.856. No significanc
 test is reported; six compounds do not support one.
 
 **When:** Post-analysis.
+
+---
+
+## Deviation 8: the registered rebuild names a loader the deposited artifact did not use
+
+**Pre-registered:** rebuild the LINCS matrices "with the existing loader",
+pinned as `drug-perturbation-geometry@1dc20a2`, `data/lincs_loader.py`
+(`PREREG_H3_MAGNITUDE_AND_SHARED_AXIS.md`, frozen `f288507`).
+
+**Actual:** the loader is used to read signature metadata. Per-cell-line
+aggregation follows `experiments/03_phenotype_projection.py`, which produced the
+deposited artifact.
+
+**Why:** the loader's `get_consensus_signatures` selects one signature per cell
+line, by highest `distil_ss` where that column exists and otherwise the first
+row. The deposited H3 artifact was not built that way: it averages every
+signature for each drug-cell pair. Reproducing the deposited `D`, `P` and `E` to
+the registered tolerance of 1e-6 is only possible with the mean. The registered
+phrase did not distinguish the loader's metadata functions from its consensus
+function, and the two were not the same procedure.
+
+Separately, `GSE92742_Broad_LINCS_sig_info.txt.gz` carries no `distil_ss`
+column, so the loader's primary selection rule is unavailable on this release
+regardless.
+
+**When:** before any statistic was computed. The first extraction attempt failed
+on the missing column rather than producing a cohort.
+
+### What this does NOT change
+
+- The registered hypotheses, statistics, criteria and seeds are untouched
+- The per-drug reproduction requirement is unchanged and remains the check that
+  the rebuilt cohort is the deposited one
+- The analysis is void if reproduction fails, as registered
+
+---
+
+## Deviation 9: shRNA consensus directions were indexed by metadata row, not signature id
+
+**Pre-registered:** H3 tests whether phenotype-projected instability correlates
+with on-target enrichment, where the on-target direction is the consensus shRNA
+knockdown signature of the drug's annotated target gene (`PREREGISTRATION.md`,
+commit `249abaf`).
+
+**Actual:** the deposited H3 artifact was computed against consensus directions
+that are not those genes' hairpin means. `build_shrna_consensus` mapped each
+signature id to its row position in `lincs_shrna_siginfo.csv.gz` and used that
+number to index the signature matrix in `lincs_shrna.npz`. The two files carry
+the same 154,993 signature ids in different order, agreeing at 115 of 154,993
+positions. Each target's consensus was therefore the mean of an arbitrary set of
+shRNA signatures. The compound side of the same scripts indexes by npz position
+and is unaffected.
+
+**How it was identified:** rebuilding the cohort for the registered H3
+sensitivity analyses (`PREREG_H3_MAGNITUDE_AND_SHARED_AXIS.md`, frozen
+`f288507`) reproduced raw direction instability to 7.5e-08 and the per-drug
+cell-line counts exactly, while projected instability and enrichment differed by
+up to 7.82 and 0.448. Replicating the metadata-row indexing reproduced the
+deposited values to 1.9e-07 and 1.3e-07, which identifies how they were
+produced.
+
+**Scope:** `03_phenotype_projection.py` (H3), `04_localization.py` (H4) and
+`03b_h3_crispri_ground_truth.py` (the CRISPRi convergent-validity check) carry
+the same function. Raw direction instability never uses a target direction, so
+H1, H2, H5 and the held-out cell-line prediction do not depend on it.
+
+**Corrected result, H3:** with consensus directions built by signature id,
+Spearman rho between projected instability and on-target enrichment is 0.3172
+(p = 4.8e-20, n = 795), against 0.3756 deposited. Raw direction instability
+against enrichment is -0.0580, against -0.0433 deposited. Both pre-registered
+criteria are still met: |rho_projected| > 0.3 and |rho_raw| < 0.15.
+
+**When:** post-analysis, before the registered sensitivity analyses were
+computed.
+
+### What this does NOT change
+
+- H1, H2, H5 and the 66-fold held-out prediction result, none of which use a
+  target direction
+- The registered criteria themselves, which H3 still meets after correction
+
+### What it sharpens
+
+Projected instability and enrichment are constructed from the same target
+direction, so an association between them is available whether or not that
+direction is the annotated target. The mis-indexed directions produced a
+*higher* correlation (0.3756) than the correct ones (0.3172), which is a single
+realization of exactly the coupling S2 was registered to measure against 10,000
+target permutations. That test has not been run.

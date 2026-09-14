@@ -203,18 +203,31 @@ def stage_extract():
                 continue
             print(f"[{_ts()}] shard {s+1}/{n_shards}: fingerprint moved, rebuilding")
         names = wanted[s * SHARD:(s + 1) * SHARD]
-        sub = siginfo[siginfo.pert_iname.isin(names)]
-        # the pinned loader's rule: highest distil_ss per cell line
-        best = sub.loc[sub.groupby(["pert_iname", "cell_id"])["distil_ss"].idxmax()]
-        gct = parse.parse(str(raw / GCTX), cid=best.sig_id.tolist(), rid=ids)
+        sub = siginfo[siginfo.pert_iname.isin(names) & siginfo.pert_iname.notna()]
+        gct = parse.parse(str(raw / GCTX), cid=sorted(set(sub.sig_id.astype(str))), rid=ids)
         assert gct.data_df.shape[0] == N_LANDMARK, f"parsed {gct.data_df.shape[0]} rows"
-        assert list(gct.data_df.index.astype(str)) == ids, "landmark order is not the frozen order"
-        mat = gct.data_df.T
+        assert gct.data_df.columns.is_unique, "parsed matrix has duplicate signature ids"
+        df = gct.data_df
+        df.index = df.index.astype(str)
+        df = df.reindex(index=ids)                 # rid= selects, it does not order
+        assert not df.isna().any().any(), "a landmark gene is missing from the parse"
+        assert list(df.index) == ids, "landmark order is not the frozen order"
+        mat = df.T
         payload = {}
-        for drug, grp in best.groupby("pert_iname"):
-            rows = [mat.loc[sid].to_numpy(np.float64) for sid in grp.sig_id if sid in mat.index]
-            if rows:
-                payload[drug] = np.vstack(rows)
+        # The deposited artifact averages every signature for a drug-cell pair
+        # (03_phenotype_projection.py), rather than selecting one per cell line
+        # as lincs_loader.get_consensus_signatures would. This file follows the
+        # artifact it must reproduce; Deviation 8 records the difference. The
+        # sig-info column that rule needs, distil_ss, is absent here in any case.
+        for drug, grp in sub.groupby("pert_iname"):
+            per_cell = []
+            for _, cell_rows in grp.groupby("cell_id"):
+                sids = [x for x in sorted(set(cell_rows.sig_id.astype(str))) if x in mat.index]
+                if sids:
+                    per_cell.append(np.vstack([mat.loc[x].to_numpy(np.float64)
+                                               for x in sids]).mean(axis=0))
+            if per_cell:
+                payload[drug] = np.vstack(per_cell)
         np.savez_compressed(out, fingerprint=np.array(fp), **payload)
         vol.commit()                                       # checkpoint inside the unit
         print(f"[{_ts()}] shard {s+1}/{n_shards}: {len(payload)} drugs")
@@ -244,8 +257,13 @@ def stage_shrna():
 
     all_sids = sorted(set(info["sig_id"].astype(str)))
     gct = parse.parse(str(raw / GCTX), cid=all_sids, rid=ids)
-    assert list(gct.data_df.index.astype(str)) == ids, "landmark order is not the frozen order"
-    mat = gct.data_df.T
+    assert gct.data_df.shape[0] == N_LANDMARK, f"parsed {gct.data_df.shape[0]} rows"
+    df = gct.data_df
+    df.index = df.index.astype(str)
+    df = df.reindex(index=ids)                     # identical ordering to the drug parse
+    assert not df.isna().any().any(), "a landmark gene is missing from the parse"
+    assert list(df.index) == ids, "landmark order is not the frozen order"
+    mat = df.T
 
     assert mat.index.is_unique, "parsed shRNA matrix has duplicate signature ids"
     names, dirs, hairpins = [], [], {}

@@ -1,0 +1,19 @@
+{
+  "n": 795,
+  "deposited": {
+    "rho_projected_vs_enrichment": 0.3756370369503523,
+    "p": 4.805491865876767e-28,
+    "rho_raw_vs_enrichment": -0.043271822254660024
+  },
+  "corrected": {
+    "rho_projected_vs_enrichment": 0.3172428847340165,
+    "p": 4.787391134297444e-20,
+    "rho_raw_vs_enrichment": -0.05804415356569932
+  },
+  "registered_criteria": {
+    "projected_abs_gt": 0.3,
+    "raw_abs_lt": 0.15
+  },
+  "criteria_met_deposited": true,
+  "criteria_met_corrected": true
+}

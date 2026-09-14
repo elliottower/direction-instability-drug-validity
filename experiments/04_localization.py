@@ -42,14 +42,19 @@ def log(msg: str):
     print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}", flush=True)
 
 
-def build_shrna_consensus(shrna_sigs, shrna_siginfo):
-    """Build consensus shRNA signature per target gene."""
-    sig_ids = list(shrna_siginfo["sig_id"])
-    sig_id_to_idx = {sid: i for i, sid in enumerate(sig_ids)}
-    assert len(set(sig_ids)) == len(sig_ids), "Duplicate sig_ids in shRNA data"
+def build_shrna_consensus(shrna_sigs, shrna_sig_ids, shrna_siginfo):
+    """Build consensus shRNA signature per target gene.
 
-    filtered = shrna_siginfo[shrna_siginfo["sig_id"].isin(sig_id_to_idx)].copy()
-    filtered["_idx"] = filtered["sig_id"].map(sig_id_to_idx)
+    The index must map a signature id to its row in `shrna_sigs`. Deriving it
+    from the metadata's row order instead silently averages unrelated
+    signatures: the two files carry the same 154,993 ids and agree at 115
+    positions. See Deviation 9.
+    """
+    sig_id_to_idx = {str(s): i for i, s in enumerate(shrna_sig_ids)}
+    assert len(sig_id_to_idx) == len(shrna_sig_ids), "Duplicate sig_ids in shRNA data"
+
+    filtered = shrna_siginfo[shrna_siginfo["sig_id"].astype(str).isin(sig_id_to_idx)].copy()
+    filtered["_idx"] = filtered["sig_id"].astype(str).map(sig_id_to_idx)
 
     consensus = {}
     for gene, group in filtered.groupby("pert_iname"):
@@ -188,7 +193,7 @@ def run_real(data_dir: Path, output_dir: Path):
     shrna_siginfo = pd.read_csv(shrna_siginfo_path)
 
     log("Building shRNA consensus signatures...")
-    shrna_consensus = build_shrna_consensus(shrna_sigs, shrna_siginfo)
+    shrna_consensus = build_shrna_consensus(shrna_sigs, shrna_data["sig_ids"], shrna_siginfo)
     log(f"  {len(shrna_consensus)} target genes with >= 3 hairpins")
 
     log("Loading drug labels...")

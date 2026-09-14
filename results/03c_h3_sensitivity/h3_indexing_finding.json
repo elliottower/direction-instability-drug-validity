@@ -1,0 +1,26 @@
+{
+  "finding": "the deposited H3 artifact was computed with mis-indexed shRNA consensus directions",
+  "mechanism": "experiments/03_phenotype_projection.py::build_shrna_consensus maps each sig_id to its row position in lincs_shrna_siginfo.csv.gz, then uses that position to index the signature matrix in lincs_shrna.npz. The two files hold the same 154,993 signature ids but in different order, agreeing at 115 of 154,993 positions (0.07%, chance level). Each target's consensus is therefore the mean of an arbitrary set of shRNA signatures rather than the hairpins of that gene. The compound side of the same script indexes by npz position and is correct, which is why raw direction instability reproduces.",
+  "evidence": {
+    "replicating_csv_position_indexing": {
+      "max_abs_P_error": 1.9e-07,
+      "max_abs_E_error": 1.29e-07
+    },
+    "correct_signature_id_indexing": {
+      "max_abs_P_error": 7.82,
+      "max_abs_E_error": 0.448
+    },
+    "tolerance": 1e-06,
+    "reading": "reproducing the deposited values to 2e-07 only under the mis-indexing identifies how they were produced"
+  },
+  "unaffected": {
+    "raw_instability_D": "reproduces to 7.5e-08; D never uses a target direction, so H1, H2, H5 and the held-out prediction result do not depend on this",
+    "n_celllines": "exact for all 795 drugs"
+  },
+  "affected": {
+    "H3": "rho = 0.376 between projected instability and on-target enrichment; the paper's one confirmed hypothesis and the only one surviving Holm-Bonferroni correction",
+    "H4": "localization score shares the shRNA consensus dependency, recorded in DEVIATION_LOG.md entry 3",
+    "note": "both P and E are built from the same direction, so an association between them can arise from the shared axis whether or not the axis is the annotated target. That is the coupling S2 was registered to test."
+  },
+  "status": "S1-S3 not computed; the correct-direction association not computed"
+}

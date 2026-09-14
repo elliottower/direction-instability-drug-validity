@@ -1,0 +1,17 @@
+{
+  "verdict": "registered reproduction gate failed; S1-S3 are void as registered",
+  "tolerance": 1e-06,
+  "reproduction": {
+    "D_max_abs_error": 7.496284071262238e-08,
+    "D_median_abs_error": 4.647988105510592e-09,
+    "E_max_abs_error": 0.44799274852195803,
+    "E_median_abs_error": 0.04628585538132453,
+    "P_max_abs_error": 7.818049204166789,
+    "P_median_abs_error": 0.9141035077328343,
+    "n_celllines_mismatches": 0,
+    "n_drugs": 795
+  },
+  "localization": "D and the per-drug cell-line counts reproduce exactly, so the rebuilt drug signature matrices are the deposited ones. E and P both depend on the shRNA consensus direction and both fail. The hairpin sets match exactly: 14,656 of 14,656 listed signature ids were found in the pinned GCTX, across all 258 targets. The consensus values therefore differ while the inputs that define them agree, which means the original lincs_shrna.npz held values the pinned GCTX does not produce for those ids.",
+  "not_recoverable_from": "the inputs pinned in PREREG_H3_MAGNITUDE_AND_SHARED_AXIS.md",
+  "what_was_not_run": "S1, S2 and S3 were not computed; no adjusted statistic exists"
+}
