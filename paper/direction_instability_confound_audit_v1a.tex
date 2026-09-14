@@ -86,7 +86,9 @@ direction instability produces biologically meaningful rankings: pan-HDAC
 inhibitors achieve the lowest scores ($D = 0.49$--$0.55$), with a
 selectivity gradient within the HDAC class (Figure~\ref{fig:hdac})
 that tracks isoform specificity \citep[preprint, under
-review;][]{tower2026atlas}.
+review;][]{tower2026atlas}. Those two studies establish the score and its
+behavior at scale. Whether its rankings survive correction for the confounds
+that motivate them is the question here.
 
 \begin{figure}[t]
 \centering
@@ -253,7 +255,9 @@ given source is a vector in $\mathbb{R}^{3180}$, and $D$ measures angular
 consistency across sources. A JUMP-CP source is a partner imaging site
 rather than a distinct cell type, so $D$ computed over sources indexes
 cross-site technical reproducibility rather than context-dependence across
-cell types. The JUMP-CP result is reported on that basis throughout. A frozen block of
+cell types, as \citet{tower2026atlas} reports for JUMP-CP plate replicates
+within a single cell line. The JUMP-CP result is reported on that basis
+throughout. A frozen block of
 252 features (7.9\% of the space) covers size and shape across compartments
 together with DNA- and mitochondria-channel intensity, granularity and
 radial distribution. The ablation removes that block and recomputes
@@ -733,6 +737,10 @@ held-out cell line agrees with their consensus: mean Spearman
 $\rho = -0.602$ (range $[-0.784, -0.223]$), correctly signed in all 66
 folds. A drug whose training signatures disagree with one another also
 disagrees with a cell line it has not been measured in.
+\citet{tower2026drug} reports the same prediction on this dataset under a
+different estimator and fold structure (AUROC $= 0.986$ against a permutation
+null of $0.500 \pm 0.012$); the leave-one-cell-line-out result here recovers it
+as a rank correlation.
 The advantage is drug-specific rather than algebraic. Under a
 variance-preserving permutation null on the preliminary five-fold analysis,
 held-out \emph{signatures} are shuffled across drugs while training data
@@ -960,6 +968,14 @@ divergence; individual drug-level scores carry uncertainty from cell-line
 sampling ($n = 16$--$19$).
 
 \subsection{What direction instability measures}
+
+\citet{tower2026atlas} finds that mechanism-of-action class explains 20\% of
+residualized instability variance across 55{,}000 perturbations
+($\eta^2 = 0.201$), separating core-machinery inhibitors from
+receptor-signaling drugs whose activity depends on target expression. A score
+varying with how widely a target is expressed, rather than with a removable
+nuisance axis, is one that feature and gene-set deletions should leave ordered.
+That is what the three domains show.
 
 Under the DAG of Figure~\ref{fig:dag}, cosine normalization blocks the
 linear magnitude path from perturbation strength to the metric. Direction
