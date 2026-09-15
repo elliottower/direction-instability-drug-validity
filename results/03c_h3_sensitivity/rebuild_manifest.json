@@ -1,0 +1,25 @@
+{
+  "source": "original extraction from Modal volume drug-perturbation-vol",
+  "deviation": "Deviation 9",
+  "stage_fingerprint": "de1de6cee93413664baffa11c9d602a8a749f2e7f27fe8e77ef7565611029154",
+  "fingerprint_parts": {
+    "lincs_subset_sha256": "2ad0f5d30ab826f9ec0cfe37f6b53b2829bfef1d73b7920c3441de6407adb4ec",
+    "lincs_shrna_sha256": "4a990e5072a43f59fdda60a2ff040f355f06be947c14bcfa87056c66332b58e7",
+    "deposited_sha256": "65e5d10e272037987384f89e6208de478fa17f6b8fb946add893e5a24c2d80c4",
+    "n_targets_with_consensus": 4369
+  },
+  "n_bundled": 795,
+  "n_deposited": 795,
+  "reproduction_max_abs_error": {
+    "D": 7.297946003070876e-08,
+    "P": 7.81804825939048,
+    "E": 0.44799276329871596,
+    "K": 0.0
+  },
+  "cohort_identifier_sha256": "e3b9907551c1deac3ec9959c6972d43e2596f4e50f741c82be239459423d1bf0",
+  "bundle_sha256": "87f75267de9d2a1e9e71d6c5de60f3b34a00f1eea3ebf37c4529afbf4a0d64be",
+  "lincs_subset_sha256": "2ad0f5d30ab826f9ec0cfe37f6b53b2829bfef1d73b7920c3441de6407adb4ec",
+  "lincs_shrna_sha256": "4a990e5072a43f59fdda60a2ff040f355f06be947c14bcfa87056c66332b58e7",
+  "deposited_sha256": "65e5d10e272037987384f89e6208de478fa17f6b8fb946add893e5a24c2d80c4",
+  "n_targets_with_consensus": 4369
+}
