@@ -48,11 +48,15 @@ def build_shrna_consensus(shrna_sigs, shrna_sig_ids, shrna_siginfo):
     signatures: the two files carry the same 154,993 ids and agree at 115
     positions. See Deviation 9.
     """
+    assert len(shrna_sigs) == len(shrna_sig_ids), (
+        f"{len(shrna_sigs)} signature rows against {len(shrna_sig_ids)} ids")
     sig_id_to_idx = {str(s): i for i, s in enumerate(shrna_sig_ids)}
     assert len(sig_id_to_idx) == len(shrna_sig_ids), "Duplicate sig_ids in shRNA data"
 
-    filtered = shrna_siginfo[shrna_siginfo["sig_id"].astype(str).isin(sig_id_to_idx)].copy()
-    filtered["_idx"] = filtered["sig_id"].astype(str).map(sig_id_to_idx)
+    filtered = (shrna_siginfo.assign(sig_id=shrna_siginfo["sig_id"].astype(str))
+                .drop_duplicates("sig_id"))
+    filtered = filtered[filtered["sig_id"].isin(sig_id_to_idx)].copy()
+    filtered["_idx"] = filtered["sig_id"].map(sig_id_to_idx)
 
     consensus = {}
     for gene, group in filtered.groupby("pert_iname"):

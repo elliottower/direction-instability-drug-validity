@@ -282,13 +282,16 @@ that are not those genes' hairpin means. `build_shrna_consensus` mapped each
 signature id to its row position in `lincs_shrna_siginfo.csv.gz` and used that
 number to index the signature matrix in `lincs_shrna.npz`. The two files carry
 the same 154,993 signature ids in different order, agreeing at 115 of 154,993
-positions. Each target's consensus was therefore the mean of an arbitrary set of
-shRNA signatures. The compound side of the same scripts indexes by npz position
+positions. Each target's consensus was therefore the mean of
+metadata-position-selected unrelated shRNA signatures. The compound side of the same scripts indexes by npz position
 and is unaffected.
 
-**How it was identified:** rebuilding the cohort for the registered H3
-sensitivity analyses (`PREREG_H3_MAGNITUDE_AND_SHARED_AXIS.md`, frozen
-`f288507`) reproduced raw direction instability to 7.5e-08 and the per-drug
+**How it was identified:** the rebuild-validation gate of
+`PREREG_H3_MAGNITUDE_AND_SHARED_AXIS.md` (frozen `f288507`) failed. That
+registration required rebuilt values to reproduce the deposited artifact within
+1e-6, and correct reconstruction does not. S1, S2 and S3 were therefore void
+before any of them was computed, and none was. The rebuild reproduced raw
+direction instability to 7.5e-08 and the per-drug
 cell-line counts exactly, while projected instability and enrichment differed by
 up to 7.82 and 0.448. Replicating the metadata-row indexing reproduced the
 deposited values to 1.9e-07 and 1.3e-07, which identifies how they were
@@ -296,7 +299,10 @@ produced.
 
 **Scope:** `03_phenotype_projection.py` (H3), `04_localization.py` (H4) and
 `03b_h3_crispri_ground_truth.py` (the CRISPRi convergent-validity check) carry
-the same function. Raw direction instability never uses a target direction, so
+the same function. A repository-wide audit found no other instance: every other
+position map is built from the signature matrix's own ids. H4 and the CRISPRi
+check are pending recomputation and their reported values do not stand until
+that happens. Raw direction instability never uses a target direction, so
 H1, H2, H5 and the held-out cell-line prediction do not depend on it.
 
 **Corrected result, H3:** with consensus directions built by signature id,
@@ -318,7 +324,11 @@ computed.
 
 Projected instability and enrichment are constructed from the same target
 direction, so an association between them is available whether or not that
-direction is the annotated target. The mis-indexed directions produced a
-*higher* correlation (0.3756) than the correct ones (0.3172), which is a single
-realization of exactly the coupling S2 was registered to measure against 10,000
-target permutations. That test has not been run.
+direction is the annotated target. The erroneous construction shows that a
+shared direction can generate a substantial association without correct
+drug-target matching: it produced a *higher* correlation (0.3756) than the
+correct directions (0.3172). It is not itself a draw from the registered
+target-permutation null, which preserves the multiset of valid target
+directions, and unrelated mixtures need not share their norm or covariance
+structure. The corrected association remains subject to the same shared-axis
+concern, and S2 has not been run.
