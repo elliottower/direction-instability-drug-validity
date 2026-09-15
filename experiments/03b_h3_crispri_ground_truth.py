@@ -7,7 +7,12 @@ strengthens, this confirms shRNA noise attenuated the original result.
 
 Pre-registered in PREREGISTRATION_EXTENDED.md before running on real data.
 
-Decision criterion: rho_CRISPRi >= rho_shRNA (0.376).
+Decision criterion: rho_CRISPRi >= rho_shRNA (0.376), as registered in
+PREREGISTRATION_EXTENDED.md. That comparison value was itself produced under the
+shRNA indexing defect recorded as Deviation 9; the corrected shRNA value is
+0.3172. The registered value is left unchanged rather than rewritten after the
+fact, and the outcome does not depend on which is used, because the CRISPRi
+correlation is negative.
 
 Reports BOTH shRNA and CRISPRi results side by side for the same drug set
 (intersection of drugs with both ground truth types).
@@ -374,9 +379,11 @@ def run_real(data_dir: Path, perturbseq_path: Path, output_dir: Path):
 
     log(f"\n=== CRITERION (three-outcome convergent validity check) ===")
     log(f"  NOTE: This is a convergent-validity check, not a blind confirmatory test.")
-    log(f"  The comparison value (rho_shRNA is known from the corrected H3 run) is known from the original H3.")
+    log("  The registered comparison value is rho_shRNA = 0.376, computed under the")
+    log("  indexing defect of Deviation 9. The corrected value is 0.3172. The outcome")
+    log("  below is the same under either, because the CRISPRi correlation is negative.")
     if rho_proj_c is not None:
-        original_shrna_rho = 0.376
+        original_shrna_rho = 0.376   # as registered; see Deviation 9
         if rho_proj_c >= original_shrna_rho:
             log(f"  OUTCOME (a): rho_CRISPRi ({rho_proj_c:.4f}) >= rho_shRNA ({original_shrna_rho})")
             log(f"  Convergent validity confirmed. CRISPRi ground truth produces same or")
