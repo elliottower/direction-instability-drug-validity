@@ -374,7 +374,7 @@ def run_real(data_dir: Path, perturbseq_path: Path, output_dir: Path):
 
     log(f"\n=== CRITERION (three-outcome convergent validity check) ===")
     log(f"  NOTE: This is a convergent-validity check, not a blind confirmatory test.")
-    log(f"  The comparison value (rho_shRNA = 0.376) is known from the original H3.")
+    log(f"  The comparison value (rho_shRNA is known from the corrected H3 run) is known from the original H3.")
     if rho_proj_c is not None:
         original_shrna_rho = 0.376
         if rho_proj_c >= original_shrna_rho:
