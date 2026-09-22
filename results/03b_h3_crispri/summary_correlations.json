@@ -1,0 +1,46 @@
+{
+  "note": "deterministic extraction from the corrected per-drug records; every value was printed by the corrected run. Matched raw correlations are not computed.",
+  "shrna_all": {
+    "n": 795,
+    "projected_vs_enrichment": [
+      0.3172428847340165,
+      4.787391134297444e-20
+    ],
+    "raw_vs_enrichment": [
+      -0.05804415356569932,
+      0.10196481320766686
+    ]
+  },
+  "crispri_all": {
+    "n": 131,
+    "projected_vs_enrichment": [
+      -0.12470506592643997,
+      0.15584612994024752
+    ],
+    "raw_vs_enrichment": [
+      0.2722681898254417,
+      0.001654968969173072
+    ]
+  },
+  "matched": {
+    "n": 114,
+    "shrna_projected": [
+      0.3398108584273304,
+      0.00021653542055586594
+    ],
+    "crispri_projected": [
+      -0.14398655353273526,
+      0.12641598234527976
+    ]
+  },
+  "crispri_targets": {
+    "n_distinct": 41
+  },
+  "provenance": {
+    "records": "results/03b_h3_crispri/h3_crispri_results.json",
+    "records_sha256": "f00f8428071178bd2317139c5a1f534e458931684fb6da65c750f9f1e5456eb3",
+    "script_sha256": "928cc0e726150a1216e800cd91ba9e6b42886607a5f3657424b22c59bd43561b",
+    "scipy": "1.18.1",
+    "statistic": "scipy.stats.spearmanr, two-sided p"
+  }
+}
