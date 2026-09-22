@@ -177,6 +177,16 @@ explanation for this divergence.
 - The pre-registered interpretation was followed exactly as frozen
 - No post-hoc re-analysis or threshold adjustment was performed
 
+**Note added 2026-09-22.** The shRNA values in this entry (rho = 0.376 and 0.38,
+the z-test against it, and the matched comparison) were computed under the
+indexing defect recorded in Deviation 9; the entry is left as written. Corrected
+values are in Deviation 9. Two readings in this entry are not supported by what
+was tested: that the raw correlation "indicates the CRISPRi ground truth itself is
+confounded by K562 cell-type-specific effects", and that the divergence is
+"attributable to" the single-cell-line limitation. No analysis of cell type was
+run. The K562 account is one candidate among several, registered for test in
+`experiments/PREREG_H3_REFERENCE_DISCORDANCE_DRAFT.md`.
+
 ---
 
 ## Deviation 6: H5 win test compared oppositely-oriented statistics
@@ -300,10 +310,35 @@ produced.
 **Scope:** `03_phenotype_projection.py` (H3), `04_localization.py` (H4) and
 `03b_h3_crispri_ground_truth.py` (the CRISPRi convergent-validity check) carry
 the same function. A repository-wide audit found no other instance: every other
-position map is built from the signature matrix's own ids. H4 and the CRISPRi
-check are pending recomputation and their reported values do not stand until
-that happens. Raw direction instability never uses a target direction, so
-H1, H2, H5 and the held-out cell-line prediction do not depend on it.
+position map is built from the signature matrix's own ids. Raw direction
+instability never uses a target direction, so H1, H2, H5 and the held-out
+cell-line prediction do not depend on it.
+
+**Corrected results, H4 and CRISPRi:** both were recomputed with the corrected
+function (commits `fde2d9b` and `f822fb1`, 2026-09-15). H4's macro-averaged AUROC
+gap is +0.0005, 95% CI [−0.0256, +0.0282], against +0.018 deposited; H4 was not
+confirmed before or after, and the per-class gaps behind the "domain-dependent"
+reading also move. The CRISPRi convergent-validity check gives rho = −0.1247
+(p = 0.156, n = 131) for projected instability against CRISPRi enrichment,
+against −0.12 deposited; its CRISPRi directions never used the defective path.
+On the 114 drugs with both references, the shRNA projected rho is 0.3398 against
+0.42 deposited.
+
+**Provenance:** each superseded artifact is kept byte-for-byte under
+`superseded/misindexed_shrna_consensus/` beside its corrected replacement, with a
+README recording both hashes.
+
+| artifact | superseded sha256 | corrected sha256 |
+|---|---|---|
+| `results/03_phenotype_projection/phenotype_projection_results.json` | `65e5d10e2720…` | `fd69e26fc9a3…` |
+| `results/04_localization/localization_results.json` | `36808886a93a…` | `9c7ada30ad63…` |
+| `results/03b_h3_crispri/h3_crispri_results.json` | `1e96ef13ad1d…` | `f00f84280711…` |
+
+The corrected H3 and H4 artifacts were produced from `lincs_subset.npz` (sha256
+`2ad0f5d30ab8…`) and `lincs_shrna.npz` (`4a990e5072a4…`) on the Modal volume
+`drug-perturbation-vol`; the CRISPRi artifact additionally from the scPerturb
+`ReplogleWeissman2022_K562_essential.h5ad` (Zenodo 10044268, sha256
+`412fd0df8c4c…`).
 
 **Corrected result, H3:** with consensus directions built by signature id,
 Spearman rho between projected instability and on-target enrichment is 0.3172
@@ -319,6 +354,13 @@ computed.
 - H1, H2, H5 and the 66-fold held-out prediction result, none of which use a
   target direction
 - The registered criteria themselves, which H3 still meets after correction
+
+Meeting H3's registered numerical criterion is not the same as confirming the
+construct it was meant to test. Convergence with the independent CRISPRi reference
+is absent: under CRISPRi, projected instability is not positively associated with
+alignment and raw instability is (rho = +0.2723, p = 0.00165, n = 131). H3's
+interpretation as separating on-target from off-target consistency is unresolved
+and is the subject of `experiments/PREREG_H3_REFERENCE_DISCORDANCE_DRAFT.md`.
 
 ### What it sharpens
 

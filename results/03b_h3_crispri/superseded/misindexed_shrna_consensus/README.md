@@ -12,9 +12,13 @@ evidence and the scope.
 | | sha256 |
 |---|---|
 | superseded, this file | `1e96ef13ad1dd1629b2b4f9ebfd90087bde3c2f444f184c9d6071e5be2ea68bd` |
-| corrected, one directory up | not yet produced |
+| corrected, one directory up | `f00f8428071178bd2317139c5a1f534e458931684fb6da65c750f9f1e5456eb3` |
 
-The corrected version requires the Replogle K562 h5ad, which is not held locally or on any Modal volume checked; the file at the canonical path is still the superseded one until that rerun happens.
+The corrected version was produced in commit `f822fb1` from the scPerturb
+`ReplogleWeissman2022_K562_essential.h5ad` (Zenodo 10044268, sha256
+`412fd0df8c4ccea9f4db91cd88033c49200838b29d40945e48574be588b48789`). Only the
+shRNA fields differ between the two versions; the CRISPRi directions never used
+the defective path.
 
 Raw direction instability never uses a target direction and is unaffected in
 both versions.
