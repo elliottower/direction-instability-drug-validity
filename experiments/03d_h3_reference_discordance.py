@@ -59,7 +59,7 @@ EXPECTED_BULK_SHA256 = {
 }
 
 MIN_CELL_LINES = 5
-MIN_HAIRPINS = 3
+MIN_SIGNATURES = 3        # distinct signature ids, as the corrected artifact counts them
 RECON_TOL = 1e-6
 N_BOOT = 10_000
 N_PERM = 10_000
@@ -77,6 +77,20 @@ Q_EQUIVALENCE = (0.40, 0.60)
 HEMATOPOIETIC = ["HL60", "JURKAT", "NOMO1", "PL21", "SKM1", "THP1", "U266", "U937", "WSUDLCL2"]
 MYELOID = ["HL60", "THP1", "U937", "NOMO1", "PL21", "SKM1"]
 BRD_STEM = re.compile(r"(BRD-[A-Z]\d{8})")
+
+
+class Draws(dict):
+    """Every resampling distribution the run produces, keyed once.
+
+    The registrations require the replicate arrays to travel with the result, so
+    the intervals and p-values can be recomputed without rerunning. A key is
+    written once: a silent overwrite would lose a distribution.
+    """
+
+    def keep(self, key, array):
+        assert key not in self, f"two distributions claim the key {key}"
+        self[key] = np.asarray(array)
+        return array
 
 
 def log(message):
@@ -122,6 +136,8 @@ def build_drug_signatures(data_dir: Path):
     compounds = np.load(data_dir / "lincs_subset.npz", allow_pickle=True)
     signatures = compounds["signatures"]
     position = {str(sig_id): i for i, sig_id in enumerate(compounds["sig_ids"])}
+    assert len(position) == len(compounds["sig_ids"]), (
+        "duplicate signature ids in the compound extraction")
     siginfo = pd.read_csv(data_dir / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                           low_memory=False)
     siginfo = siginfo[siginfo.sig_id.astype(str).isin(position) & siginfo.pert_iname.notna()].copy()
@@ -148,17 +164,22 @@ def build_shrna_reference(data_dir: Path, name="shRNA") -> Reference:
     siginfo = siginfo[siginfo.sig_id.astype(str).isin(position)].copy()
     siginfo["_row"] = siginfo.sig_id.astype(str).map(position)
 
-    directions, hairpins = {}, {}
+    directions, signature_counts = {}, {}
     for gene, group in siginfo.groupby("pert_iname"):
         rows = sorted(set(group.sig_id.astype(str)))
-        if len(rows) < MIN_HAIRPINS:
+        if len(rows) < MIN_SIGNATURES:
             continue
         consensus = signatures[[position[r] for r in rows]].mean(axis=0)
         if np.linalg.norm(consensus) == 0:
             continue
         directions[gene] = unit(consensus)
-        hairpins[gene] = len(rows)
-    audit = {"n_targets": len(directions), "min_hairpins": MIN_HAIRPINS, "hairpins": hairpins}
+        signature_counts[gene] = len(rows)
+    # a signature id identifies one experiment, not one reagent: a hairpin measured
+    # in several cell lines contributes several signatures. The corrected artifact
+    # counts distinct signatures, so the eligibility rule is kept and the field is
+    # named for what it counts.
+    audit = {"n_targets": len(directions), "min_distinct_signatures": MIN_SIGNATURES,
+             "n_distinct_signatures": signature_counts}
     return Reference(name, directions, np.arange(N_LANDMARK), audit)
 
 
@@ -329,7 +350,8 @@ def q_reading(arm: Arm, reference: Reference, label):
             "p_permutation": p_value, "null_median": float(np.median(null)),
             "equivalence_region": list(Q_EQUIVALENCE), "reading": reading,
             "q_bar_within_target_z": target_balanced_mean(q_z, arm.targets),
-            "per_target_q": {t: float(q[arm.targets == t].mean()) for t in sorted(set(arm.targets))}}, q
+            "per_target_q": {t: float(q[arm.targets == t].mean())
+                             for t in sorted(set(arm.targets))}}, q, draws, null
 
 
 def leave_one_target_out(x, y, targets, label):
@@ -398,30 +420,29 @@ def reproduction_gate(arm: Arm, shrna_values, crispri_values, records):
     return {k: float(v) for k, v in worst.items()}
 
 
-def prism_toxicity(prism_dir: Path, drugs, pert_ids):
-    """Minus the median log-fold change, mapped only through the pinned release.
+DOSE_WINDOW = (2.0, 3.0)         # Amendment 1, A1: the registered 2.5 uM with a tolerance
 
-    PRISM Repurposing 19Q4's primary screen is a wide matrix: rows are cell lines,
-    columns are one treatment each, named `broad_id::dose::screen`. Every compound
-    holds exactly one column, so the registered tie-break between several entries
-    can only fire when one drug name matches several compounds.
 
-    The release carries a `name` field and no synonym field, and its doses are not
-    uniformly 2.5 micromolar. Both departures from the registered description are
-    recorded in the provenance rather than worked around.
+def prism_mapping(prism_dir: Path, drugs, pert_ids) -> dict:
+    """Stage one of R5: which treatment stands for which drug, and nothing else.
+
+    Reads the treatment table and the missingness of the response matrix. No
+    response value is read, summarized or returned, so the mapping can be frozen
+    and hashed before any association exists. Amendment 1, A4.
     """
     treatment_path = prism_dir / "primary-screen-replicate-collapsed-treatment-info.csv"
     lfc_path = prism_dir / "primary-screen-replicate-collapsed-logfold-change.csv"
     treatments = pd.read_csv(treatment_path, low_memory=False)
-    lfc = pd.read_csv(lfc_path, index_col=0)
+    responses = pd.read_csv(lfc_path, index_col=0)
+    lines_measured = responses.notna().sum(axis=0)       # missingness, not response
+    del responses
 
     treatments["stem"] = treatments.broad_id.str.extract(BRD_STEM)[0]
-    treatments = treatments[treatments.column_name.isin(lfc.columns)].copy()
-    counts = lfc.notna().sum(axis=0)
-    medians = lfc.median(axis=0, skipna=True)
-    killed = (lfc < -1).sum(axis=0) / counts
-
-    eligible = treatments[treatments.column_name.map(counts) >= R5_MIN_LINES].copy()
+    treatments = treatments[treatments.column_name.isin(lines_measured.index)].copy()
+    treatments["n_lines"] = treatments.column_name.map(lines_measured)
+    eligible = treatments[(treatments.n_lines >= R5_MIN_LINES)
+                          & (treatments.dose >= DOSE_WINDOW[0])
+                          & (treatments.dose <= DOSE_WINDOW[1])]
 
     def normalize(text):
         return " ".join(str(text).lower().split())
@@ -431,7 +452,7 @@ def prism_toxicity(prism_dir: Path, drugs, pert_ids):
         by_stem.setdefault(row.stem, []).append(row.column_name)
         by_name.setdefault(normalize(row["name"]), []).append(row.column_name)
 
-    mapping, rejected = {}, {}
+    accepted, rejected = {}, {}
     for drug in drugs:
         stems = {stem for pid in pert_ids.get(drug, []) for stem in BRD_STEM.findall(str(pid))}
         candidates = [c for stem in sorted(stems) for c in by_stem.get(stem, [])]
@@ -440,38 +461,59 @@ def prism_toxicity(prism_dir: Path, drugs, pert_ids):
             candidates = by_name.get(normalize(drug), [])
             route = "exact name"
         if not candidates:
-            rejected[drug] = (f"no treatment with log-fold change in at least {R5_MIN_LINES} "
-                              "cell lines, by identifier or by exact name in the release")
+            rejected[drug] = (f"no treatment inside {DOSE_WINDOW[0]}-{DOSE_WINDOW[1]} uM with "
+                              f"log-fold change in at least {R5_MIN_LINES} cell lines, by "
+                              "identifier or by exact name in the release")
             continue
-        best = max(sorted(candidates), key=lambda column: (counts[column], column))
+        best = max(sorted(candidates), key=lambda column: (lines_measured[column], column))
         row = eligible[eligible.column_name == best].iloc[0]
-        mapping[drug] = {"column": best, "stem": row.stem, "route": route,
-                         "n_lines": int(counts[best]), "dose": float(row.dose),
-                         "screen": row.screen_id, "n_candidates": len(set(candidates))}
+        accepted[drug] = {"column": best, "stem": row.stem, "route": route,
+                          "n_lines": int(lines_measured[best]), "dose": float(row.dose),
+                          "screen": row.screen_id, "n_candidates": len(set(candidates))}
 
-    toxicity = {column: -float(medians[column]) for column in set(m["column"] for m in mapping.values())}
-    fraction_killed = {column: float(killed[column]) for column in toxicity}
-    doses = [m["dose"] for m in mapping.values()]
-    provenance = {
-        "lfc_file": str(lfc_path), "treatment_file": str(treatment_path),
-        "lfc_sha256": sha256_file(lfc_path), "treatment_sha256": sha256_file(treatment_path),
-        "n_cell_lines": int(lfc.shape[0]), "n_treatments": int(lfc.shape[1]),
-        "dose_range_of_mapped": [float(min(doses)), float(max(doses))] if doses else None,
-        "departures_from_the_registered_description": [
-            "the release has a name field and no synonym field, so exact-name matching "
-            "uses name alone",
-            "doses are not uniformly 2.5 micromolar; each compound is screened at one dose "
-            "and the chosen dose is recorded per drug"]}
-    return mapping, rejected, toxicity, fraction_killed, provenance
+    return {"amendment": "experiments/PREREG_H3_REFERENCE_DISCORDANCE_AMENDMENT_1.md",
+            "dose_window": list(DOSE_WINDOW), "min_lines": R5_MIN_LINES,
+            "accepted": accepted, "rejected": rejected,
+            "n_accepted": len(accepted), "n_rejected": len(rejected),
+            "provenance": {"lfc_file": str(lfc_path), "treatment_file": str(treatment_path),
+                           "lfc_sha256": sha256_file(lfc_path),
+                           "treatment_sha256": sha256_file(treatment_path),
+                           "no_response_value_was_read": True}}
+
+
+def prism_response(prism_dir: Path, mapping_path: Path):
+    """Stage two of R5: the toxicity measure, from a mapping it did not choose.
+
+    The stage accepts only a mapping written to disk by stage one, and refuses to
+    build one of its own, so no mapping can be revised after a response value has
+    been summarized.
+    """
+    assert mapping_path.exists(), (
+        f"{mapping_path} is missing: the mapping must be frozen before any response "
+        "value is summarized")
+    frozen = json.loads(mapping_path.read_text())
+    assert frozen.get("accepted"), "the frozen mapping accepts no drug"
+    lfc_path = prism_dir / "primary-screen-replicate-collapsed-logfold-change.csv"
+    assert sha256_file(lfc_path) == frozen["provenance"]["lfc_sha256"], (
+        "the response matrix is not the one the mapping was frozen against")
+
+    columns = sorted({entry["column"] for entry in frozen["accepted"].values()})
+    responses = pd.read_csv(lfc_path, index_col=0, usecols=["Unnamed: 0"] + columns)
+    toxicity = {column: -float(responses[column].median(skipna=True)) for column in columns}
+    killed = {column: float((responses[column] < -1).sum() / responses[column].notna().sum())
+              for column in columns}
+    return toxicity, killed, {"mapping_file": str(mapping_path),
+                              "mapping_sha256": sha256_file(mapping_path),
+                              "n_columns_read": len(columns)}
 
 
 def run(args):
     OUT.mkdir(parents=True, exist_ok=True)
     args.output.mkdir(parents=True, exist_ok=True)
+    draws = Draws()
     result = {"registration": {"file": "experiments/PREREG_H3_REFERENCE_DISCORDANCE.md",
                                "frozen_at": "7f57136"},
               "inputs": verify_inputs(args), "modules": {}}
-    draws_out = {}
 
     log("building drug signatures and references")
     per_drug, gene_ids = build_drug_signatures(args.data)
@@ -554,6 +596,7 @@ def run(args):
         lambda idx: leading_share(c1, [common[i] for i in idx]) -
                     leading_share(shrna, [common[i] for i in idx]),
         1000, SEED_BOOT)[:, 0]
+    draws.keep("R0.8_concentration_difference", concentration_draws)
     result["modules"]["R0.8_concentration"] = {
         "n_targets": len(common),
         "C1_leading_share": leading_share(c1, common),
@@ -569,17 +612,19 @@ def run(args):
             summary, drawn = association(values[quantity], values["E"], crispri_arm.targets,
                                          f"{name}: rho({quantity}, E)")
             headline[f"{name}_{quantity}_E"] = summary
-            draws_out[f"R0.9_{name}_{quantity}_E"] = drawn
-    raw_comparison, _ = paired_comparison(
+            draws.keep(f"R0.9_{name}_{quantity}_E", drawn)
+    raw_comparison, raw_comparison_draws = paired_comparison(
         headline["C0_D_E"]["rho"], headline["C1_D_E"]["rho"], crispri_arm.targets,
         lambda idx: (spearmanr(c0_values["D"][idx], c0_values["E"][idx]).statistic,
                      spearmanr(c1_values["D"][idx], c1_values["E"][idx]).statistic),
         "C1 against C0, rho(D, E)")
-    projected_comparison, _ = paired_comparison(
+    projected_comparison, projected_comparison_draws = paired_comparison(
         headline["C0_P_E"]["rho"], headline["C1_P_E"]["rho"], crispri_arm.targets,
         lambda idx: (spearmanr(c0_values["P"][idx], c0_values["E"][idx]).statistic,
                      spearmanr(c1_values["P"][idx], c1_values["E"][idx]).statistic),
         "C1 against C0, rho(P, E)")
+    draws.keep("R0.9_C1_vs_C0_raw_paired", raw_comparison_draws)
+    draws.keep("R0.9_C1_vs_C0_projected_paired", projected_comparison_draws)
     reversal = {"attenuated": "construction-dependent", "reversed": "construction-dependent",
                 "retained": "construction-robust"}.get(raw_comparison["reading"], "inconclusive")
     result["modules"]["R0.9_constructions"] = {"headline": headline, "raw": raw_comparison,
@@ -594,14 +639,15 @@ def run(args):
             summary, drawn = association(values[quantity], values["E"], arm.targets,
                                          f"{name}: rho({quantity}, E)")
             r1["dependence"][f"{name}_{quantity}_E"] = summary
-            draws_out[f"R1_{name}_{quantity}_E"] = drawn
-            weighting, _ = paired_comparison(
+            draws.keep(f"R1_{name}_{quantity}_E", drawn)
+            weighting, weighting_draws = paired_comparison(
                 summary["rho"], summary["target_balanced_rho"], arm.targets,
                 lambda idx, v=values, q=quantity: (
                     spearmanr(v[q][idx], v["E"][idx]).statistic,
                     target_balanced_spearman(v[q][idx], v["E"][idx], arm.targets[idx])),
                 f"{name}: target-balanced against drug-weighted, rho({quantity}, E)")
             r1["weighting"][f"{name}_{quantity}_E"] = weighting
+            draws.keep(f"R1_weighting_{name}_{quantity}_E_paired", weighting_draws)
 
     matched_index = [i for i, d in enumerate(crispri_arm.drugs) if d in matched_drugs]
     matched_arm = crispri_arm.subset(matched_index)
@@ -609,7 +655,7 @@ def run(args):
     matched_shrna_h = quantities(matched_arm, shrna_h)
     matched_shrna = quantities(matched_arm, shrna)
     for quantity in ("P", "D"):
-        comparison, _ = paired_comparison(
+        comparison, composition_draws = paired_comparison(
             float(spearmanr(matched_shrna_h[quantity], matched_shrna_h["E"]).statistic),
             float(spearmanr(matched_c1[quantity], matched_c1["E"]).statistic),
             matched_arm.targets,
@@ -618,6 +664,7 @@ def run(args):
                 spearmanr(matched_c1[q][idx], matched_c1["E"][idx]).statistic),
             f"matched: C1 against shRNA-h, rho({quantity}, E)")
         r1["composition"][f"{quantity}_E_harmonized"] = comparison
+        draws.keep(f"R1_composition_{quantity}_E_paired", composition_draws)
         r1["composition"][f"{quantity}_E_unharmonized"] = {
             "rho_shRNA_full_space": float(spearmanr(matched_shrna[quantity],
                                                     matched_shrna["E"]).statistic),
@@ -629,7 +676,9 @@ def run(args):
     r2 = {}
     for arm, reference, name in ((shrna_arm, shrna, "shRNA"), (crispri_arm, c1, "C1"),
                                  (crispri_arm, c1_rpe1, "C1-RPE1"), (crispri_arm, c0, "C0")):
-        r2[name], _ = q_reading(arm, reference, f"{name}: own-target percentile")
+        r2[name], _, q_draws, q_null = q_reading(arm, reference, f"{name}: own-target percentile")
+        draws.keep(f"R2_{name}_qbar_bootstrap", q_draws)
+        draws.keep(f"R2_{name}_qbar_null", q_null)
     result["modules"]["R2_target_identity"] = r2
 
     # ---- R3 permutation resistance
@@ -645,7 +694,7 @@ def run(args):
             summary, null = permutation_null(arm, values, genes, projections, matrix, statistic,
                                              f"{name}: rho({quantity}, E) under unique-target permutation")
             r3[f"{name}_{quantity}_E"] = summary
-            draws_out[f"R3_{name}_{quantity}_E_null"] = null
+            draws.keep(f"R3_{name}_{quantity}_E_null", null)
     result["modules"]["R3_permutation_resistance"] = r3
     result["modules"]["R3_permutation_resistance"]["note"] = (
         "permutation resistance is not attributed to any program here")
@@ -683,29 +732,44 @@ def run(args):
     if args.prism is None:
         result["modules"]["R5_toxicity"] = {"runnable": False, "reason": "no PRISM release given"}
     else:
-        pert_ids = {}
         siginfo = pd.read_csv(args.data / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                               low_memory=False, usecols=["pert_iname", "pert_id"])
-        for drug, group in siginfo.groupby("pert_iname"):
-            pert_ids[drug] = sorted(set(group.pert_id.astype(str)))
-        mapping, rejected, toxicity, killed, provenance = prism_toxicity(
-            args.prism, crispri_arm.drugs, pert_ids)
-        (args.output / "r5_prism_mapping.json").write_text(json.dumps(
-            {"accepted": mapping, "rejected": rejected, "provenance": provenance}, indent=2))
-        mapped = [i for i, d in enumerate(crispri_arm.drugs) if d in mapping]
+        pert_ids = {drug: sorted(set(group.pert_id.astype(str)))
+                    for drug, group in siginfo.groupby("pert_iname")}
+
+        mapping_path = args.output / "r5_prism_mapping.json"
+        if not mapping_path.exists():
+            mapping = prism_mapping(args.prism, crispri_arm.drugs, pert_ids)
+            mapping_path.write_text(json.dumps(mapping, indent=2))
+            log(f"mapping frozen at {mapping_path}; commit it before the response stage")
+        frozen = json.loads(mapping_path.read_text())
+        accepted = frozen["accepted"]
+
+        mapped = [i for i, drug in enumerate(crispri_arm.drugs) if drug in accepted]
         n_targets = len(set(crispri_arm.targets[mapped]))
         gate_met = len(mapped) >= R5_MIN_DRUGS and n_targets >= R5_MIN_TARGETS
         r5 = {"runnable": gate_met, "n_mapped": len(mapped), "n_targets": n_targets,
               "gate": {"min_drugs": R5_MIN_DRUGS, "min_targets": R5_MIN_TARGETS},
-              "mapping_table": "r5_prism_mapping.json", "provenance": provenance}
-        if gate_met:
+              "dose_window": frozen["dose_window"], "mapping_table": mapping_path.name,
+              "mapping_sha256": sha256_file(mapping_path), "provenance": frozen["provenance"],
+              "reading": None}
+        if not gate_met:
+            r5["reading"] = ("the registered minimum cohort was not reached; R5 is reported "
+                             "descriptively and labeled exploratory, and it neither supports "
+                             "nor counts against the toxicity explanation")
+        else:
+            toxicity, killed, response_provenance = prism_response(args.prism, mapping_path)
+            r5["response_provenance"] = response_provenance
             idx = np.array(mapped)
-            T = np.array([toxicity[mapping[crispri_arm.drugs[i]]["column"]] for i in idx])
-            fraction_killed = np.array([killed[mapping[crispri_arm.drugs[i]]["column"]] for i in idx])
+            T = np.array([toxicity[accepted[crispri_arm.drugs[i]]["column"]] for i in idx])
+            fraction_killed = np.array([killed[accepted[crispri_arm.drugs[i]]["column"]]
+                                        for i in idx])
             sub_targets = crispri_arm.targets[idx]
-            e_t, _ = association(c1_values["E"][idx], T, sub_targets, "rho(E, toxicity)")
-            d_e, _ = association(c1_values["D"][idx], c1_values["E"][idx], sub_targets,
-                                 "rho(D, E) on the complete-case cohort")
+            e_t, e_t_draws = association(c1_values["E"][idx], T, sub_targets, "rho(E, toxicity)")
+            d_e, d_e_draws = association(c1_values["D"][idx], c1_values["E"][idx], sub_targets,
+                                         "rho(D, E) on the complete-case cohort")
+            draws.keep("R5_rho_E_toxicity", e_t_draws)
+            draws.keep("R5_rho_D_E_complete_case", d_e_draws)
             partial = rank_partial_correlation(c1_values["D"][idx], c1_values["E"][idx], (T,))
             partial_draws = cluster_bootstrap(
                 sub_targets,
@@ -713,8 +777,10 @@ def run(args):
                               rank_partial_correlation(c1_values["D"][idx][rows],
                                                        c1_values["E"][idx][rows], (T[rows],))),
                 N_BOOT, SEED_BOOT)
+            draws.keep("R5_partial_paired", partial_draws)
             attenuation = partial_draws[:, 0] - partial_draws[:, 1]
-            reading_rule = comparison_reading(d_e["rho"], partial, partial_draws[:, 1] - partial_draws[:, 0],
+            reading_rule = comparison_reading(d_e["rho"], partial,
+                                              partial_draws[:, 1] - partial_draws[:, 0],
                                               partial_draws[:, 1])
             if e_t["ci95"][0] > 0 and (is_practically_null(partial_draws[:, 1])
                                        or reading_rule in ("attenuated", "reversed")):
@@ -731,7 +797,10 @@ def run(args):
                                  else None),
                        "fraction_of_lines_below_minus_one": {
                            "median": float(np.median(fraction_killed))},
-                       "comparison_reading": reading_rule, "reading": reading})
+                       "comparison_reading": reading_rule, "reading": reading,
+                       "measure": ("viability response at a near-common exposure of "
+                                   f"{DOSE_WINDOW[0]}-{DOSE_WINDOW[1]} uM; not a dose-response "
+                                   "summary and not a potency estimate")})
         result["modules"]["R5_toxicity"] = r5
 
     # ---- R6 cell context
@@ -739,7 +808,7 @@ def run(args):
     for quantity in ("P", "D"):
         k562 = quantities(crispri_arm, c1_shared)
         rpe1 = quantities(crispri_arm, c1_rpe1_shared)
-        comparison, _ = paired_comparison(
+        comparison, context_draws = paired_comparison(
             float(spearmanr(k562[quantity], k562["E"]).statistic),
             float(spearmanr(rpe1[quantity], rpe1["E"]).statistic),
             crispri_arm.targets,
@@ -747,6 +816,7 @@ def run(args):
                                      spearmanr(rpe1[q][idx], rpe1["E"][idx]).statistic),
             f"RPE1 against K562, rho({quantity}, E)")
         r6[f"R6a_{quantity}_E"] = comparison
+        draws.keep(f"R6a_{quantity}_E_paired", context_draws)
     r6["R6a_reading"] = {"retained": "raw reversal replicates in RPE1",
                          "attenuated": "raw reversal is context-dependent",
                          "reversed": "raw reversal is context-dependent"}.get(
@@ -832,7 +902,8 @@ def run(args):
     result["modules"]["R7_sensitivities"] = r7
 
     draws_path = args.output / "reference_discordance_draws.npz"
-    np.savez_compressed(draws_path, **draws_out)
+    np.savez_compressed(draws_path, **draws)
+    result["draws"] = {"file": draws_path.name, "keys": sorted(draws)}
     result["provenance"] = {"script_sha256": sha256_file(Path(__file__)),
                             "draws_sha256": sha256_file(draws_path),
                             "seeds": {"bootstrap": SEED_BOOT, "permutation": SEED_PERM},
@@ -894,7 +965,7 @@ def shrna_reliability(data_dir: Path, targets_wanted) -> dict:
     out = {}
     for gene, group in siginfo.groupby("pert_iname"):
         rows = group.drop_duplicates("sig_id")
-        if len(rows) < MIN_HAIRPINS:
+        if len(rows) < MIN_SIGNATURES:
             continue
         matrix = signatures[rows._row.values]
         hairpins = rows.pert_id.astype(str).to_numpy() if "pert_id" in rows else \

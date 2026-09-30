@@ -1,3 +1,4 @@
+import json
 import sys
 from pathlib import Path
 
@@ -167,10 +168,12 @@ def _prism_files(tmp_path, treatments, columns_with_values):
     return tmp_path
 
 
-def test_prism_mapping_uses_only_the_pinned_files(tmp_path):
+def test_prism_mapping_uses_only_the_pinned_files_and_the_dose_window(tmp_path):
     columns = {
         "BRD-K11111111-001-01-9::2.5::HTS": lambda lines: [-2.0] * len(lines),
         "BRD-K22222222-001-01-9::2.5::HTS": lambda lines: [-0.1] * len(lines),
+        # outside the 2.0-3.0 window fixed by Amendment 1
+        "BRD-K55555555-001-01-9::0.08::HTS": lambda lines: [-5.0] * len(lines),
         # measured in too few cell lines
         "BRD-K33333333-001-01-9::2.5::HTS": lambda lines: [-3.0] * 20 + [np.nan] * (len(lines) - 20),
     }
@@ -179,37 +182,60 @@ def test_prism_mapping_uses_only_the_pinned_files(tmp_path):
          "name": "Alpha", "dose": 2.5, "screen_id": "HTS"},
         {"column_name": "BRD-K22222222-001-01-9::2.5::HTS", "broad_id": "BRD-K22222222-001-01-9",
          "name": "Beta", "dose": 2.5, "screen_id": "HTS"},
+        {"column_name": "BRD-K55555555-001-01-9::0.08::HTS", "broad_id": "BRD-K55555555-001-01-9",
+         "name": "LowDose", "dose": 0.08, "screen_id": "HTS"},
         {"column_name": "BRD-K33333333-001-01-9::2.5::HTS", "broad_id": "BRD-K33333333-001-01-9",
          "name": "Gamma", "dose": 2.5, "screen_id": "HTS"},
     ]
     prism = _prism_files(tmp_path, treatments, columns)
-
-    drugs = ["alpha", "beta", "gamma", "delta", "byid"]
     pert_ids = {"byid": ["BRD-K11111111"], "delta": ["BRD-K99999999"]}
-    mapping, rejected, toxicity, killed, provenance = _mod.prism_toxicity(prism, drugs, pert_ids)
 
-    assert mapping["alpha"]["route"] == "exact name"
-    assert mapping["byid"]["route"] == "broad identifier"
-    assert "gamma" in rejected and "delta" in rejected      # too few lines; no entry at all
-    assert toxicity[mapping["alpha"]["column"]] == pytest.approx(2.0)
-    assert toxicity[mapping["beta"]["column"]] == pytest.approx(0.1)
-    assert killed[mapping["alpha"]["column"]] == pytest.approx(1.0)
-    assert killed[mapping["beta"]["column"]] == pytest.approx(0.0)
-    assert mapping["alpha"]["dose"] == 2.5
-    assert provenance["lfc_sha256"] and provenance["treatment_sha256"]
-    assert provenance["departures_from_the_registered_description"]
+    mapping = _mod.prism_mapping(prism, ["alpha", "beta", "gamma", "delta", "byid", "lowdose"],
+                                 pert_ids)
+    accepted, rejected = mapping["accepted"], mapping["rejected"]
+    assert accepted["alpha"]["route"] == "exact name"
+    assert accepted["byid"]["route"] == "broad identifier"
+    assert accepted["alpha"]["dose"] == 2.5
+    assert "lowdose" in rejected          # outside the frozen dose window
+    assert "gamma" in rejected            # too few cell lines
+    assert "delta" in rejected            # absent from the release
+    assert mapping["dose_window"] == [2.0, 3.0]
+    assert mapping["provenance"]["no_response_value_was_read"]
 
 
-def test_prism_mapping_refuses_a_name_that_is_not_in_the_release(tmp_path):
-    columns = {"BRD-K11111111-001-01-9::2.5::HTS": lambda lines: [-1.5] * len(lines)}
+def test_prism_response_refuses_a_mapping_it_was_not_given(tmp_path):
+    columns = {"BRD-K11111111-001-01-9::2.5::HTS": lambda lines: [-2.0] * len(lines)}
     treatments = [{"column_name": "BRD-K11111111-001-01-9::2.5::HTS",
                    "broad_id": "BRD-K11111111-001-01-9", "name": "Alpha", "dose": 2.5,
                    "screen_id": "HTS"}]
     prism = _prism_files(tmp_path, treatments, columns)
 
-    mapping, rejected, _, _, _ = _mod.prism_toxicity(prism, ["alpha-two"], {})
-    assert mapping == {}
-    assert "alpha-two" in rejected
+    with pytest.raises(AssertionError, match="frozen before any response value"):
+        _mod.prism_response(prism, tmp_path / "does_not_exist.json")
+
+    mapping = _mod.prism_mapping(prism, ["alpha"], {})
+    path = tmp_path / "r5_prism_mapping.json"
+    path.write_text(json.dumps(mapping))
+    toxicity, killed, provenance = _mod.prism_response(prism, path)
+    assert toxicity[mapping["accepted"]["alpha"]["column"]] == pytest.approx(2.0)
+    assert killed[mapping["accepted"]["alpha"]["column"]] == pytest.approx(1.0)
+    assert provenance["mapping_sha256"]
+
+
+def test_prism_response_refuses_a_response_matrix_that_moved(tmp_path):
+    columns = {"BRD-K11111111-001-01-9::2.5::HTS": lambda lines: [-2.0] * len(lines)}
+    treatments = [{"column_name": "BRD-K11111111-001-01-9::2.5::HTS",
+                   "broad_id": "BRD-K11111111-001-01-9", "name": "Alpha", "dose": 2.5,
+                   "screen_id": "HTS"}]
+    prism = _prism_files(tmp_path, treatments, columns)
+    mapping = _mod.prism_mapping(prism, ["alpha"], {})
+    path = tmp_path / "r5_prism_mapping.json"
+    path.write_text(json.dumps(mapping))
+
+    _prism_files(tmp_path, treatments,
+                 {"BRD-K11111111-001-01-9::2.5::HTS": lambda lines: [-1.0] * len(lines)})
+    with pytest.raises(AssertionError, match="not the one the mapping was frozen against"):
+        _mod.prism_response(prism, path)
 
 
 def test_prism_mapping_prefers_the_treatment_measured_in_more_lines(tmp_path):
@@ -225,10 +251,9 @@ def test_prism_mapping_prefers_the_treatment_measured_in_more_lines(tmp_path):
     ]
     prism = _prism_files(tmp_path, treatments, columns)
 
-    mapping, _, toxicity, _, _ = _mod.prism_toxicity(prism, ["shared"], {})
-    assert mapping["shared"]["n_lines"] == 120
-    assert mapping["shared"]["n_candidates"] == 2
-    assert toxicity[mapping["shared"]["column"]] == pytest.approx(4.0)
+    mapping = _mod.prism_mapping(prism, ["shared"], {})
+    assert mapping["accepted"]["shared"]["n_lines"] == 120
+    assert mapping["accepted"]["shared"]["n_candidates"] == 2
 
 
 def test_hematopoietic_probe_says_when_there_are_too_few_drugs():

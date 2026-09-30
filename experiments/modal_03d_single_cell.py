@@ -155,7 +155,8 @@ def stage_targets():
     import numpy as np
 
     sys.path.insert(0, "/app")
-    from geometry.single_cell import cosine, split_half_reliability
+    from geometry.single_cell import (batches, cosine, split_half_reliability,
+                                      target_seed)
 
     results = Path("/vol/results")
     results.mkdir(parents=True, exist_ok=True)
@@ -173,19 +174,19 @@ def stage_targets():
         done = {path.stem for path in shard_dir.glob("*.json")}
         print(f"[{_ts()}] {release}: {len(targets)} targets, {len(done)} batches already done")
 
-        for start in range(0, len(targets), BATCH):
-            name = f"batch_{start // BATCH:04d}"
+        for name, members in batches(targets, BATCH):
             if name in done:
                 continue
             batch = {}
-            for target in targets[start:start + BATCH]:
+            for target in members:
                 rows = np.flatnonzero(labels == target)
                 if len(rows) < 2:
                     continue
                 cells = single_cell[rows].to_memory().X
                 cells = cells.toarray() if hasattr(cells, "toarray") else np.asarray(cells)
                 entry = {"n_cells": int(len(rows)),
-                         "reliability": split_half_reliability(cells, groups[rows], SEED_SPLIT)}
+                         "reliability": split_half_reliability(
+                             cells, groups[rows], target_seed(SEED_SPLIT, str(target)))}
                 if target in bulk_gene:
                     released = np.asarray(bulk.X[bulk_gene[target]], dtype=np.float64).ravel()
                     mean = cells.mean(axis=0)
@@ -193,7 +194,11 @@ def stage_targets():
                         entry["cosine_with_released_bulk"] = cosine(mean, released)
                         entry["max_abs_difference"] = float(np.abs(mean - released).max())
                 batch[target] = entry
-            (shard_dir / f"{name}.json").write_text(json.dumps(batch, indent=2))
+            # a shard is named only once it is complete, so an interrupted write
+            # cannot be mistaken for a finished batch on resume
+            partial = shard_dir / f"{name}.json.part"
+            partial.write_text(json.dumps(batch, indent=2, sort_keys=True))
+            partial.replace(shard_dir / f"{name}.json")
             vol.commit()                      # checkpoint inside the unit
             print(f"[{_ts()}] {release}: {name} written, {len(batch)} targets")
         single_cell.file.close()
@@ -204,18 +209,21 @@ def stage_targets():
 def stage_merge():
     """One audit file, in the shape `03d_h3_reference_discordance.py` expects."""
     import json
+    import sys
     from pathlib import Path
 
     import numpy as np
+
+    sys.path.insert(0, "/app")
+    from geometry.single_cell import merge_batches
 
     results = Path("/vol/results")
     audit = json.loads((results / "audit.json").read_text())
     reliability, verification = {}, {}
     naming = {"K562_essential": "C1-K562", "RPE1_essential": "C1-RPE1"}
     for release, name in naming.items():
-        merged = {}
-        for shard in sorted((results / release).glob("*.json")):
-            merged.update(json.loads(shard.read_text()))
+        merged = merge_batches({shard.stem: json.loads(shard.read_text())
+                                for shard in sorted((results / release).glob("*.json"))})
         reliability[name] = {target: entry["reliability"] for target, entry in merged.items()
                              if entry.get("reliability") is not None}
         cosines = [entry["cosine_with_released_bulk"] for entry in merged.values()

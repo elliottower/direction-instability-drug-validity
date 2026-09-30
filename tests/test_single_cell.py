@@ -87,3 +87,61 @@ def test_cosine_is_scale_free_and_signed():
     assert cosine(a, 5 * a) == pytest.approx(1.0)
     assert cosine(a, -a) == pytest.approx(-1.0)
     assert np.isnan(cosine(a, np.zeros(20)))
+
+
+def test_target_seed_follows_the_name_not_the_position():
+    from geometry.single_cell import target_seed
+
+    assert target_seed(7, "TP53") == target_seed(7, "TP53")
+    assert target_seed(7, "TP53") != target_seed(8, "TP53")
+    assert target_seed(7, "TP53") != target_seed(7, "MYC")
+    # the same target in a different batch keeps its seed, which is what makes a
+    # resumed run agree with a clean one
+    first = [target_seed(7, t) for t in ["A", "B", "C"]]
+    reordered = [target_seed(7, t) for t in ["C", "A", "B"]]
+    assert sorted(first) == sorted(reordered)
+
+
+def test_batches_are_deterministic_and_cover_every_target():
+    from geometry.single_cell import batches
+
+    targets = [f"T{i}" for i in range(250)]
+    named = batches(targets, 100)
+    assert [name for name, _ in named] == ["batch_0000", "batch_0001", "batch_0002"]
+    assert sum(len(members) for _, members in named) == 250
+    assert batches(list(reversed(targets)), 100) == named
+
+
+def test_an_interrupted_run_resumes_to_the_same_result_as_a_clean_one():
+    from geometry.single_cell import batches, merge_batches, split_half_reliability, target_seed
+
+    rng = np.random.default_rng()
+    genes, groups = 25, np.repeat(np.arange(6), 20)
+    data = {f"T{i}": rng.standard_normal(genes) + rng.standard_normal((120, genes)) * 0.5
+            for i in range(30)}
+
+    def compute(targets):
+        return {t: {"reliability": split_half_reliability(data[t], groups,
+                                                          target_seed(99, t))} for t in targets}
+
+    named = batches(list(data), 8)
+    clean = merge_batches({name: compute(members) for name, members in named})
+
+    # the first two batches survive an interruption; the rest are computed later
+    written = {name: compute(members) for name, members in named[:2]}
+    written.update({name: compute(members) for name, members in named[2:]})
+    resumed = merge_batches(written)
+
+    assert clean == resumed
+    assert len(clean) == 30
+
+
+def test_merge_refuses_a_target_written_by_two_batches():
+    from geometry.single_cell import merge_batches
+
+    with pytest.raises(AssertionError, match="conflicting"):
+        merge_batches({"batch_0000": {"T1": {"reliability": 0.9}},
+                       "batch_0001": {"T1": {"reliability": 0.2}}})
+    with pytest.raises(AssertionError, match="identical"):
+        merge_batches({"batch_0000": {"T1": {"reliability": 0.9}},
+                       "batch_0001": {"T1": {"reliability": 0.9}}})
