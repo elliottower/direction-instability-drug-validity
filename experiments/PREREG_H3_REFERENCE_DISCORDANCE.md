@@ -3,7 +3,7 @@
 **Date:** 2026-09-22
 **Status:** DESIGN FROZEN. No analysis below has been computed, and the
 analysis code was not written when this was frozen.
-**Commit SHA:** filled in the commit that follows this freeze
+**Commit SHA:** 7f57136
 **Analysis code SHA:** pending. It is recorded in an implementation manifest,
 after code review and before any run on real data. This document is not edited
 to insert it.
