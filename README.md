@@ -14,7 +14,7 @@ This repository holds the audit. Hypotheses and decision criteria were frozen an
 |---|---|---|:--|
 | H1 | Toxicity correction reclassifies cytotoxic drugs | Δ < 0.01 | Refuted — the criterion passes as an artifact |
 | H2 | Broad-mechanism drugs fall below the median | 7 of 10 | Suggestive; does not survive multiplicity correction |
-| H3 | Target-axis projection separates on- from off-target | ρ = 0.317 vs −0.058 raw (shRNA); −0.125 vs +0.272 raw (CRISPRi) | Criterion met; convergent validity unresolved |
+| H3 | Target-axis projection separates on- from off-target (as registered) | ρ = 0.317 vs −0.058 raw (shRNA); −0.125 vs +0.272 raw (CRISPRi) | Criterion met; convergent validity unresolved |
 | H4 | Localization predicts mechanism of action | AUROC gap +0.0005 [−0.026, +0.028] | Not confirmed |
 | H5 | The variance-regularized score outpredicts raw | 10 of 66 folds | Not confirmed |
 | HP1 | Essential-gene correction reorganizes the ranking | ρ = 0.91 | Correction does not bite |
