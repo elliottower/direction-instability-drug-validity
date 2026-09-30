@@ -156,29 +156,33 @@ def test_leave_one_target_out_finds_the_target_that_carries_the_estimate():
     assert abs(out["largest_change"]) > 0.1
 
 
-def _prism_files(tmp_path, rows, catalogue):
-    lfc = pd.DataFrame(rows)
-    lfc_path = tmp_path / "Repurposing_LFC_COLLAPSED.csv"
-    lfc.to_csv(lfc_path, index=False)
-    compounds = pd.DataFrame(catalogue)
-    compounds_path = tmp_path / "Repurposing_Extended_Primary_Compound_List.csv"
-    compounds.to_csv(compounds_path, index=False)
+def _prism_files(tmp_path, treatments, columns_with_values):
+    """A miniature PRISM 19Q4 primary screen: a wide matrix plus its treatment table."""
+    lines = [f"ACH-{i:06d}" for i in range(120)]
+    matrix = pd.DataFrame({column: values(lines) for column, values in columns_with_values.items()},
+                          index=lines)
+    matrix.to_csv(tmp_path / "primary-screen-replicate-collapsed-logfold-change.csv")
+    pd.DataFrame(treatments).to_csv(
+        tmp_path / "primary-screen-replicate-collapsed-treatment-info.csv", index=False)
     return tmp_path
 
 
 def test_prism_mapping_uses_only_the_pinned_files(tmp_path):
-    lines = [f"ACH-{i:06d}" for i in range(120)]
-    rows = []
-    for stem, level in (("BRD-K11111111", -2.0), ("BRD-K22222222", -0.1)):
-        rows += [{"broad_id": f"{stem}-001-01-9", "row_id": line, "LFC": level} for line in lines]
-    # a compound measured in too few lines
-    rows += [{"broad_id": "BRD-K33333333-001-01-9", "row_id": line, "LFC": -3.0}
-             for line in lines[:20]]
-    prism = _prism_files(tmp_path, rows, [
-        {"IDs": "BRD:BRD-K11111111-001-01-9", "Drug.Name": "Alpha", "Synonyms": "alpha-one"},
-        {"IDs": "BRD:BRD-K22222222-001-01-9", "Drug.Name": "Beta", "Synonyms": "beta-two"},
-        {"IDs": "BRD:BRD-K33333333-001-01-9", "Drug.Name": "Gamma", "Synonyms": "gamma"},
-    ])
+    columns = {
+        "BRD-K11111111-001-01-9::2.5::HTS": lambda lines: [-2.0] * len(lines),
+        "BRD-K22222222-001-01-9::2.5::HTS": lambda lines: [-0.1] * len(lines),
+        # measured in too few cell lines
+        "BRD-K33333333-001-01-9::2.5::HTS": lambda lines: [-3.0] * 20 + [np.nan] * (len(lines) - 20),
+    }
+    treatments = [
+        {"column_name": "BRD-K11111111-001-01-9::2.5::HTS", "broad_id": "BRD-K11111111-001-01-9",
+         "name": "Alpha", "dose": 2.5, "screen_id": "HTS"},
+        {"column_name": "BRD-K22222222-001-01-9::2.5::HTS", "broad_id": "BRD-K22222222-001-01-9",
+         "name": "Beta", "dose": 2.5, "screen_id": "HTS"},
+        {"column_name": "BRD-K33333333-001-01-9::2.5::HTS", "broad_id": "BRD-K33333333-001-01-9",
+         "name": "Gamma", "dose": 2.5, "screen_id": "HTS"},
+    ]
+    prism = _prism_files(tmp_path, treatments, columns)
 
     drugs = ["alpha", "beta", "gamma", "delta", "byid"]
     pert_ids = {"byid": ["BRD-K11111111"], "delta": ["BRD-K99999999"]}
@@ -187,22 +191,44 @@ def test_prism_mapping_uses_only_the_pinned_files(tmp_path):
     assert mapping["alpha"]["route"] == "exact name"
     assert mapping["byid"]["route"] == "broad identifier"
     assert "gamma" in rejected and "delta" in rejected      # too few lines; no entry at all
-    assert toxicity[mapping["alpha"]["stem"]] == pytest.approx(2.0)
-    assert toxicity[mapping["beta"]["stem"]] == pytest.approx(0.1)
-    assert killed[mapping["alpha"]["stem"]] == pytest.approx(1.0)
-    assert killed[mapping["beta"]["stem"]] == pytest.approx(0.0)
-    assert provenance["lfc_sha256"] and provenance["compound_sha256"]
+    assert toxicity[mapping["alpha"]["column"]] == pytest.approx(2.0)
+    assert toxicity[mapping["beta"]["column"]] == pytest.approx(0.1)
+    assert killed[mapping["alpha"]["column"]] == pytest.approx(1.0)
+    assert killed[mapping["beta"]["column"]] == pytest.approx(0.0)
+    assert mapping["alpha"]["dose"] == 2.5
+    assert provenance["lfc_sha256"] and provenance["treatment_sha256"]
+    assert provenance["departures_from_the_registered_description"]
 
 
-def test_prism_mapping_refuses_a_synonym_that_is_not_in_the_release(tmp_path):
-    lines = [f"ACH-{i:06d}" for i in range(120)]
-    rows = [{"broad_id": "BRD-K11111111-001-01-9", "row_id": line, "LFC": -1.5} for line in lines]
-    prism = _prism_files(tmp_path, rows, [
-        {"IDs": "BRD:BRD-K11111111-001-01-9", "Drug.Name": "Alpha", "Synonyms": "alpha-one"}])
+def test_prism_mapping_refuses_a_name_that_is_not_in_the_release(tmp_path):
+    columns = {"BRD-K11111111-001-01-9::2.5::HTS": lambda lines: [-1.5] * len(lines)}
+    treatments = [{"column_name": "BRD-K11111111-001-01-9::2.5::HTS",
+                   "broad_id": "BRD-K11111111-001-01-9", "name": "Alpha", "dose": 2.5,
+                   "screen_id": "HTS"}]
+    prism = _prism_files(tmp_path, treatments, columns)
 
     mapping, rejected, _, _, _ = _mod.prism_toxicity(prism, ["alpha-two"], {})
     assert mapping == {}
     assert "alpha-two" in rejected
+
+
+def test_prism_mapping_prefers_the_treatment_measured_in_more_lines(tmp_path):
+    columns = {
+        "BRD-K11111111-001-01-9::2.5::HTS": lambda lines: [-1.0] * 110 + [np.nan] * 10,
+        "BRD-K44444444-001-01-9::2.5::MTS004": lambda lines: [-4.0] * len(lines),
+    }
+    treatments = [
+        {"column_name": "BRD-K11111111-001-01-9::2.5::HTS", "broad_id": "BRD-K11111111-001-01-9",
+         "name": "Shared", "dose": 2.5, "screen_id": "HTS"},
+        {"column_name": "BRD-K44444444-001-01-9::2.5::MTS004", "broad_id": "BRD-K44444444-001-01-9",
+         "name": "Shared", "dose": 2.5, "screen_id": "MTS004"},
+    ]
+    prism = _prism_files(tmp_path, treatments, columns)
+
+    mapping, _, toxicity, _, _ = _mod.prism_toxicity(prism, ["shared"], {})
+    assert mapping["shared"]["n_lines"] == 120
+    assert mapping["shared"]["n_candidates"] == 2
+    assert toxicity[mapping["shared"]["column"]] == pytest.approx(4.0)
 
 
 def test_hematopoietic_probe_says_when_there_are_too_few_drugs():

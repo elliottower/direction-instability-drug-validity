@@ -399,59 +399,70 @@ def reproduction_gate(arm: Arm, shrna_values, crispri_values, records):
 
 
 def prism_toxicity(prism_dir: Path, drugs, pert_ids):
-    """Minus the median log-fold change, mapped only through the pinned release."""
-    lfc_path = next(prism_dir.glob("*LFC*.csv"), None) or next(prism_dir.glob("*logfold*.csv"))
-    compounds = next(prism_dir.glob("*Compound_List*.csv"), None) or \
-        next(prism_dir.glob("*treatment-info*.csv"))
-    lfc = pd.read_csv(lfc_path, usecols=lambda c: c in ("broad_id", "row_id", "LFC", "depmap_id"))
-    value_column = "LFC" if "LFC" in lfc.columns else lfc.columns[-1]
-    line_column = "row_id" if "row_id" in lfc.columns else "depmap_id"
-    lfc = lfc[lfc[value_column].notna()].copy()
-    lfc["stem"] = lfc.broad_id.str.extract(BRD_STEM)[0]
-    lfc = lfc.dropna(subset=["stem"])
-    lines = lfc.groupby("stem")[line_column].nunique()
-    eligible = set(lines[lines >= R5_MIN_LINES].index)
+    """Minus the median log-fold change, mapped only through the pinned release.
 
-    catalogue = pd.read_csv(compounds)
-    name_column = "Drug.Name" if "Drug.Name" in catalogue.columns else catalogue.columns[0]
-    synonym_column = "Synonyms" if "Synonyms" in catalogue.columns else None
-    id_column = "IDs" if "IDs" in catalogue.columns else "broad_id"
+    PRISM Repurposing 19Q4's primary screen is a wide matrix: rows are cell lines,
+    columns are one treatment each, named `broad_id::dose::screen`. Every compound
+    holds exactly one column, so the registered tie-break between several entries
+    can only fire when one drug name matches several compounds.
+
+    The release carries a `name` field and no synonym field, and its doses are not
+    uniformly 2.5 micromolar. Both departures from the registered description are
+    recorded in the provenance rather than worked around.
+    """
+    treatment_path = prism_dir / "primary-screen-replicate-collapsed-treatment-info.csv"
+    lfc_path = prism_dir / "primary-screen-replicate-collapsed-logfold-change.csv"
+    treatments = pd.read_csv(treatment_path, low_memory=False)
+    lfc = pd.read_csv(lfc_path, index_col=0)
+
+    treatments["stem"] = treatments.broad_id.str.extract(BRD_STEM)[0]
+    treatments = treatments[treatments.column_name.isin(lfc.columns)].copy()
+    counts = lfc.notna().sum(axis=0)
+    medians = lfc.median(axis=0, skipna=True)
+    killed = (lfc < -1).sum(axis=0) / counts
+
+    eligible = treatments[treatments.column_name.map(counts) >= R5_MIN_LINES].copy()
 
     def normalize(text):
         return " ".join(str(text).lower().split())
 
-    by_name = {}
-    for _, row in catalogue.iterrows():
-        stems = set(BRD_STEM.findall(str(row[id_column])))
-        names = [row[name_column]] + (str(row[synonym_column]).split(",") if synonym_column else [])
-        for name in names:
-            if str(name).strip():
-                by_name.setdefault(normalize(name), set()).update(stems)
+    by_stem, by_name = {}, {}
+    for _, row in eligible.iterrows():
+        by_stem.setdefault(row.stem, []).append(row.column_name)
+        by_name.setdefault(normalize(row["name"]), []).append(row.column_name)
 
     mapping, rejected = {}, {}
     for drug in drugs:
-        stems = {s for pid in pert_ids.get(drug, []) for s in BRD_STEM.findall(str(pid))}
-        candidates = stems & eligible
+        stems = {stem for pid in pert_ids.get(drug, []) for stem in BRD_STEM.findall(str(pid))}
+        candidates = [c for stem in sorted(stems) for c in by_stem.get(stem, [])]
         route = "broad identifier"
         if not candidates:
-            candidates = by_name.get(normalize(drug), set()) & eligible
+            candidates = by_name.get(normalize(drug), [])
             route = "exact name"
         if not candidates:
-            rejected[drug] = "no entry with log-fold change in at least "
-            rejected[drug] += f"{R5_MIN_LINES} lines"
+            rejected[drug] = (f"no treatment with log-fold change in at least {R5_MIN_LINES} "
+                              "cell lines, by identifier or by exact name in the release")
             continue
-        best = max(sorted(candidates), key=lambda stem: (lines[stem], stem))
-        mapping[drug] = {"stem": best, "route": route, "n_lines": int(lines[best]),
-                         "n_candidates": len(candidates)}
+        best = max(sorted(candidates), key=lambda column: (counts[column], column))
+        row = eligible[eligible.column_name == best].iloc[0]
+        mapping[drug] = {"column": best, "stem": row.stem, "route": route,
+                         "n_lines": int(counts[best]), "dose": float(row.dose),
+                         "screen": row.screen_id, "n_candidates": len(set(candidates))}
 
-    values = lfc[lfc.stem.isin({m["stem"] for m in mapping.values()})]
-    per_stem = values.groupby("stem")[value_column]
-    toxicity = {stem: -float(group.median()) for stem, group in per_stem}
-    killed = {stem: float((group < -1).mean()) for stem, group in per_stem}
-    return mapping, rejected, toxicity, killed, {"lfc_file": str(lfc_path),
-                                                 "compound_file": str(compounds),
-                                                 "lfc_sha256": sha256_file(lfc_path),
-                                                 "compound_sha256": sha256_file(compounds)}
+    toxicity = {column: -float(medians[column]) for column in set(m["column"] for m in mapping.values())}
+    fraction_killed = {column: float(killed[column]) for column in toxicity}
+    doses = [m["dose"] for m in mapping.values()]
+    provenance = {
+        "lfc_file": str(lfc_path), "treatment_file": str(treatment_path),
+        "lfc_sha256": sha256_file(lfc_path), "treatment_sha256": sha256_file(treatment_path),
+        "n_cell_lines": int(lfc.shape[0]), "n_treatments": int(lfc.shape[1]),
+        "dose_range_of_mapped": [float(min(doses)), float(max(doses))] if doses else None,
+        "departures_from_the_registered_description": [
+            "the release has a name field and no synonym field, so exact-name matching "
+            "uses name alone",
+            "doses are not uniformly 2.5 micromolar; each compound is screened at one dose "
+            "and the chosen dose is recorded per drug"]}
+    return mapping, rejected, toxicity, fraction_killed, provenance
 
 
 def run(args):
@@ -689,8 +700,8 @@ def run(args):
               "mapping_table": "r5_prism_mapping.json", "provenance": provenance}
         if gate_met:
             idx = np.array(mapped)
-            T = np.array([toxicity[mapping[crispri_arm.drugs[i]]["stem"]] for i in idx])
-            fraction_killed = np.array([killed[mapping[crispri_arm.drugs[i]]["stem"]] for i in idx])
+            T = np.array([toxicity[mapping[crispri_arm.drugs[i]]["column"]] for i in idx])
+            fraction_killed = np.array([killed[mapping[crispri_arm.drugs[i]]["column"]] for i in idx])
             sub_targets = crispri_arm.targets[idx]
             e_t, _ = association(c1_values["E"][idx], T, sub_targets, "rho(E, toxicity)")
             d_e, _ = association(c1_values["D"][idx], c1_values["E"][idx], sub_targets,

@@ -374,3 +374,45 @@ target-permutation null, which preserves the multiset of valid target
 directions, and unrelated mixtures need not share their norm or covariance
 structure. The corrected association remains subject to the same shared-axis
 concern, and S2 has not been run.
+
+---
+
+## Deviation 10: the registered description of the PRISM release does not match the release
+
+**Pre-registered:** R5's toxicity measure is "minus the median, across cell lines, of
+the PRISM Repurposing 19Q4 primary-screen log-fold-change (2.5 µM,
+replicate-collapsed)", and a drug is mapped "by exact name match after
+normalization, against the `Drug.Name` and `Synonyms` fields of the pinned compound
+list" (`experiments/PREREG_H3_REFERENCE_DISCORDANCE.md`, frozen `7f57136`).
+
+**Actual:** the release was retrieved from figshare 9393293 on 2026-09-30 and
+differs from that description in two ways.
+
+- Its treatment table carries `name` and no synonym field, so exact-name matching
+  uses `name` alone. The registered rule is otherwise unchanged: identifiers first,
+  then exact names normalized by case folding and whitespace, and no source outside
+  the pinned files.
+- Its doses are not uniformly 2.5 µM. The primary screen holds one treatment per
+  compound, 4,147 in the HTS screen at 0.03–5.6 µM and 539 in MTS004 at 2.29–3.12
+  µM. Each compound is therefore screened at one dose, which is recorded per drug
+  rather than filtered on.
+
+The registered field names and dose were written from the 24Q2 public release,
+which is the one that was on disk when the registration was drafted, and which
+covers 5 of the 131 CRISPRi-arm drugs.
+
+**When:** at retrieval, before any log-fold-change value was summarized and before
+any R5 statistic was computed.
+
+### What this does NOT change
+
+- The mapping rule's substance: identifiers first, then exact names, sourced only
+  from the pinned release, with the accepted and rejected tables written before any
+  value is summarized
+- R5's gate, its quantities, its intervals or its readings
+- Coverage, counted at mapping and before any value was summarized: 121 of the 131
+  CRISPRi-arm drugs map over 38 targets, against a registered minimum of 60 drugs
+  over 20 targets
+
+Recorded in `results/03d_h3_reference_discordance/r5_prism_mapping.json` at run
+time, with the dose of every mapped drug.
