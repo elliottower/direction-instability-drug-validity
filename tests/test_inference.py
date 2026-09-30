@@ -177,3 +177,18 @@ def test_permutation_p_counts_both_tails():
     null = np.linspace(-1, 1, 1001)
     assert two_sided_permutation_p(0.0, null) == pytest.approx(1.0, abs=1e-3)
     assert two_sided_permutation_p(2.0, null) == pytest.approx(1 / 1002, abs=1e-6)
+
+
+def test_percentile_table_matches_the_direct_percentile_for_every_assignment():
+    from geometry.inference import percentile_table
+
+    rng = np.random.default_rng()
+    for _ in range(30):
+        alignment = rng.standard_normal((25, 9))
+        if rng.random() < 0.3:                       # force ties
+            alignment = np.round(alignment, 1)
+        table = percentile_table(alignment)
+        for column in range(9):
+            own = np.full(25, column)
+            assert table[np.arange(25), own] == pytest.approx(
+                own_target_percentile(alignment, own))

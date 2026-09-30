@@ -192,6 +192,9 @@ def stage_extract():
                                         compound_only=True)
     print(f"[{_ts()}] {len(wanted):,} deposited drugs; fingerprint {fp[:12]}")
 
+    (shards / "landmark_gene_ids.json").write_text(json.dumps(ids))
+    vol.commit()
+
     n_shards = (len(wanted) + SHARD - 1) // SHARD
     for s in range(n_shards):
         out = shards / f"shard_{s:03d}.npz"
@@ -220,14 +223,18 @@ def stage_extract():
         # artifact it must reproduce; Deviation 8 records the difference. The
         # sig-info column that rule needs, distil_ss, is absent here in any case.
         for drug, grp in sub.groupby("pert_iname"):
-            per_cell = []
-            for _, cell_rows in grp.groupby("cell_id"):
+            per_cell, cell_ids = [], []
+            for cell_id, cell_rows in grp.groupby("cell_id"):
                 sids = [x for x in sorted(set(cell_rows.sig_id.astype(str))) if x in mat.index]
                 if sids:
                     per_cell.append(np.vstack([mat.loc[x].to_numpy(np.float64)
                                                for x in sids]).mean(axis=0))
+                    cell_ids.append(str(cell_id))
             if per_cell:
                 payload[drug] = np.vstack(per_cell)
+                # the rows carry their cell lines, so the comparison against the
+                # extraction can join on identifiers instead of on row order
+                payload[f"{drug}\x00cells"] = np.array(cell_ids)
         np.savez_compressed(out, fingerprint=np.array(fp), **payload)
         vol.commit()                                       # checkpoint inside the unit
         print(f"[{_ts()}] shard {s+1}/{n_shards}: {len(payload)} drugs")
@@ -319,14 +326,16 @@ def stage_bundle():
         "missing": sorted(p.name for p in expected - observed),
         "unexpected": sorted(p.name for p in observed - expected)}
 
-    sigs = {}
+    sigs, cells = {}, {}
     for f in sorted(expected):
         with np.load(f, allow_pickle=True) as z:
             assert str(z["fingerprint"]) == fp, f"{f.name} was built under a different fingerprint"
-            keys = {k for k in z.files if k != "fingerprint"}
+            keys = {k for k in z.files if k != "fingerprint" and "\x00cells" not in k}
             overlap = set(sigs) & keys
             assert not overlap, f"drug identifiers appear in more than one shard: {sorted(overlap)}"
             sigs.update({k: z[k] for k in keys})
+            cells.update({k.split("\x00")[0]: [str(c) for c in z[k]]
+                          for k in z.files if "\x00cells" in k})
 
     with np.load(out / "shrna_consensus.npz", allow_pickle=True) as z:
         assert str(z["fingerprint"]) == fp, "the shRNA consensus predates the current fingerprint"
@@ -357,7 +366,8 @@ def stage_bundle():
     np.savez_compressed(out / "cohort_bundle.npz", drugs=np.array(drugs),
                         targets=np.array(targets),
                         signatures=np.array(mats, dtype=object),
-                        directions=np.array(dirs))
+                        directions=np.array(dirs),
+                        cell_lines=np.array([cells.get(d, []) for d in drugs], dtype=object))
     from importlib.metadata import version
     parts, _ = _fingerprint(raw)
     manifest = {

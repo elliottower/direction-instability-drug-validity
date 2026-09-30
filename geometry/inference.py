@@ -83,6 +83,31 @@ def own_target_percentile(alignment: np.ndarray, own: np.ndarray) -> np.ndarray:
     return (below + 0.5 * ties) / (n_targets - 1)
 
 
+def percentile_table(alignment: np.ndarray) -> np.ndarray:
+    """(n_drugs, n_targets) own-target percentile for every candidate assignment.
+
+    Entry (c, j) is what `own_target_percentile` returns for drug c if target j
+    were its target. A permutation then becomes a lookup instead of a recount,
+    which is what makes 10,000 permutations affordable.
+    """
+    n_drugs, n_targets = alignment.shape
+    assert n_targets > 1, "an own-target percentile needs at least two candidate targets"
+    order = np.argsort(alignment, axis=1, kind="stable")
+    ranks = np.empty_like(order)
+    rows = np.arange(n_drugs)[:, None]
+    ranks[rows, order] = np.arange(n_targets)[None, :]
+    # ties: count strictly below and half the ties, as own_target_percentile does
+    table = np.empty_like(alignment, dtype=float)
+    for c in range(n_drugs):
+        values = alignment[c]
+        sorted_values = values[order[c]]
+        below = np.searchsorted(sorted_values, values, side="left")
+        at_or_below = np.searchsorted(sorted_values, values, side="right")
+        ties = at_or_below - below - 1
+        table[c] = (below + 0.5 * ties) / (n_targets - 1)
+    return table
+
+
 def cluster_bootstrap(targets: np.ndarray, statistic, n_replicates: int, seed: int) -> np.ndarray:
     """Resample targets with replacement, carrying every drug of a drawn target.
 

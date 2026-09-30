@@ -235,3 +235,37 @@ def test_sidecar_hash_matches_the_file_it_describes(tmp_path):
     assert (tmp_path / "r.json.sha256").read_text().strip() == \
         hashlib.sha256(f.read_bytes()).hexdigest()
     assert json.loads(f.read_text()) == payload
+
+
+def test_target_representatives_require_one_direction_per_target():
+    rng = np.random.default_rng()
+    targets = np.array(["TOP2A", "TOP2A", "CDK1", "MTOR", "MTOR", "MTOR"])
+    unique_dirs = {t: rng.standard_normal(8) for t in set(targets)}
+    dirs = np.array([unique_dirs[t] for t in targets])
+
+    unique, representative = _mod.target_representatives(targets, dirs)
+    assert list(unique) == ["CDK1", "MTOR", "TOP2A"]
+    for t, rep in zip(unique, representative):
+        assert targets[rep] == t
+
+    dirs[4] = rng.standard_normal(8)          # one drug's direction diverges
+    with pytest.raises(AssertionError):
+        _mod.target_representatives(targets, dirs)
+
+
+def test_unique_target_permutation_gives_each_target_one_direction():
+    from geometry.inference import unique_target_permutations
+
+    rng = np.random.default_rng()
+    targets = np.array(["A"] * 5 + ["B"] * 3 + ["C"] + ["D"] * 2)
+    unique_dirs = {t: rng.standard_normal(6) for t in set(targets)}
+    dirs = np.array([unique_dirs[t] for t in targets])
+    unique, representative = _mod.target_representatives(targets, dirs)
+
+    for assigned in unique_target_permutations(targets, 100, seed=int(rng.integers(1e6))):
+        rows = representative[assigned]
+        for t in set(targets):
+            members = targets == t
+            assert len({tuple(dirs[r]) for r in rows[members]}) == 1
+        assert sorted({tuple(dirs[r]) for r in rows}) == sorted(
+            {tuple(v) for v in unique_dirs.values()})

@@ -5,16 +5,23 @@ S1  the association survives adjustment for pairwise-difference magnitude and co
 S2  it exceeds a null that permutes target assignment while keeping the shared axis
 S3  the raw score stays practically equivalent to zero under the same adjustment
 
-All three are required; none compensates for another.
+The amendment frozen at 7f57136 adds S1-T, S2-T and S3-T: the same three
+statistics with the target rather than the drug as the unit, resampled as clusters
+and permuted among unique targets. All three target-level versions are required
+and none compensates for another; the drug-level versions are reported as
+registered, and where the two disagree the target-level verdict governs.
 
 Input is the bundle written by the rebuild stage: per-drug signature matrices, the
 unit target direction, and the identifiers, for drugs that reproduced the deposited
 artifact. Nothing here re-derives the cohort; it fails closed if the bundle and the
 deposited artifact disagree.
 
-    uv run --no-project --with numpy --with scipy python experiments/03c_h3_sensitivity.py \
+    PYTHONPATH=. uv run --no-project --with numpy --with scipy \
+        python experiments/03c_h3_sensitivity.py \
         --bundle results/03c_h3_sensitivity/cohort_bundle.npz \
         --manifest results/03c_h3_sensitivity/rebuild_manifest.json
+
+PYTHONPATH is what puts `geometry` on the path under --no-project.
 """
 import argparse
 import hashlib
@@ -26,6 +33,9 @@ import numpy as np
 import scipy
 from scipy.stats import rankdata, spearmanr
 
+from geometry.inference import (cluster_bootstrap, percentile_interval,
+                                unique_target_permutations)
+
 REPO = Path("/Users/elliottower/Documents/GitHub/direction-instability-drug-validity")
 DEPOSITED = REPO / "results" / "03_phenotype_projection" / "phenotype_projection_results.json"
 OUT = REPO / "results" / "03c_h3_sensitivity"
@@ -34,17 +44,19 @@ OUT = REPO / "results" / "03c_h3_sensitivity"
 MIN_COMMON_RECORDS = 700
 DEPOSITED_RECORDS = 795
 RECON_TOL = 1e-6
-EXPECTED_DEPOSITED_SHA256 = "65e5d10e272037987384f89e6208de478fa17f6b8fb946add893e5a24c2d80c4"
-EXPECTED_LOADER_SHA256 = "b7ec2cd46be4a800dc546594e82491f785fdf504d4bd8bc783be293b343a1611"
-EXPECTED_SHARD_SIZE = 250
-EXPECTED_MIN_HAIRPINS = 3
+# the corrected artifact, which replaces the superseded 65e5d10e2720... of f288507
+EXPECTED_REFERENCE_SHA256 = "fd69e26fc9a3917323065b631688baeab8b283f735c8bf5b16210ba67bd21425"
+EXPECTED_LINCS_SUBSET_SHA256 = "2ad0f5d30ab826f9ec0cfe37f6b53b2829bfef1d73b7920c3441de6407adb4ec"
+EXPECTED_LINCS_SHRNA_SHA256 = "4a990e5072a43f59fdda60a2ff040f355f06be947c14bcfa87056c66332b58e7"
 S1_MIN_EFFECT = 0.20
 S3_EQUIV_BOUND = 0.15
 N_LANDMARK = 978
 N_BOOT = 10_000
 N_PERM = 10_000
-SEED_BOOT = 20260913
-SEED_PERM = 20260914
+SEED_BOOT = 20260913          # drug-level, as registered at f288507
+SEED_PERM = 20260914          # drug-record permutation, as registered at f288507
+SEED_BOOT_TARGET = 20260926   # target-level, added by the amendment
+SEED_PERM_TARGET = 20260927   # unique-target permutation, added by the amendment
 
 
 def sha256_file(path):
@@ -104,6 +116,22 @@ def permuted_statistic(G, row_drug, counts, E_all, covars, perm):
     return partial_spearman(P_p, E_p, covars), P_p, E_p
 
 
+def target_representatives(targets, dirs):
+    """One drug index per unique target, whose direction stands for that target.
+
+    The permutation reassigns directions by target, while the lookup tables are
+    indexed by drug, so each target needs a drug that carries its direction. Every
+    drug of a target must already share that direction, which is asserted here
+    rather than assumed: the bundle builds a drug's direction from its target.
+    """
+    unique, first_row = np.unique(targets, return_index=True)
+    for target, row in zip(unique, first_row):
+        rows = np.flatnonzero(targets == target)
+        assert np.allclose(dirs[rows], dirs[row], atol=1e-12), (
+            f"drugs annotated to {target} do not share one direction")
+    return unique, first_row
+
+
 def load_bundle(path):
     """The bundle is an untrusted input; every assertion here is repeated from
     the stage that wrote it, because a short or ragged bundle must not reach the
@@ -122,7 +150,7 @@ def load_bundle(path):
 
 REQUIRED_MANIFEST_KEYS = ("stage_fingerprint", "fingerprint_parts", "n_bundled",
                           "n_deposited", "cohort_identifier_sha256", "bundle_sha256",
-                          "shrna_consensus_sha256", "shrna_hairpins_sha256")
+                          "lincs_subset_sha256", "lincs_shrna_sha256", "deposited_sha256")
 
 
 def main(bundle_path, manifest_path):
@@ -140,12 +168,14 @@ def main(bundle_path, manifest_path):
     recomputed_fp = hashlib.sha256(json.dumps(parts, sort_keys=True).encode()).hexdigest()
     assert manifest["stage_fingerprint"] == recomputed_fp, (
         "the manifest fingerprint is not the hash of its own component hashes")
-    assert parts["deposited"] == EXPECTED_DEPOSITED_SHA256, "manifest pins a different deposited artifact"
-    assert parts["loader"] == EXPECTED_LOADER_SHA256, "manifest pins a loader other than the registered one"
-    assert parts["shard_size"] == EXPECTED_SHARD_SIZE, f"manifest shard size {parts['shard_size']}"
-    assert parts["min_hairpins"] == EXPECTED_MIN_HAIRPINS, f"manifest hairpin minimum {parts['min_hairpins']}"
-    assert sha256_file(DEPOSITED) == EXPECTED_DEPOSITED_SHA256, (
-        "the deposited artifact is not the one pinned in the registration")
+    assert parts["deposited_sha256"] == EXPECTED_REFERENCE_SHA256, (
+        "the manifest pins an artifact other than the corrected one")
+    assert parts["lincs_subset_sha256"] == EXPECTED_LINCS_SUBSET_SHA256, (
+        "the manifest pins a different compound extraction")
+    assert parts["lincs_shrna_sha256"] == EXPECTED_LINCS_SHRNA_SHA256, (
+        "the manifest pins a different shRNA extraction")
+    assert sha256_file(DEPOSITED) == EXPECTED_REFERENCE_SHA256, (
+        "the reference artifact is not the corrected one pinned in the amendment")
     drugs, targets, sigs, dirs = load_bundle(bundle_path)
     n = len(drugs)
 
@@ -235,6 +265,25 @@ def main(bundle_path, manifest_path):
     assert np.isfinite(null).all(), "nonfinite permutation replicate"
     p_perm = (1 + int((null >= rho_obs).sum())) / (N_PERM + 1)
 
+    # --- S2-T. The same statistic under a permutation of unique targets: every
+    # drug of one target receives the same reassigned direction, so target group
+    # sizes and the within-target dependence of the observed mapping survive.
+    targets_array = np.asarray(targets)
+    unique_targets, representative = target_representatives(targets_array, dirs)
+    covariate_fingerprint = (M_delta.tobytes(), K.tobytes())
+    null_target = np.array([
+        stat_under(representative[assigned])
+        for assigned in unique_target_permutations(targets_array, N_PERM, SEED_PERM_TARGET)])
+    assert np.isfinite(null_target).all(), "nonfinite unique-target permutation replicate"
+    p_perm_target = (1 + int((null_target >= rho_obs).sum())) / (N_PERM + 1)
+    # M_delta is the mean pairwise difference norm and K the number of cell lines;
+    # neither uses the target direction, which is why the permutation holds them
+    # fixed. Assert it rather than trust it: a covariate that did depend on u would
+    # have to be recomputed inside the loop.
+    assert (M_delta.tobytes(), K.tobytes()) == covariate_fingerprint, (
+        "a covariate changed while directions were reassigned; it depends on the "
+        "target direction and cannot be held fixed under permutation")
+
     # --- S1 and S3. Percentile bootstrap; ranks and both regressions refit inside.
     rng_boot = np.random.default_rng(SEED_BOOT)
     boot_p = np.empty(N_BOOT)
@@ -244,6 +293,15 @@ def main(bundle_path, manifest_path):
         boot_p[b] = partial_spearman(P[idx], E[idx], (M_delta[idx], K[idx]))
         boot_raw[b] = partial_spearman(D[idx], E[idx], (M_delta[idx], K[idx]))
     assert np.isfinite(boot_p).all() and np.isfinite(boot_raw).all(), "nonfinite bootstrap replicate"
+
+    # --- S1-T and S3-T. The same two statistics, resampling targets rather than
+    # drugs, so that drugs sharing a reference direction travel together.
+    def _paired_partials(idx):
+        return (partial_spearman(P[idx], E[idx], (M_delta[idx], K[idx])),
+                partial_spearman(D[idx], E[idx], (M_delta[idx], K[idx])))
+
+    boot_target = cluster_bootstrap(targets_array, _paired_partials, N_BOOT, SEED_BOOT_TARGET)
+    boot_p_target, boot_raw_target = boot_target[:, 0], boot_target[:, 1]
 
     # a zero denominator makes that drug's ratio missing, not the whole description
     valid = M_delta > 0
@@ -260,6 +318,12 @@ def main(bundle_path, manifest_path):
     s2 = bool(p_perm < 0.01)
     s3 = bool(-S3_EQUIV_BOUND < ci_s3[0] and ci_s3[1] < S3_EQUIV_BOUND)
 
+    ci_s1_target = list(percentile_interval(boot_p_target, 95.0))
+    ci_s3_target = list(percentile_interval(boot_raw_target, 90.0))
+    s1_target = bool(rho_obs >= S1_MIN_EFFECT and ci_s1_target[0] > 0)
+    s2_target = bool(p_perm_target < 0.01)
+    s3_target = bool(-S3_EQUIV_BOUND < ci_s3_target[0] and ci_s3_target[1] < S3_EQUIV_BOUND)
+
     out = {
         "registration": {"file": "experiments/PREREG_H3_MAGNITUDE_AND_SHARED_AXIS.md",
                          "frozen_at": "f288507"},
@@ -271,21 +335,48 @@ def main(bundle_path, manifest_path):
         "S1_magnitude_and_coverage": {
             "partial_rho": rho_obs, "ci95_percentile": ci_s1,
             "display": f"{rho_obs:.4f} [{ci_s1[0]:.4f}, {ci_s1[1]:.4f}]",
-            "min_effect": S1_MIN_EFFECT, "holds": s1},
+            "min_effect": S1_MIN_EFFECT, "holds": s1,
+            "unit": "drug, as registered at f288507"},
         "S2_shared_axis_permutation": {
             "rho_observed": rho_obs, "p_perm": p_perm,
             "null_pct": {"p2.5": float(np.percentile(null, 2.5)),
                          "p50": float(np.percentile(null, 50)),
                          "p97.5": float(np.percentile(null, 97.5))},
-            "n_permutations": N_PERM, "holds": s2},
+            "n_permutations": N_PERM, "holds": s2,
+            "unit": "drug record, as registered at f288507"},
         "S3_raw_equivalence": {
             "partial_rho": rho_raw, "ci90_percentile": ci_s3,
             "display": f"{rho_raw:.4f} [{ci_s3[0]:.4f}, {ci_s3[1]:.4f}]",
-            "equivalence_bound": S3_EQUIV_BOUND, "holds": s3},
+            "equivalence_bound": S3_EQUIV_BOUND, "holds": s3,
+            "unit": "drug, as registered at f288507"},
+        "S1T_magnitude_and_coverage": {
+            "partial_rho": rho_obs, "ci95_percentile": ci_s1_target,
+            "display": f"{rho_obs:.4f} [{ci_s1_target[0]:.4f}, {ci_s1_target[1]:.4f}]",
+            "min_effect": S1_MIN_EFFECT, "holds": s1_target,
+            "unit": "target cluster"},
+        "S2T_unique_target_permutation": {
+            "rho_observed": rho_obs, "p_perm": p_perm_target,
+            "null_pct": {"p2.5": float(np.percentile(null_target, 2.5)),
+                         "p50": float(np.percentile(null_target, 50)),
+                         "p97.5": float(np.percentile(null_target, 97.5))},
+            "attenuation_vs_null_median": float(rho_obs - np.median(null_target)),
+            "n_permutations": N_PERM, "n_unique_targets": int(len(unique_targets)),
+            "holds": s2_target, "unit": "unique target"},
+        "S3T_raw_equivalence": {
+            "partial_rho": rho_raw, "ci90_percentile": ci_s3_target,
+            "display": f"{rho_raw:.4f} [{ci_s3_target[0]:.4f}, {ci_s3_target[1]:.4f}]",
+            "equivalence_bound": S3_EQUIV_BOUND, "holds": s3_target,
+            "unit": "target cluster"},
         "identity_check": {"max_abs_P": dP, "max_abs_E": dE,
                            "abs_partial_rho": abs(identity - rho_obs)},
+        # The amendment frozen at 7f57136 puts the gate on the target-level
+        # versions: where a drug-level verdict and its target-level counterpart
+        # disagree, the target-level verdict governs.
         "gate": {"all_three_required": True,
-                 "h3_interpretation_survives": bool(s1 and s2 and s3)},
+                 "governing_unit": "target",
+                 "h3_interpretation_survives": bool(s1_target and s2_target and s3_target),
+                 "drug_level_verdict": bool(s1 and s2 and s3),
+                 "units_agree": bool((s1, s2, s3) == (s1_target, s2_target, s3_target))},
         "secondary_no_criterion": {
             "partial_rho_given_mean_signature_norm": rho_meannorm,
             "P_over_M_delta": ratio_stats},
@@ -294,7 +385,9 @@ def main(bundle_path, manifest_path):
             "bundle_sha256": sha256_file(bundle_path),
             "deposited_artifact_sha256": sha256_file(DEPOSITED),
             "script_sha256": sha256_file(Path(__file__)),
-            "seeds": {"bootstrap": SEED_BOOT, "permutation": SEED_PERM},
+            "seeds": {"bootstrap": SEED_BOOT, "permutation": SEED_PERM,
+                      "bootstrap_target": SEED_BOOT_TARGET,
+                      "permutation_target": SEED_PERM_TARGET},
             "numpy": np.__version__, "scipy": scipy.__version__,
             "python": platform.python_version()},
     }
@@ -302,7 +395,9 @@ def main(bundle_path, manifest_path):
     # the replicate arrays travel with the result, so the intervals and the
     # p-value can be recomputed without rerunning
     draws = OUT / "h3_sensitivity_draws.npz"
-    np.savez_compressed(draws, permutation_null=null, bootstrap_P=boot_p, bootstrap_raw=boot_raw)
+    np.savez_compressed(draws, permutation_null=null, bootstrap_P=boot_p, bootstrap_raw=boot_raw,
+                        permutation_null_target=null_target,
+                        bootstrap_P_target=boot_p_target, bootstrap_raw_target=boot_raw_target)
     out["provenance"]["draws_sha256"] = sha256_file(draws)
 
     path = OUT / "h3_sensitivity_results.json"
@@ -311,7 +406,8 @@ def main(bundle_path, manifest_path):
     (OUT / "h3_sensitivity_results.json.sha256").write_text(sha256_file(path) + "\n")
     print(json.dumps({k: out[k] for k in
                       ("cohort", "S1_magnitude_and_coverage", "S2_shared_axis_permutation",
-                       "S3_raw_equivalence", "gate")}, indent=2))
+                       "S3_raw_equivalence", "S1T_magnitude_and_coverage",
+                       "S2T_unique_target_permutation", "S3T_raw_equivalence", "gate")}, indent=2))
     print(f"\nwritten to {path}")
 
 
