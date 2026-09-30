@@ -4,7 +4,7 @@ A deterministic extraction from `results/03b_h3_crispri/h3_crispri_results.json`
 not a new analysis: every value here was printed by the corrected run of
 `03b_h3_crispri_ground_truth.py` (commit f822fb1). The raw-instability
 correlations on the matched cohort are deliberately not computed; they are
-registered in `experiments/PREREG_H3_REFERENCE_DISCORDANCE_DRAFT.md`.
+registered in `experiments/PREREG_H3_REFERENCE_DISCORDANCE.md`.
 
     uv run --no-project --with scipy python experiments/03b_summary_correlations.py
 """

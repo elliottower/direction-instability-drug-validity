@@ -1,10 +1,14 @@
 # Pre-registration amendment: Does the corrected H3 association survive magnitude, coverage and target-level shared-axis controls?
 
 **Date:** 2026-09-22
-**Status:** DRAFT. Not frozen; no statistic below has been computed.
-**Commit SHA:** filled at freeze
+**Status:** DESIGN FROZEN. No statistic below has been computed, and the
+analysis code was not written when this was frozen.
+**Commit SHA:** filled in the commit that follows this freeze
+**Analysis code SHA:** pending. It is recorded in an implementation manifest,
+after code review and before any run on real data. This document is not edited
+to insert it.
 **Amends:** `experiments/PREREG_H3_MAGNITUDE_AND_SHARED_AXIS.md` (frozen `f288507`).
-**Linked:** `experiments/PREREG_H3_REFERENCE_DISCORDANCE_DRAFT.md`, frozen in the same
+**Linked:** `experiments/PREREG_H3_REFERENCE_DISCORDANCE.md`, frozen in the same
 commit. That registration covers the disagreement between the shRNA and CRISPRi
 references; this one covers only the threats intrinsic to H3.
 
@@ -107,9 +111,10 @@ retained. Within each replicate:
 - both residual regressions are refitted with `numpy.linalg.lstsq`;
 - the residual correlation is recomputed.
 
-There are 10,000 replicates, with seed 20260913, the seed of the registered drug
-bootstrap. Intervals are percentile intervals. A nonfinite replicate invalidates
-the run and is investigated, never discarded or redrawn.
+There are 10,000 replicates, with seed 20260926, distinct from the registered drug
+bootstrap's 20260913 so that the two sets of draws are independent. Intervals are
+percentile intervals. A nonfinite replicate invalidates the run and is
+investigated, never discarded or redrawn.
 
 **Unique-target permutation.** Let `π` be a uniformly random permutation of the
 258 unique targets. Every drug `c` receives direction `u_{π(t(c))}`. The procedure
@@ -118,17 +123,20 @@ then:
 - holds `D`, `M_delta` and `K` fixed;
 - reranks, residualizes and recomputes the partial correlation.
 
-Fixed points are allowed. There are 10,000 permutations, with seed 20260914, the
-seed of the registered permutation. p_perm is `(1 + #{ρ_b ≥ ρ_obs}) / 10001`. The
-output reports the 2.5th, 50th and 97.5th percentiles of the null, the full null
-distribution, and `ρ_obs − median(null)`.
+Fixed points are allowed. There are 10,000 permutations, with seed 20260927,
+distinct from the registered permutation's 20260914. p_perm is
+`(1 + #{ρ_b ≥ ρ_obs}) / 10001`. The output reports the 2.5th, 50th and 97.5th
+percentiles of the null, the full null distribution, and `ρ_obs − median(null)`.
 
-**Stratified sensitivity, without a criterion.** S2-T is repeated with targets
-permuted only within tertiles of distinct-hairpin count. A target whose count falls
-on a tertile boundary is placed in the lower tertile.
+Holding `M_delta` and `K` fixed under permutation is correct because neither
+depends on the target direction: `M_delta` is the mean pairwise
+signature-difference norm and `K` the number of cell lines. The run asserts that
+both are unchanged when the direction is reassigned, so a future covariate that
+did depend on `u` could not be held fixed by accident.
 
 The secondary quantities of `f288507` are reported without a criterion: mean
-signature norm as a covariate, and `P/M_delta`.
+signature norm as a covariate, and `P/M_delta`. Distinct-hairpin count per target
+is reported as a record, and no stratified permutation is registered.
 
 ## Validation
 
@@ -143,7 +151,13 @@ by position:
     both identifier sets unique, and equal as sets
     rows and columns reordered by identifier into extraction order before comparison
     the ordered identifier sequences hashed separately from the numeric arrays
-    every per-drug matrix and every target consensus equal to the extraction within 1e-6
+    every per-drug matrix and every target consensus equal to the extraction
+      within rtol = 1e-5 and atol = 1e-5
+
+The GCTX holds float32 values whose magnitude reaches about 10, so an absolute
+tolerance of 1e-6 could fail on rounding alone while the reconstruction is
+correct. The tolerance above is the float32-appropriate one, and a failure here
+voids the analyses.
 
 **Integrity gate.** The cohort bundle is built by `experiments/build_h3_bundle.py`
 from the pinned extraction. It must reproduce the corrected artifact on every
@@ -216,12 +230,22 @@ A failed component carries a set consequence:
 
 The code changes are limited to four:
 1. The pins in `03c_h3_sensitivity.py` and the manifest keys it checks.
-2. S1-T, S2-T, S3-T and the stratified sensitivity, added to that script.
+2. S1-T, S2-T and S3-T, added to that script.
 3. Cell-line identifiers carried through `modal_h3_rebuild.py`.
 4. The identifier-aligned comparison of the reconstruction gate.
 
 The code is tested on synthetic data and reviewed before freeze, and its commit is
 pinned here.
+
+**Repairs of defect-era values: deterministic corrections of quantities affected by
+Deviation 9, not new hypothesis tests.** The manuscript reports four quantities that were
+computed on the superseded artifact and have no corrected replacement: the
+HDAC-removal correlation, the correlations after removing the 20 lowest-`D` and the
+20 highest-`P` drugs, and the drug-level bootstrap interval on the full set. Each
+is recomputed on the corrected artifact with its original procedure, reported as a
+repair, and carries no new criterion. The corrected value replaces the superseded
+one in the manuscript whatever it shows, and the manuscript reports none of the
+four until its repair has run.
 
 Each run writes the full result structure, seeds, input hashes, replicate draws
 and null distributions to `results/03c_h3_sensitivity/`. The analysis runs once.

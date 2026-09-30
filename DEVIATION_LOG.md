@@ -185,7 +185,7 @@ was tested: that the raw correlation "indicates the CRISPRi ground truth itself 
 confounded by K562 cell-type-specific effects", and that the divergence is
 "attributable to" the single-cell-line limitation. No analysis of cell type was
 run. The K562 account is one candidate among several, registered for test in
-`experiments/PREREG_H3_REFERENCE_DISCORDANCE_DRAFT.md`.
+`experiments/PREREG_H3_REFERENCE_DISCORDANCE.md`.
 
 ---
 
@@ -360,7 +360,7 @@ construct it was meant to test. Convergence with the independent CRISPRi referen
 is absent: under CRISPRi, projected instability is not positively associated with
 alignment and raw instability is (rho = +0.2723, p = 0.00165, n = 131). H3's
 interpretation as separating on-target from off-target consistency is unresolved
-and is the subject of `experiments/PREREG_H3_REFERENCE_DISCORDANCE_DRAFT.md`.
+and is the subject of `experiments/PREREG_H3_REFERENCE_DISCORDANCE.md`.
 
 ### What it sharpens
 

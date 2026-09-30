@@ -1,12 +1,16 @@
 # Registered follow-up: Why does H3's pattern reverse between the shRNA and CRISPRi references?
 
 **Date:** 2026-09-22
-**Status:** DRAFT. Not frozen; no analysis below has been computed.
-**Commit SHA:** filled at freeze
+**Status:** DESIGN FROZEN. No analysis below has been computed, and the
+analysis code was not written when this was frozen.
+**Commit SHA:** filled in the commit that follows this freeze
+**Analysis code SHA:** pending. It is recorded in an implementation manifest,
+after code review and before any run on real data. This document is not edited
+to insert it.
 **Kind:** a registered post hoc follow-up. It was designed after the reversal was
 seen, and it specifies analyses that have not been run. It is not a confirmatory
 test of H3 and cannot raise H3 above its original registration (`249abaf`).
-**Linked:** `experiments/PREREG_H3_S1S3_CORRECTED_BASELINE_DRAFT.md`, frozen in the
+**Linked:** `experiments/PREREG_H3_S1S3_CORRECTED_BASELINE.md`, frozen in the
 same commit. That registration covers the shared-axis threat to H3 within the
 shRNA reference (S1–S3, S1-T to S3-T). This registration covers the disagreement
 between references.
@@ -101,6 +105,17 @@ own.
 All four come from the unmodified functions in
 `geometry/direction_instability.py`.
 
+**Harmonized comparators.** A comparison between references must not also change
+the gene space, so two further quantities are defined:
+
+- `shRNA-h`: the shRNA reference's `P` and `E`, computed on C1's landmarks, with
+  drug signatures restricted the same way.
+- `D_h`: raw direction instability on C1's landmarks.
+
+Every comparison between references uses `shRNA-h` as the paired comparator, and
+every ρ(D, E) under a CRISPRi construction is reported beside the corresponding
+ρ(D_h, E).
+
 **Constructions of the CRISPRi direction.**
 
 | name | construction |
@@ -110,12 +125,20 @@ All four come from the unmodified functions in
 | C1 | the official Replogle K562-essential normalized pseudobulk, which is z-normalized against controls within each GEM group. The rows for the target gene are averaged, and the number of rows is recorded. The direction is restricted to landmarks present in the file, matched by symbol through the pinned gene-info file, and drug signatures are restricted to the same landmarks. **C1 is the primary CRISPRi construction for R1–R7.** |
 | C1-RPE1, C1-GW | C1's procedure applied to the official RPE1-essential and K562 genome-wide pseudobulk files |
 
-Two further rules apply to the gene space:
+Four further rules apply to the gene space and to construction:
 - A comparison between two files uses the landmarks present in both.
 - Landmark symbols duplicated in a file's gene list are excluded and recorded.
+- Where a gene has several rows in a file, its rows are averaged first, and the
+  average is unit-normalized afterwards.
+- Every direction is unit-normalized after restriction, and the shRNA reference
+  uses all 978 landmarks unless it is the harmonized comparator.
 
-Every direction is unit-normalized after restriction, and the shRNA reference uses
-all 978 landmarks.
+**C1 analyses are void unless C1's landmark set holds at least 500 genes.** The
+count is recorded by R0.2 before any statistic is computed. 500 is roughly half
+the landmark space and is not derived from a power calculation. It is a usability
+floor, not evidence that C1 covers the landmark space: the actual overlap is
+reported wherever C1 results are, and if it is close to 500 the results are
+described as applying to a substantially reduced landmark space.
 
 **Cohorts.** All K562-essential and RPE1 comparisons use the same 131 drugs:
 
@@ -161,14 +184,22 @@ paired TCB. It applies only when `|ρ_ref| ≥ 0.15`.
 
 | reading | condition |
 |---|---|
-| attenuated | the sign changes, or `|ρ_alt| ≤ 0.5 |ρ_ref|`; **and** the paired 95% interval for `ρ_alt − ρ_ref` excludes 0 |
+| attenuated | `|ρ_alt| ≤ 0.5 |ρ_ref|` with the sign unchanged, **and** the paired 95% interval for `ρ_alt − ρ_ref` excludes 0 |
+| reversed | the sign changes, **and** the paired 95% interval for `ρ_alt − ρ_ref` excludes 0 |
 | retained | the sign is the same, `|ρ_alt| ≥ 0.5 |ρ_ref|`, **and** the 95% interval for `ρ_alt` excludes 0 |
 | inconclusive | otherwise |
+
+Every reading requires the paired interval, so a large apparent drop with an
+interval that spans 0 is inconclusive rather than attenuated. Where a reading
+below asks for attenuation, "reversed" satisfies it and is reported by name.
 
 When `|ρ_ref| < 0.15`, only the paired difference and its interval are reported.
 
 **Practical null.** An association is practically null when its 90% TCB interval
-lies inside (−0.15, 0.15).
+lies inside (−0.15, 0.15). In the shRNA arm, with 258 target clusters, that
+condition is reachable. In the CRISPRi arm, with 41 unequal clusters, the interval
+for a correlation is expected to be wider than 0.30, so the condition will rarely
+be met there and a failure to meet it carries no information.
 
 **An interval that includes 0 is never read as support for anything.** It is
 reported as inconclusive unless the practical-null condition, or a stated
@@ -178,7 +209,8 @@ equivalence condition, is met.
 
 R0 carries no criterion that can upgrade a manuscript claim. It fixes which
 CRISPRi construction the other analyses use, and it records what that construction
-is.
+is. R0.1, R0.3 and R0.7 are audit records rather than analyses: they are written to
+the output and carry no reading.
 
 - **R0.1 Representation.** For the scPerturb file and every official file, record:
   - the dtype, minimum, maximum, fraction nonzero and fraction integer-valued of
@@ -194,8 +226,12 @@ is.
   control label and count, the GEM groups, the cells per target, and the number of
   GEM groups containing each target.
 - **R0.4 Verification.** Compute the mean of the normalized single-cell file over
-  each target's cells. Report its maximum absolute difference from C1. This is
-  descriptive only.
+  each target's cells, and report the full per-target distribution of its cosine
+  with C1, and its maximum absolute difference from C1. A failure voids nothing,
+  but it changes what the reliability estimates describe: **if the median
+  per-target cosine is below 0.99, R0.6 and R7c are labeled as describing the
+  single-cell construction rather than C1.** Crossing 0.99 licenses no claim that
+  C1 is validated; it fixes only which object the reliability estimates describe.
 - **R0.5 Agreement.** Per target, compute the cosine between each pair of
   constructions on shared landmarks: C0 and C1; C1 and C1-RPE1; C1 and C1-GW.
   Report the distributions.
@@ -235,9 +271,13 @@ is.
     targets.
   - Retained counts against that.
 - **R1-composition.** On the matched 114 drugs, report the full 2×2:
-  - ρ(P, E) and ρ(D, E), under shRNA and under C1;
-  - the paired differences C1 − shRNA for both, with TCB intervals over the 33
+  - ρ(P, E) and ρ(D, E) under shRNA, under shRNA-h and under C1;
+  - the paired differences C1 − shRNA-h for both, with TCB intervals over the 33
     targets.
+
+  The comparator is shRNA-h, so the difference isolates the reference and not the
+  gene space. The difference from the unharmonized shRNA quantities is reported
+  beside it, and the gap between the two is the gene-space contribution.
 
   **The references differ on identical drugs** if a difference's 95% interval
   excludes 0; otherwise that comparison is inconclusive. The shRNA estimates on the
@@ -253,11 +293,22 @@ For shRNA, C1, C1-RPE1 and C0, compute `q̄` with the UTP p-value, one-sided on
 | reading | condition |
 |---|---|
 | carries target identity | p < 0.01 **and** the 95% interval lies above 0.5 |
-| lacks target identity | the 90% interval lies inside (0.45, 0.55) |
+| lacks target identity | the 90% interval lies inside (0.40, 0.60) |
 | inconclusive | otherwise |
 
-The Spearman correlation across targets between R0.6 reliability and target-mean
-`q` is reported without a criterion.
+The equivalence margin is 0.10 on each side rather than 0.05. If per-target `q`
+were uniform, its standard deviation would be near 0.29, so with 41 targets the
+standard error of `q̄` is near 0.045 and a 90% interval is about 0.15 wide. A
+margin of 0.05 on each side could not be met in the CRISPRi arm at any outcome.
+Even at 0.10 the reading is marginal there, and it is reachable in the shRNA arm.
+The margin is prespecified and not derived from a power calculation.
+
+Two further quantities are reported without a criterion:
+- the Spearman correlation across targets between R0.6 reliability and target-mean
+  `q`;
+- `q̄` recomputed after `E` is z-scored across drugs within each target, which
+  removes the advantage a target direction gains by carrying a component common to
+  many drugs.
 
 ## R3. Permutation resistance (explanation A)
 
@@ -273,8 +324,7 @@ adjusted version).
 
 Permutation resistance alone is not attributed to any program.
 
-The following are reported without a criterion:
-- UTP within tertiles of R0.6 reliability.
+One sensitivity is reported without a criterion:
 - Common-direction removal. Let `v` be the leading right singular vector of the
   unit-normalized C1 directions of every perturbation in the K562-essential file,
   restricted to C1's landmarks. Project `v` out of the drug signatures and target
@@ -288,6 +338,29 @@ K562-essential file) and other targets. For each subset, compute ρ(P, E) and
 ρ(D, E) under C1-GW with TCB intervals. Estimate the difference essential − other
 with a TCB that resamples targets within each subset independently.
 
+**Essentiality and phenotype strength are confounded in this split.** Essential
+knockdowns produce strong transcriptional phenotypes; many genome-wide
+perturbations produce almost none, and their direction is then mostly noise, which
+dilutes any correlation toward zero. The primary version of R4 therefore restricts
+the other-target subset to targets with a transcriptional phenotype. The
+restriction is fixed here, before any outcome is seen, and uses a field R0.7
+already records.
+
+A gene can hold several rows in the released file, so eligibility and construction
+are both specified:
+
+- A target enters the phenotype-positive subset when **at least one** of its
+  released rows has `energy_test_p_value < 0.05`.
+- Its direction is built from **only the qualifying rows**, averaged before unit
+  normalization.
+- The total and qualifying row counts are recorded per target.
+
+Building the direction from qualifying rows alone keeps one phenotype definition
+throughout: a target does not become phenotype-positive on the strength of one row
+and then have that row averaged with unresponsive ones. Two further versions are
+reported beside the primary: the direction built from all rows of the eligible
+targets, and the unrestricted subset.
+
 | reading | condition |
 |---|---|
 | raw association depends on essential composition | the 95% interval for the difference in ρ(D, E) lies above 0 |
@@ -295,7 +368,16 @@ with a TCB that resamples targets within each subset independently.
 | H3 pattern outside the essential set | in the other-target subset, the ρ(P, E) 95% interval lies above 0 **and** ρ(D, E) is practically null |
 
 **R4's readings apply only if the other-target subset holds at least 60 drugs over at
-least 30 targets.** Otherwise R4 is reported descriptively.
+least 30 targets, after the energy-test restriction.** If the gate is not met, R4
+is still run and reported, with the sentence: the registered minimum cohort was not
+reached, so the estimates are descriptive and neither support nor count against an
+essential-gene-composition explanation. R4 is never dropped after its count is
+seen, and a failed sample-size gate is not a negative result.
+
+Only the positive reading, H3's pattern outside the essential set, has consequences
+for H3; a weak result in that subset is compatible with weak directions.
+Genome-wide reliability is not estimated, and that limitation stands even with the
+energy-test restriction.
 
 On the 41 CRISPRi-arm targets, C1 and C1-GW are compared by the comparison rule
 without a criterion. That comparison changes screen design while holding the cell
@@ -308,9 +390,13 @@ Repurposing 19Q4 primary-screen log-fold-change (2.5 µM, replicate-collapsed).
 The fraction of lines with log-fold-change below −1 is a secondary summary without
 a criterion.
 
-**Mapping.**
-- A drug is mapped by Broad identifier stem, then by exact case-insensitive name or
-  synonym.
+**Mapping.** The only permitted sources of identifiers and names are the pinned
+PRISM release files themselves. No external synonym dictionary, ontology or manual
+alias is used, so the set of mapped drugs is a function of the pinned inputs alone.
+- A drug is mapped first by Broad identifier stem.
+- Failing that, it is mapped by exact name match after normalization, against the
+  `Drug.Name` and `Synonyms` fields of the pinned compound list. Normalization is
+  case folding, trimming, and collapsing internal whitespace, and nothing else.
 - When several entries map, the entry with the most lines is used, with ties broken
   by lexical identifier order.
 - Only entries with log-fold-change in at least 100 lines count.
@@ -351,14 +437,15 @@ paired TCB differences RPE1 − K562.
 | projected association is context-dependent | the 95% interval for RPE1 − K562 in ρ(P, E) lies above 0 |
 | inconclusive | otherwise |
 
-**R6b, the hematopoietic proxy (secondary).** In the hematopoietic subset, compute
-the target-balanced mean of `q_heme − q_nonheme` under C1. Here `q_heme` uses the
-mean of a drug's hematopoietic signatures, and `q_nonheme` the mean of its other
-signatures.
-- The reading **context compatibility** holds if the 95% TCB interval lies above 0.
-- A failure is uninformative.
-- A sensitivity analysis restricts the proxy to the six myeloid lines: HL60, THP1,
-  U937, NOMO1, PL21 and SKM1.
+**R6b, the hematopoietic proxy: exploratory.** In the hematopoietic subset, compute
+the target-balanced mean of `q_heme − q_nonheme` under C1, where `q_heme` uses the
+mean of a drug's hematopoietic signatures and `q_nonheme` the mean of its other
+signatures. A sensitivity analysis restricts the proxy to the six myeloid lines:
+HL60, THP1, U937, NOMO1, PL21 and SKM1.
+
+R6b carries no reading in either direction and is labeled exploratory wherever it
+is reported. With 29 drugs over 22 targets it cannot change what the paper says,
+and R6a is the registered test of cell context.
 
 No K562 compound profile exists, so matched drug profiles cannot test cell type
 directly.
@@ -380,13 +467,28 @@ directly.
 - **R7e Exclusions.** Report the eligible drugs lacking each reference, counted by
   target, together with the reliability and knockdown of included and excluded
   targets where available. No drug is filtered on alignment.
+- **R7f The target's own gene.** Both references lower the target's own transcript,
+  and in single-cell CRISPRi that coordinate is often the largest in `u`. A drug
+  that inhibits a protein need not lower its transcript at all, so `E` partly
+  measures a coordinate the drug cannot move, to a degree that may differ between
+  references. Recompute `P`, `E`, `q̄` and the primary correlations with the
+  target's own gene removed from both `u` and the drug signatures, under every
+  reference, and report them beside the primary values.
+
+  For each reference and each harmonized comparison, the target coordinate is
+  removed only where it is present in that analysis gene space. Paired comparisons
+  fix the shared gene space before removal. Where the target is absent, the
+  sensitivity equals the primary analysis and is recorded as such. The numbers of
+  drugs and targets whose vectors change are reported.
 
 ## Interpretation grid
 
 | outcome | reading |
 |---|---|
 | R0.9: raw reversal construction-dependent | the raw half of the reversal is attributable to how the CRISPRi direction was built; the remaining analyses describe the validated C1 reference |
-| R2 under C1 carries target identity, and ρ(P, E) under C1 is not positive | H3 does not replicate against a CRISPRi reference that carries target identity |
+| R2 under C1 carries target identity, and the 95% interval for ρ(P, E) under C1 does not lie above 0 | H3 is not replicated against a CRISPRi reference that carries target identity |
+| R2 under C1 carries target identity, and ρ(P, E) under C1 is practically null | H3's proposed generalization is contradicted by that reference, without any reversed association being established |
+| R2 under C1 carries target identity, and the 95% interval for ρ(P, E) under C1 lies below 0 | that reference establishes a directional contradiction: the association runs the other way |
 | R3 under C1: raw permutation-resistant; R2 under C1 does not carry identity; R0.8 concentrated | the raw CRISPRi association reflects a component shared across the arm's target directions, not target identity |
 | the above, together with R5 accounting for the association | that shared component is statistically accounted for by broad cytotoxicity |
 | R4: raw association depends on essential composition | the raw association is specific to essential-screen targets |
@@ -407,10 +509,15 @@ directly.
 | R5 complete-case cohort | counted at mapping; at least 60 drugs over 20 targets | — |
 
 These sizes are fixed by the data and are not a design choice.
-- Intervals in the CRISPRi arm rest on 41 unequal clusters and will be wide.
-- The hematopoietic subset resolves only large differences.
+- Intervals in the CRISPRi arm rest on 41 unequal clusters. A correlation's 95%
+  interval there is expected to be wider than 0.30, and the 90% interval for `q̄`
+  about 0.15 wide.
+- With 258 targets, the shRNA arm's intervals are narrow enough for the
+  practical-null and equivalence conditions to be met.
+- The hematopoietic subset, at 29 drugs, is exploratory.
 - No analysis supports a claim of no difference except through a stated
-  equivalence condition.
+  equivalence condition, and an inconclusive reading in the CRISPRi arm is
+  expected often enough that it must not be reported as a failure.
 
 ## Maximum claim under this registration
 
@@ -432,7 +539,9 @@ The paper may not:
 - say that raw instability carries no target-related information;
 - attribute the CRISPRi association to cytotoxicity unless R5 ran and returned
   "toxicity accounts for the raw association";
-- say that the K562 cell type is confirmed.
+- say that the K562 cell type is confirmed, or draw any conclusion from R6b;
+- say H3 is contradicted by a reference where the grid's reading is "not
+  replicated", which requires only that the interval fail to lie above 0.
 
 Everything else is exploratory and labeled as such.
 
@@ -466,10 +575,13 @@ Hematopoietic lines are those whose `primary_site` in the pinned cell-info file 
 The work is split across two scripts:
 
 - **`experiments/03d_h3_reference_discordance.py`** builds every cohort and
-  construction from the pinned inputs. Before any analysis, it checks that its C0
-  and shRNA quantities reproduce the corrected CRISPRi records to within 1e-6 for
-  `D`, `P` and `E`, and exactly for target and `n_celllines`. It then runs R0.1,
-  R0.2, R0.5 and R0.7 to R7.
+  construction from the pinned inputs, including the harmonized comparators
+  `shRNA-h` and `D_h` and the target-gene-removed variant of R7f. Before any
+  analysis, it checks that its C0 and shRNA quantities reproduce the corrected
+  CRISPRi records to within 1e-6 for `D`, `P` and `E`, and exactly for target and
+  `n_celllines`; both are computed in float64 from the same extraction, so the
+  tolerance is not the float32 one used by the linked reconstruction gate. It then
+  runs R0.1, R0.2, R0.5 and R0.7 to R7.
 - **`experiments/modal_03d_single_cell.py`** runs R0.3, R0.4 and R0.6 on one Modal
   CPU worker. It checkpoints within each file by target batch and commits the
   volume after each batch.
