@@ -170,7 +170,8 @@ def test_a_wrongly_built_stored_consensus_is_caught_even_when_signatures_agree()
     for target, ids in membership.items():
         mean = np.vstack([signatures[i] for i in ids]).mean(axis=0)
         honest[target] = mean / np.linalg.norm(mean)
-    assert _mod.compare_shrna(right, left, stored_directions=honest)["all_within_tolerance"]
+    assert _mod.compare_shrna(right, left,
+                              stored=(honest, genes))["all_within_tolerance"]
 
     # Deviation 9's shape: every signature is right, and the consensus was built
     # from the wrong rows
@@ -179,7 +180,7 @@ def test_a_wrongly_built_stored_consensus_is_caught_even_when_signatures_agree()
     mean = np.vstack(wrong_rows).mean(axis=0)
     defective["TARGET0"] = mean / np.linalg.norm(mean)
 
-    result = _mod.compare_shrna(right, left, stored_directions=defective)
+    result = _mod.compare_shrna(right, left, stored=(defective, genes))
     assert not result["all_within_tolerance"]
     assert result["max_abs_stored_direction_difference"] > 0.01
     assert result["per_target"]["TARGET0"]["max_abs_stored_direction_difference"] > 0.01
@@ -224,3 +225,68 @@ def test_extra_drugs_outside_the_cohort_are_counted_not_silently_dropped():
     result = _mod.compare(right, left, cohort=cohort)
     assert result["n_drugs"] == 4
     assert result["n_outside_cohort"] == {"rebuild": 1, "extraction": 1}
+
+
+def test_stored_direction_is_aligned_on_its_own_axis_not_the_extraction_permutation():
+    # the rebuild and the extraction disagree about gene order, which is the case
+    # that made the previous version of this check wrong
+    left, right = _shrna_pair(n_targets=3, per_target=3, shuffle_genes=True)
+    signatures, membership, rebuilt_genes = right
+
+    honest = {}
+    for target, ids in membership.items():
+        mean = np.vstack([signatures[i] for i in ids]).mean(axis=0)
+        honest[target] = mean / np.linalg.norm(mean)
+
+    result = _mod.compare_shrna(right, left, stored=(honest, rebuilt_genes))
+    assert result["all_within_tolerance"]
+    assert result["max_abs_stored_direction_difference"] == pytest.approx(0.0, abs=1e-12)
+
+    # the same values stored against a consistently reordered axis still pass,
+    # because the axis is what the alignment uses
+    shuffled = list(reversed(rebuilt_genes))
+    reordered = {t: v[[rebuilt_genes.index(g) for g in shuffled]] for t, v in honest.items()}
+    assert _mod.compare_shrna(right, left,
+                              stored=(reordered, shuffled))["all_within_tolerance"]
+
+    # values in the rebuild's order, declared against a different axis, must not:
+    # that is a mislabeled coordinate system, which is the error being guarded
+    assert not _mod.compare_shrna(right, left,
+                                  stored=(honest, shuffled))["all_within_tolerance"]
+
+
+def test_a_stored_direction_with_two_coordinates_swapped_fails_and_names_the_target():
+    left, right = _shrna_pair(n_targets=3, per_target=3, shuffle_genes=True)
+    signatures, membership, rebuilt_genes = right
+    honest = {}
+    for target, ids in membership.items():
+        mean = np.vstack([signatures[i] for i in ids]).mean(axis=0)
+        honest[target] = mean / np.linalg.norm(mean)
+
+    corrupted = {t: v.copy() for t, v in honest.items()}
+    corrupted["TARGET2"][[0, 1]] = corrupted["TARGET2"][[1, 0]]
+
+    result = _mod.compare_shrna(right, left, stored=(corrupted, rebuilt_genes))
+    assert not result["all_within_tolerance"]
+    assert result["per_target"]["TARGET2"]["max_abs_stored_direction_difference"] > 0
+    assert result["per_target"]["TARGET0"]["max_abs_stored_direction_difference"] == pytest.approx(
+        0.0, abs=1e-12)
+
+
+def test_a_stored_axis_that_is_not_the_rebuild_axis_is_refused():
+    left, right = _shrna_pair(n_targets=2, per_target=3)
+    signatures, membership, genes = right
+    honest = {t: np.ones(len(genes)) / np.sqrt(len(genes)) for t in membership}
+
+    with pytest.raises(AssertionError, match="does not share the rebuild's gene axis"):
+        _mod.compare_shrna(right, left, stored=(honest, genes[:-1] + ["9999"]))
+
+
+def test_a_zero_norm_consensus_is_named_rather_than_dividing_by_zero():
+    left, right = _shrna_pair(n_targets=2, per_target=2)
+    for side in (left, right):
+        for sig_id in side[1]["TARGET0"]:
+            side[0][sig_id] = np.zeros_like(side[0][sig_id])
+
+    with pytest.raises(AssertionError, match="zero-norm consensus"):
+        _mod.compare_shrna(right, left, min_signatures=2)

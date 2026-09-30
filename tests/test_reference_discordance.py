@@ -159,6 +159,7 @@ def test_leave_one_target_out_finds_the_target_that_carries_the_estimate():
 
 def _prism_files(tmp_path, treatments, columns_with_values):
     """A miniature PRISM 19Q4 primary screen: a wide matrix plus its treatment table."""
+    tmp_path.mkdir(parents=True, exist_ok=True)
     lines = [f"ACH-{i:06d}" for i in range(120)]
     matrix = pd.DataFrame({column: values(lines) for column, values in columns_with_values.items()},
                           index=lines)
@@ -200,7 +201,8 @@ def test_prism_mapping_uses_only_the_pinned_files_and_the_dose_window(tmp_path):
     assert "gamma" in rejected            # too few cell lines
     assert "delta" in rejected            # absent from the release
     assert mapping["dose_window"] == [2.0, 3.0]
-    assert mapping["provenance"]["no_response_value_was_read"]
+    assert mapping["provenance"]["response_values_used_for_mapping"] is False
+    assert mapping["provenance"]["response_missingness_used_for_mapping"] is True
 
 
 def test_prism_response_refuses_a_mapping_it_was_not_given(tmp_path):
@@ -261,3 +263,102 @@ def test_hematopoietic_probe_says_when_there_are_too_few_drugs():
     reference = _reference(arm)
     out = _mod.hematopoietic_probe(arm, reference, {"LINE0"}, ["LINE0"])
     assert out["hematopoietic"]["reading"] == "too few drugs"
+
+
+def _minimal_prism(tmp_path):
+    columns = {"BRD-K11111111-001-01-9::2.5::HTS": lambda lines: [-2.0] * len(lines),
+               "BRD-K22222222-001-01-9::2.5::HTS": lambda lines: [-0.4] * len(lines)}
+    treatments = [
+        {"column_name": "BRD-K11111111-001-01-9::2.5::HTS", "broad_id": "BRD-K11111111-001-01-9",
+         "name": "Alpha", "dose": 2.5, "screen_id": "HTS"},
+        {"column_name": "BRD-K22222222-001-01-9::2.5::HTS", "broad_id": "BRD-K22222222-001-01-9",
+         "name": "Beta", "dose": 2.5, "screen_id": "HTS"}]
+    return _prism_files(tmp_path, treatments, columns)
+
+
+def test_the_mapping_is_written_canonically_and_its_hash_is_stable(tmp_path):
+    prism = _minimal_prism(tmp_path)
+    mapping = _mod.prism_mapping(prism, ["alpha", "beta"], {})
+
+    first = _mod.write_mapping(mapping, tmp_path / "one.json")
+    shuffled = {k: mapping[k] for k in reversed(list(mapping))}
+    second = _mod.write_mapping(shuffled, tmp_path / "two.json")
+    assert first == second
+    assert (tmp_path / "one.json").read_text() == (tmp_path / "two.json").read_text()
+
+
+def test_mapping_depends_on_missingness_and_not_on_the_response_values(tmp_path):
+    treatments = [{"column_name": "BRD-K11111111-001-01-9::2.5::HTS",
+                   "broad_id": "BRD-K11111111-001-01-9", "name": "Alpha", "dose": 2.5,
+                   "screen_id": "HTS"}]
+    quiet = _prism_files(tmp_path / "quiet", treatments,
+                         {"BRD-K11111111-001-01-9::2.5::HTS": lambda lines: [-0.01] * len(lines)})
+    loud = _prism_files(tmp_path / "loud", treatments,
+                        {"BRD-K11111111-001-01-9::2.5::HTS": lambda lines: [-9.0] * len(lines)})
+
+    a = _mod.prism_mapping(quiet, ["alpha"], {})
+    b = _mod.prism_mapping(loud, ["alpha"], {})
+    for mapping in (a, b):
+        mapping["provenance"].pop("lfc_file")
+        mapping["provenance"].pop("lfc_sha256")
+        mapping["provenance"].pop("treatment_file")
+        mapping["provenance"].pop("treatment_sha256")
+    assert a == b
+    assert a["provenance"]["response_values_used_for_mapping"] is False
+
+
+def test_the_response_stage_refuses_a_mapping_whose_hash_is_not_the_expected_one(tmp_path):
+    prism = _minimal_prism(tmp_path)
+    mapping = _mod.prism_mapping(prism, ["alpha", "beta"], {})
+    path = tmp_path / "r5_prism_mapping.json"
+    expected = _mod.write_mapping(mapping, path)
+
+    _mod.validate_mapping(json.loads(path.read_text()), ["alpha", "beta"], expected, path)
+
+    edited = json.loads(path.read_text())
+    edited["rejected"]["beta"] = "removed by hand"
+    edited["accepted"].pop("beta")
+    edited["n_accepted"], edited["n_rejected"] = 1, 1
+    _mod.write_mapping(edited, path)
+    with pytest.raises(AssertionError, match="not a frozen mapping"):
+        _mod.validate_mapping(json.loads(path.read_text()), ["alpha", "beta"], expected, path)
+
+
+def test_validate_mapping_refuses_a_mapping_built_for_another_cohort(tmp_path):
+    prism = _minimal_prism(tmp_path)
+    path = tmp_path / "r5_prism_mapping.json"
+    expected = _mod.write_mapping(_mod.prism_mapping(prism, ["alpha"], {}), path)
+    frozen = json.loads(path.read_text())
+
+    with pytest.raises(AssertionError, match="built for a different cohort"):
+        _mod.validate_mapping(frozen, ["alpha", "beta"], expected, path)
+
+
+def test_validate_mapping_refuses_an_unregistered_route_or_a_dose_outside_the_window(tmp_path):
+    prism = _minimal_prism(tmp_path)
+    path = tmp_path / "r5_prism_mapping.json"
+    _mod.write_mapping(_mod.prism_mapping(prism, ["alpha"], {}), path)
+
+    frozen = json.loads(path.read_text())
+    frozen["accepted"]["alpha"]["route"] = "fuzzy name"
+    expected = _mod.write_mapping(frozen, path)
+    with pytest.raises(AssertionError, match="unregistered route"):
+        _mod.validate_mapping(json.loads(path.read_text()), ["alpha"], expected, path)
+
+    frozen = json.loads(path.read_text())
+    frozen["accepted"]["alpha"]["route"] = "exact name"
+    frozen["accepted"]["alpha"]["dose"] = 0.05
+    expected = _mod.write_mapping(frozen, path)
+    with pytest.raises(AssertionError, match="dose outside the window"):
+        _mod.validate_mapping(json.loads(path.read_text()), ["alpha"], expected, path)
+
+
+def test_the_response_stage_reads_only_the_columns_the_mapping_names(tmp_path):
+    prism = _minimal_prism(tmp_path)
+    path = tmp_path / "r5_prism_mapping.json"
+    mapping = _mod.prism_mapping(prism, ["alpha"], {})      # beta is never offered
+    _mod.write_mapping(mapping, path)
+
+    toxicity, killed, provenance = _mod.prism_response(prism, path)
+    assert provenance["n_columns_read"] == 1
+    assert set(toxicity) == {mapping["accepted"]["alpha"]["column"]}

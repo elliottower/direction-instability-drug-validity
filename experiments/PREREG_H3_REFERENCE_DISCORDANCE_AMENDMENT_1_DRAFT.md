@@ -36,31 +36,51 @@ carry the registered reading.
 **A1. Exposure window.** R5 uses only treatments whose dose lies within 2.0 to 3.0
 µM inclusive: the registered 2.5 µM with a tolerance of 0.5. The window is fixed
 here, from the treatment metadata alone, before any response value is summarized.
-It is not the window that maximizes coverage, and no other window is tried after
-an association is seen.
+No other window is tried after an association is seen.
 
-**A2. Name matching.** Exact-name matching, after case folding and whitespace
-collapse, uses the release's `name` field. The release has no synonym field, and
-no source outside the pinned files is consulted. A drug whose name is absent is
-reported unmapped, never rescued by hand.
+**A2. Compound mapping.** Each LINCS drug is mapped to PRISM first through the
+Broad compound-identifier stem, and only then by name.
 
-**A3. Treatment selection.** Each compound holds one treatment in the release, so
-the registered tie-break applies only when one drug name matches several
-compounds. It is unchanged: the treatment measured in the most cell lines, ties
-broken by the lexical order of the column name.
+- The identifier route takes every distinct `pert_id` the pinned LINCS signature
+  metadata associates with the drug, and extracts its stem with the frozen regular
+  expression `(BRD-[A-Z]\d{8})`. That expression is part of the estimand, because
+  it decides which drugs enter the cohort.
+- Where no eligible identifier match exists, the drug's name is matched exactly to
+  the release's `name` field after case folding, trimming, and collapsing internal
+  whitespace. The release has no synonym field, no source outside the pinned files
+  is consulted, and no drug is rescued by hand.
+- Identifier matches take priority over name matches.
+- Where a route yields several eligible treatments, the treatment measured in the
+  most cell lines is taken, with ties broken by the lexical order of the column
+  name.
+
+The identifier route was in the implementation before this amendment was drafted
+and is registered here because the coverage in A5 depends on it: of the 120 drugs
+that map, most do so by identifier.
+
+**A3. Treatment selection.** Each compound holds exactly one treatment in the
+release, so the tie-break in A2 fires only when one drug name matches several
+compounds.
 
 **A4. The mapping is frozen before any response value is summarized.** R5 runs in
 two stages:
 
-1. **Mapping.** From the pinned treatment table, the missingness of the response
-   matrix, and nothing else, write every accepted mapping with its identifier,
-   route, dose, screen, candidate count and cell-line count, and every rejected
-   drug with its reason. Hash that artifact and commit it.
-2. **Response.** Accept only that committed artifact, and compute the toxicity
-   measure and every R5 quantity from it. The stage refuses to run against a
-   mapping it did not receive as a frozen file.
+1. **Mapping.** From the pinned treatment table and the response matrix's
+   missingness, write every accepted mapping with its identifier, route, dose,
+   screen, candidate count and cell-line count, and every rejected drug with its
+   reason. The stage reads the response matrix solely to learn which columns exist
+   and how many cell lines each one measures. It does not retain, summarize,
+   compare, display or use any non-missing log-fold-change value in choosing a
+   mapping. It writes the table canonically, with sorted keys, and stops.
+2. **Freeze.** The table is reviewed, committed, and its sha256 recorded in the
+   implementation manifest.
+3. **Response.** A separate invocation computes the toxicity measure and every R5
+   quantity. It refuses to build a mapping, refuses a mapping whose hash is not the
+   one the manifest records, refuses a response matrix whose hash has moved, and
+   reads only the columns the frozen mapping names.
 
-No mapping is revised after any response value is summarized.
+No mapping is revised after any response value is summarized. A mapping built for
+a different cohort, dose window or cell-line floor is refused rather than reused.
 
 **A5. Coverage, counted under A1 to A3 before the freeze.** 120 of the 131
 CRISPRi-arm drugs map, over 37 targets, against the registered minimum of 60 drugs

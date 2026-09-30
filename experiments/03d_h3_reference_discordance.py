@@ -375,6 +375,10 @@ def main():
     parser.add_argument("--perturbseq", type=Path, required=True)
     parser.add_argument("--replogle", type=Path, required=True)
     parser.add_argument("--prism", type=Path)
+    parser.add_argument("--r5-stage", choices=["mapping", "response"], default="response",
+                        help="mapping writes the frozen table and stops; response consumes it")
+    parser.add_argument("--expected-mapping-sha256",
+                        help="the hash the implementation manifest records for the frozen mapping")
     parser.add_argument("--single-cell", type=Path)
     parser.add_argument("--output", type=Path, default=OUT)
     args = parser.parse_args()
@@ -473,12 +477,50 @@ def prism_mapping(prism_dir: Path, drugs, pert_ids) -> dict:
 
     return {"amendment": "experiments/PREREG_H3_REFERENCE_DISCORDANCE_AMENDMENT_1.md",
             "dose_window": list(DOSE_WINDOW), "min_lines": R5_MIN_LINES,
+            "drugs_offered": sorted(drugs),
             "accepted": accepted, "rejected": rejected,
             "n_accepted": len(accepted), "n_rejected": len(rejected),
             "provenance": {"lfc_file": str(lfc_path), "treatment_file": str(treatment_path),
                            "lfc_sha256": sha256_file(lfc_path),
                            "treatment_sha256": sha256_file(treatment_path),
-                           "no_response_value_was_read": True}}
+                           # the matrix is parsed, and only its missingness is used:
+                           # which columns exist and how many lines each one measures
+                           "response_values_used_for_mapping": False,
+                           "response_missingness_used_for_mapping": True,
+                           "nonmissing_response_values_summarized": False}}
+
+
+def write_mapping(mapping: dict, path: Path) -> str:
+    """Canonically and atomically, so the same mapping always has the same hash."""
+    payload = json.dumps(mapping, indent=2, sort_keys=True) + "\n"
+    partial = path.with_suffix(".json.part")
+    partial.write_text(payload)
+    partial.replace(path)
+    return sha256_file(path)
+
+
+def validate_mapping(frozen: dict, drugs, expected_sha256: str, path: Path):
+    """Everything about the frozen mapping that must hold before a value is read."""
+    actual = sha256_file(path)
+    assert actual == expected_sha256, (
+        f"the mapping at {path} hashes to {actual}, and the manifest expects "
+        f"{expected_sha256}; a mapping edited after it was frozen is not a frozen mapping")
+    assert frozen["dose_window"] == list(DOSE_WINDOW), "the mapping used a different dose window"
+    assert frozen["min_lines"] == R5_MIN_LINES, "the mapping used a different cell-line floor"
+    accepted, rejected = frozen["accepted"], frozen["rejected"]
+    assert frozen["n_accepted"] == len(accepted) and frozen["n_rejected"] == len(rejected), (
+        "the mapping's counts do not match its own records")
+    assert not (set(accepted) & set(rejected)), "a drug is both accepted and rejected"
+    assert set(accepted) | set(rejected) == set(frozen["drugs_offered"]), (
+        "the mapping does not account for every drug it was offered")
+    assert set(frozen["drugs_offered"]) == set(drugs), (
+        "the frozen mapping was built for a different cohort")
+    columns = [entry["column"] for entry in accepted.values()]
+    assert len(set(columns)) == len(columns), "two drugs claim the same treatment column"
+    for drug, entry in accepted.items():
+        assert DOSE_WINDOW[0] <= entry["dose"] <= DOSE_WINDOW[1], f"{drug}: dose outside the window"
+        assert entry["n_lines"] >= R5_MIN_LINES, f"{drug}: too few cell lines"
+        assert entry["route"] in ("broad identifier", "exact name"), f"{drug}: unregistered route"
 
 
 def prism_response(prism_dir: Path, mapping_path: Path):
@@ -498,6 +540,7 @@ def prism_response(prism_dir: Path, mapping_path: Path):
         "the response matrix is not the one the mapping was frozen against")
 
     columns = sorted({entry["column"] for entry in frozen["accepted"].values()})
+    assert columns, "the frozen mapping names no column to read"
     responses = pd.read_csv(lfc_path, index_col=0, usecols=["Unnamed: 0"] + columns)
     toxicity = {column: -float(responses[column].median(skipna=True)) for column in columns}
     killed = {column: float((responses[column] < -1).sum() / responses[column].notna().sum())
@@ -736,13 +779,28 @@ def run(args):
                               low_memory=False, usecols=["pert_iname", "pert_id"])
         pert_ids = {drug: sorted(set(group.pert_id.astype(str)))
                     for drug, group in siginfo.groupby("pert_iname")}
-
         mapping_path = args.output / "r5_prism_mapping.json"
-        if not mapping_path.exists():
-            mapping = prism_mapping(args.prism, crispri_arm.drugs, pert_ids)
-            mapping_path.write_text(json.dumps(mapping, indent=2))
-            log(f"mapping frozen at {mapping_path}; commit it before the response stage")
+
+        if args.r5_stage == "mapping":
+            # Amendment 1, A4: this stage writes the mapping and stops. The response
+            # stage is a separate invocation, so the table can be reviewed, committed
+            # and hashed while no response value has been summarized.
+            assert not mapping_path.exists(), (
+                f"{mapping_path} already exists; remove or supersede it deliberately rather "
+                "than rewriting a frozen mapping")
+            digest = write_mapping(prism_mapping(args.prism, crispri_arm.drugs, pert_ids),
+                                   mapping_path)
+            log(f"mapping written to {mapping_path}")
+            log(f"sha256 {digest}")
+            log("commit it, record that hash in the implementation manifest, then rerun with "
+                "--r5-stage response --expected-mapping-sha256 <hash>")
+            return {"stage": "mapping", "mapping": str(mapping_path), "sha256": digest}
+
+        assert args.expected_mapping_sha256, (
+            "--expected-mapping-sha256 is required: the response stage runs against a hash "
+            "recorded before it, not against whatever file is on disk")
         frozen = json.loads(mapping_path.read_text())
+        validate_mapping(frozen, crispri_arm.drugs, args.expected_mapping_sha256, mapping_path)
         accepted = frozen["accepted"]
 
         mapped = [i for i, drug in enumerate(crispri_arm.drugs) if drug in accepted]
@@ -751,7 +809,7 @@ def run(args):
         r5 = {"runnable": gate_met, "n_mapped": len(mapped), "n_targets": n_targets,
               "gate": {"min_drugs": R5_MIN_DRUGS, "min_targets": R5_MIN_TARGETS},
               "dose_window": frozen["dose_window"], "mapping_table": mapping_path.name,
-              "mapping_sha256": sha256_file(mapping_path), "provenance": frozen["provenance"],
+              "mapping_sha256": args.expected_mapping_sha256, "provenance": frozen["provenance"],
               "reading": None}
         if not gate_met:
             r5["reading"] = ("the registered minimum cohort was not reached; R5 is reported "
@@ -764,6 +822,7 @@ def run(args):
             T = np.array([toxicity[accepted[crispri_arm.drugs[i]]["column"]] for i in idx])
             fraction_killed = np.array([killed[accepted[crispri_arm.drugs[i]]["column"]]
                                         for i in idx])
+            assert np.isfinite(T).all(), "a mapped drug has no toxicity value"
             sub_targets = crispri_arm.targets[idx]
             e_t, e_t_draws = association(c1_values["E"][idx], T, sub_targets, "rho(E, toxicity)")
             d_e, d_e_draws = association(c1_values["D"][idx], c1_values["E"][idx], sub_targets,
@@ -798,6 +857,9 @@ def run(args):
                        "fraction_of_lines_below_minus_one": {
                            "median": float(np.median(fraction_killed))},
                        "comparison_reading": reading_rule, "reading": reading,
+                       "reading_note": ("adjustment attenuated or reversed the raw association, "
+                                        "which is consistent with shared variation and does not "
+                                        "establish that toxicity caused it"),
                        "measure": ("viability response at a near-common exposure of "
                                    f"{DOSE_WINDOW[0]}-{DOSE_WINDOW[1]} uM; not a dose-response "
                                    "summary and not a potency estimate")})

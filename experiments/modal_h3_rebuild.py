@@ -292,8 +292,10 @@ def stage_shrna():
     out = Path("/vol/results"); out.mkdir(parents=True, exist_ok=True)
     tmp = out / "shrna_consensus.npz.part"
     with open(tmp, "wb") as fh:
+        # the directions carry the gene axis they were built on, so a comparison
+        # never has to assume their coordinate system
         np.savez_compressed(fh, genes=np.array(names), directions=np.array(dirs),
-                            fingerprint=np.array(fp))
+                            gene_ids=np.array(ids), fingerprint=np.array(fp))
     tmp.replace(out / "shrna_consensus.npz")
     (out / "shrna_hairpins.json").write_text(json.dumps(hairpins, indent=2, sort_keys=True))
     vol.commit()

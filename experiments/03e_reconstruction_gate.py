@@ -139,7 +139,7 @@ def load_extraction(data_dir: Path):
     return matrices, cells, [str(g) for g in compounds["gene_ids"]]
 
 
-def compare_shrna(rebuilt, extraction, stored_directions=None,
+def compare_shrna(rebuilt, extraction, stored=None,
                   min_signatures=MIN_HAIRPINS, rtol=RTOL, atol=ATOL):
     """The half of the gate that guards the object Deviation 9 corrupted.
 
@@ -151,10 +151,12 @@ def compare_shrna(rebuilt, extraction, stored_directions=None,
 
     Each side is (signatures by signature id, target -> its signature ids, genes).
 
-    `stored_directions` is what the rebuild itself wrote out as each target's unit
-    direction. Comparing it against the direction recomputed here from verified
-    signatures is the check that bites: Deviation 9 was a rebuild whose signatures
-    were all correct and whose consensus construction was not.
+    `stored` is (directions by target, gene axis) as the rebuild wrote them.
+    Comparing those against the directions recomputed here from verified signatures
+    is the check that bites: Deviation 9 was a rebuild whose signatures were all
+    correct and whose consensus construction was not. The stored axis is aligned on
+    its own identifiers, never on the extraction's permutation, because assuming a
+    coordinate system is the error this gate exists to catch.
     """
     rebuilt_signatures, rebuilt_membership, rebuilt_genes = rebuilt
     extraction_signatures, extraction_membership, extraction_genes = extraction
@@ -178,6 +180,15 @@ def compare_shrna(rebuilt, extraction, stored_directions=None,
     assert set(rebuilt_membership) == set(extraction_membership), (
         f"target sets differ: {sorted(set(rebuilt_membership) ^ set(extraction_membership))[:5]}")
 
+    stored_permutation = None
+    if stored is not None:
+        stored_directions, stored_genes = stored
+        stored_genes = [str(g) for g in stored_genes]
+        assert set(stored_genes) == set(map(str, rebuilt_genes)), (
+            "the stored consensus does not share the rebuild's gene axis")
+        stored_index = {gene: i for i, gene in enumerate(stored_genes)}
+        stored_permutation = np.array([stored_index[gene] for gene in map(str, rebuilt_genes)])
+
     worst = {"consensus": 0.0, "direction": 0.0, "stored": 0.0}
     per_target, worst_target = {}, None
     for target in sorted(rebuilt_membership):
@@ -189,6 +200,11 @@ def compare_shrna(rebuilt, extraction, stored_directions=None,
         left = np.vstack([rebuilt_signatures[i] for i in left_ids]).mean(axis=0)
         right = np.vstack([np.asarray(extraction_signatures[i])[permutation]
                            for i in right_ids]).mean(axis=0)
+        # a zero or nonfinite consensus must say so, not surface later as a
+        # division warning and an obscure tolerance failure
+        for side, vector in (("rebuild", left), ("extraction", right)):
+            assert np.isfinite(vector).all(), f"{target}: nonfinite consensus on the {side}"
+            assert np.linalg.norm(vector) > 0, f"{target}: zero-norm consensus on the {side}"
         consensus_error = float(np.abs(left - right).max())
         # a normalized direction can agree while the consensus behind it does not,
         # so both are compared
@@ -197,11 +213,11 @@ def compare_shrna(rebuilt, extraction, stored_directions=None,
         entry = {"n_signatures": len(left_ids),
                  "max_abs_consensus_difference": consensus_error,
                  "max_abs_direction_difference": direction_error}
-        if stored_directions is not None:
+        if stored is not None:
             assert target in stored_directions, f"{target}: the rebuild stored no direction"
-            stored = np.asarray(stored_directions[target])[permutation]
+            stored_vector = np.asarray(stored_directions[target])[stored_permutation]
             recomputed = left / np.linalg.norm(left)
-            stored_error = float(np.abs(stored - recomputed).max())
+            stored_error = float(np.abs(stored_vector - recomputed).max())
             entry["max_abs_stored_direction_difference"] = stored_error
             worst["stored"] = max(worst["stored"], stored_error)
         per_target[target] = entry
@@ -215,9 +231,9 @@ def compare_shrna(rebuilt, extraction, stored_directions=None,
             "max_abs_signature_difference": worst_signature,
             "max_abs_consensus_difference": worst["consensus"],
             "max_abs_direction_difference": worst["direction"],
-            "max_abs_stored_direction_difference": (worst["stored"] if stored_directions
-                                                    is not None else None),
-            "stored_directions_compared": stored_directions is not None,
+            "max_abs_stored_direction_difference": (worst["stored"] if stored is not None
+                                                    else None),
+            "stored_directions_compared": stored is not None,
             "worst_target": worst_target,
             "all_within_tolerance": bool(worst["consensus"] <= tolerance
                                          and worst["direction"] <= tolerance
@@ -241,8 +257,12 @@ def load_shrna_rebuild(directory: Path):
     consensus_path = Path(directory) / "shrna_consensus.npz"
     if consensus_path.exists():
         with np.load(consensus_path, allow_pickle=True) as data:
-            stored = {str(gene): data["directions"][i]
-                      for i, gene in enumerate(data["genes"])}
+            assert "gene_ids" in data.files, (
+                f"{consensus_path} carries no gene axis; the gate cannot tell which "
+                "coordinate system its directions use")
+            stored = ({str(target): data["directions"][i]
+                       for i, target in enumerate(data["genes"])},
+                      [str(g) for g in data["gene_ids"]])
     return signatures, membership, genes, stored
 
 
@@ -278,16 +298,19 @@ def main():
 
     records = json.loads(args.cohort.read_text())
     drugs = sorted({record["drug"] for record in records})
-    targets = sorted({record["target"] for record in records})
+    assert len(drugs) == len(records), (
+        f"{len(records)} records hold {len(drugs)} distinct drugs; the cohort unit is the drug")
+    targets = sorted({str(record["target"]) for record in records})
 
     compounds = compare(load_rebuild(args.rebuilt), load_extraction(args.extraction), cohort=drugs)
     rebuilt_signatures, rebuilt_membership, rebuilt_genes, stored = load_shrna_rebuild(args.rebuilt)
     shrna = compare_shrna((rebuilt_signatures, rebuilt_membership, rebuilt_genes),
                           load_shrna_extraction(args.extraction, targets_wanted=set(targets)),
-                          stored_directions=stored)
+                          stored=stored)
 
     result = {"cohort": {"file": str(args.cohort), "sha256": sha256_file(args.cohort),
-                         "n_drugs": len(drugs), "n_targets": len(targets)},
+                         "n_records": len(records), "n_unique_drugs": len(drugs),
+                         "n_unique_targets": len(targets)},
               "compound_signatures": compounds, "shrna_signatures_and_consensuses": shrna}
     result["identifier_hashes"] = {"drugs": sha256_text("\n".join(drugs)),
                                    "targets": sha256_text("\n".join(targets))}
