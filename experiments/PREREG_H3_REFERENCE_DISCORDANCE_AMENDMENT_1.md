@@ -3,7 +3,7 @@
 **Date:** 2026-09-30
 **Status:** FROZEN. Prospective: no drug-level PRISM value, and no association
 involving one, has been computed or inspected.
-**Commit SHA:** filled in the commit that follows this freeze
+**Commit SHA:** 4ef15f9
 **Amends:** `experiments/PREREG_H3_REFERENCE_DISCORDANCE.md`, design frozen at
 `7f57136`. Only R5 changes. Every other module, gate, interval and reading stands
 as frozen.
