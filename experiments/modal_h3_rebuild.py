@@ -209,6 +209,7 @@ def stage_extract():
             print(f"[{_ts()}] shard {s+1}/{n_shards}: fingerprint moved, rebuilding")
         names = wanted[s * SHARD:(s + 1) * SHARD]
         sub = siginfo[siginfo.pert_iname.isin(names) & siginfo.pert_iname.notna()]
+        cells_by_drug = {}
         gct = parse.parse(str(raw / GCTX), cid=sorted(set(sub.sig_id.astype(str))), rid=ids)
         assert gct.data_df.shape[0] == N_LANDMARK, f"parsed {gct.data_df.shape[0]} rows"
         assert gct.data_df.columns.is_unique, "parsed matrix has duplicate signature ids"
@@ -234,10 +235,12 @@ def stage_extract():
                     cell_ids.append(str(cell_id))
             if per_cell:
                 payload[drug] = np.vstack(per_cell)
-                # the rows carry their cell lines, so the comparison against the
-                # extraction can join on identifiers instead of on row order
-                payload[f"{drug}\x00cells"] = np.array(cell_ids)
-        np.savez_compressed(out, fingerprint=np.array(fp), **payload)
+                cells_by_drug[drug] = cell_ids
+        # The cell lines travel in one JSON blob rather than one array per drug.
+        # A suffixed key does not survive the npz round trip intact, and a key
+        # that collides with a drug name silently replaces that drug's matrix.
+        np.savez_compressed(out, fingerprint=np.array(fp),
+                            __cells__=np.array(json.dumps(cells_by_drug)), **payload)
         vol.commit()                                       # checkpoint inside the unit
         print(f"[{_ts()}] shard {s+1}/{n_shards}: {len(payload)} drugs")
     return f"{n_shards} shards at {fp[:12]}"
@@ -334,12 +337,17 @@ def stage_bundle():
     for f in sorted(expected):
         with np.load(f, allow_pickle=True) as z:
             assert str(z["fingerprint"]) == fp, f"{f.name} was built under a different fingerprint"
-            keys = {k for k in z.files if k != "fingerprint" and "\x00cells" not in k}
+            keys = {k for k in z.files if k not in ("fingerprint", "__cells__")}
             overlap = set(sigs) & keys
             assert not overlap, f"drug identifiers appear in more than one shard: {sorted(overlap)}"
             sigs.update({k: z[k] for k in keys})
-            cells.update({k.split("\x00")[0]: [str(c) for c in z[k]]
-                          for k in z.files if "\x00cells" in k})
+            shard_cells = json.loads(str(z["__cells__"]))
+            assert set(shard_cells) == keys, (
+                f"{f.name}: {len(keys)} drugs but cell lines for {len(shard_cells)}")
+            cells.update({drug: [str(c) for c in ids] for drug, ids in shard_cells.items()})
+    for drug, matrix in sigs.items():
+        assert matrix.shape[0] == len(cells[drug]), (
+            f"{drug}: {matrix.shape[0]} rows against {len(cells[drug])} cell lines")
 
     with np.load(out / "shrna_consensus.npz", allow_pickle=True) as z:
         assert str(z["fingerprint"]) == fp, "the shRNA consensus predates the current fingerprint"

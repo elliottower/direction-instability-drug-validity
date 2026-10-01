@@ -102,13 +102,15 @@ def load_rebuild(directory: Path):
     genes = None
     for shard in sorted(Path(directory).glob("shard_*.npz")):
         with np.load(shard, allow_pickle=True) as data:
+            assert "__cells__" in data.files, (
+                f"{shard.name} carries no cell-line identifiers; the join would fall back to "
+                "row order, which is what this gate exists to avoid")
+            shard_cells = json.loads(str(data["__cells__"]))
             for key in data.files:
-                if key == "fingerprint":
+                if key in ("fingerprint", "__cells__"):
                     continue
-                if "\x00cells" in key:
-                    cells[key.split("\x00")[0]] = [str(c) for c in data[key]]
-                else:
-                    matrices[key] = data[key]
+                matrices[key] = data[key]
+            cells.update({drug: [str(c) for c in ids] for drug, ids in shard_cells.items()})
     gene_file = Path(directory) / "landmark_gene_ids.json"
     if gene_file.exists():
         genes = [str(g) for g in json.loads(gene_file.read_text())]

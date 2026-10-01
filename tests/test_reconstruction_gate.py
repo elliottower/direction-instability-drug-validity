@@ -353,3 +353,37 @@ def test_the_gate_refuses_a_repeated_gene_identifier_on_any_axis():
     honest = {t: np.ones(len(genes)) / np.sqrt(len(genes)) for t in membership}
     with pytest.raises(AssertionError, match="repeats a gene identifier"):
         _mod.compare_shrna(right, left, stored=(honest, genes[:-1] + [genes[0]]))
+
+
+def _write_shard(path, matrices, cells, fingerprint="fp"):
+    """A shard in the layout the Modal rebuild writes."""
+    np.savez_compressed(path, fingerprint=np.array(fingerprint),
+                        __cells__=np.array(json.dumps(cells)), **matrices)
+
+
+def test_the_loader_keeps_matrices_and_cell_lines_apart(tmp_path):
+    rng = np.random.default_rng()
+    matrices = {"drugA": rng.standard_normal((3, 6)), "drugB": rng.standard_normal((2, 6))}
+    cells = {"drugA": ["MCF7", "PC3", "A375"], "drugB": ["HT29", "A549"]}
+    _write_shard(tmp_path / "shard_000.npz", matrices, cells)
+    (tmp_path / "landmark_gene_ids.json").write_text(json.dumps([str(i) for i in range(6)]))
+
+    loaded_matrices, loaded_cells, genes = _mod.load_rebuild(tmp_path)
+    assert set(loaded_matrices) == {"drugA", "drugB"}
+    for drug in matrices:
+        # the failure this guards: a cell-line array arriving under a drug's own
+        # name and replacing its matrix
+        assert loaded_matrices[drug].dtype.kind == "f"
+        assert loaded_matrices[drug] == pytest.approx(matrices[drug])
+        assert loaded_cells[drug] == cells[drug]
+    assert genes == [str(i) for i in range(6)]
+
+
+def test_a_shard_without_cell_identifiers_is_refused(tmp_path):
+    rng = np.random.default_rng()
+    np.savez_compressed(tmp_path / "shard_000.npz", fingerprint=np.array("fp"),
+                        drugA=rng.standard_normal((3, 6)))
+    (tmp_path / "landmark_gene_ids.json").write_text(json.dumps([str(i) for i in range(6)]))
+
+    with pytest.raises(AssertionError, match="carries no cell-line identifiers"):
+        _mod.load_rebuild(tmp_path)
