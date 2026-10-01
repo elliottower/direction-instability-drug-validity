@@ -1,0 +1,114 @@
+{
+  "what_this_binds": "the frozen designs, the reviewed code, the pinned inputs and the frozen R5 mapping, so that what ran can be named before it runs",
+  "design_freeze": {
+    "registrations": [
+      "experiments/PREREG_H3_S1S3_CORRECTED_BASELINE.md",
+      "experiments/PREREG_H3_REFERENCE_DISCORDANCE.md"
+    ],
+    "commit": "7f57136"
+  },
+  "amendment_freeze": {
+    "file": "experiments/PREREG_H3_REFERENCE_DISCORDANCE_AMENDMENT_1.md",
+    "commit": "4ef15f9"
+  },
+  "code": {
+    "commit": "a6c5568afcd07d1fa2992f364f43c78ff906004b",
+    "short": "a6c5568",
+    "files": {
+      "experiments/03c_h3_sensitivity.py": "b6a32c6c46afc77ac62215be0361340c0fed1b0c7375fefa9633d903faac128f",
+      "experiments/03d_h3_reference_discordance.py": "1cca1c56c580e03aeb78536191d4508a4c87dcec5e1d2735dde3092342e53284",
+      "experiments/03e_reconstruction_gate.py": "42647b3611efe13fe8536cf2b2d6825136801fb7b3ec8baf997535ba44872009",
+      "experiments/modal_03d_single_cell.py": "1f29f55059e5a85ca7409ac2710f2e4658afd5e1e575a207198e37cc271b0348",
+      "experiments/modal_h3_rebuild.py": "64571855705f723e2b187e25d6e481fd3f174d1e51c8ef7333304058e78f0150",
+      "experiments/build_h3_bundle.py": "8b71ea9ebe503f44e93297c5aab30398e3f2b7da3d8406ddb7e2afbe4a710aeb",
+      "geometry/inference.py": "7b57e9b07bba2a0f6f0367b34aeaa9fb1620a3e5ee00b64bfe0890a6d826a60f",
+      "geometry/references.py": "ae82b3d8337f52afdfe272b76b6c9cb67ac2bf3e15744864e2cb8855ebf97d67",
+      "geometry/single_cell.py": "7508c054248cf6d655849edabab01edcafbc72e5fd9316c731060b2b3eb33ca9",
+      "geometry/direction_instability.py": "e827ea0a739b207f9a736063862689b23161def07b929bbab91f973154184064"
+    }
+  },
+  "environment": {
+    "python": "3.13.12",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pandas": "3.0.6",
+    "anndata": "0.13.4",
+    "invocation": "uv run --no-project --with numpy --with scipy --with pandas --with anndata, PYTHONPATH=."
+  },
+  "inputs": {
+    "corrected_H3_artifact": {
+      "path": "/Users/elliottower/Documents/GitHub/direction-instability-drug-validity/results/03_phenotype_projection/phenotype_projection_results.json",
+      "sha256": "fd69e26fc9a3917323065b631688baeab8b283f735c8bf5b16210ba67bd21425"
+    },
+    "corrected_CRISPRi_records": {
+      "path": "/Users/elliottower/Documents/GitHub/direction-instability-drug-validity/results/03b_h3_crispri/h3_crispri_results.json",
+      "sha256": "f00f8428071178bd2317139c5a1f534e458931684fb6da65c750f9f1e5456eb3"
+    },
+    "lincs_sig_info": {
+      "path": "/Users/elliottower/Documents/GitHub/drug-perturbation-geometry/data/GSE92742_Broad_LINCS_sig_info.txt.gz",
+      "sha256": "19da29c0ee12ddf27f9698cd0da40beaff58657dcde9d382aae068737e831299"
+    },
+    "lincs_gene_info": {
+      "path": "/Users/elliottower/Documents/GitHub/drug-perturbation-geometry/data/GSE92742_Broad_LINCS_gene_info.txt.gz",
+      "sha256": "741216ccc53320119b47ab006de3bcad48963c57087c9e07f50f0d6cd088711a"
+    },
+    "lincs_cell_info": {
+      "path": "/Users/elliottower/Documents/GitHub/drug-perturbation-geometry/data/GSE92742_Broad_LINCS_cell_info.txt.gz",
+      "sha256": "88c6ca5ff8bb3cf3af22c2eb8cbe769f9ae8e305a760959b18711877d730d61c"
+    },
+    "lincs_shrna_siginfo": {
+      "path": "/Users/elliottower/Documents/GitHub/drug-perturbation-geometry/data/lincs_shrna_siginfo.csv.gz",
+      "sha256": "bd396fa0e1a2f00c1b5f2c8d2b35f9a056f5e5353382475655869038037ec014"
+    },
+    "frozen_drug_labels": {
+      "path": "/Users/elliottower/Documents/GitHub/drug-perturbation-geometry/data/frozen_drug_labels.json",
+      "sha256": "e6d73384c5bbc501ee15f621aaa258f02f38ee0d7a9603b6c820bec3e0489d52"
+    },
+    "replogle_K562_essential_bulk": {
+      "path": "/Users/elliottower/Documents/GitHub/direction-instability-drug-validity/data/replogle2022/K562_essential_normalized_bulk_01.h5ad",
+      "sha256": "c1ca6456c9c9f1aa2b02c496eb64d1dc3e6a852edbd744d682b8d2c95fd36829"
+    },
+    "replogle_RPE1_bulk": {
+      "path": "/Users/elliottower/Documents/GitHub/direction-instability-drug-validity/data/replogle2022/rpe1_normalized_bulk_01.h5ad",
+      "sha256": "a3c5bfd0f15d63938bc80c9b8874b9cd761e3a23caf5ffe7966bae4e887ec89d"
+    },
+    "replogle_K562_gwps_bulk": {
+      "path": "/Users/elliottower/Documents/GitHub/direction-instability-drug-validity/data/replogle2022/K562_gwps_normalized_bulk_01.h5ad",
+      "sha256": "37e48c474d8b5dead4151f96ea8f5fe7bbe6beb10eeea48685b740c3f74490a2"
+    },
+    "prism_19q4_logfold_change": {
+      "path": "/Users/elliottower/Documents/GitHub/direction-instability-drug-validity/data/prism_19q4/primary-screen-replicate-collapsed-logfold-change.csv",
+      "sha256": "25efc741b372b30d38629cb139a388e989663fba597e55fff5f6c2bb7cdeb75a"
+    },
+    "prism_19q4_treatment_info": {
+      "path": "/Users/elliottower/Documents/GitHub/direction-instability-drug-validity/data/prism_19q4/primary-screen-replicate-collapsed-treatment-info.csv",
+      "sha256": "d649f207a437c9e9910572c5023d02f68a77c946f6e972c998b057160a3505e6"
+    }
+  },
+  "r5_mapping": {
+    "file": "results/03d_h3_reference_discordance/r5_prism_mapping.json",
+    "sha256": "152361cb3174a5fb7aae0229c3e3d049dc00d49d9e442925156a9fe0564b89d3",
+    "n_offered": 131,
+    "n_accepted": 120,
+    "n_rejected": 11,
+    "n_targets": 37,
+    "frozen_before": "any PRISM response value was summarized"
+  },
+  "tests": {
+    "command": "python -m pytest tests/ --ignore=tests/test_combined_experiments.py",
+    "n_passed": 179,
+    "log": "test_log_at_freeze.txt",
+    "log_sha256": "0429f4e3edcc00f960694302ef4106a4c6fce1f2da0e97089f476b96dd69646c",
+    "excluded": "tests/test_combined_experiments.py imports experiments/12_perturbseq_cosine_transport, deleted in 8c64d56"
+  },
+  "commands_in_order": [
+    "PYTHONPATH=. python experiments/03d_h3_reference_discordance.py --r5-stage mapping --data <lincs> --prism data/prism_19q4 --output results/03d_h3_reference_discordance",
+    "PYTHONPATH=. python experiments/03e_reconstruction_gate.py --rebuilt <gctx rebuild> --extraction <lincs>",
+    "PYTHONPATH=. python experiments/03c_h3_sensitivity.py --bundle <bundle> --manifest <manifest>",
+    "PYTHONPATH=. python experiments/03d_h3_reference_discordance.py --r5-stage response --expected-mapping-sha256 152361cb3174a5fb7aae0229c3e3d049dc00d49d9e442925156a9fe0564b89d3 --data <lincs> --perturbseq <h5ad> --replogle data/replogle2022 --prism data/prism_19q4"
+  ],
+  "policies": {
+    "nonfinite_bootstrap_replicate": "cluster_bootstrap asserts every replicate is finite, so an undefined draw fails the run rather than propagating; the registration calls such a replicate invalidating",
+    "gate_failure": "a failed reconstruction gate voids the analyses registered against it"
+  }
+}
