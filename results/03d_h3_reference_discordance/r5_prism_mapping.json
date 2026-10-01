@@ -1,0 +1,1247 @@
+{
+  "accepted": {
+    "10-hydroxycamptothecin": {
+      "column": "BRD-K63784565-001-06-2::2.51::HTS",
+      "dose": 2.51,
+      "n_candidates": 1,
+      "n_lines": 538,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K63784565"
+    },
+    "ABT-751": {
+      "column": "BRD-K91623615-001-05-0::2.46::HTS",
+      "dose": 2.46,
+      "n_candidates": 1,
+      "n_lines": 538,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K91623615"
+    },
+    "AT-7519": {
+      "column": "BRD-K13390322-001-06-3::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 557,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K13390322"
+    },
+    "AT-9283": {
+      "column": "BRD-K24576554-001-04-8::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K24576554"
+    },
+    "BI-2536": {
+      "column": "BRD-K64890080-001-13-8::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 563,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K64890080"
+    },
+    "BMS-387032": {
+      "column": "BRD-K43389698-001-09-9::2.4::HTS",
+      "dose": 2.4,
+      "n_candidates": 1,
+      "n_lines": 538,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K43389698"
+    },
+    "BX-912": {
+      "column": "BRD-K49669041-001-08-4::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K49669041"
+    },
+    "CGP-57380": {
+      "column": "BRD-K42500029-001-03-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 571,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K42500029"
+    },
+    "CHIR-99021": {
+      "column": "BRD-K16189898-003-03-3::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K16189898"
+    },
+    "CYT-997": {
+      "column": "BRD-K23363278-001-02-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K23363278"
+    },
+    "D-4476": {
+      "column": "BRD-K09132007-001-07-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 550,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K09132007"
+    },
+    "D-64131": {
+      "column": "BRD-K26997899-001-02-2::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K26997899"
+    },
+    "ENMD-2076": {
+      "column": "BRD-K68488863-001-04-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 572,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K68488863"
+    },
+    "GW-843682X": {
+      "column": "BRD-K90382497-001-10-7::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 563,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K90382497"
+    },
+    "HMN-214": {
+      "column": "BRD-K70511574-001-06-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 572,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K70511574"
+    },
+    "JNJ-7706621": {
+      "column": "BRD-K11636097-001-03-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K11636097"
+    },
+    "K-858": {
+      "column": "BRD-A67748489-001-10-0::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-A67748489"
+    },
+    "KU-0063794": {
+      "column": "BRD-K67566344-001-07-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K67566344"
+    },
+    "MG-132": {
+      "column": "BRD-K60230970-001-17-5::2.4::HTS",
+      "dose": 2.4,
+      "n_candidates": 1,
+      "n_lines": 534,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K60230970"
+    },
+    "MK-1775": {
+      "column": "BRD-K54256913-001-08-7::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 569,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K54256913"
+    },
+    "MK-5108": {
+      "column": "BRD-K53665955-001-03-0::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 569,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K53665955"
+    },
+    "NVP-BEZ235": {
+      "column": "BRD-K12184916-001-15-4::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 572,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K12184916"
+    },
+    "OSI-027": {
+      "column": "BRD-K87124298-001-03-4::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 570,
+      "route": "exact name",
+      "screen": "HTS",
+      "stem": "BRD-K87124298"
+    },
+    "PD-407824": {
+      "column": "BRD-K82823804-001-04-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 563,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K82823804"
+    },
+    "PF-477736": {
+      "column": "BRD-K03063480-001-05-8::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 2,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K03063480"
+    },
+    "PF-562271": {
+      "column": "BRD-K99545815-001-06-3::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K99545815"
+    },
+    "PHA-793887": {
+      "column": "BRD-K64800655-001-07-4::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K64800655"
+    },
+    "PI-103": {
+      "column": "BRD-K67868012-001-07-6::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K67868012"
+    },
+    "PJ-34": {
+      "column": "BRD-K11853856-001-01-7::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K11853856"
+    },
+    "SAR-245409": {
+      "column": "BRD-K75308783-001-07-0::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 567,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K75308783"
+    },
+    "SB-216763": {
+      "column": "BRD-K59184148-001-21-6::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K59184148"
+    },
+    "SB-218078": {
+      "column": "BRD-A06352508-001-03-7::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 570,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-A06352508"
+    },
+    "SB-334867": {
+      "column": "BRD-K41567364-001-04-6::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K41567364"
+    },
+    "SB-408124": {
+      "column": "BRD-K53913732-001-05-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K53913732"
+    },
+    "SN-38": {
+      "column": "BRD-K89561498-001-01-7::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 569,
+      "route": "exact name",
+      "screen": "HTS",
+      "stem": "BRD-K89561498"
+    },
+    "SNS-314": {
+      "column": "BRD-K71512533-066-02-8::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K71512533"
+    },
+    "WYE-125132": {
+      "column": "BRD-A45498368-001-07-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 570,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-A45498368"
+    },
+    "WYE-354": {
+      "column": "BRD-K77008974-001-03-2::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K77008974"
+    },
+    "YM-155": {
+      "column": "BRD-K76703230-004-04-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 2,
+      "n_lines": 569,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K76703230"
+    },
+    "ZM-447439": {
+      "column": "BRD-K72703948-001-10-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K72703948"
+    },
+    "alisertib": {
+      "column": "BRD-K75295174-001-05-0::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 558,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K75295174"
+    },
+    "alvocidib": {
+      "column": "BRD-K87909389-003-03-4::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 571,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K87909389"
+    },
+    "aminopurvalanol-a": {
+      "column": "BRD-K07762753-001-04-4::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K07762753"
+    },
+    "amonafide": {
+      "column": "BRD-K56334280-001-05-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K56334280"
+    },
+    "arcyriaflavin-a": {
+      "column": "BRD-K72726508-001-02-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K72726508"
+    },
+    "aurora-a-inhibitor-i": {
+      "column": "BRD-K53561341-001-07-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 570,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K53561341"
+    },
+    "azacitidine": {
+      "column": "BRD-K03406345-001-27-8::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 569,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K03406345"
+    },
+    "barasertib-HQPA": {
+      "column": "BRD-K63923597-001-10-0::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K63923597"
+    },
+    "bortezomib": {
+      "column": "BRD-K88510285-001-11-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 571,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K88510285"
+    },
+    "camptothecin": {
+      "column": "BRD-K37890730-001-15-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 557,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K37890730"
+    },
+    "clofarabine": {
+      "column": "BRD-K34022604-001-06-6::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 572,
+      "route": "exact name",
+      "screen": "HTS",
+      "stem": "BRD-K34022604"
+    },
+    "cycloheximide": {
+      "column": "BRD-K36055864-001-19-2::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 570,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K36055864"
+    },
+    "cytarabine": {
+      "column": "BRD-K71847383-001-12-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 563,
+      "route": "exact name",
+      "screen": "HTS",
+      "stem": "BRD-K71847383"
+    },
+    "danusertib": {
+      "column": "BRD-K07881437-001-03-8::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 2,
+      "n_lines": 550,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K07881437"
+    },
+    "dapsone": {
+      "column": "BRD-K62363391-001-24-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 569,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K62363391"
+    },
+    "daunorubicin": {
+      "column": "BRD-K43389675-003-20-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 2,
+      "n_lines": 569,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K43389675"
+    },
+    "decitabine": {
+      "column": "BRD-K79254416-001-22-6::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 568,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K79254416"
+    },
+    "deforolimus": {
+      "column": "BRD-K62304154-001-04-2::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 550,
+      "route": "exact name",
+      "screen": "HTS",
+      "stem": "BRD-K62304154"
+    },
+    "dexrazoxane": {
+      "column": "BRD-K07265709-003-05-6::2.61::HTS",
+      "dose": 2.61,
+      "n_candidates": 1,
+      "n_lines": 538,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K07265709"
+    },
+    "diazoxide": {
+      "column": "BRD-K73109821-001-20-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K73109821"
+    },
+    "digitoxigenin": {
+      "column": "BRD-K18518344-001-15-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K18518344"
+    },
+    "digitoxin": {
+      "column": "BRD-A93236127-001-04-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 569,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-A93236127"
+    },
+    "digoxin": {
+      "column": "BRD-A94756469-001-04-7::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-A94756469"
+    },
+    "dimercaptosuccinic-acid": {
+      "column": "BRD-K88701661-001-02-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 532,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K88701661"
+    },
+    "doxorubicin": {
+      "column": "BRD-K92093830-003-30-8::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 571,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K92093830"
+    },
+    "emetine": {
+      "column": "BRD-A25687296-300-04-3::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 569,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-A25687296"
+    },
+    "etacrynic-acid": {
+      "column": "BRD-K63630713-001-25-8::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 569,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K63630713"
+    },
+    "etoposide": {
+      "column": "BRD-K37798499-001-27-2::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 569,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K37798499"
+    },
+    "everolimus": {
+      "column": "BRD-K13514097-001-05-3::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 569,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K13514097"
+    },
+    "fenbendazole": {
+      "column": "BRD-K51318897-001-15-3::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 550,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K51318897"
+    },
+    "flubendazole": {
+      "column": "BRD-K86003836-001-10-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 570,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K86003836"
+    },
+    "flucytosine": {
+      "column": "BRD-K82143716-001-19-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 561,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K82143716"
+    },
+    "fluvastatin": {
+      "column": "BRD-K66296774-236-11-3::2.63::HTS",
+      "dose": 2.63,
+      "n_candidates": 1,
+      "n_lines": 550,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K66296774"
+    },
+    "gemcitabine": {
+      "column": "BRD-K15108141-001-06-6::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 550,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K15108141"
+    },
+    "hesperidin": {
+      "column": "BRD-K38903228-001-13-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K38903228"
+    },
+    "homoharringtonine": {
+      "column": "BRD-K76674262-001-03-3::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K76674262"
+    },
+    "hydroflumethiazide": {
+      "column": "BRD-K36862742-001-25-6::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 569,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K36862742"
+    },
+    "idarubicin": {
+      "column": "BRD-K69650333-003-14-0::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 2,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K69650333"
+    },
+    "indirubin": {
+      "column": "BRD-K17894950-001-14-3::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 572,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K17894950"
+    },
+    "indirubin-3-monoxime": {
+      "column": "BRD-K19136521-001-08-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K19136521"
+    },
+    "irinotecan": {
+      "column": "BRD-K08547377-394-03-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 550,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K08547377"
+    },
+    "ispinesib": {
+      "column": "BRD-K64881305-001-03-7::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 570,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K64881305"
+    },
+    "kenpaullone": {
+      "column": "BRD-K37312348-001-15-0::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 563,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K37312348"
+    },
+    "ketoconazole": {
+      "column": "BRD-A38350138-001-04-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 554,
+      "route": "exact name",
+      "screen": "HTS",
+      "stem": "BRD-A38350138"
+    },
+    "levofloxacin": {
+      "column": "BRD-K09471561-001-18-2::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 550,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K09471561"
+    },
+    "methotrexate": {
+      "column": "BRD-A55424491-001-19-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 2,
+      "n_lines": 562,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-A55424491"
+    },
+    "mevastatin": {
+      "column": "BRD-K94441233-001-17-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 2,
+      "n_lines": 556,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K94441233"
+    },
+    "mitoxantrone": {
+      "column": "BRD-K21680192-300-14-4::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K21680192"
+    },
+    "monastrol": {
+      "column": "BRD-A78377521-001-05-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 563,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-A78377521"
+    },
+    "moxifloxacin": {
+      "column": "BRD-K66615216-003-14-8::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 562,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K66615216"
+    },
+    "olomoucine": {
+      "column": "BRD-K82731415-001-07-0::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 563,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K82731415"
+    },
+    "orantinib": {
+      "column": "BRD-K55966568-001-05-4::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 572,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K55966568"
+    },
+    "ouabain": {
+      "column": "BRD-K33277808-331-01-3::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 570,
+      "route": "exact name",
+      "screen": "HTS",
+      "stem": "BRD-K33277808"
+    },
+    "oxibendazole": {
+      "column": "BRD-K52075715-001-06-7::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K52075715"
+    },
+    "parbendazole": {
+      "column": "BRD-K02407574-001-09-7::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K02407574"
+    },
+    "pefloxacin": {
+      "column": "BRD-K55034111-066-17-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 569,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K55034111"
+    },
+    "pevonedistat": {
+      "column": "BRD-K67844266-003-01-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 572,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K67844266"
+    },
+    "pitavastatin": {
+      "column": "BRD-K75958547-238-01-0::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 572,
+      "route": "exact name",
+      "screen": "HTS",
+      "stem": "BRD-K75958547"
+    },
+    "pravastatin": {
+      "column": "BRD-K60511616-236-08-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K60511616"
+    },
+    "procainamide": {
+      "column": "BRD-K75089421-003-24-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 563,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K75089421"
+    },
+    "proguanil": {
+      "column": "BRD-K28183345-003-11-4::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K28183345"
+    },
+    "purvalanol-a": {
+      "column": "BRD-K50836978-001-02-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 571,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K50836978"
+    },
+    "purvalanol-b": {
+      "column": "BRD-K41564320-001-02-0::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 571,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K41564320"
+    },
+    "pyrimethamine": {
+      "column": "BRD-K88429204-001-35-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 571,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K88429204"
+    },
+    "roscovitine": {
+      "column": "BRD-K07691486-001-15-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 568,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K07691486"
+    },
+    "rosmarinic-acid": {
+      "column": "BRD-K20313525-001-04-6::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K20313525"
+    },
+    "rosuvastatin": {
+      "column": "BRD-K82941592-238-04-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 550,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K82941592"
+    },
+    "ryuvidine": {
+      "column": "BRD-K06426971-001-02-7::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 570,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K06426971"
+    },
+    "salubrinal": {
+      "column": "BRD-A45107007-001-03-4::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 565,
+      "route": "exact name",
+      "screen": "HTS",
+      "stem": "BRD-A45107007"
+    },
+    "simvastatin": {
+      "column": "BRD-K22134346-001-22-3::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 2,
+      "n_lines": 550,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K22134346"
+    },
+    "temsirolimus": {
+      "column": "BRD-K42898655-001-01-8::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "exact name",
+      "screen": "HTS",
+      "stem": "BRD-K42898655"
+    },
+    "teniposide": {
+      "column": "BRD-A35588707-001-05-5::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 570,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-A35588707"
+    },
+    "tipifarnib": {
+      "column": "BRD-K62965247-001-04-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 569,
+      "route": "exact name",
+      "screen": "HTS",
+      "stem": "BRD-K62965247"
+    },
+    "topotecan": {
+      "column": "BRD-K55696337-003-24-4::2.50001813::MTS004",
+      "dose": 2.50001813,
+      "n_candidates": 1,
+      "n_lines": 548,
+      "route": "broad identifier",
+      "screen": "MTS004",
+      "stem": "BRD-K55696337"
+    },
+    "torin-1": {
+      "column": "BRD-K40175214-001-11-6::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K40175214"
+    },
+    "torin-2": {
+      "column": "BRD-K68174511-001-06-6::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K68174511"
+    },
+    "tozasertib": {
+      "column": "BRD-K59369769-001-20-3::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 574,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K59369769"
+    },
+    "triclabendazole": {
+      "column": "BRD-K81916719-001-13-9::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 550,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K81916719"
+    },
+    "triclosan": {
+      "column": "BRD-K41731458-001-15-1::2.5::HTS",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 572,
+      "route": "broad identifier",
+      "screen": "HTS",
+      "stem": "BRD-K41731458"
+    },
+    "vindesine": {
+      "column": "BRD-K59753975-001-02-6::2.5::MTS004",
+      "dose": 2.5,
+      "n_candidates": 1,
+      "n_lines": 548,
+      "route": "broad identifier",
+      "screen": "MTS004",
+      "stem": "BRD-K59753975"
+    }
+  },
+  "amendment": "experiments/PREREG_H3_REFERENCE_DISCORDANCE_AMENDMENT_1.md",
+  "dose_window": [
+    2.0,
+    3.0
+  ],
+  "drugs_offered": [
+    "10-hydroxycamptothecin",
+    "ABT-751",
+    "AT-7519",
+    "AT-9283",
+    "BI-2536",
+    "BMS-387032",
+    "BX-795",
+    "BX-912",
+    "CGP-57380",
+    "CGP-60474",
+    "CHIR-99021",
+    "CYT-997",
+    "D-4476",
+    "D-64131",
+    "ENMD-2076",
+    "GW-843682X",
+    "HMN-214",
+    "JNJ-7706621",
+    "K-858",
+    "KU-0063794",
+    "MG-132",
+    "MK-1775",
+    "MK-5108",
+    "NVP-BEZ235",
+    "OSI-027",
+    "PD-407824",
+    "PF-431396",
+    "PF-477736",
+    "PF-562271",
+    "PHA-793887",
+    "PI-103",
+    "PJ-34",
+    "Ro-3306",
+    "SAR-245409",
+    "SB-216763",
+    "SB-218078",
+    "SB-334867",
+    "SB-408124",
+    "SN-38",
+    "SNS-314",
+    "WYE-125132",
+    "WYE-354",
+    "YM-155",
+    "ZM-447439",
+    "alisertib",
+    "alvocidib",
+    "aminopurvalanol-a",
+    "amonafide",
+    "antimycin-a",
+    "arcyriaflavin-a",
+    "artemether",
+    "aurora-a-inhibitor-i",
+    "azacitidine",
+    "barasertib-HQPA",
+    "bortezomib",
+    "camptothecin",
+    "clofarabine",
+    "cycloheximide",
+    "cytarabine",
+    "cytochalasin-b",
+    "dactinomycin",
+    "danusertib",
+    "dapsone",
+    "daunorubicin",
+    "decitabine",
+    "deforolimus",
+    "dexrazoxane",
+    "diazoxide",
+    "digitoxigenin",
+    "digitoxin",
+    "digoxin",
+    "dimercaptosuccinic-acid",
+    "doxorubicin",
+    "emetine",
+    "etacrynic-acid",
+    "etoposide",
+    "everolimus",
+    "fenbendazole",
+    "flubendazole",
+    "flucytosine",
+    "fluvastatin",
+    "gemcitabine",
+    "hesperidin",
+    "homoharringtonine",
+    "hydroflumethiazide",
+    "idarubicin",
+    "indirubin",
+    "indirubin-3-monoxime",
+    "irinotecan",
+    "ispinesib",
+    "kenpaullone",
+    "ketoconazole",
+    "levofloxacin",
+    "methotrexate",
+    "mevastatin",
+    "mitoxantrone",
+    "monastrol",
+    "moxifloxacin",
+    "olomoucine",
+    "orantinib",
+    "ouabain",
+    "oxibendazole",
+    "parbendazole",
+    "pefloxacin",
+    "pevonedistat",
+    "pirarubicin",
+    "pitavastatin",
+    "pravastatin",
+    "procainamide",
+    "proguanil",
+    "purvalanol-a",
+    "purvalanol-b",
+    "pyrimethamine",
+    "reversine",
+    "roscovitine",
+    "rosmarinic-acid",
+    "rosuvastatin",
+    "ryuvidine",
+    "salubrinal",
+    "simvastatin",
+    "temsirolimus",
+    "teniposide",
+    "tipifarnib",
+    "topotecan",
+    "torin-1",
+    "torin-2",
+    "tozasertib",
+    "triclabendazole",
+    "triclosan",
+    "vindesine",
+    "wortmannin"
+  ],
+  "min_lines": 100,
+  "n_accepted": 120,
+  "n_rejected": 11,
+  "provenance": {
+    "lfc_file": "data/prism_19q4/primary-screen-replicate-collapsed-logfold-change.csv",
+    "lfc_sha256": "25efc741b372b30d38629cb139a388e989663fba597e55fff5f6c2bb7cdeb75a",
+    "nonmissing_response_values_summarized": false,
+    "response_missingness_used_for_mapping": true,
+    "response_values_used_for_mapping": false,
+    "treatment_file": "data/prism_19q4/primary-screen-replicate-collapsed-treatment-info.csv",
+    "treatment_sha256": "d649f207a437c9e9910572c5023d02f68a77c946f6e972c998b057160a3505e6"
+  },
+  "rejected": {
+    "BX-795": "no treatment inside 2.0-3.0 uM with log-fold change in at least 100 cell lines, by identifier or by exact name in the release",
+    "CGP-60474": "no treatment inside 2.0-3.0 uM with log-fold change in at least 100 cell lines, by identifier or by exact name in the release",
+    "PF-431396": "no treatment inside 2.0-3.0 uM with log-fold change in at least 100 cell lines, by identifier or by exact name in the release",
+    "Ro-3306": "no treatment inside 2.0-3.0 uM with log-fold change in at least 100 cell lines, by identifier or by exact name in the release",
+    "antimycin-a": "no treatment inside 2.0-3.0 uM with log-fold change in at least 100 cell lines, by identifier or by exact name in the release",
+    "artemether": "no treatment inside 2.0-3.0 uM with log-fold change in at least 100 cell lines, by identifier or by exact name in the release",
+    "cytochalasin-b": "no treatment inside 2.0-3.0 uM with log-fold change in at least 100 cell lines, by identifier or by exact name in the release",
+    "dactinomycin": "no treatment inside 2.0-3.0 uM with log-fold change in at least 100 cell lines, by identifier or by exact name in the release",
+    "pirarubicin": "no treatment inside 2.0-3.0 uM with log-fold change in at least 100 cell lines, by identifier or by exact name in the release",
+    "reversine": "no treatment inside 2.0-3.0 uM with log-fold change in at least 100 cell lines, by identifier or by exact name in the release",
+    "wortmannin": "no treatment inside 2.0-3.0 uM with log-fold change in at least 100 cell lines, by identifier or by exact name in the release"
+  }
+}

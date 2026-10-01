@@ -372,8 +372,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--data", type=Path, required=True)
-    parser.add_argument("--perturbseq", type=Path, required=True)
-    parser.add_argument("--replogle", type=Path, required=True)
+    # the mapping stage opens neither, and demanding them would make a
+    # mapping-only invocation depend on files it never reads
+    parser.add_argument("--perturbseq", type=Path)
+    parser.add_argument("--replogle", type=Path)
     parser.add_argument("--prism", type=Path)
     parser.add_argument("--r5-stage", choices=["mapping", "response"], required=True,
                         help="mapping writes the frozen table and stops; response consumes it")
@@ -588,6 +590,8 @@ def run(args):
     if args.r5_stage == "mapping":
         return run_mapping_stage(args)
 
+    assert args.perturbseq and args.replogle, (
+        "--perturbseq and --replogle are required by the response stage")
     OUT.mkdir(parents=True, exist_ok=True)
     args.output.mkdir(parents=True, exist_ok=True)
     draws = Draws()
