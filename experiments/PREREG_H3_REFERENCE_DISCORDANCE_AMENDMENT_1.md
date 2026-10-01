@@ -1,8 +1,9 @@
 # Amendment 1 to the reference-discordance registration: R5's exposure and mapping under the release as it is
 
 **Date:** 2026-09-30
-**Status:** DRAFT. Prospective: no drug-level PRISM value, and no association
+**Status:** FROZEN. Prospective: no drug-level PRISM value, and no association
 involving one, has been computed or inspected.
+**Commit SHA:** filled in the commit that follows this freeze
 **Amends:** `experiments/PREREG_H3_REFERENCE_DISCORDANCE.md`, design frozen at
 `7f57136`. Only R5 changes. Every other module, gate, interval and reading stands
 as frozen.
