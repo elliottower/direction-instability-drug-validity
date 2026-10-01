@@ -362,3 +362,60 @@ def test_the_response_stage_reads_only_the_columns_the_mapping_names(tmp_path):
     toxicity, killed, provenance = _mod.prism_response(prism, path)
     assert provenance["n_columns_read"] == 1
     assert set(toxicity) == {mapping["accepted"]["alpha"]["column"]}
+
+
+def test_the_identifier_route_wins_when_both_routes_have_a_candidate(tmp_path):
+    columns = {"BRD-K11111111-001-01-9::2.5::HTS": lambda lines: [-2.0] * len(lines),
+               "BRD-K77777777-001-01-9::2.5::HTS": lambda lines: [-8.0] * len(lines)}
+    treatments = [
+        # the drug's own identifier, under a different name in the release
+        {"column_name": "BRD-K11111111-001-01-9::2.5::HTS", "broad_id": "BRD-K11111111-001-01-9",
+         "name": "ReleaseName", "dose": 2.5, "screen_id": "HTS"},
+        # a different compound that happens to carry the drug's name
+        {"column_name": "BRD-K77777777-001-01-9::2.5::HTS", "broad_id": "BRD-K77777777-001-01-9",
+         "name": "Alpha", "dose": 2.5, "screen_id": "HTS"}]
+    prism = _prism_files(tmp_path, treatments, columns)
+
+    mapping = _mod.prism_mapping(prism, ["alpha"], {"alpha": ["BRD-K11111111-001-01-9"]})
+    entry = mapping["accepted"]["alpha"]
+    assert entry["route"] == "broad identifier"
+    assert entry["stem"] == "BRD-K11111111"       # not the name match, which had more effect
+
+
+def test_the_frozen_regex_matches_stems_and_nothing_broader(tmp_path):
+    columns = {"BRD-K11111111-001-01-9::2.5::HTS": lambda lines: [-2.0] * len(lines)}
+    treatments = [{"column_name": "BRD-K11111111-001-01-9::2.5::HTS",
+                   "broad_id": "BRD-K11111111-001-01-9", "name": "Alpha", "dose": 2.5,
+                   "screen_id": "HTS"}]
+    prism = _prism_files(tmp_path, treatments, columns)
+
+    # a suffixed identifier still yields the stem; a malformed one yields nothing
+    by_suffix = _mod.prism_mapping(prism, ["x"], {"x": ["BRD-K11111111-999-99-9"]})
+    assert by_suffix["accepted"]["x"]["route"] == "broad identifier"
+    malformed = _mod.prism_mapping(prism, ["y"], {"y": ["BRD-K1111111", "BRDK11111111"]})
+    assert "y" in malformed["rejected"]
+
+
+def test_validate_mapping_refuses_two_drugs_claiming_one_treatment(tmp_path):
+    prism = _minimal_prism(tmp_path)
+    path = tmp_path / "r5_prism_mapping.json"
+    _mod.write_mapping(_mod.prism_mapping(prism, ["alpha", "beta"], {}), path)
+
+    frozen = json.loads(path.read_text())
+    frozen["accepted"]["beta"]["column"] = frozen["accepted"]["alpha"]["column"]
+    expected = _mod.write_mapping(frozen, path)
+    with pytest.raises(AssertionError, match="same treatment column"):
+        _mod.validate_mapping(json.loads(path.read_text()), ["alpha", "beta"], expected, path)
+
+
+def test_validate_mapping_refuses_a_partition_that_does_not_account_for_every_drug(tmp_path):
+    prism = _minimal_prism(tmp_path)
+    path = tmp_path / "r5_prism_mapping.json"
+    _mod.write_mapping(_mod.prism_mapping(prism, ["alpha", "beta"], {}), path)
+
+    frozen = json.loads(path.read_text())
+    frozen["accepted"].pop("beta")
+    frozen["n_accepted"] = 1
+    expected = _mod.write_mapping(frozen, path)
+    with pytest.raises(AssertionError, match="account for every drug"):
+        _mod.validate_mapping(json.loads(path.read_text()), ["alpha", "beta"], expected, path)

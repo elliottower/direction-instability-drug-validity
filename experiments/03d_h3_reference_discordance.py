@@ -799,6 +799,9 @@ def run(args):
         assert args.expected_mapping_sha256, (
             "--expected-mapping-sha256 is required: the response stage runs against a hash "
             "recorded before it, not against whatever file is on disk")
+        assert mapping_path.exists(), (
+            f"{mapping_path} does not exist. The response stage never builds a mapping: run "
+            "--r5-stage mapping, review and commit the table, then rerun with its hash")
         frozen = json.loads(mapping_path.read_text())
         validate_mapping(frozen, crispri_arm.drugs, args.expected_mapping_sha256, mapping_path)
         accepted = frozen["accepted"]
