@@ -19,6 +19,7 @@ app = modal.App("di-h3-execute")
 extraction = modal.Volume.from_name("drug-perturbation-vol")
 rebuild = modal.Volume.from_name("di-h3")
 results = modal.Volume.from_name("di-h3-results", create_if_missing=True)
+inputs = modal.Volume.from_name("di-h3-inputs")
 
 REPO = "/Users/elliottower/Documents/GitHub/direction-instability-drug-validity"
 
@@ -33,12 +34,14 @@ image = (
     .add_local_dir(f"{REPO}/results/03b_h3_crispri", remote_path="/app/results/03b_h3_crispri")
     .add_local_dir(f"{REPO}/results/03d_h3_reference_discordance",
                    remote_path="/app/results/03d_h3_reference_discordance")
-    .add_local_dir(f"{REPO}/data/replogle2022", remote_path="/app/data/replogle2022")
-    .add_local_dir(f"{REPO}/data/prism_19q4", remote_path="/app/data/prism_19q4")
 )
+# The Replogle and PRISM files are half a gigabyte. They live on a volume rather
+# than in the image: mounting them makes every run upload them again, and a client
+# killed mid-upload leaves an app that never dispatches its function.
 
 COMMON = dict(image=image, timeout=86400, memory=262144, cpu=16.0,
-              volumes={"/extraction": extraction, "/rebuild": rebuild, "/out": results})
+              volumes={"/extraction": extraction, "/rebuild": rebuild, "/out": results,
+                       "/inputs": inputs})
 
 MAPPING_SHA256 = "152361cb3174a5fb7aae0229c3e3d049dc00d49d9e442925156a9fe0564b89d3"
 
@@ -144,8 +147,8 @@ def stage_driver():
           "--expected-mapping-sha256", MAPPING_SHA256,
           "--data", str(staged),
           "--perturbseq", "/extraction/ReplogleWeissman2022_K562_essential.h5ad",
-          "--replogle", "/app/data/replogle2022",
-          "--prism", "/app/data/prism_19q4",
+          "--replogle", "/inputs/replogle2022",
+          "--prism", "/inputs/prism_19q4",
           "--output", "/out/03d_h3_reference_discordance"])
     results.commit()
     return "driver done"
