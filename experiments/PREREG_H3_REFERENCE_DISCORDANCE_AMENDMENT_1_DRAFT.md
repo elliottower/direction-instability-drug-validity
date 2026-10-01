@@ -51,8 +51,8 @@ Broad compound-identifier stem, and only then by name.
   is consulted, and no drug is rescued by hand.
 - Identifier matches take priority over name matches.
 - Where a route yields several eligible treatments, the treatment measured in the
-  most cell lines is taken, with ties broken by the lexical order of the column
-  name.
+  most cell lines is taken. An exact tie goes to the **lexically first** column
+  name, ascending.
 
 The identifier route was in the implementation before this amendment was drafted
 and is registered here because the coverage in A5 depends on it: of the 120 drugs
@@ -71,7 +71,8 @@ two stages:
    reason. The stage reads the response matrix solely to learn which columns exist
    and how many cell lines each one measures. It does not retain, summarize,
    compare, display or use any non-missing log-fold-change value in choosing a
-   mapping. It writes the table canonically, with sorted keys, and stops.
+   mapping. It writes the table canonically, with sorted keys, and stops. The
+   stage is selected explicitly; it is never reached by omitting an argument.
 2. **Freeze.** The table is reviewed, committed, and its sha256 recorded in the
    implementation manifest.
 3. **Response.** A separate invocation computes the toxicity measure and every R5
@@ -108,6 +109,13 @@ its potency.
 The counts in A5, the dose distribution, and the schema. No log-fold-change value
 has been summarized, no toxicity variable has been constructed, and no association
 between toxicity and any other quantity has been computed.
+
+The design is **response-value-blind but missingness-informed**, which is a
+narrower claim than outcome-blind. Two facts make it narrower. The mapping rule
+uses which treatments were measured and in how many cell lines, and missingness
+in a viability screen is itself data. And the coverage in A5 was counted before
+the rule was finalized, so eligibility information informed the final rule even
+though no response value did.
 
 **Fallback, fixed here.** If the response stage finds that fewer than 60 mapped
 drugs or fewer than 20 targets survive the complete-case cohort, R5 is reported

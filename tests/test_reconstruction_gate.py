@@ -1,3 +1,4 @@
+import json
 import sys
 from pathlib import Path
 
@@ -290,3 +291,65 @@ def test_a_zero_norm_consensus_is_named_rather_than_dividing_by_zero():
 
     with pytest.raises(AssertionError, match="zero-norm consensus"):
         _mod.compare_shrna(right, left, min_signatures=2)
+
+
+def test_the_gate_refuses_a_rebuild_with_no_stored_consensus(tmp_path):
+    rng = np.random.default_rng()
+    np.savez_compressed(tmp_path / "shrna_signatures.npz",
+                        sig_ids=np.array(["SIG1", "SIG2", "SIG3"]),
+                        signatures=rng.standard_normal((3, 5)),
+                        gene_ids=np.array([str(i) for i in range(5)]),
+                        membership=json.dumps({"TARGET0": ["SIG1", "SIG2", "SIG3"]}))
+
+    # the lenient loader tolerates the absence; the one the gate uses does not
+    assert _mod.load_shrna_rebuild(tmp_path)[3] is None
+    with pytest.raises(AssertionError, match="shrna_consensus.npz is missing"):
+        _mod.load_shrna_rebuild_strict(tmp_path)
+
+
+def test_the_gate_refuses_stored_directions_covering_other_targets():
+    left, right = _shrna_pair(n_targets=3, per_target=3)
+    signatures, membership, genes = right
+    honest = {}
+    for target, ids in membership.items():
+        mean = np.vstack([signatures[i] for i in ids]).mean(axis=0)
+        honest[target] = mean / np.linalg.norm(mean)
+
+    extra = dict(honest)
+    extra["TARGET_NOT_IN_THE_REBUILD"] = honest["TARGET0"]
+    with pytest.raises(AssertionError, match="different set of targets"):
+        _mod.compare_shrna(right, left, stored=(extra, genes))
+
+
+def test_the_gate_refuses_a_nonfinite_or_unnormalized_stored_direction():
+    left, right = _shrna_pair(n_targets=2, per_target=3)
+    signatures, membership, genes = right
+    honest = {}
+    for target, ids in membership.items():
+        mean = np.vstack([signatures[i] for i in ids]).mean(axis=0)
+        honest[target] = mean / np.linalg.norm(mean)
+
+    with_nan = {t: v.copy() for t, v in honest.items()}
+    with_nan["TARGET0"][2] = np.nan
+    with pytest.raises(AssertionError, match="nonfinite stored direction"):
+        _mod.compare_shrna(right, left, stored=(with_nan, genes))
+
+    unnormalized = {t: v * 4.0 for t, v in honest.items()}
+    with pytest.raises(AssertionError, match="contract is a unit vector"):
+        _mod.compare_shrna(right, left, stored=(unnormalized, genes))
+
+    wrong_length = {t: v[:-1] for t, v in honest.items()}
+    with pytest.raises(AssertionError, match="stored direction is"):
+        _mod.compare_shrna(right, left, stored=(wrong_length, genes))
+
+
+def test_the_gate_refuses_a_repeated_gene_identifier_on_any_axis():
+    left, right = _shrna_pair(n_targets=2, per_target=3)
+    duplicated = right[2][:-1] + [right[2][0]]
+    with pytest.raises(AssertionError, match="repeats an identifier"):
+        _mod.compare_shrna((right[0], right[1], duplicated), left)
+
+    signatures, membership, genes = right
+    honest = {t: np.ones(len(genes)) / np.sqrt(len(genes)) for t in membership}
+    with pytest.raises(AssertionError, match="repeats a gene identifier"):
+        _mod.compare_shrna(right, left, stored=(honest, genes[:-1] + [genes[0]]))

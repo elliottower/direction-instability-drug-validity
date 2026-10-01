@@ -375,7 +375,7 @@ def main():
     parser.add_argument("--perturbseq", type=Path, required=True)
     parser.add_argument("--replogle", type=Path, required=True)
     parser.add_argument("--prism", type=Path)
-    parser.add_argument("--r5-stage", choices=["mapping", "response"], default="response",
+    parser.add_argument("--r5-stage", choices=["mapping", "response"], required=True,
                         help="mapping writes the frozen table and stops; response consumes it")
     parser.add_argument("--expected-mapping-sha256",
                         help="the hash the implementation manifest records for the frozen mapping")
@@ -469,7 +469,8 @@ def prism_mapping(prism_dir: Path, drugs, pert_ids) -> dict:
                               f"log-fold change in at least {R5_MIN_LINES} cell lines, by "
                               "identifier or by exact name in the release")
             continue
-        best = max(sorted(candidates), key=lambda column: (lines_measured[column], column))
+        # most cell lines wins; ties go to the lexically first column name
+        best = min(sorted(set(candidates)), key=lambda column: (-lines_measured[column], column))
         row = eligible[eligible.column_name == best].iloc[0]
         accepted[drug] = {"column": best, "stem": row.stem, "route": route,
                           "n_lines": int(lines_measured[best]), "dose": float(row.dose),
@@ -550,7 +551,43 @@ def prism_response(prism_dir: Path, mapping_path: Path):
                               "n_columns_read": len(columns)}
 
 
+def run_mapping_stage(args):
+    """R5 stage one, and nothing else.
+
+    This runs before any cohort is assembled or any registered quantity computed,
+    so a mapping invocation cannot produce an analysis output even by accident.
+    The drug list comes from the corrected CRISPRi records, which already fix the
+    arm.
+    """
+    args.output.mkdir(parents=True, exist_ok=True)
+    mapping_path = args.output / "r5_prism_mapping.json"
+    assert args.prism is not None, "--prism is required by the mapping stage"
+    assert not mapping_path.exists(), (
+        f"{mapping_path} already exists; remove or supersede it deliberately rather than "
+        "rewriting a frozen mapping")
+    assert sha256_file(CRISPRI_RECORDS) == EXPECTED_RECORDS_SHA256, (
+        "the CRISPRi records are not the corrected ones")
+
+    records = json.loads(CRISPRI_RECORDS.read_text())
+    drugs = sorted({record["drug"] for record in records if "proj_crispri" in record})
+    siginfo = pd.read_csv(args.data / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+                          low_memory=False, usecols=["pert_iname", "pert_id"])
+    pert_ids = {drug: sorted(set(group.pert_id.astype(str)))
+                for drug, group in siginfo.groupby("pert_iname")}
+
+    digest = write_mapping(prism_mapping(args.prism, drugs, pert_ids), mapping_path)
+    log(f"mapping written to {mapping_path}")
+    log(f"sha256 {digest}")
+    log("commit it, record that hash in the implementation manifest, then rerun with "
+        "--r5-stage response --expected-mapping-sha256 <hash>")
+    return {"stage": "mapping", "mapping": str(mapping_path), "sha256": digest,
+            "n_drugs_offered": len(drugs)}
+
+
 def run(args):
+    if args.r5_stage == "mapping":
+        return run_mapping_stage(args)
+
     OUT.mkdir(parents=True, exist_ok=True)
     args.output.mkdir(parents=True, exist_ok=True)
     draws = Draws()
@@ -775,27 +812,9 @@ def run(args):
     if args.prism is None:
         result["modules"]["R5_toxicity"] = {"runnable": False, "reason": "no PRISM release given"}
     else:
-        siginfo = pd.read_csv(args.data / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
-                              low_memory=False, usecols=["pert_iname", "pert_id"])
-        pert_ids = {drug: sorted(set(group.pert_id.astype(str)))
-                    for drug, group in siginfo.groupby("pert_iname")}
+        # the response stage reads the frozen mapping and never builds one, so it
+        # needs no identifier metadata of its own
         mapping_path = args.output / "r5_prism_mapping.json"
-
-        if args.r5_stage == "mapping":
-            # Amendment 1, A4: this stage writes the mapping and stops. The response
-            # stage is a separate invocation, so the table can be reviewed, committed
-            # and hashed while no response value has been summarized.
-            assert not mapping_path.exists(), (
-                f"{mapping_path} already exists; remove or supersede it deliberately rather "
-                "than rewriting a frozen mapping")
-            digest = write_mapping(prism_mapping(args.prism, crispri_arm.drugs, pert_ids),
-                                   mapping_path)
-            log(f"mapping written to {mapping_path}")
-            log(f"sha256 {digest}")
-            log("commit it, record that hash in the implementation manifest, then rerun with "
-                "--r5-stage response --expected-mapping-sha256 <hash>")
-            return {"stage": "mapping", "mapping": str(mapping_path), "sha256": digest}
-
         assert args.expected_mapping_sha256, (
             "--expected-mapping-sha256 is required: the response stage runs against a hash "
             "recorded before it, not against whatever file is on disk")

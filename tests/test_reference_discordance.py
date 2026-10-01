@@ -419,3 +419,20 @@ def test_validate_mapping_refuses_a_partition_that_does_not_account_for_every_dr
     expected = _mod.write_mapping(frozen, path)
     with pytest.raises(AssertionError, match="account for every drug"):
         _mod.validate_mapping(json.loads(path.read_text()), ["alpha", "beta"], expected, path)
+
+
+def test_an_exact_tie_goes_to_the_lexically_first_column(tmp_path):
+    lines = [f"ACH-{i:06d}" for i in range(120)]
+    columns = {"BRD-K99999999-001-01-9::2.5::HTS": lambda lines: [-1.0] * len(lines),
+               "BRD-K11111111-001-01-9::2.5::HTS": lambda lines: [-7.0] * len(lines)}
+    treatments = [
+        {"column_name": "BRD-K99999999-001-01-9::2.5::HTS", "broad_id": "BRD-K99999999-001-01-9",
+         "name": "Tied", "dose": 2.5, "screen_id": "HTS"},
+        {"column_name": "BRD-K11111111-001-01-9::2.5::HTS", "broad_id": "BRD-K11111111-001-01-9",
+         "name": "Tied", "dose": 2.5, "screen_id": "HTS"}]
+    prism = _prism_files(tmp_path, treatments, columns)
+
+    mapping = _mod.prism_mapping(prism, ["tied"], {})
+    entry = mapping["accepted"]["tied"]
+    assert entry["n_candidates"] == 2
+    assert entry["column"] == "BRD-K11111111-001-01-9::2.5::HTS"   # lexically first, both at 120
