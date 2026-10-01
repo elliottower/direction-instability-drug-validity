@@ -48,8 +48,10 @@ PINS = {
     "GSE92742_Broad_LINCS_gene_info.txt.gz": None,     # stamped on first run
     "lincs_shrna_siginfo.csv.gz":
         "bd396fa0e1a2f00c1b5f2c8d2b35f9a056f5e5353382475655869038037ec014",
+    # the corrected artifact, which the amendment frozen at 7f57136 makes the
+    # reference; it replaces the superseded 65e5d10e2720... of f288507
     "phenotype_projection_results.json":
-        "65e5d10e272037987384f89e6208de478fa17f6b8fb946add893e5a24c2d80c4",
+        "fd69e26fc9a3917323065b631688baeab8b283f735c8bf5b16210ba67bd21425",
 }
 
 
