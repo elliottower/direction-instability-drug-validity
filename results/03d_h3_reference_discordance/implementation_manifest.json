@@ -5,11 +5,16 @@
       "experiments/PREREG_H3_S1S3_CORRECTED_BASELINE.md",
       "experiments/PREREG_H3_REFERENCE_DISCORDANCE.md"
     ],
-    "commit": "7f57136"
+    "commit": "7f57136",
+    "file_sha256": {
+      "experiments/PREREG_H3_S1S3_CORRECTED_BASELINE.md": "efcd3baccceb5c45dc9343d4e13abc745cafe7760763e7bbaa43d8882c75f3ef",
+      "experiments/PREREG_H3_REFERENCE_DISCORDANCE.md": "8a0d7a35e1a8344776c5301a9b8f643a51c533d98efe08229c0d0a6f9c191d64"
+    }
   },
   "amendment_freeze": {
     "file": "experiments/PREREG_H3_REFERENCE_DISCORDANCE_AMENDMENT_1.md",
-    "commit": "4ef15f9"
+    "commit": "4ef15f9",
+    "file_sha256": "4b38805146e9a7e94917c44ecebe19fa06e6834ac997e486faaa879b2b3788bb"
   },
   "code": {
     "commit": "a6c5568afcd07d1fa2992f364f43c78ff906004b",
@@ -33,7 +38,9 @@
     "scipy": "1.18.1",
     "pandas": "3.0.6",
     "anndata": "0.13.4",
-    "invocation": "uv run --no-project --with numpy --with scipy --with pandas --with anndata, PYTHONPATH=."
+    "invocation": "PYTHONPATH=. uv run --no-project --with numpy==2.5.3 --with scipy==1.18.1 --with pandas==3.0.6 --with anndata==0.13.4 python",
+    "uv_lock_sha256": "4e789913c48c78fa31eea49b1ac9f94c0fc00fcfaa3be08cf2ff611ab769e41b",
+    "note": "versions are pinned with == in every command, so a later resolution cannot substitute a newer build; uv.lock is hashed as well, though --no-project does not resolve through it"
   },
   "inputs": {
     "corrected_H3_artifact": {
@@ -102,13 +109,53 @@
     "excluded": "tests/test_combined_experiments.py imports experiments/12_perturbseq_cosine_transport, deleted in 8c64d56"
   },
   "commands_in_order": [
-    "PYTHONPATH=. python experiments/03d_h3_reference_discordance.py --r5-stage mapping --data <lincs> --prism data/prism_19q4 --output results/03d_h3_reference_discordance",
-    "PYTHONPATH=. python experiments/03e_reconstruction_gate.py --rebuilt <gctx rebuild> --extraction <lincs>",
-    "PYTHONPATH=. python experiments/03c_h3_sensitivity.py --bundle <bundle> --manifest <manifest>",
-    "PYTHONPATH=. python experiments/03d_h3_reference_discordance.py --r5-stage response --expected-mapping-sha256 152361cb3174a5fb7aae0229c3e3d049dc00d49d9e442925156a9fe0564b89d3 --data <lincs> --perturbseq <h5ad> --replogle data/replogle2022 --prism data/prism_19q4"
+    {
+      "step": 1,
+      "what": "R5 mapping stage; already run and frozen",
+      "command": "PYTHONPATH=. uv run --no-project --with numpy==2.5.3 --with scipy==1.18.1 --with pandas==3.0.6 --with anndata==0.13.4 python experiments/03d_h3_reference_discordance.py --r5-stage mapping --data /Users/elliottower/Documents/GitHub/drug-perturbation-geometry/data --prism data/prism_19q4 --output results/03d_h3_reference_discordance",
+      "status": "complete",
+      "produced": "results/03d_h3_reference_discordance/r5_prism_mapping.json"
+    },
+    {
+      "step": 2,
+      "what": "rebuild from the GCTX on Modal, with cell identifiers and the consensus gene axis",
+      "command": "modal run --detach experiments/modal_h3_rebuild.py --stage all",
+      "then": "modal volume get di-h3 results ./results/03c_h3_sensitivity/gctx_rebuild/",
+      "status": "pending"
+    },
+    {
+      "step": 3,
+      "what": "reconstruction gate; both halves must pass or the analyses are void",
+      "command": "PYTHONPATH=. uv run --no-project --with numpy==2.5.3 --with scipy==1.18.1 --with pandas==3.0.6 --with anndata==0.13.4 python experiments/03e_reconstruction_gate.py --rebuilt results/03c_h3_sensitivity/gctx_rebuild --extraction /Users/elliottower/Documents/GitHub/drug-perturbation-geometry/data --cohort results/03_phenotype_projection/phenotype_projection_results.json --output results/03c_h3_sensitivity",
+      "status": "pending"
+    },
+    {
+      "step": 4,
+      "what": "single-cell audit on Modal, for R0.3, R0.4 and R0.6",
+      "command": "modal run --detach experiments/modal_03d_single_cell.py --stage all",
+      "then": "modal volume get di-h3-sc results/single_cell_audit.json ./results/03d_h3_reference_discordance/",
+      "status": "pending"
+    },
+    {
+      "step": 5,
+      "what": "S1-S3 and their target-level versions",
+      "command": "PYTHONPATH=. uv run --no-project --with numpy==2.5.3 --with scipy==1.18.1 --with pandas==3.0.6 --with anndata==0.13.4 python experiments/03c_h3_sensitivity.py --bundle results/03c_h3_sensitivity/cohort_bundle.npz --manifest results/03c_h3_sensitivity/rebuild_manifest.json",
+      "status": "pending"
+    },
+    {
+      "step": 6,
+      "what": "R0 to R7 and R5 response, in one invocation of the driver",
+      "command": "PYTHONPATH=. uv run --no-project --with numpy==2.5.3 --with scipy==1.18.1 --with pandas==3.0.6 --with anndata==0.13.4 python experiments/03d_h3_reference_discordance.py --r5-stage response --expected-mapping-sha256 152361cb3174a5fb7aae0229c3e3d049dc00d49d9e442925156a9fe0564b89d3 --data /Users/elliottower/Documents/GitHub/drug-perturbation-geometry/data --perturbseq data/scperturb/ReplogleWeissman2022_K562_essential.h5ad --replogle data/replogle2022 --prism data/prism_19q4 --single-cell results/03d_h3_reference_discordance/single_cell_audit.json --output results/03d_h3_reference_discordance",
+      "status": "pending",
+      "note": "the driver runs once. R0 to R7 and R5 are produced by this single invocation, so no module is computed twice under different invocation states"
+    }
   ],
   "policies": {
     "nonfinite_bootstrap_replicate": "cluster_bootstrap asserts every replicate is finite, so an undefined draw fails the run rather than propagating; the registration calls such a replicate invalidating",
     "gate_failure": "a failed reconstruction gate voids the analyses registered against it"
+  },
+  "external_record": {
+    "why": "a file cannot authenticate its own mutable contents",
+    "how": "this manifest's sha256 is written into the commit message that adds it and into the annotated tag h3-execution-freeze"
   }
 }
