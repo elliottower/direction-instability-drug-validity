@@ -120,14 +120,21 @@ def load_rebuild(directory: Path):
     return matrices, cells, genes
 
 
-def load_extraction(data_dir: Path):
-    """The same objects from the extraction the corrected artifact was computed from."""
+def load_extraction(data_dir: Path, cohort=None):
+    """The same objects from the extraction the corrected artifact was computed from.
+
+    `cohort` restricts the build to the drugs the gate compares. Without it this
+    builds a matrix for every compound in the metadata, which is tens of thousands
+    of drugs the gate never looks at.
+    """
     compounds = np.load(data_dir / "lincs_subset.npz", allow_pickle=True)
-    signatures = compounds["signatures"]
+    signatures = compounds["signatures"]      # decompressed once
     position = {str(sig_id): i for i, sig_id in enumerate(compounds["sig_ids"])}
     siginfo = pd.read_csv(data_dir / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                           low_memory=False)
     siginfo = siginfo[siginfo.sig_id.astype(str).isin(position) & siginfo.pert_iname.notna()].copy()
+    if cohort is not None:
+        siginfo = siginfo[siginfo.pert_iname.isin(set(cohort))]
     siginfo["_row"] = siginfo.sig_id.astype(str).map(position)
 
     matrices, cells = {}, {}
@@ -282,7 +289,8 @@ def load_shrna_rebuild(directory: Path):
     assert path.exists(), f"{path} is missing; the rebuild must emit shRNA signatures with ids"
     with np.load(path, allow_pickle=True) as data:
         ids = [str(i) for i in data["sig_ids"]]
-        signatures = {sig_id: data["signatures"][i] for i, sig_id in enumerate(ids)}
+        matrix = data["signatures"]          # decompressed once, not once per id
+        signatures = {sig_id: np.asarray(matrix[i]) for i, sig_id in enumerate(ids)}
         genes = [str(g) for g in data["gene_ids"]]
         membership = {str(target): [str(i) for i in members]
                       for target, members in json.loads(str(data["membership"])).items()}
@@ -295,21 +303,28 @@ def load_shrna_rebuild(directory: Path):
             assert "gene_ids" in data.files, (
                 f"{consensus_path} carries no gene axis; the gate cannot tell which "
                 "coordinate system its directions use")
-            stored = ({str(target): data["directions"][i]
+            directions = data["directions"]
+            stored = ({str(target): np.asarray(directions[i])
                        for i, target in enumerate(data["genes"])},
                       [str(g) for g in data["gene_ids"]])
     return signatures, membership, genes, stored
 
 
 def load_shrna_extraction(data_dir: Path, targets_wanted=None):
-    """The same objects from the pinned extraction, grouped by the pinned metadata rule."""
+    """The same objects from the pinned extraction, grouped by the pinned metadata rule.
+
+    The signature matrix is decompressed once. Indexing an NpzFile inside a loop
+    re-reads and re-inflates the whole array on every access, which on 154,993
+    signatures is hundreds of gigabytes of allocation rather than one.
+    """
     shrna = np.load(data_dir / "lincs_shrna.npz", allow_pickle=True)
     ids = [str(sig_id) for sig_id in shrna["sig_ids"]]
     assert len(set(ids)) == len(ids), "the extraction repeats a signature id"
-    signatures = {sig_id: shrna["signatures"][i] for i, sig_id in enumerate(ids)}
-    siginfo = pd.read_csv(data_dir / "lincs_shrna_siginfo.csv.gz")
-    siginfo = siginfo[siginfo.sig_id.astype(str).isin(signatures)]
+    row_of = {sig_id: i for i, sig_id in enumerate(ids)}
+    genes = [str(g) for g in shrna["gene_ids"]]
 
+    siginfo = pd.read_csv(data_dir / "lincs_shrna_siginfo.csv.gz")
+    siginfo = siginfo[siginfo.sig_id.astype(str).isin(row_of)]
     membership = {}
     for gene, group in siginfo.groupby("pert_iname"):
         members = sorted(set(group.sig_id.astype(str)))
@@ -317,7 +332,13 @@ def load_shrna_extraction(data_dir: Path, targets_wanted=None):
             continue
         if targets_wanted is None or gene in targets_wanted:
             membership[str(gene)] = members
-    return signatures, membership, [str(g) for g in shrna["gene_ids"]]
+
+    # only the signatures the compared targets use are held in memory
+    wanted = sorted({sig_id for members in membership.values() for sig_id in members})
+    matrix = shrna["signatures"]
+    signatures = {sig_id: np.asarray(matrix[row_of[sig_id]]) for sig_id in wanted}
+    del matrix
+    return signatures, membership, genes
 
 
 def main():
@@ -337,7 +358,8 @@ def main():
         f"{len(records)} records hold {len(drugs)} distinct drugs; the cohort unit is the drug")
     targets = sorted({str(record["target"]) for record in records})
 
-    compounds = compare(load_rebuild(args.rebuilt), load_extraction(args.extraction), cohort=drugs)
+    compounds = compare(load_rebuild(args.rebuilt),
+                        load_extraction(args.extraction, cohort=drugs), cohort=drugs)
     rebuilt_signatures, rebuilt_membership, rebuilt_genes, stored = load_shrna_rebuild_strict(
         args.rebuilt)
     shrna = compare_shrna((rebuilt_signatures, rebuilt_membership, rebuilt_genes),

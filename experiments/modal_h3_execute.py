@@ -39,7 +39,9 @@ image = (
 # than in the image: mounting them makes every run upload them again, and a client
 # killed mid-upload leaves an app that never dispatches its function.
 
-COMMON = dict(image=image, timeout=86400, memory=262144, cpu=16.0,
+# 32 GB, not 256: a run that needs more has a bug rather than a big input, and
+# retries=0 so a bug fails once instead of nine times overnight
+COMMON = dict(image=image, timeout=86400, memory=32768, cpu=8.0, retries=0,
               volumes={"/extraction": extraction, "/rebuild": rebuild, "/out": results,
                        "/inputs": inputs})
 

@@ -387,3 +387,29 @@ def test_a_shard_without_cell_identifiers_is_refused(tmp_path):
 
     with pytest.raises(AssertionError, match="carries no cell-line identifiers"):
         _mod.load_rebuild(tmp_path)
+
+
+def test_the_extraction_loader_builds_only_the_cohort(tmp_path, monkeypatch):
+    import pandas as pd
+
+    rng = np.random.default_rng()
+    sig_ids = [f"SIG{i}" for i in range(6)]
+    np.savez_compressed(tmp_path / "lincs_subset.npz",
+                        sig_ids=np.array(sig_ids),
+                        signatures=rng.standard_normal((6, 4)),
+                        gene_ids=np.array([str(i) for i in range(4)]))
+    pd.DataFrame({"sig_id": sig_ids,
+                  "pert_iname": ["wanted", "wanted", "other", "other", "third", "third"],
+                  "cell_id": ["MCF7", "PC3"] * 3}).to_csv(
+        tmp_path / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t", index=False,
+        compression="gzip")
+
+    everything, _, _ = _mod.load_extraction(tmp_path)
+    assert set(everything) == {"wanted", "other", "third"}
+
+    # the gate compares one cohort, so the loader must not build the rest
+    restricted, cells, genes = _mod.load_extraction(tmp_path, cohort=["wanted"])
+    assert set(restricted) == {"wanted"}
+    assert restricted["wanted"].shape == (2, 4)
+    assert cells["wanted"] == ["MCF7", "PC3"]
+    assert genes == [str(i) for i in range(4)]
