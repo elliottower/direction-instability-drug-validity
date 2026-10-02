@@ -3,7 +3,7 @@
 **Date:** 2026-10-02
 **Status:** FROZEN. No repaired statistic has been computed, and no repaired
 artifact has been produced.
-**Commit SHA:** filled in the commit that follows this freeze
+**Commit SHA:** fd1ae8d
 **Amends:** `experiments/PREREG_H3_S1S3_CORRECTED_BASELINE.md` (design frozen
 `7f57136`), and the inputs the linked
 `experiments/PREREG_H3_REFERENCE_DISCORDANCE.md` pins.
