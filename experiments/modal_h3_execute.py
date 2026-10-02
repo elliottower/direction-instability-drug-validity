@@ -23,18 +23,37 @@ inputs = modal.Volume.from_name("di-h3-inputs")
 
 REPO = "/Users/elliottower/Documents/GitHub/direction-instability-drug-validity"
 
-image = (
+base = (
     modal.Image.debian_slim(python_version="3.12")
     .pip_install("numpy==2.1.3", "scipy==1.14.1", "pandas==2.2.3", "anndata==0.11.4",
                  "h5py==3.12.1")
-    .add_local_dir(f"{REPO}/experiments", remote_path="/app/experiments")
-    .add_local_dir(f"{REPO}/geometry", remote_path="/app/geometry")
-    .add_local_dir(f"{REPO}/results/03_phenotype_projection",
-                   remote_path="/app/results/03_phenotype_projection")
-    .add_local_dir(f"{REPO}/results/03b_h3_crispri", remote_path="/app/results/03b_h3_crispri")
-    .add_local_dir(f"{REPO}/results/03d_h3_reference_discordance",
-                   remote_path="/app/results/03d_h3_reference_discordance")
 )
+
+
+def _with_code(built):
+    """The repository's code and the artifacts the stages read, added last.
+
+    Modal refuses a build step after an `add_local_*`, so every layer that
+    installs something comes before this.
+    """
+    return (built
+            .add_local_dir(f"{REPO}/experiments", remote_path="/app/experiments")
+            .add_local_dir(f"{REPO}/geometry", remote_path="/app/geometry")
+            .add_local_dir(f"{REPO}/results/03_phenotype_projection",
+                           remote_path="/app/results/03_phenotype_projection")
+            .add_local_dir(f"{REPO}/results/03b_h3_crispri",
+                           remote_path="/app/results/03b_h3_crispri")
+            .add_local_dir(f"{REPO}/results/03d_h3_reference_discordance",
+                           remote_path="/app/results/03d_h3_reference_discordance"))
+
+
+image = _with_code(base)
+# the registered implementation runs the suite, and a suite that fits models is
+# an analysis under a different name, so it runs here rather than on a laptop
+test_image = _with_code(base.pip_install("pytest==9.1.1", "scikit-learn==1.9.1",
+                                         "tqdm==4.70.1", "pyarrow==25.0.1")).add_local_dir(
+    f"{REPO}/tests", remote_path="/app/tests")
+
 # The Replogle and PRISM files are half a gigabyte. They live on a volume rather
 # than in the image: mounting them makes every run upload them again, and a client
 # killed mid-upload leaves an app that never dispatches its function.
@@ -524,6 +543,99 @@ def stage_verify_permutation():
     open("/out/03c_h3_sensitivity/shrna_axis_recovery.json", "w").write(json.dumps(summary, indent=2))
     results.commit()
     return json.dumps({k: v for k, v in summary.items() if k != "permutation"}, indent=2)[:1800]
+
+
+@app.function(**COMMON)
+def stage_axis_uniqueness():
+    """Is the recovered permutation the only one that reconciles the two matrices?
+
+    Deviation 11 states that one bijection maps the extraction onto the rebuild for
+    every signature. That is existence, not uniqueness: a second valid permutation
+    exists exactly when two gene columns carry the same values across all 14,656
+    signatures, because those two columns could then be exchanged without changing
+    anything. This measures how far apart the closest pair of columns is, so the
+    deviation can say whether the recovered map is the only one or merely one.
+    """
+    import json
+    import importlib.util
+    from pathlib import Path
+
+    import numpy as np
+
+    _repo_at_its_absolute_path()
+    staged, rebuilt_dir = _stage_inputs(), _stage_rebuild()
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    records = json.loads(Path("/app/results/03_phenotype_projection/"
+                              "phenotype_projection_results.json").read_text())
+    targets = sorted({str(r["target"]) for r in records})
+    rebuilt_sigs, _, rebuilt_genes, _ = gate.load_shrna_rebuild_strict(rebuilt_dir)
+    extraction_sigs, _, _ = gate.load_shrna_extraction(staged, targets_wanted=set(targets))
+
+    shared = sorted(set(rebuilt_sigs) & set(extraction_sigs))
+    genes = [str(g) for g in rebuilt_genes]
+    matrix = np.vstack([np.asarray(rebuilt_sigs[s], dtype=np.float64) for s in shared])
+    assert matrix.shape == (len(shared), len(genes)), f"matrix is {matrix.shape}"
+
+    # two identical columns are the only way a second permutation can exist
+    profiles = {}
+    for column, gene in enumerate(genes):
+        profiles.setdefault(np.ascontiguousarray(matrix[:, column]).tobytes(), []).append(gene)
+    collisions = {digest_genes[0]: digest_genes[1:]
+                  for digest_genes in profiles.values() if len(digest_genes) > 1}
+
+    # the closest pair, whether or not it is an exact tie: squared distances from
+    # the Gram matrix, which is one 978 x 978 matmul rather than 478,000 loops
+    gram = matrix.T @ matrix
+    square = np.diag(gram).copy()
+    distance_squared = square[:, None] + square[None, :] - 2.0 * gram
+    np.fill_diagonal(distance_squared, np.inf)
+    flat = int(np.argmin(distance_squared))
+    first, second = divmod(flat, len(genes))
+    closest = float(np.sqrt(max(distance_squared[first, second], 0.0)))
+    closest_elementwise = float(np.abs(matrix[:, first] - matrix[:, second]).max())
+
+    tolerance = gate.ATOL + gate.RTOL * float(np.abs(matrix).mean())
+    summary = {
+        "n_signatures": len(shared),
+        "n_columns": len(genes),
+        "n_distinct_column_profiles": len(profiles),
+        "n_columns_sharing_a_profile": sum(len(v) + 1 for v in collisions.values()),
+        "colliding_columns": collisions,
+        "permutation_is_unique": len(profiles) == len(genes),
+        "closest_pair": {"genes": [genes[first], genes[second]],
+                         "l2_distance": closest,
+                         "max_abs_elementwise_difference": closest_elementwise},
+        "mean_abs_value": float(np.abs(matrix).mean()),
+        "gate_elementwise_tolerance_at_that_scale": tolerance,
+        "reading": ("every column profile distinct means exactly one permutation maps the "
+                    "extraction onto the rebuild; the closest pair's elementwise difference "
+                    "says how far that conclusion sits from the gate's tolerance"),
+    }
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "shrna_axis_uniqueness.json").write_text(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps({k: v for k, v in summary.items() if k != "colliding_columns"}, indent=2)
+
+
+@app.function(**{**COMMON, "image": test_image})
+def stage_tests():
+    """The registered suite, in the image the analyses run in."""
+    import subprocess
+
+    _repo_at_its_absolute_path()
+    finished = subprocess.run(
+        ["python", "-m", "pytest", "/app/tests", "-q",
+         "--ignore=/app/tests/test_combined_experiments.py"],
+        cwd="/app", capture_output=True, text=True)
+    print(finished.stdout[-8000:], flush=True)
+    print(finished.stderr[-4000:], flush=True)
+    assert finished.returncode == 0, f"the suite failed with {finished.returncode}"
+    return finished.stdout[-2000:]
 
 
 @app.local_entrypoint()

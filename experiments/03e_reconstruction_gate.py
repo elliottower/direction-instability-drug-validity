@@ -32,11 +32,19 @@ OUT = REPO / "results" / "03c_h3_sensitivity"
 REFERENCE_ARTIFACT = (REPO / "results" / "03_phenotype_projection"
                       / "phenotype_projection_results.json")
 RTOL, ATOL = 1e-5, 1e-5
-MIN_HAIRPINS = 3
+MIN_SIGNATURES = 3        # distinct signature ids, not reagents
 
 
 def sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode()).hexdigest()
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for block in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def align(rebuilt_rows, rebuilt_ids, extraction_rows, extraction_ids):
@@ -149,7 +157,7 @@ def load_extraction(data_dir: Path, cohort=None):
 
 
 def compare_shrna(rebuilt, extraction, stored=None,
-                  min_signatures=MIN_HAIRPINS, rtol=RTOL, atol=ATOL):
+                  min_signatures=MIN_SIGNATURES, rtol=RTOL, atol=ATOL):
     """The half of the gate that guards the object Deviation 9 corrupted.
 
     A perfect compound reconstruction cannot detect a recurrence of that defect,
@@ -166,6 +174,11 @@ def compare_shrna(rebuilt, extraction, stored=None,
     correct and whose consensus construction was not. The stored axis is aligned on
     its own identifiers, never on the extraction's permutation, because assuming a
     coordinate system is the error this gate exists to catch.
+
+    A value that moved is counted in the result rather than raised, so the record
+    survives the failure. A structural violation — a missing identifier, a repeated
+    gene, a direction whose shape does not match its axis — raises, because there is
+    no number to report about it.
     """
     rebuilt_signatures, rebuilt_membership, rebuilt_genes = rebuilt
     extraction_signatures, extraction_membership, extraction_genes = extraction
@@ -182,13 +195,17 @@ def compare_shrna(rebuilt, extraction, stored=None,
     assert set(map(str, rebuilt_genes)) == set(gene_order), "the shRNA gene axes differ"
     permutation = np.array([gene_order[gene] for gene in map(str, rebuilt_genes)])
 
-    worst_signature = 0.0
+    # a value mismatch is recorded rather than raised: the gate's own result file
+    # is written by its caller, and an exception here left no record of the one
+    # failure the gate exists to document
+    worst_signature, signature_failures = 0.0, []
     for sig_id, vector in rebuilt_signatures.items():
         other = np.asarray(extraction_signatures[sig_id])[permutation]
         difference = np.abs(np.asarray(vector) - other)
-        assert (difference <= atol + rtol * np.abs(other)).all(), (
-            f"signature {sig_id} differs by {difference.max():.3g}")
         worst_signature = max(worst_signature, float(difference.max()))
+        if not (difference <= atol + rtol * np.abs(other)).all():
+            signature_failures.append({"sig_id": sig_id,
+                                       "max_abs_difference": float(difference.max())})
 
     assert set(rebuilt_membership) == set(extraction_membership), (
         f"target sets differ: {sorted(set(rebuilt_membership) ^ set(extraction_membership))[:5]}")
@@ -208,7 +225,8 @@ def compare_shrna(rebuilt, extraction, stored=None,
         stored_permutation = np.array([stored_index[gene] for gene in map(str, rebuilt_genes)])
 
     worst = {"consensus": 0.0, "direction": 0.0, "stored": 0.0}
-    per_target, worst_target = {}, None
+    worst_target = {"consensus": None, "direction": None, "stored": None}
+    per_target, target_failures = {}, []
     for target in sorted(rebuilt_membership):
         left_ids, right_ids = sorted(rebuilt_membership[target]), sorted(extraction_membership[target])
         assert left_ids == right_ids, (
@@ -223,14 +241,24 @@ def compare_shrna(rebuilt, extraction, stored=None,
         for side, vector in (("rebuild", left), ("extraction", right)):
             assert np.isfinite(vector).all(), f"{target}: nonfinite consensus on the {side}"
             assert np.linalg.norm(vector) > 0, f"{target}: zero-norm consensus on the {side}"
-        consensus_error = float(np.abs(left - right).max())
+        # the registered tolerance is the elementwise float32 rule. Reducing it to
+        # one scalar threshold compares unnormalized consensus entries, whose
+        # magnitude reaches about ten, against a unit-scale bound: too lax below
+        # one and too strict above it.
+        consensus_difference = np.abs(left - right)
+        consensus_error = float(consensus_difference.max())
+        consensus_ok = bool((consensus_difference <= atol + rtol * np.abs(right)).all())
         # a normalized direction can agree while the consensus behind it does not,
         # so both are compared
-        direction_error = float(np.abs(left / np.linalg.norm(left)
-                                       - right / np.linalg.norm(right)).max())
+        left_unit = left / np.linalg.norm(left)
+        right_unit = right / np.linalg.norm(right)
+        direction_difference = np.abs(left_unit - right_unit)
+        direction_error = float(direction_difference.max())
+        direction_ok = bool((direction_difference <= atol + rtol * np.abs(right_unit)).all())
         entry = {"n_signatures": len(left_ids),
                  "max_abs_consensus_difference": consensus_error,
-                 "max_abs_direction_difference": direction_error}
+                 "max_abs_direction_difference": direction_error,
+                 "within_tolerance": consensus_ok and direction_ok}
         if stored is not None:
             assert target in stored_directions, f"{target}: the rebuild stored no direction"
             raw_stored = np.asarray(stored_directions[target])
@@ -243,28 +271,36 @@ def compare_shrna(rebuilt, extraction, stored=None,
                 f"{target}: the stored direction has norm {norm:.6g}; the artifact's contract "
                 "is a unit vector")
             stored_vector = raw_stored[stored_permutation]
-            recomputed = left / np.linalg.norm(left)
-            stored_error = float(np.abs(stored_vector - recomputed).max())
+            stored_difference = np.abs(stored_vector - left_unit)
+            stored_error = float(stored_difference.max())
+            stored_ok = bool((stored_difference <= atol + rtol * np.abs(left_unit)).all())
             entry["max_abs_stored_direction_difference"] = stored_error
-            worst["stored"] = max(worst["stored"], stored_error)
-        per_target[target] = entry
+            entry["within_tolerance"] = entry["within_tolerance"] and stored_ok
+            if stored_error > worst["stored"]:
+                worst["stored"], worst_target["stored"] = stored_error, target
         if consensus_error > worst["consensus"]:
-            worst_target = target
-        worst["consensus"] = max(worst["consensus"], consensus_error)
-        worst["direction"] = max(worst["direction"], direction_error)
+            worst["consensus"], worst_target["consensus"] = consensus_error, target
+        if direction_error > worst["direction"]:
+            worst["direction"], worst_target["direction"] = direction_error, target
+        per_target[target] = entry
+        if not entry["within_tolerance"]:
+            target_failures.append(target)
 
-    tolerance = atol + rtol * 1.0
     return {"n_signatures": len(rebuilt_signatures), "n_targets": len(per_target),
             "max_abs_signature_difference": worst_signature,
+            "n_signature_failures": len(signature_failures),
+            "worst_signature_failures": sorted(
+                signature_failures, key=lambda record: -record["max_abs_difference"])[:10],
+            "signatures_within_tolerance": not signature_failures,
             "max_abs_consensus_difference": worst["consensus"],
             "max_abs_direction_difference": worst["direction"],
             "max_abs_stored_direction_difference": (worst["stored"] if stored is not None
                                                     else None),
             "stored_directions_compared": stored is not None,
             "worst_target": worst_target,
-            "all_within_tolerance": bool(worst["consensus"] <= tolerance
-                                         and worst["direction"] <= tolerance
-                                         and worst["stored"] <= tolerance),
+            "n_target_failures": len(target_failures),
+            "targets_outside_tolerance": target_failures[:20],
+            "all_within_tolerance": bool(not signature_failures and not target_failures),
             "rtol": rtol, "atol": atol, "per_target": per_target}
 
 
@@ -328,7 +364,7 @@ def load_shrna_extraction(data_dir: Path, targets_wanted=None):
     membership = {}
     for gene, group in siginfo.groupby("pert_iname"):
         members = sorted(set(group.sig_id.astype(str)))
-        if len(members) < MIN_HAIRPINS:
+        if len(members) < MIN_SIGNATURES:
             continue
         if targets_wanted is None or gene in targets_wanted:
             membership[str(gene)] = members
@@ -339,6 +375,30 @@ def load_shrna_extraction(data_dir: Path, targets_wanted=None):
     signatures = {sig_id: np.asarray(matrix[row_of[sig_id]]) for sig_id in wanted}
     del matrix
     return signatures, membership, genes
+
+
+def compare_both(compound_rebuilt, compound_extraction, shrna_rebuilt, shrna_extraction,
+                 cohort, stored=None):
+    """Both registered halves, with a structural failure named rather than thrown.
+
+    An assertion inside either comparison used to propagate before anything was
+    written, so the single failure the gate exists to document left no artifact of
+    itself. It is caught here and recorded; the caller writes the result and then
+    raises.
+    """
+    halves = ("compound_signatures", "shrna_signatures_and_consensuses")
+    result = {}
+    try:
+        result["compound_signatures"] = compare(compound_rebuilt, compound_extraction,
+                                                cohort=cohort)
+        result["shrna_signatures_and_consensuses"] = compare_shrna(
+            shrna_rebuilt, shrna_extraction, stored=stored)
+    except AssertionError as failure:
+        result["structural_failure"] = str(failure)
+    result["all_within_tolerance"] = bool(
+        not result.get("structural_failure")
+        and all(result.get(half, {}).get("all_within_tolerance") for half in halves))
+    return result
 
 
 def main():
@@ -358,21 +418,21 @@ def main():
         f"{len(records)} records hold {len(drugs)} distinct drugs; the cohort unit is the drug")
     targets = sorted({str(record["target"]) for record in records})
 
-    compounds = compare(load_rebuild(args.rebuilt),
-                        load_extraction(args.extraction, cohort=drugs), cohort=drugs)
     rebuilt_signatures, rebuilt_membership, rebuilt_genes, stored = load_shrna_rebuild_strict(
         args.rebuilt)
-    shrna = compare_shrna((rebuilt_signatures, rebuilt_membership, rebuilt_genes),
-                          load_shrna_extraction(args.extraction, targets_wanted=set(targets)),
-                          stored=stored)
+    result = compare_both(
+        load_rebuild(args.rebuilt),
+        load_extraction(args.extraction, cohort=drugs),
+        (rebuilt_signatures, rebuilt_membership, rebuilt_genes),
+        load_shrna_extraction(args.extraction, targets_wanted=set(targets)),
+        cohort=drugs, stored=stored)
 
-    result = {"cohort": {"file": str(args.cohort), "sha256": sha256_file(args.cohort),
-                         "n_records": len(records), "n_unique_drugs": len(drugs),
-                         "n_unique_targets": len(targets)},
-              "compound_signatures": compounds, "shrna_signatures_and_consensuses": shrna}
+    result["cohort"] = {"file": str(args.cohort), "sha256": sha256_file(args.cohort),
+                        "n_records": len(records), "n_unique_drugs": len(drugs),
+                        "n_unique_targets": len(targets)}
     result["identifier_hashes"] = {"drugs": sha256_text("\n".join(drugs)),
                                    "targets": sha256_text("\n".join(targets))}
-    passed = compounds["all_within_tolerance"] and shrna["all_within_tolerance"]
+    passed = result["all_within_tolerance"]
     result["gate"] = ("reconstruction" if passed
                       else "failed: the analyses registered against this gate are void")
 
@@ -380,13 +440,9 @@ def main():
     path = args.output / "reconstruction_gate.json"
     path.write_text(json.dumps(result, indent=2))
     print(json.dumps({k: v for k, v in result.items()
-                      if k not in ("compound_signatures", "shrna_signatures_and_consensuses")}
-                     | {"compound_max_abs": compounds["max_abs_difference"],
-                        "shrna_max_abs_consensus": shrna["max_abs_consensus_difference"]}, indent=2))
-    assert passed, (
-        f"the rebuild departs from the extraction: compounds by "
-        f"{compounds['max_abs_difference']:.3g}, shRNA consensuses by "
-        f"{shrna['max_abs_consensus_difference']:.3g}")
+                      if k not in ("compound_signatures", "shrna_signatures_and_consensuses")},
+                     indent=2))
+    assert passed, f"the gate failed; the record is at {path}"
 
 
 if __name__ == "__main__":

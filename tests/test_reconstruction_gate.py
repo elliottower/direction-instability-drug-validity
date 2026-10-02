@@ -94,8 +94,13 @@ def test_align_returns_rows_in_a_shared_order():
     assert used == [ids[i] for i in order]
 
 
-def _shrna_pair(n_targets=4, per_target=3, n_genes=15, shuffle_genes=False):
-    """Signatures on both sides, grouped into targets, optionally in different gene order."""
+def _shrna_pair(n_targets=4, per_target=3, n_genes=15, shuffle_genes=False, offset=0.0):
+    """Signatures on both sides, grouped into targets, optionally in different gene order.
+
+    `offset` lifts every coordinate away from zero, which is what the GCTX values
+    do: the registered tolerance is relative, so a comparison at magnitude ten
+    allows an order of magnitude more than one at magnitude one.
+    """
     rng = np.random.default_rng()
     genes = [str(2000 + i) for i in range(n_genes)]
     signatures, membership = {}, {}
@@ -103,7 +108,7 @@ def _shrna_pair(n_targets=4, per_target=3, n_genes=15, shuffle_genes=False):
         ids = [f"SIG_{t}_{k}" for k in range(per_target)]
         membership[f"TARGET{t}"] = ids
         for sig_id in ids:
-            signatures[sig_id] = rng.standard_normal(n_genes)
+            signatures[sig_id] = offset + rng.standard_normal(n_genes)
     left = ({k: v.copy() for k, v in signatures.items()},
             {k: list(v) for k, v in membership.items()}, list(genes))
     right_genes = list(genes)
@@ -123,11 +128,17 @@ def test_shrna_gate_passes_identical_data_in_a_different_gene_order():
     assert result["n_targets"] == 4
 
 
-def test_shrna_gate_catches_a_changed_signature():
+def test_shrna_gate_reports_a_changed_signature_rather_than_raising():
     left, right = _shrna_pair()
     right[0]["SIG_1_0"][2] += 0.5
-    with pytest.raises(AssertionError, match="signature SIG_1_0 differs"):
-        _mod.compare_shrna(right, left)
+
+    # raising here wrote no record of the failure the gate exists to document
+    result = _mod.compare_shrna(right, left)
+    assert not result["all_within_tolerance"]
+    assert not result["signatures_within_tolerance"]
+    assert result["n_signature_failures"] == 1
+    assert result["worst_signature_failures"][0]["sig_id"] == "SIG_1_0"
+    assert result["max_abs_signature_difference"] == pytest.approx(0.5, abs=1e-9)
 
 
 def test_shrna_gate_catches_signatures_assigned_to_the_wrong_target():
@@ -158,9 +169,12 @@ def test_a_scaled_target_is_caught_at_the_signature_stage():
         right[0][sig_id] = right[0][sig_id] * 3.0
 
     # the unit direction of that target is unchanged by scaling, so the signature
-    # comparison is what catches it
-    with pytest.raises(AssertionError, match="differs by"):
-        _mod.compare_shrna(right, left)
+    # comparison is the only one that can catch it
+    result = _mod.compare_shrna(right, left)
+    assert not result["signatures_within_tolerance"]
+    assert result["n_signature_failures"] == 3
+    assert result["per_target"]["TARGET0"]["max_abs_direction_difference"] == pytest.approx(
+        0.0, abs=1e-12)
 
 
 def test_a_wrongly_built_stored_consensus_is_caught_even_when_signatures_agree():
@@ -413,3 +427,87 @@ def test_the_extraction_loader_builds_only_the_cohort(tmp_path, monkeypatch):
     assert restricted["wanted"].shape == (2, 4)
     assert cells["wanted"] == ["MCF7", "PC3"]
     assert genes == [str(i) for i in range(4)]
+
+
+def test_consensus_tolerance_is_elementwise_not_a_unit_scale_threshold():
+    left, right = _shrna_pair(n_targets=3, per_target=3, offset=10.0)
+    # every element moves by half the registered relative tolerance: inside the
+    # elementwise rule everywhere, and above the 2e-5 that one unit-scale
+    # threshold allowed, which failed consensuses the tolerance admits
+    for sig_id in right[1]["TARGET0"]:
+        right[0][sig_id] = right[0][sig_id] * (1.0 + 0.5 * _mod.RTOL)
+
+    result = _mod.compare_shrna(right, left)
+    assert result["all_within_tolerance"]
+    assert result["max_abs_consensus_difference"] > _mod.ATOL + _mod.RTOL
+
+    left, right = _shrna_pair(n_targets=3, per_target=3, offset=10.0)
+    for sig_id in right[1]["TARGET0"]:
+        right[0][sig_id] = right[0][sig_id] * (1.0 + 20.0 * _mod.RTOL)
+
+    outside = _mod.compare_shrna(right, left)
+    assert not outside["all_within_tolerance"]
+    assert outside["n_signature_failures"] == 3
+
+
+def test_the_record_names_the_worst_target_for_each_comparison_separately():
+    left, right = _shrna_pair(n_targets=3, per_target=3, shuffle_genes=True)
+    signatures, membership, rebuilt_genes = right
+    honest = {}
+    for target, ids in membership.items():
+        mean = np.vstack([signatures[i] for i in ids]).mean(axis=0)
+        honest[target] = mean / np.linalg.norm(mean)
+
+    # one target's extraction signatures moved, a different target's stored
+    # direction is wrong: a single worst-target field can only name one of them
+    for sig_id in membership["TARGET0"]:
+        left[0][sig_id] = left[0][sig_id] + 0.5
+    corrupted = {t: v.copy() for t, v in honest.items()}
+    corrupted["TARGET2"][[0, 1]] = corrupted["TARGET2"][[1, 0]]
+
+    result = _mod.compare_shrna(right, left, stored=(corrupted, rebuilt_genes))
+    assert not result["all_within_tolerance"]
+    assert result["worst_target"]["consensus"] == "TARGET0"
+    assert result["worst_target"]["direction"] == "TARGET0"
+    assert result["worst_target"]["stored"] == "TARGET2"
+    assert result["per_target"]["TARGET2"]["max_abs_stored_direction_difference"] > 0
+    assert result["per_target"]["TARGET0"]["max_abs_stored_direction_difference"] == pytest.approx(
+        0.0, abs=1e-12)
+
+
+def test_a_declared_axis_the_values_do_not_follow_is_caught():
+    # Deviation 11's shape: correct values under a declared gene order they do not
+    # use. Both sides agree on their gene_ids, so every check that compares labels
+    # passes and only a comparison of values can see it.
+    left, right = _shrna_pair(n_targets=3, per_target=3)
+    rng = np.random.default_rng()
+    scramble = rng.permutation(len(right[2]))
+    while (scramble == np.arange(len(scramble))).all():
+        scramble = rng.permutation(len(scramble))
+
+    mislabeled = {sig_id: vector[scramble] for sig_id, vector in left[0].items()}
+    assert left[2] == right[2]                       # the declared axes still match
+
+    result = _mod.compare_shrna(right, (mislabeled, left[1], left[2]))
+    assert not result["all_within_tolerance"]
+    assert result["n_signature_failures"] == 9
+
+
+def test_compare_both_records_a_structural_failure_instead_of_losing_it():
+    compound_left, compound_right = _pair(n_drugs=4)
+    shrna_left, shrna_right = _shrna_pair(n_targets=3, per_target=3)
+    cohort = sorted(compound_left[0])
+
+    passing = _mod.compare_both(compound_right, compound_left, shrna_right, shrna_left,
+                                cohort=cohort)
+    assert passing["all_within_tolerance"]
+    assert "structural_failure" not in passing
+
+    fewer = {k: v for k, v in shrna_right[1].items() if k != "TARGET2"}
+    failed = _mod.compare_both(compound_right, compound_left,
+                               (shrna_right[0], fewer, shrna_right[2]), shrna_left,
+                               cohort=cohort)
+    assert not failed["all_within_tolerance"]
+    assert "target sets differ" in failed["structural_failure"]
+    # the half that ran before the failure is still in the record
+    assert failed["compound_signatures"]["all_within_tolerance"]

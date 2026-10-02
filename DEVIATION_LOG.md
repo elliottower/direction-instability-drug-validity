@@ -432,13 +432,17 @@ that followed establish what the disagreement is.
 - Every one of the 14,656 shRNA signatures differs from the rebuild as stored, with
   a median maximum absolute difference of 6.63.
 - The two versions have identical norms, to sixteen decimal places, and a median
-  cosine of 0.004. Equal norms with no alignment is a permutation, not a difference
-  in values.
+  cosine of 0.004. Equal norms with no alignment rules out a rescaling and points
+  at a permutation; the two bullets below are what establish one.
 - Each signature holds the same multiset of values, and no rebuilt vector matches a
   different extraction row, so the permutation is of the gene axis rather than of
   the signature labels.
 - One bijective permutation maps the extraction onto the rebuild for **all 14,656
   signatures with a maximum absolute difference of 0.0**.
+- That permutation is the only one: all 978 gene columns carry distinct value
+  profiles across the 14,656 signatures, and the closest pair of columns, genes
+  1788 and 2523, differs by 5.63 elementwise against a gate tolerance of 1.73e-05.
+  Two identical columns would have admitted a second reconciling map; none exist.
 - The order that permutation implies matches none of the orders the pipeline uses:
   not the gene-info file's row order, not the landmark ids sorted as strings, not
   the gene symbols alphabetically.
@@ -449,9 +453,11 @@ that followed establish what the disagreement is.
 **What this means:** `lincs_shrna.npz` holds the right numbers under the wrong
 labels. Any quantity pairing a drug signature with a target direction — H3's
 signless target-axis alignment and projected dispersion, and H4's localization —
-was computed between vectors in different gene orders. The corrected values of
-Deviation 9 are affected: that deviation fixed which signatures were averaged into
-each consensus, not which gene each column carried.
+was computed between vectors in different gene orders. The Deviation 9 replacement
+values for H3 and H4 are invalidated rather than merely shifted: they are not
+measurements of their stated quantities, because that deviation fixed which
+signatures were averaged into each consensus and never which gene each column
+carried.
 
 **Scope:** H3 and H4, and the shRNA fields of the CRISPRi records
 (`proj_shrna`, `enrich_shrna`). Raw direction instability, H1, H2, H5 and the
@@ -465,12 +471,24 @@ position could not have seen it. The gate's shRNA half was added after a review
 observed that a compound-only comparison cannot test the object Deviation 9
 corrupted.
 
+**Why the checks already in the code could not see it.** A `Reference` carries
+`positions`, an index into the 978-landmark order, so every matrix is assumed to
+follow one order and a positional axis cannot disagree with itself.
+`experiments/build_h3_bundle.py:48` does compare the two files' declared gene axes
+and asserts they match — the assertion passes, because both declare the same
+identifiers. The same script reproduces the deposited `D`, `P` and `E` to within
+1e-6 and asserts on it; that check cannot detect the defect either, because it
+reads the mislabeled matrix on both sides of the comparison. Only a comparison
+against an independent parse of the pinned GCTX, which is what the gate performs,
+reaches the values rather than the labels.
+
 **When:** before any S1-S3 statistic, and before any R0-R7 statistic, was computed.
 
 **Artifacts:** `results/03c_h3_sensitivity/shrna_axis_recovery.json` carries the
 recovered permutation and its verification;
 `gate_shrna_diagnostic.json`, `gate_permutation_test.json` and `gate_axis_test.json`
-carry the forensics above.
+carry the forensics above; `shrna_axis_uniqueness.json` carries the column-profile
+comparison behind the uniqueness of the recovered permutation.
 
 ### What this does NOT change
 

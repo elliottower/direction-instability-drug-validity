@@ -1,0 +1,19 @@
+{
+  "n_signatures": 14656,
+  "n_columns": 978,
+  "n_distinct_column_profiles": 978,
+  "n_columns_sharing_a_profile": 0,
+  "colliding_columns": {},
+  "permutation_is_unique": true,
+  "closest_pair": {
+    "genes": [
+      "1788",
+      "2523"
+    ],
+    "l2_distance": 82.60532331642791,
+    "max_abs_elementwise_difference": 5.626670956611633
+  },
+  "mean_abs_value": 0.7343548378916506,
+  "gate_elementwise_tolerance_at_that_scale": 1.7343548378916508e-05,
+  "reading": "every column profile distinct means exactly one permutation maps the extraction onto the rebuild; the closest pair's elementwise difference says how far that conclusion sits from the gate's tolerance"
+}
