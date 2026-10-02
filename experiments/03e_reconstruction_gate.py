@@ -26,12 +26,14 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from cmapPy.pandasGEXpress import parse
 
 REPO = Path("/Users/elliottower/Documents/GitHub/direction-instability-drug-validity")
 OUT = REPO / "results" / "03c_h3_sensitivity"
 REFERENCE_ARTIFACT = (REPO / "results" / "03_phenotype_projection"
                       / "phenotype_projection_results.json")
 RTOL, ATOL = 1e-5, 1e-5
+N_LANDMARK = 978
 MIN_SIGNATURES = 3        # distinct signature ids, not reagents
 
 
@@ -346,6 +348,62 @@ def load_shrna_rebuild(directory: Path):
     return signatures, membership, genes, stored
 
 
+def shrna_from_parsed_frame(frame, membership, landmark_ids):
+    """Signatures keyed by id, carrying the gene labels the frame itself reports.
+
+    The pairing of a value with a gene comes from the parsed frame's own index and
+    is never reordered here. Deviation 11 was a matrix whose columns did not follow
+    the labels it declared, and a loader that reindexes onto an expected order
+    destroys the only evidence of that: after the reindex both sides agree about
+    the labels and disagree about nothing visible.
+    """
+    labels = [str(gene) for gene in frame.index]
+    assert len(set(labels)) == len(labels), "the parsed frame repeats a gene identifier"
+    wanted = set(map(str, landmark_ids))
+    keep = [i for i, gene in enumerate(labels) if gene in wanted]
+    genes = [labels[i] for i in keep]
+    assert len(genes) == len(wanted), (
+        f"the parse covers {len(genes)} of {len(wanted)} landmark genes")
+
+    columns = {str(sig_id): i for i, sig_id in enumerate(frame.columns)}
+    assert len(columns) == frame.shape[1], "the parsed frame repeats a signature id"
+    values = frame.to_numpy()
+    signatures = {}
+    for members in membership.values():
+        for sig_id in members:
+            if sig_id not in signatures:
+                signatures[sig_id] = values[keep, columns[sig_id]]
+    return signatures, genes
+
+
+def load_shrna_from_gctx(gctx_path: Path, siginfo_path: Path, gene_info_path: Path,
+                         targets_wanted=None, min_signatures=MIN_SIGNATURES):
+    """The gate's own parse of the pinned GCTX, by a different route from production.
+
+    The production extractor asks cmapPy for a fixed row order and reindexes the
+    result onto it. This asks only for the landmark rows, reads the identifiers the
+    file reports for them, and leaves them in that order: `compare_shrna` aligns
+    the two axes on identifiers, so no order has to be assumed anywhere.
+    """
+    gene_info = pd.read_csv(gene_info_path, sep="\t", low_memory=False)
+    landmark_ids = [str(gene) for gene in gene_info[gene_info.pr_is_lm == 1].pr_gene_id]
+    assert len(landmark_ids) == N_LANDMARK, f"{len(landmark_ids)} landmark genes"
+
+    siginfo = pd.read_csv(siginfo_path)
+    membership = {}
+    for gene, group in siginfo.groupby("pert_iname"):
+        members = sorted(set(group.sig_id.astype(str)))
+        if len(members) < min_signatures:
+            continue
+        if targets_wanted is None or gene in targets_wanted:
+            membership[str(gene)] = members
+
+    wanted = sorted({sig_id for members in membership.values() for sig_id in members})
+    gct = parse.parse(str(gctx_path), cid=wanted, rid=landmark_ids)
+    signatures, genes = shrna_from_parsed_frame(gct.data_df, membership, landmark_ids)
+    return signatures, membership, genes
+
+
 def load_shrna_extraction(data_dir: Path, targets_wanted=None):
     """The same objects from the pinned extraction, grouped by the pinned metadata rule.
 
@@ -409,8 +467,20 @@ def main():
     parser.add_argument("--extraction", type=Path, required=True)
     parser.add_argument("--cohort", type=Path, default=REFERENCE_ARTIFACT,
                         help="the artifact whose drugs and targets both sides must hold")
+    parser.add_argument("--gctx", type=Path,
+                        help="the pinned GCTX. Given, the shRNA half compares the canonical "
+                             "artifact against this gate's own parse of the source, which is "
+                             "what Amendment 2 requires; `lincs_shrna.npz` is then read by "
+                             "nothing. Omitted, the retired extraction is the second source.")
+    parser.add_argument("--shrna-siginfo", type=Path,
+                        help="the pinned shRNA metadata, with --gctx")
+    parser.add_argument("--gene-info", type=Path,
+                        help="the pinned gene info, with --gctx")
     parser.add_argument("--output", type=Path, default=OUT)
     args = parser.parse_args()
+    assert bool(args.gctx) == bool(args.shrna_siginfo) == bool(args.gene_info), (
+        "--gctx needs --shrna-siginfo and --gene-info, which pin the membership rule and "
+        "the landmark set it parses against")
 
     records = json.loads(args.cohort.read_text())
     drugs = sorted({record["drug"] for record in records})
@@ -420,12 +490,19 @@ def main():
 
     rebuilt_signatures, rebuilt_membership, rebuilt_genes, stored = load_shrna_rebuild_strict(
         args.rebuilt)
+    if args.gctx:
+        second_source = load_shrna_from_gctx(args.gctx, args.shrna_siginfo, args.gene_info,
+                                             targets_wanted=set(targets))
+    else:
+        second_source = load_shrna_extraction(args.extraction, targets_wanted=set(targets))
     result = compare_both(
         load_rebuild(args.rebuilt),
         load_extraction(args.extraction, cohort=drugs),
         (rebuilt_signatures, rebuilt_membership, rebuilt_genes),
-        load_shrna_extraction(args.extraction, targets_wanted=set(targets)),
+        second_source,
         cohort=drugs, stored=stored)
+    result["shrna_second_source"] = ("the gate's own parse of " + str(args.gctx) if args.gctx
+                                     else "lincs_shrna.npz, retired by Amendment 2")
 
     result["cohort"] = {"file": str(args.cohort), "sha256": sha256_file(args.cohort),
                         "n_records": len(records), "n_unique_drugs": len(drugs),

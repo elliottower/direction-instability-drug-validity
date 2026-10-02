@@ -511,3 +511,51 @@ def test_compare_both_records_a_structural_failure_instead_of_losing_it():
     assert "target sets differ" in failed["structural_failure"]
     # the half that ran before the failure is still in the record
     assert failed["compound_signatures"]["all_within_tolerance"]
+
+
+def _parsed_frame(n_genes=6, n_sigs=5, extra_rows=2, gene_order=None):
+    """A frame shaped like a cmapPy parse: genes down the index, signatures across."""
+    import pandas as pd
+
+    rng = np.random.default_rng()
+    genes = gene_order or [str(3000 + i) for i in range(n_genes)]
+    rows = genes + [f"NOT_LANDMARK_{i}" for i in range(extra_rows)]
+    sigs = [f"SIG_{i}" for i in range(n_sigs)]
+    return pd.DataFrame(rng.standard_normal((len(rows), n_sigs)), index=rows, columns=sigs), genes
+
+
+def test_the_parse_keeps_each_value_with_the_label_the_frame_gave_it():
+    frame, genes = _parsed_frame()
+    membership = {"TARGET0": ["SIG_0", "SIG_1", "SIG_2"]}
+
+    signatures, parsed_genes = _mod.shrna_from_parsed_frame(frame, membership, genes)
+    assert parsed_genes == genes                       # the frame's own order, not the request's
+    assert set(signatures) == {"SIG_0", "SIG_1", "SIG_2"}
+    for sig_id, vector in signatures.items():
+        for gene, value in zip(parsed_genes, vector):
+            assert value == pytest.approx(frame.loc[gene, sig_id])
+
+
+def test_the_parse_reports_the_frames_order_not_the_requested_one():
+    # the production route asks for a row order and reindexes onto it, which hides
+    # a frame whose rows arrive in another order; this must not
+    frame, genes = _parsed_frame()
+    shuffled = list(reversed(genes))
+
+    signatures, parsed_genes = _mod.shrna_from_parsed_frame(
+        frame, {"TARGET0": ["SIG_0", "SIG_1", "SIG_2"]}, shuffled)
+    assert parsed_genes == genes
+    for gene, value in zip(parsed_genes, signatures["SIG_0"]):
+        assert value == pytest.approx(frame.loc[gene, "SIG_0"])
+
+
+def test_the_parse_refuses_a_frame_missing_a_landmark_or_repeating_an_identifier():
+    frame, genes = _parsed_frame()
+    with pytest.raises(AssertionError, match="of .* landmark genes"):
+        _mod.shrna_from_parsed_frame(frame, {"T": ["SIG_0"]}, genes + ["9999"])
+
+    duplicated = frame.copy()
+    duplicated.index = [frame.index[0]] + list(frame.index[1:])
+    duplicated = duplicated.set_axis([frame.index[0]] * 2 + list(frame.index[2:]), axis=0)
+    with pytest.raises(AssertionError, match="repeats a gene identifier"):
+        _mod.shrna_from_parsed_frame(duplicated, {"T": ["SIG_0"]}, genes)

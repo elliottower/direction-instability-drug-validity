@@ -26,7 +26,7 @@ REPO = "/Users/elliottower/Documents/GitHub/direction-instability-drug-validity"
 base = (
     modal.Image.debian_slim(python_version="3.12")
     .pip_install("numpy==2.1.3", "scipy==1.14.1", "pandas==2.2.3", "anndata==0.11.4",
-                 "h5py==3.12.1")
+                 "h5py==3.12.1", "cmapPy==4.0.1")
 )
 
 
@@ -63,6 +63,8 @@ test_image = _with_code(base.pip_install("pytest==9.1.1", "scikit-learn==1.9.1",
 COMMON = dict(image=image, timeout=86400, memory=32768, cpu=8.0, retries=0,
               volumes={"/extraction": extraction, "/rebuild": rebuild, "/out": results,
                        "/inputs": inputs})
+
+GCTX = "GSE92742_Broad_LINCS_Level5_COMPZ.MODZ_n473647x12328.gctx"
 
 MAPPING_SHA256 = "152361cb3174a5fb7aae0229c3e3d049dc00d49d9e442925156a9fe0564b89d3"
 
@@ -141,6 +143,9 @@ def stage_gate():
     _run(["/app/experiments/03e_reconstruction_gate.py",
           "--rebuilt", str(rebuilt),
           "--extraction", str(staged),
+          "--gctx", f"/rebuild/raw/{GCTX}",
+          "--shrna-siginfo", "/rebuild/raw/lincs_shrna_siginfo.csv.gz",
+          "--gene-info", "/rebuild/raw/GSE92742_Broad_LINCS_gene_info.txt.gz",
           "--cohort", "/app/results/03_phenotype_projection/phenotype_projection_results.json",
           "--output", "/out/03c_h3_sensitivity"])
     results.commit()
