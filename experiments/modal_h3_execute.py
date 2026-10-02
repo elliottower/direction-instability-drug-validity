@@ -156,15 +156,387 @@ def stage_driver():
     return "driver done"
 
 
+@app.function(**COMMON)
+def stage_gate_diagnostic():
+    """Why the shRNA half of the gate failed, described rather than explained away.
+
+    A failed gate voids the analyses registered against it. Before anything is
+    concluded, this measures the disagreement: how many signatures differ, by how
+    much, whether the two versions are related by a scale, a permutation of genes,
+    or a different normalization, and whether the compound half agrees.
+    """
+    import json
+    import sys
+
+    import numpy as np
+
+    sys.path.insert(0, "/app")
+    _repo_at_its_absolute_path()
+    staged, rebuilt_dir = _stage_inputs(), _stage_rebuild()
+    gate = __import__("experiments.03e_reconstruction_gate", fromlist=["x"]) if False else None
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    records = json.loads(open("/app/results/03_phenotype_projection/"
+                              "phenotype_projection_results.json").read())
+    targets = sorted({str(r["target"]) for r in records})
+
+    rebuilt_sigs, rebuilt_membership, rebuilt_genes, stored = gate.load_shrna_rebuild_strict(
+        rebuilt_dir)
+    extraction_sigs, extraction_membership, extraction_genes = gate.load_shrna_extraction(
+        staged, targets_wanted=set(targets))
+
+    shared = sorted(set(rebuilt_sigs) & set(extraction_sigs))
+    order = {g: i for i, g in enumerate(map(str, extraction_genes))}
+    permutation = np.array([order[g] for g in map(str, rebuilt_genes)])
+
+    rows = []
+    for sig_id in shared:
+        left = np.asarray(rebuilt_sigs[sig_id], dtype=np.float64)
+        right = np.asarray(extraction_sigs[sig_id], dtype=np.float64)[permutation]
+        denominator = float(np.linalg.norm(left) * np.linalg.norm(right))
+        rows.append({
+            "sig_id": sig_id,
+            "max_abs_difference": float(np.abs(left - right).max()),
+            "cosine": float(left @ right / denominator) if denominator else float("nan"),
+            "scale_ratio": float(np.linalg.norm(left) / np.linalg.norm(right))
+                           if np.linalg.norm(right) else float("nan"),
+            "rebuild_norm": float(np.linalg.norm(left)),
+            "extraction_norm": float(np.linalg.norm(right)),
+        })
+
+    differing = [r for r in rows if r["max_abs_difference"] > 1e-5]
+    cosines = np.array([r["cosine"] for r in rows])
+    ratios = np.array([r["scale_ratio"] for r in rows])
+    summary = {
+        "n_signatures_compared": len(rows),
+        "n_differing_beyond_1e-5": len(differing),
+        "fraction_differing": len(differing) / max(len(rows), 1),
+        "cosine": {"min": float(np.nanmin(cosines)), "median": float(np.nanmedian(cosines)),
+                   "max": float(np.nanmax(cosines)),
+                   "n_above_0.999": int((cosines > 0.999).sum())},
+        "scale_ratio": {"min": float(np.nanmin(ratios)), "median": float(np.nanmedian(ratios)),
+                        "max": float(np.nanmax(ratios))},
+        "max_abs_difference": {"max": max(r["max_abs_difference"] for r in rows),
+                               "median": float(np.median([r["max_abs_difference"]
+                                                          for r in rows]))},
+        "worst_ten": sorted(rows, key=lambda r: -r["max_abs_difference"])[:10],
+        "reading": ("a cosine near 1 with a scale ratio away from 1 means the same direction "
+                    "under a different normalization; a cosine far from 1 means different "
+                    "values, not a rescaling"),
+    }
+    out = "/out/03c_h3_sensitivity"
+    __import__("os").makedirs(out, exist_ok=True)
+    open(f"{out}/gate_shrna_diagnostic.json", "w").write(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps({k: v for k, v in summary.items() if k != "worst_ten"}, indent=2)
+
+
+@app.function(**COMMON)
+def stage_permutation_test():
+    """Equal norms with zero cosine means a permutation. This finds which axis.
+
+    If a signature's sorted values match, the same numbers are present in a
+    different order, and the disagreement is a gene-axis mislabeling. If instead
+    the rebuild's vector equals a *different* extraction signature, the row labels
+    are mislabeled, which is Deviation 9's shape one level deeper.
+    """
+    import json
+    import sys
+
+    import numpy as np
+
+    sys.path.insert(0, "/app")
+    _repo_at_its_absolute_path()
+    staged, rebuilt_dir = _stage_inputs(), _stage_rebuild()
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    records = json.loads(open("/app/results/03_phenotype_projection/"
+                              "phenotype_projection_results.json").read())
+    targets = sorted({str(r["target"]) for r in records})
+    rebuilt_sigs, _, rebuilt_genes, _ = gate.load_shrna_rebuild_strict(rebuilt_dir)
+    extraction_sigs, _, extraction_genes = gate.load_shrna_extraction(
+        staged, targets_wanted=set(targets))
+
+    sample = sorted(set(rebuilt_sigs) & set(extraction_sigs))[:200]
+    same_values, exact_row_match = 0, 0
+    matches = {}
+    extraction_matrix = np.vstack([np.asarray(extraction_sigs[s], dtype=np.float64)
+                                   for s in sample])
+    for sig_id in sample:
+        left = np.asarray(rebuilt_sigs[sig_id], dtype=np.float64)
+        right = np.asarray(extraction_sigs[sig_id], dtype=np.float64)
+        if np.allclose(np.sort(left), np.sort(right), rtol=1e-5, atol=1e-5):
+            same_values += 1
+        # does this rebuilt vector equal some other extraction signature?
+        distances = np.abs(extraction_matrix - left).max(axis=1)
+        best = int(np.argmin(distances))
+        if distances[best] < 1e-4:
+            exact_row_match += 1
+            if sample[best] != sig_id and len(matches) < 5:
+                matches[sig_id] = sample[best]
+
+    summary = {
+        "n_sampled": len(sample),
+        "same_multiset_of_values": same_values,
+        "reading_same_values": ("the same numbers in a different order means the gene axis is "
+                                "mislabeled, not that the values differ"),
+        "rebuilt_vector_found_elsewhere_in_extraction": exact_row_match,
+        "example_row_mismatches": matches,
+        "gene_axis_identical_as_sequence": [str(a) for a in rebuilt_genes][:5] ==
+                                           [str(a) for a in extraction_genes][:5],
+        "rebuilt_genes_head": [str(g) for g in rebuilt_genes[:5]],
+        "extraction_genes_head": [str(g) for g in extraction_genes[:5]],
+        "rebuilt_genes_sorted": [str(g) for g in rebuilt_genes] == sorted(
+            [str(g) for g in rebuilt_genes], key=int),
+        "extraction_genes_sorted": [str(g) for g in extraction_genes] == sorted(
+            [str(g) for g in extraction_genes], key=int),
+    }
+    open("/out/03c_h3_sensitivity/gate_permutation_test.json", "w").write(
+        json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps(summary, indent=2)
+
+
+@app.function(**COMMON)
+def stage_axis_test():
+    """Which column order does each extraction matrix actually use?
+
+    The compound half of the gate passed while the shRNA half failed on the same
+    declared gene axis. Either the two npz files disagree about their own column
+    order, or one of them carries labels that do not describe its matrix. H3's
+    alignment between a drug mean and a target direction is only meaningful if
+    both sit in the same coordinate system, so this is measured, not assumed.
+    """
+    import json
+    import sys
+
+    import numpy as np
+
+    sys.path.insert(0, "/app")
+    _repo_at_its_absolute_path()
+    staged, rebuilt_dir = _stage_inputs(), _stage_rebuild()
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    records = json.loads(open("/app/results/03_phenotype_projection/"
+                              "phenotype_projection_results.json").read())
+    targets = sorted({str(r["target"]) for r in records})
+    rebuilt_sigs, _, rebuilt_genes, _ = gate.load_shrna_rebuild_strict(rebuilt_dir)
+    extraction_sigs, _, extraction_genes = gate.load_shrna_extraction(
+        staged, targets_wanted=set(targets))
+
+    rebuilt_genes = [str(g) for g in rebuilt_genes]
+    extraction_genes = [str(g) for g in extraction_genes]
+    declared = {g: i for i, g in enumerate(extraction_genes)}
+    by_label = np.array([declared[g] for g in rebuilt_genes])
+
+    sample = sorted(set(rebuilt_sigs) & set(extraction_sigs))[:50]
+    identity_err, label_err = [], []
+    for sig_id in sample:
+        left = np.asarray(rebuilt_sigs[sig_id], dtype=np.float64)
+        right = np.asarray(extraction_sigs[sig_id], dtype=np.float64)
+        identity_err.append(float(np.abs(left - right).max()))
+        label_err.append(float(np.abs(left - right[by_label]).max()))
+
+    # and the same question for the compound matrix, whose half of the gate passed
+    compounds = np.load(f"{staged}/lincs_subset.npz", allow_pickle=True)
+    compound_genes = [str(g) for g in compounds["gene_ids"]]
+
+    summary = {
+        "n_sampled": len(sample),
+        "shrna_identity_order_max_error": max(identity_err),
+        "shrna_declared_label_order_max_error": max(label_err),
+        "reading": ("whichever is at float tolerance is the order the extraction's shRNA "
+                    "matrix actually uses"),
+        "shrna_matrix_follows": ("the rebuild's sorted order, so its own gene_ids labels are "
+                                 "wrong" if max(identity_err) < 1e-4 else
+                                 "its declared labels" if max(label_err) < 1e-4 else
+                                 "neither: a third order"),
+        "compound_gene_ids_equal_shrna_gene_ids": compound_genes == extraction_genes,
+        "compound_gene_ids_sorted": compound_genes == sorted(compound_genes, key=int),
+        "shrna_gene_ids_sorted": extraction_genes == sorted(extraction_genes, key=int),
+        "compound_half_of_the_gate": "passed, by declared labels, before the shRNA half ran",
+    }
+    open("/out/03c_h3_sensitivity/gate_axis_test.json", "w").write(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps(summary, indent=2)
+
+
+@app.function(**COMMON)
+def stage_recover_permutation():
+    """Recover the permutation between the extraction's shRNA columns and the GCTX.
+
+    The matrix follows neither its declared labels nor sorted order. If one
+    consistent permutation maps it onto the rebuild for every signature, the axis
+    is recoverable and the directions can be relabelled rather than rebuilt. If no
+    consistent permutation exists, they cannot.
+    """
+    import json
+    import sys
+
+    import numpy as np
+
+    sys.path.insert(0, "/app")
+    _repo_at_its_absolute_path()
+    staged, rebuilt_dir = _stage_inputs(), _stage_rebuild()
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    records = json.loads(open("/app/results/03_phenotype_projection/"
+                              "phenotype_projection_results.json").read())
+    targets = sorted({str(r["target"]) for r in records})
+    rebuilt_sigs, _, rebuilt_genes, _ = gate.load_shrna_rebuild_strict(rebuilt_dir)
+    extraction_sigs, _, extraction_genes = gate.load_shrna_extraction(
+        staged, targets_wanted=set(targets))
+    rebuilt_genes = [str(g) for g in rebuilt_genes]
+    extraction_genes = [str(g) for g in extraction_genes]
+
+    shared = sorted(set(rebuilt_sigs) & set(extraction_sigs))
+    probe = shared[0]
+    left = np.asarray(rebuilt_sigs[probe], dtype=np.float64)
+    right = np.asarray(extraction_sigs[probe], dtype=np.float64)
+    # the permutation that sorts both the same way maps one onto the other
+    candidate = np.argsort(right)[np.argsort(np.argsort(left))]
+
+    agree, disagree = 0, []
+    for sig_id in shared[:300]:
+        a = np.asarray(rebuilt_sigs[sig_id], dtype=np.float64)
+        b = np.asarray(extraction_sigs[sig_id], dtype=np.float64)[candidate]
+        if np.allclose(a, b, rtol=1e-4, atol=1e-4):
+            agree += 1
+        elif len(disagree) < 5:
+            disagree.append({"sig_id": sig_id, "max_abs": float(np.abs(a - b).max())})
+
+    implied = [extraction_genes[i] for i in candidate]
+    summary = {
+        "n_checked": min(300, len(shared)),
+        "n_agreeing_under_one_permutation": agree,
+        "permutation_is_consistent": agree == min(300, len(shared)),
+        "examples_disagreeing": disagree,
+        "implied_extraction_order_head": implied[:8],
+        "rebuild_order_head": rebuilt_genes[:8],
+        "implied_equals_declared": implied == extraction_genes,
+        "implied_is_sorted": implied == sorted(implied, key=int),
+        "reading": ("one consistent permutation means the shRNA columns are a relabelling "
+                    "away from the GCTX; no consistent permutation means they are not the "
+                    "same numbers at all"),
+    }
+    open("/out/03c_h3_sensitivity/gate_permutation_recovery.json", "w").write(
+        json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps(summary, indent=2)
+
+
+@app.function(**COMMON)
+def stage_verify_permutation():
+    """Verify the recovered permutation on every signature, and try to name it.
+
+    A permutation recovered from one vector and confirmed on 300 is a hypothesis.
+    This checks all 14,656, confirms the map is a bijection, writes it out so the
+    repair uses a recorded object rather than a rediscovered one, and tests the
+    orders it might correspond to: the gene-info file's own row order, the
+    landmark ids as strings, or the symbols alphabetically.
+    """
+    import json
+    import sys
+
+    import numpy as np
+    import pandas as pd
+
+    sys.path.insert(0, "/app")
+    _repo_at_its_absolute_path()
+    staged, rebuilt_dir = _stage_inputs(), _stage_rebuild()
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    records = json.loads(open("/app/results/03_phenotype_projection/"
+                              "phenotype_projection_results.json").read())
+    targets = sorted({str(r["target"]) for r in records})
+    rebuilt_sigs, _, rebuilt_genes, _ = gate.load_shrna_rebuild_strict(rebuilt_dir)
+    extraction_sigs, _, extraction_genes = gate.load_shrna_extraction(
+        staged, targets_wanted=set(targets))
+    rebuilt_genes = [str(g) for g in rebuilt_genes]
+    extraction_genes = [str(g) for g in extraction_genes]
+
+    shared = sorted(set(rebuilt_sigs) & set(extraction_sigs))
+    probe = shared[0]
+    left = np.asarray(rebuilt_sigs[probe], dtype=np.float64)
+    right = np.asarray(extraction_sigs[probe], dtype=np.float64)
+    permutation = np.argsort(right)[np.argsort(np.argsort(left))]
+
+    assert sorted(permutation.tolist()) == list(range(len(rebuilt_genes))), (
+        "the recovered map is not a bijection, so it is not a permutation")
+
+    worst, failures = 0.0, []
+    for sig_id in shared:
+        a = np.asarray(rebuilt_sigs[sig_id], dtype=np.float64)
+        b = np.asarray(extraction_sigs[sig_id], dtype=np.float64)[permutation]
+        error = float(np.abs(a - b).max())
+        worst = max(worst, error)
+        if error > 1e-4 and len(failures) < 10:
+            failures.append({"sig_id": sig_id, "max_abs": error})
+
+    # what order does the extraction's matrix actually sit in?
+    implied = [extraction_genes[i] for i in permutation]      # rebuild position -> extraction gene
+    actual_column_order = [None] * len(implied)
+    for position, gene in zip(permutation, rebuilt_genes):
+        actual_column_order[int(position)] = gene
+
+    gene_info = pd.read_csv(f"{staged}/GSE92742_Broad_LINCS_gene_info.txt.gz", sep="\t",
+                            low_memory=False)
+    landmark = gene_info[gene_info.pr_is_lm == 1]
+    file_order = [str(g) for g in landmark.pr_gene_id]
+    symbol_order = [str(g) for g in landmark.sort_values("pr_gene_symbol").pr_gene_id]
+    string_sorted = sorted([str(g) for g in rebuilt_genes])
+
+    summary = {
+        "n_signatures_checked": len(shared),
+        "max_abs_difference_under_the_permutation": worst,
+        "all_within_1e-4": worst <= 1e-4,
+        "failures": failures,
+        "is_a_bijection": True,
+        "actual_column_order_head": actual_column_order[:8],
+        "declared_order_head": extraction_genes[:8],
+        "matches_gene_info_file_order": actual_column_order == file_order,
+        "matches_symbol_alphabetical": actual_column_order == symbol_order,
+        "matches_id_as_string_sorted": actual_column_order == string_sorted,
+        "permutation": permutation.tolist(),
+        "reading": ("the extraction's shRNA columns sit in `actual_column_order`; its stored "
+                    "gene_ids say otherwise, and the compound matrix follows the stored ids"),
+    }
+    open("/out/03c_h3_sensitivity/shrna_axis_recovery.json", "w").write(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps({k: v for k, v in summary.items() if k != "permutation"}, indent=2)[:1800]
+
+
 @app.local_entrypoint()
 def main(stage: str):
-    """stage: gate | s1s3 | driver"""
+    """stage: gate | s1s3 | driver | diagnostic"""
     if stage == "gate":
         print(stage_gate.remote())
     elif stage == "s1s3":
         print(stage_s1s3.remote())
     elif stage == "driver":
         print(stage_driver.remote())
+    elif stage == "diagnostic":
+        print(stage_gate_diagnostic.remote())
     else:
         raise SystemExit(f"unknown stage {stage}")
     print("\nretrieve with:")

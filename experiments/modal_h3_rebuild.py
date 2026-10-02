@@ -295,6 +295,22 @@ def stage_shrna():
 
     _, fp = _fingerprint(raw)
     out = Path("/vol/results"); out.mkdir(parents=True, exist_ok=True)
+
+    # the signatures themselves, with their ids and the grouping that defines each
+    # consensus. The reconstruction gate compares these against the extraction and
+    # rebuilds every consensus from them, which is the check Deviation 9 needs.
+    used_ids = sorted({sig_id for entry in hairpins.values() for sig_id in entry["sig_ids"]})
+    signature_tmp = out / "shrna_signatures.npz.part"
+    with open(signature_tmp, "wb") as fh:
+        np.savez_compressed(fh, sig_ids=np.array(used_ids),
+                            signatures=np.vstack([mat.loc[s].to_numpy(np.float64)
+                                                  for s in used_ids]),
+                            gene_ids=np.array(ids),
+                            membership=np.array(json.dumps(
+                                {gene: entry["sig_ids"] for gene, entry in hairpins.items()})),
+                            fingerprint=np.array(fp))
+    signature_tmp.replace(out / "shrna_signatures.npz")
+
     tmp = out / "shrna_consensus.npz.part"
     with open(tmp, "wb") as fh:
         # the directions carry the gene axis they were built on, so a comparison
@@ -305,6 +321,8 @@ def stage_shrna():
     (out / "shrna_hairpins.json").write_text(json.dumps(hairpins, indent=2, sort_keys=True))
     vol.commit()
     print(json.dumps({"targets_with_consensus": len(names),
+                      "signatures_written": len(used_ids),
+                      "signatures_sha256": _sha256(out / "shrna_signatures.npz"),
                       "landmark_order_sha256": order_hash,
                       "consensus_sha256": _sha256(out / "shrna_consensus.npz"),
                       "hairpins_sha256": _sha256(out / "shrna_hairpins.json")}, indent=2))
