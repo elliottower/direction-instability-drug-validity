@@ -416,3 +416,65 @@ any R5 statistic was computed.
 
 Recorded in `results/03d_h3_reference_discordance/r5_prism_mapping.json` at run
 time, with the dose of every mapped drug.
+
+---
+
+## Deviation 11: the shRNA extraction stores correct values under a wrong gene axis
+
+**Pre-registered:** the reconstruction gate of
+`experiments/PREREG_H3_S1S3_CORRECTED_BASELINE.md` (frozen `7f57136`) requires an
+independent rebuild from the GEO GCTX to reproduce the pinned extraction, joined on
+identifiers, for both the compound matrices and the shRNA target consensuses.
+
+**Actual:** the gate ran on 2026-10-02 and failed on its shRNA half. The forensics
+that followed establish what the disagreement is.
+
+- Every one of the 14,656 shRNA signatures differs from the rebuild as stored, with
+  a median maximum absolute difference of 6.63.
+- The two versions have identical norms, to sixteen decimal places, and a median
+  cosine of 0.004. Equal norms with no alignment is a permutation, not a difference
+  in values.
+- Each signature holds the same multiset of values, and no rebuilt vector matches a
+  different extraction row, so the permutation is of the gene axis rather than of
+  the signature labels.
+- One bijective permutation maps the extraction onto the rebuild for **all 14,656
+  signatures with a maximum absolute difference of 0.0**.
+- The order that permutation implies matches none of the orders the pipeline uses:
+  not the gene-info file's row order, not the landmark ids sorted as strings, not
+  the gene symbols alphabetically.
+- `lincs_subset.npz` and `lincs_shrna.npz` declare the *same* gene axis, and the
+  compound half of the gate passed against that declared axis before the shRNA half
+  ran. The compound matrix follows the declared labels; the shRNA matrix does not.
+
+**What this means:** `lincs_shrna.npz` holds the right numbers under the wrong
+labels. Any quantity pairing a drug signature with a target direction — H3's
+signless target-axis alignment and projected dispersion, and H4's localization —
+was computed between vectors in different gene orders. The corrected values of
+Deviation 9 are affected: that deviation fixed which signatures were averaged into
+each consensus, not which gene each column carried.
+
+**Scope:** H3 and H4, and the shRNA fields of the CRISPRi records
+(`proj_shrna`, `enrich_shrna`). Raw direction instability, H1, H2, H5 and the
+66-fold held-out prediction never pair the two matrices and are unaffected. The
+CRISPRi directions are built from the Perturb-seq file into the compound matrix's
+own coordinates and are unaffected.
+
+**How it was identified:** the registered reconstruction gate, which exists because
+Deviation 9 was an identifier-versus-position error and a gate comparing values by
+position could not have seen it. The gate's shRNA half was added after a review
+observed that a compound-only comparison cannot test the object Deviation 9
+corrupted.
+
+**When:** before any S1-S3 statistic, and before any R0-R7 statistic, was computed.
+
+**Artifacts:** `results/03c_h3_sensitivity/shrna_axis_recovery.json` carries the
+recovered permutation and its verification;
+`gate_shrna_diagnostic.json`, `gate_permutation_test.json` and `gate_axis_test.json`
+carry the forensics above.
+
+### What this does NOT change
+
+- H1, H2, H5 and the 66-fold held-out prediction, none of which pair the two
+  matrices
+- The CRISPRi directions, or any quantity built from them alone
+- The R5 mapping, which is frozen and uses neither matrix
