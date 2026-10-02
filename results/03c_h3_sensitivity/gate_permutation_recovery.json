@@ -1,0 +1,29 @@
+{
+  "n_checked": 300,
+  "n_agreeing_under_one_permutation": 300,
+  "permutation_is_consistent": true,
+  "examples_disagreeing": [],
+  "implied_extraction_order_head": [
+    "6790",
+    "8503",
+    "54807",
+    "4791",
+    "8574",
+    "7048",
+    "10652",
+    "7168"
+  ],
+  "rebuild_order_head": [
+    "16",
+    "23",
+    "25",
+    "30",
+    "39",
+    "47",
+    "102",
+    "128"
+  ],
+  "implied_equals_declared": false,
+  "implied_is_sorted": false,
+  "reading": "one consistent permutation means the shRNA columns are a relabelling away from the GCTX; no consistent permutation means they are not the same numbers at all"
+}

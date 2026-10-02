@@ -1,0 +1,11 @@
+{
+  "n_sampled": 50,
+  "shrna_identity_order_max_error": 11.481425285339355,
+  "shrna_declared_label_order_max_error": 12.10710072517395,
+  "reading": "whichever is at float tolerance is the order the extraction's shRNA matrix actually uses",
+  "shrna_matrix_follows": "neither: a third order",
+  "compound_gene_ids_equal_shrna_gene_ids": true,
+  "compound_gene_ids_sorted": false,
+  "shrna_gene_ids_sorted": false,
+  "compound_half_of_the_gate": "passed, by declared labels, before the shRNA half ran"
+}

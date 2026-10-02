@@ -1,0 +1,24 @@
+{
+  "n_sampled": 200,
+  "same_multiset_of_values": 200,
+  "reading_same_values": "the same numbers in a different order means the gene axis is mislabeled, not that the values differ",
+  "rebuilt_vector_found_elsewhere_in_extraction": 0,
+  "example_row_mismatches": {},
+  "gene_axis_identical_as_sequence": false,
+  "rebuilt_genes_head": [
+    "16",
+    "23",
+    "25",
+    "30",
+    "39"
+  ],
+  "extraction_genes_head": [
+    "780",
+    "7849",
+    "6193",
+    "23",
+    "9552"
+  ],
+  "rebuilt_genes_sorted": true,
+  "extraction_genes_sorted": false
+}

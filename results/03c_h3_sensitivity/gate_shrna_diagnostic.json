@@ -1,0 +1,103 @@
+{
+  "n_signatures_compared": 14656,
+  "n_differing_beyond_1e-5": 14656,
+  "fraction_differing": 1.0,
+  "cosine": {
+    "min": -0.12250744748124706,
+    "median": 0.003766558273358542,
+    "max": 0.12363392915645431,
+    "n_above_0.999": 0
+  },
+  "scale_ratio": {
+    "min": 0.9999999999999997,
+    "median": 1.0,
+    "max": 1.0000000000000004
+  },
+  "max_abs_difference": {
+    "max": 20.0,
+    "median": 6.625782310962677
+  },
+  "worst_ten": [
+    {
+      "sig_id": "ERGK006_VCAP_120H:TRCN0000003164:-666",
+      "max_abs_difference": 20.0,
+      "cosine": 0.03735574817398481,
+      "scale_ratio": 1.0,
+      "rebuild_norm": 180.63038550197032,
+      "extraction_norm": 180.63038550197032
+    },
+    {
+      "sig_id": "KDD009_A375_96H:TRCN0000039606:-666",
+      "max_abs_difference": 20.0,
+      "cosine": -0.06687225350274092,
+      "scale_ratio": 1.0,
+      "rebuild_norm": 40.135900925548604,
+      "extraction_norm": 40.135900925548604
+    },
+    {
+      "sig_id": "KDD010_MCF7_96H:TRCN0000121248:-666",
+      "max_abs_difference": 20.0,
+      "cosine": -0.041320086629599614,
+      "scale_ratio": 1.0,
+      "rebuild_norm": 47.409900890190336,
+      "extraction_norm": 47.409900890190336
+    },
+    {
+      "sig_id": "TAK004_U2OS_96H:TRCN0000001028:1",
+      "max_abs_difference": 20.0,
+      "cosine": 0.013209537816486485,
+      "scale_ratio": 1.0,
+      "rebuild_norm": 107.13527540960506,
+      "extraction_norm": 107.13527540960506
+    },
+    {
+      "sig_id": "KDA001_A375_96H:TRCN0000009850:-666",
+      "max_abs_difference": 19.78849983215332,
+      "cosine": -0.005788388410882707,
+      "scale_ratio": 1.0,
+      "rebuild_norm": 62.1247694966518,
+      "extraction_norm": 62.1247694966518
+    },
+    {
+      "sig_id": "KDA005_HCC515_96H:TRCN0000084120:-666",
+      "max_abs_difference": 18.92099952697754,
+      "cosine": 0.005228435659504747,
+      "scale_ratio": 1.0,
+      "rebuild_norm": 80.68570074354069,
+      "extraction_norm": 80.68570074354069
+    },
+    {
+      "sig_id": "KDD005_A375_96H:TRCN0000001667:-666",
+      "max_abs_difference": 17.907350063323975,
+      "cosine": 0.04168241371417921,
+      "scale_ratio": 1.0,
+      "rebuild_norm": 110.9367537834998,
+      "extraction_norm": 110.9367537834998
+    },
+    {
+      "sig_id": "KDD008_HT29_96H:TRCN0000000588:-666",
+      "max_abs_difference": 17.805506706237793,
+      "cosine": 0.04632648901993927,
+      "scale_ratio": 1.0,
+      "rebuild_norm": 132.33010047693043,
+      "extraction_norm": 132.33010047693043
+    },
+    {
+      "sig_id": "KDA001_HEPG2_96H:TRCN0000064377:-666",
+      "max_abs_difference": 17.01765012741089,
+      "cosine": -0.001979461793484287,
+      "scale_ratio": 1.0,
+      "rebuild_norm": 45.87279077606301,
+      "extraction_norm": 45.87279077606301
+    },
+    {
+      "sig_id": "KDD008_HA1E_96H:TRCN0000010018:-666",
+      "max_abs_difference": 16.902699947357178,
+      "cosine": 0.02089820912583885,
+      "scale_ratio": 0.9999999999999999,
+      "rebuild_norm": 52.99175132519851,
+      "extraction_norm": 52.991751325198514
+    }
+  ],
+  "reading": "a cosine near 1 with a scale ratio away from 1 means the same direction under a different normalization; a cosine far from 1 means different values, not a rescaling"
+}
