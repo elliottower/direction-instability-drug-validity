@@ -1,0 +1,12 @@
+{
+  "n_probed": 120,
+  "rows_holding_the_signature_their_label_names": 0,
+  "rows_holding_a_different_signature": 0,
+  "rows_matching_nothing_in_the_block": 120,
+  "examples": [],
+  "offset_is_constant": null,
+  "distinct_offsets": [],
+  "stored_ids_are_sorted": false,
+  "n_signatures_in_the_extraction": 167266,
+  "reading": "a row matching a different source signature at cosine ~1 means the values are real and the labels are wrong, which is Deviation 9's shape rather than Deviation 11's; a constant offset would name the mechanism"
+}

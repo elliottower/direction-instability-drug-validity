@@ -1,0 +1,19 @@
+{
+  "n_signatures_used": 400,
+  "n_declared_columns": 978,
+  "n_source_columns_with_a_unique_profile": 978,
+  "n_source_profile_collisions": 0,
+  "n_declared_columns_matched_exactly": 0,
+  "n_unmatched": 978,
+  "unmatched_examples": [
+    "780",
+    "7849",
+    "6193",
+    "23",
+    "9552"
+  ],
+  "match_is_a_bijection": false,
+  "n_columns_already_in_the_right_place": 0,
+  "example_relabelings": [],
+  "reading": "every declared column matching exactly one source column by profile, as a bijection, means the compound extraction carries correct values under a wrong gene axis: the same defect class as Deviation 11, on the drug data"
+}

@@ -981,6 +981,182 @@ def stage_compound_axis_recovery():
     return json.dumps(summary, indent=2)
 
 
+@app.function(**COMMON)
+def stage_compound_row_test():
+    """Does each extraction row hold the signature its label claims?
+
+    No single gene permutation reconciles the compound extraction with the source,
+    which rules out Deviation 11's shape. Matching value ranges with a near-zero
+    cosine and no consistent column map is what row mislabeling looks like instead:
+    the row is a real signature, just not the one the label names. This searches the
+    source for the signature each row actually holds.
+    """
+    import importlib.util
+    import json
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+
+    _repo_at_its_absolute_path()
+    staged = _stage_inputs()
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    raw = Path("/rebuild/raw")
+    records = json.loads(Path("/app/results/03_phenotype_projection/"
+                              "phenotype_projection_results.json").read_text())
+    drugs = sorted({r["drug"] for r in records})
+    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+                          low_memory=False)
+    cohort_ids = sorted(set(siginfo[siginfo.pert_iname.isin(set(drugs))].sig_id.astype(str)))
+
+    extraction = np.load(Path(staged) / "lincs_subset.npz", allow_pickle=True)
+    stored_ids = [str(s) for s in extraction["sig_ids"]]
+    held = {sig_id: i for i, sig_id in enumerate(stored_ids)}
+    declared = [str(g) for g in extraction["gene_ids"]]
+    matrix = extraction["signatures"]
+
+    # read a block of the source large enough that a mislabeled row's true owner is
+    # likely inside it, on the extraction's declared gene order
+    block = cohort_ids[:3000]
+    values, genes, signatures, _ = gate.read_gctx_slice(raw / GCTX, block, declared)
+    column = {g: i for i, g in enumerate(genes)}
+    on_declared = np.array([column[g] for g in declared])
+    source = values[:, on_declared]
+    source_unit = source / np.linalg.norm(source, axis=1, keepdims=True)
+    position_in_source = {sig_id: i for i, sig_id in enumerate(signatures)}
+
+    probes = [sig_id for sig_id in block[:120] if sig_id in held]
+    found_elsewhere, exact_self, offsets, examples = 0, 0, [], []
+    for sig_id in probes:
+        row = np.asarray(matrix[held[sig_id]], dtype=np.float64)
+        norm = np.linalg.norm(row)
+        if norm == 0:
+            continue
+        similarity = source_unit @ (row / norm)
+        best = int(np.argmax(similarity))
+        if similarity[best] > 0.999:
+            owner = signatures[best]
+            if owner == sig_id:
+                exact_self += 1
+            else:
+                found_elsewhere += 1
+                offsets.append(position_in_source[owner] - position_in_source[sig_id])
+                if len(examples) < 8:
+                    examples.append({"label": sig_id, "actually_holds": owner,
+                                     "cosine": float(similarity[best])})
+
+    summary = {
+        "n_probed": len(probes),
+        "rows_holding_the_signature_their_label_names": exact_self,
+        "rows_holding_a_different_signature": found_elsewhere,
+        "rows_matching_nothing_in_the_block": len(probes) - exact_self - found_elsewhere,
+        "examples": examples,
+        "offset_is_constant": len(set(offsets)) == 1 if offsets else None,
+        "distinct_offsets": sorted(set(offsets))[:10],
+        "stored_ids_are_sorted": stored_ids == sorted(stored_ids),
+        "n_signatures_in_the_extraction": len(stored_ids),
+        "reading": ("a row matching a different source signature at cosine ~1 means the "
+                    "values are real and the labels are wrong, which is Deviation 9's shape "
+                    "rather than Deviation 11's; a constant offset would name the mechanism"),
+    }
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "compound_row_test.json").write_text(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps(summary, indent=2)
+
+
+@app.function(**COMMON)
+def stage_compound_column_match():
+    """Recover the compound axis by column profile rather than by sorting values.
+
+    The earlier recovery derived a permutation from one signature's `argsort`, which
+    cannot work here: tens of values per signature sit pinned at the clipping bounds,
+    so the order among ties is arbitrary and a map derived from one signature does not
+    transfer. Identical minima, maxima and saturation counts on both sides say the
+    values are the same multiset, so this matches each declared column against the
+    source columns by its profile across many signatures, where ties do not arise.
+    """
+    import importlib.util
+    import json
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+
+    _repo_at_its_absolute_path()
+    staged = _stage_inputs()
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    raw = Path("/rebuild/raw")
+    records = json.loads(Path("/app/results/03_phenotype_projection/"
+                              "phenotype_projection_results.json").read_text())
+    drugs = sorted({r["drug"] for r in records})
+    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+                          low_memory=False)
+    cohort = sorted(set(siginfo[siginfo.pert_iname.isin(set(drugs))].sig_id.astype(str)))
+
+    extraction = np.load(Path(staged) / "lincs_subset.npz", allow_pickle=True)
+    held = {str(s): i for i, s in enumerate(extraction["sig_ids"])}
+    declared = [str(g) for g in extraction["gene_ids"]]
+    sample = [s for s in cohort if s in held][:400]
+
+    # the array is decompressed once. Indexing an NpzFile inside a comprehension
+    # re-inflates the whole 167,266 by 978 matrix on every access, which is the
+    # mistake this file already carries a comment about in load_shrna_extraction.
+    stored = extraction["signatures"]
+    left = np.vstack([np.asarray(stored[held[s]], dtype=np.float64) for s in sample])
+    del stored
+    values, genes, signatures, _ = gate.read_gctx_slice(raw / GCTX, sample, declared)
+    row_of = {s: i for i, s in enumerate(signatures)}
+    right = np.vstack([values[row_of[s]] for s in sample])        # source, its own order
+
+    profiles = {}
+    for column in range(right.shape[1]):
+        profiles.setdefault(np.ascontiguousarray(right[:, column]).tobytes(), []).append(column)
+    collisions = sum(1 for cols in profiles.values() if len(cols) > 1)
+
+    matched, unmatched = {}, []
+    for column, gene in enumerate(declared):
+        key = np.ascontiguousarray(left[:, column]).tobytes()
+        where = profiles.get(key)
+        if where and len(where) == 1:
+            matched[gene] = genes[where[0]]
+        else:
+            unmatched.append(gene)
+
+    images = list(matched.values())
+    summary = {
+        "n_signatures_used": len(sample),
+        "n_declared_columns": len(declared),
+        "n_source_columns_with_a_unique_profile": len(profiles),
+        "n_source_profile_collisions": collisions,
+        "n_declared_columns_matched_exactly": len(matched),
+        "n_unmatched": len(unmatched),
+        "unmatched_examples": unmatched[:5],
+        "match_is_a_bijection": len(set(images)) == len(images) == len(declared),
+        "n_columns_already_in_the_right_place": sum(1 for gene, image in matched.items()
+                                                    if gene == image),
+        "example_relabelings": [{"declared": gene, "actually": image}
+                                for gene, image in list(matched.items())[:8]],
+        "reading": ("every declared column matching exactly one source column by profile, as a "
+                    "bijection, means the compound extraction carries correct values under a "
+                    "wrong gene axis: the same defect class as Deviation 11, on the drug data"),
+    }
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "compound_column_match.json").write_text(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps(summary, indent=2)
+
+
 @app.local_entrypoint()
 def main(stage: str):
     """stage: gate | s1s3 | driver | diagnostic"""
