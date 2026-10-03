@@ -36,6 +36,7 @@ from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from geometry.direction_instability import direction_instability, phenotype_projected_instability
+from geometry.references import check_declared_axis, frozen_landmark_order
 
 
 def log(msg: str):
@@ -227,6 +228,9 @@ def run_real(data_dir: Path, perturbseq_path: Path, output_dir: Path):
     compound_sigs = data["signatures"]
     compound_sig_ids = list(data["sig_ids"])
     compound_gene_ids = list(data["gene_ids"])
+    check_declared_axis(compound_gene_ids,
+                        frozen_landmark_order(data_dir / "GSE92742_Broad_LINCS_gene_info.txt.gz"),
+                        sigs_path.name)
     log(f"  {compound_sigs.shape[0]:,} signatures x {compound_sigs.shape[1]} genes")
 
     landmark_symbols = [entrez_to_symbol.get(gid, gid) for gid in compound_gene_ids]

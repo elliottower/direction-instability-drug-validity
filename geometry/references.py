@@ -65,6 +65,39 @@ def unit(vector: np.ndarray) -> np.ndarray:
     return vector / norm
 
 
+def frozen_landmark_order(gene_info_path) -> list:
+    """The 978 landmark gene ids, ascending by Entrez id, as the rebuild freezes them."""
+    gene_info = pd.read_csv(gene_info_path, sep="\t", low_memory=False)
+    landmark = gene_info[gene_info["pr_is_lm"] == 1].sort_values("pr_gene_id")
+    ids = [str(gene) for gene in landmark["pr_gene_id"]]
+    assert len(ids) == N_LANDMARK, f"{len(ids)} landmark genes, expected {N_LANDMARK}"
+    return ids
+
+
+def check_declared_axis(declared, frozen, source) -> None:
+    """Refuse an artifact whose declared gene axis is not the frozen landmark order.
+
+    This is a statement about labels, and labels can be wrong about the matrix they
+    sit on: Deviation 11 was a matrix whose columns did not follow the identifiers
+    it declared, and both extractions declared the same identifiers, so this check
+    passes on it. The coordinates themselves are verified against a parse of the
+    pinned source by the reconstruction gate. Amendment 2 registers both layers and
+    neither replaces the other.
+    """
+    declared, frozen = [str(gene) for gene in declared], [str(gene) for gene in frozen]
+    assert len(set(declared)) == len(declared), f"{source} repeats a gene identifier"
+    if declared == frozen:
+        return
+    position = next((i for i, (left, right) in enumerate(zip(declared, frozen))
+                     if left != right), None)
+    detail = (f"; first difference at position {position}: {declared[position]} against "
+              f"{frozen[position]}" if position is not None else "")
+    raise AssertionError(
+        f"{source} declares {len(declared)} genes against the frozen order's "
+        f"{len(frozen)}{detail}" if len(declared) != len(frozen) else
+        f"{source} declares a gene axis that is not the frozen landmark order{detail}")
+
+
 def landmark_symbols(gene_info_path, gene_ids) -> list:
     """Symbols for the landmark gene ids, in the order the extraction holds them."""
     gene_info = pd.read_csv(gene_info_path, sep="\t", low_memory=False)

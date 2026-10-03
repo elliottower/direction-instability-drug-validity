@@ -33,6 +33,7 @@ from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from geometry.direction_instability import direction_instability, localization_score
+from geometry.references import check_declared_axis, frozen_landmark_order
 
 
 REGION_MASK_SIZE = 100
@@ -177,6 +178,9 @@ def run_real(data_dir: Path, output_dir: Path):
     compound_sigs = data["signatures"]
     compound_sig_ids = list(data["sig_ids"])
     compound_gene_ids = list(data["gene_ids"])
+    check_declared_axis(compound_gene_ids,
+                        frozen_landmark_order(data_dir / "GSE92742_Broad_LINCS_gene_info.txt.gz"),
+                        sigs_path.name)
     n_genes = compound_sigs.shape[1]
     assert len(set(compound_sig_ids)) == len(compound_sig_ids), "Duplicate sig_ids in compound data"
     log(f"  {compound_sigs.shape[0]:,} signatures x {n_genes} genes")

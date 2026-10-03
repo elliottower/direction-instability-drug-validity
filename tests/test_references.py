@@ -3,8 +3,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from geometry.references import (Reference, alignment_matrix, landmark_symbols,
-                                 load_replogle_bulk, pooled_crispri_reference, shared_space, unit)
+from geometry.references import (Reference, alignment_matrix, check_declared_axis,
+                                 landmark_symbols, load_replogle_bulk,
+                                 pooled_crispri_reference, shared_space, unit)
 
 
 def _gene_info(tmp_path, symbols, extra_non_landmark=("ZZZ1",)):
@@ -173,3 +174,31 @@ def test_shared_space_is_the_intersection():
     a = Reference("a", {}, np.array([0, 1, 2, 5]))
     b = Reference("b", {}, np.array([1, 2, 3, 5]))
     assert list(shared_space(a, b)) == [1, 2, 5]
+
+
+def test_the_declared_axis_check_passes_the_frozen_order_and_refuses_a_reordering():
+    frozen = [str(100 + i) for i in range(12)]
+    check_declared_axis(list(frozen), frozen, "artifact.npz")
+
+    reordered = list(reversed(frozen))
+    with pytest.raises(AssertionError, match="not the frozen landmark order"):
+        check_declared_axis(reordered, frozen, "artifact.npz")
+
+    with pytest.raises(AssertionError, match="declares 11 genes against the frozen order's 12"):
+        check_declared_axis(frozen[:-1], frozen, "artifact.npz")
+
+    with pytest.raises(AssertionError, match="repeats a gene identifier"):
+        check_declared_axis(frozen[:-1] + [frozen[0]], frozen, "artifact.npz")
+
+
+def test_the_declared_axis_check_cannot_see_a_matrix_that_lies_about_its_labels():
+    # Deviation 11's shape, and the reason Amendment 2 registers a second layer:
+    # the labels are right, the columns under them are not, and this check passes
+    rng = np.random.default_rng()
+    frozen = [str(100 + i) for i in range(12)]
+    matrix = rng.standard_normal((5, 12))
+    mislabeled = matrix[:, rng.permutation(12)]
+
+    check_declared_axis(list(frozen), frozen, "truthful.npz")
+    check_declared_axis(list(frozen), frozen, "mislabeled.npz")
+    assert not np.allclose(matrix, mislabeled)
