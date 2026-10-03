@@ -27,7 +27,6 @@ from pathlib import Path
 import h5py
 import numpy as np
 import pandas as pd
-from cmapPy.pandasGEXpress import parse
 
 REPO = Path("/Users/elliottower/Documents/GitHub/direction-instability-drug-validity")
 OUT = REPO / "results" / "03c_h3_sensitivity"
@@ -36,6 +35,20 @@ REFERENCE_ARTIFACT = (REPO / "results" / "03_phenotype_projection"
 RTOL, ATOL = 1e-5, 1e-5
 N_LANDMARK = 978
 MIN_SIGNATURES = 3        # distinct signature ids, not reagents
+
+
+class GateError(AssertionError):
+    """A contract the gate refuses to run without.
+
+    It subclasses AssertionError so the registered failure type does not change,
+    and it is raised explicitly so `python -O`, which removes `assert`, cannot
+    switch a contract off.
+    """
+
+
+def require(condition, message) -> None:
+    if not condition:
+        raise GateError(message)
 
 
 def sha256_text(text: str) -> str:
@@ -84,12 +97,29 @@ def compare(rebuilt, extraction, cohort=None, rtol=RTOL, atol=ATOL):
     rebuilt_matrices = {d: rebuilt_matrices[d] for d in cohort}
     extraction_matrices = {d: extraction_matrices[d] for d in cohort}
 
+    require(cohort, "the cohort is empty, so this comparison would check nothing")
+    for name, axis in (("rebuild", rebuilt_genes), ("extraction", extraction_genes)):
+        labels = [str(gene) for gene in axis]
+        require(len(set(labels)) == len(labels),
+                f"the {name} compound gene axis repeats an identifier, which makes its "
+                "coordinate map ambiguous and lets a duplicated column pass")
     gene_order = {gene: i for i, gene in enumerate(map(str, extraction_genes))}
-    assert set(map(str, rebuilt_genes)) == set(gene_order), "the gene axes differ"
+    require(set(map(str, rebuilt_genes)) == set(gene_order), "the gene axes differ")
     gene_permutation = np.array([gene_order[gene] for gene in map(str, rebuilt_genes)])
 
     worst, per_drug = 0.0, {}
     for drug in sorted(cohort):
+        # shapes are tied to identifier counts before any arithmetic: a matrix with
+        # one row and two declared cell lines would otherwise broadcast against two
+        # equal source rows and pass
+        for name, matrix, cells_declared, axis in (
+                ("rebuild", rebuilt_matrices[drug], rebuilt_cells[drug], rebuilt_genes),
+                ("extraction", extraction_matrices[drug], extraction_cells[drug],
+                 extraction_genes)):
+            shape = tuple(np.asarray(matrix).shape)
+            require(shape == (len(cells_declared), len(axis)),
+                    f"{drug}: the {name} matrix is {shape} against "
+                    f"{len(cells_declared)} declared cell lines and {len(axis)} genes")
         left, right, cells = align(rebuilt_matrices[drug], rebuilt_cells[drug],
                                    extraction_matrices[drug], extraction_cells[drug])
         right = right[:, gene_permutation]     # the extraction's genes, in the rebuild's order
@@ -120,6 +150,9 @@ def load_rebuild(directory: Path):
             for key in data.files:
                 if key in ("fingerprint", "__cells__"):
                     continue
+                require(key not in matrices,
+                        f"{key} arrives from more than one shard, and the later one would "
+                        "replace the earlier without either being compared")
                 matrices[key] = data[key]
             cells.update({drug: [str(c) for c in ids] for drug, ids in shard_cells.items()})
     gene_file = Path(directory) / "landmark_gene_ids.json"
@@ -159,7 +192,7 @@ def load_extraction(data_dir: Path, cohort=None):
     return matrices, cells, [str(g) for g in compounds["gene_ids"]]
 
 
-def compare_shrna(rebuilt, extraction, stored=None,
+def compare_shrna(rebuilt, extraction, stored=None, expected_targets=None,
                   min_signatures=MIN_SIGNATURES, rtol=RTOL, atol=ATOL):
     """The half of the gate that guards the object Deviation 9 corrupted.
 
@@ -185,6 +218,35 @@ def compare_shrna(rebuilt, extraction, stored=None,
     """
     rebuilt_signatures, rebuilt_membership, rebuilt_genes = rebuilt
     extraction_signatures, extraction_membership, extraction_genes = extraction
+
+    # a comparison over nothing cannot fail, so the registered universe is required
+    # rather than inferred from whatever both sides happen to hold
+    if expected_targets is not None:
+        expected = {str(target) for target in expected_targets}
+        require(expected, "the registered target universe is empty")
+        for name, observed in (("rebuild", rebuilt_membership),
+                               ("source", extraction_membership)):
+            missing = sorted(expected - set(map(str, observed)))
+            require(not missing,
+                    f"{len(missing)} registered targets are absent from the {name}: "
+                    f"{missing[:5]}")
+        if stored is not None:
+            missing = sorted(expected - set(map(str, stored[0])))
+            require(not missing,
+                    f"{len(missing)} registered targets have no stored direction: "
+                    f"{missing[:5]}")
+    require(rebuilt_signatures and extraction_signatures,
+            "one side holds no signatures, so the comparison would check nothing")
+    require(rebuilt_membership and extraction_membership,
+            "one side groups no targets, so the comparison would check nothing")
+    for name, signatures, membership in (
+            ("rebuild", rebuilt_signatures, rebuilt_membership),
+            ("source", extraction_signatures, extraction_membership)):
+        union = {str(sig) for members in membership.values() for sig in members}
+        uncovered = sorted(union - set(map(str, signatures)))
+        require(not uncovered,
+                f"the {name} groups {len(uncovered)} signatures it does not hold: "
+                f"{uncovered[:5]}")
 
     for name, axis in (("rebuild", rebuilt_genes), ("extraction", extraction_genes)):
         assert len(set(map(str, axis))) == len(axis), (
@@ -301,6 +363,9 @@ def compare_shrna(rebuilt, extraction, stored=None,
                                                     else None),
             "stored_directions_compared": stored is not None,
             "worst_target": worst_target,
+            "n_signatures_outside_any_membership": len(
+                set(map(str, rebuilt_signatures))
+                - {str(s) for members in rebuilt_membership.values() for s in members}),
             "n_target_failures": len(target_failures),
             "targets_outside_tolerance": target_failures[:20],
             "all_within_tolerance": bool(not signature_failures and not target_failures),
@@ -343,68 +408,18 @@ def load_shrna_rebuild(directory: Path):
                 f"{consensus_path} carries no gene axis; the gate cannot tell which "
                 "coordinate system its directions use")
             directions = data["directions"]
-            stored = ({str(target): np.asarray(directions[i])
-                       for i, target in enumerate(data["genes"])},
+            targets = [str(target) for target in data["genes"]]
+            # building the dictionary first would silently keep the last of a
+            # repeated pair and discard a corrupted earlier one
+            require(len(set(targets)) == len(targets),
+                    f"{consensus_path} repeats a target: "
+                    f"{sorted({t for t in targets if targets.count(t) > 1})}")
+            require(len(targets) == len(directions),
+                    f"{consensus_path} holds {len(targets)} targets and "
+                    f"{len(directions)} directions")
+            stored = ({target: np.asarray(directions[i]) for i, target in enumerate(targets)},
                       [str(g) for g in data["gene_ids"]])
     return signatures, membership, genes, stored
-
-
-def shrna_from_parsed_frame(frame, membership, landmark_ids):
-    """Signatures keyed by id, carrying the gene labels the frame itself reports.
-
-    The pairing of a value with a gene comes from the parsed frame's own index and
-    is never reordered here. Reordering by labels read from the source is correct
-    and is what coordinate harmonization requires; assigning expected labels
-    positionally, before the source's own identifier-to-value pairing has been
-    established, is what cannot be undone. Deviation 11 was a matrix whose columns
-    did not follow the labels it declared, and reindexing an artifact that is
-    already falsely labeled neither repairs nor reveals it.
-    """
-    labels = [str(gene) for gene in frame.index]
-    assert len(set(labels)) == len(labels), "the parsed frame repeats a gene identifier"
-    wanted = set(map(str, landmark_ids))
-    keep = [i for i, gene in enumerate(labels) if gene in wanted]
-    genes = [labels[i] for i in keep]
-    assert len(genes) == len(wanted), (
-        f"the parse covers {len(genes)} of {len(wanted)} landmark genes")
-
-    columns = {str(sig_id): i for i, sig_id in enumerate(frame.columns)}
-    assert len(columns) == frame.shape[1], "the parsed frame repeats a signature id"
-    values = frame.to_numpy()
-    signatures = {}
-    for members in membership.values():
-        for sig_id in members:
-            if sig_id not in signatures:
-                signatures[sig_id] = values[keep, columns[sig_id]]
-    return signatures, genes
-
-
-def load_shrna_from_gctx(gctx_path: Path, siginfo_path: Path, gene_info_path: Path,
-                         targets_wanted=None, min_signatures=MIN_SIGNATURES):
-    """The gate's own parse of the pinned GCTX, by a different route from production.
-
-    The production extractor asks cmapPy for a fixed row order and reindexes the
-    result onto it. This asks only for the landmark rows, reads the identifiers the
-    file reports for them, and leaves them in that order: `compare_shrna` aligns
-    the two axes on identifiers, so no order has to be assumed anywhere.
-    """
-    gene_info = pd.read_csv(gene_info_path, sep="\t", low_memory=False)
-    landmark_ids = [str(gene) for gene in gene_info[gene_info.pr_is_lm == 1].pr_gene_id]
-    assert len(landmark_ids) == N_LANDMARK, f"{len(landmark_ids)} landmark genes"
-
-    siginfo = pd.read_csv(siginfo_path)
-    membership = {}
-    for gene, group in siginfo.groupby("pert_iname"):
-        members = sorted(set(group.sig_id.astype(str)))
-        if len(members) < min_signatures:
-            continue
-        if targets_wanted is None or gene in targets_wanted:
-            membership[str(gene)] = members
-
-    wanted = sorted({sig_id for members in membership.values() for sig_id in members})
-    gct = parse.parse(str(gctx_path), cid=wanted, rid=landmark_ids)
-    signatures, genes = shrna_from_parsed_frame(gct.data_df, membership, landmark_ids)
-    return signatures, membership, genes
 
 
 def _decoded(values) -> list:
@@ -537,7 +552,11 @@ def compounds_from_source(gctx_path, siginfo_path, gene_info_path, cohort):
 
 
 def load_shrna_extraction(data_dir: Path, targets_wanted=None):
-    """The same objects from the pinned extraction, grouped by the pinned metadata rule.
+    """The retired extraction, read only by the recorded forensic stages.
+
+    Amendment 2 retires `lincs_shrna.npz`, and no gate path reaches this function.
+    It stays because the Deviation 11 forensics were computed with it and would not
+    reproduce without it.
 
     The signature matrix is decompressed once. Indexing an NpzFile inside a loop
     re-reads and re-inflates the whole array on every access, which on 154,993
@@ -568,7 +587,7 @@ def load_shrna_extraction(data_dir: Path, targets_wanted=None):
 
 
 def compare_both(compound_rebuilt, compound_extraction, shrna_rebuilt, shrna_extraction,
-                 cohort, stored=None):
+                 cohort, stored=None, expected_targets=None, retained_compound=None):
     """Both registered halves, with a structural failure named rather than thrown.
 
     An assertion inside either comparison used to propagate before anything was
@@ -576,101 +595,118 @@ def compare_both(compound_rebuilt, compound_extraction, shrna_rebuilt, shrna_ext
     itself. It is caught here and recorded; the caller writes the result and then
     raises.
     """
-    halves = ("compound_signatures", "shrna_signatures_and_consensuses")
+    halves = ["compound_signatures", "shrna_signatures_and_consensuses"]
     result = {}
     try:
         result["compound_signatures"] = compare(compound_rebuilt, compound_extraction,
                                                 cohort=cohort)
+        if retained_compound is not None:
+            halves.append("retained_compound_extraction")
+            result["retained_compound_extraction"] = compare(
+                retained_compound, compound_extraction, cohort=cohort)
         result["shrna_signatures_and_consensuses"] = compare_shrna(
-            shrna_rebuilt, shrna_extraction, stored=stored)
+            shrna_rebuilt, shrna_extraction, stored=stored,
+            expected_targets=expected_targets)
     except AssertionError as failure:
         result["structural_failure"] = str(failure)
+    result["halves_compared"] = halves
     result["all_within_tolerance"] = bool(
         not result.get("structural_failure")
         and all(result.get(half, {}).get("all_within_tolerance") for half in halves))
     return result
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__,
-                                     formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--rebuilt", type=Path, required=True,
-                        help="directory holding the GCTX rebuild's shards")
-    parser.add_argument("--extraction", type=Path, required=True)
-    parser.add_argument("--cohort", type=Path, default=REFERENCE_ARTIFACT,
-                        help="the artifact whose drugs and targets both sides must hold")
-    parser.add_argument("--gctx", type=Path,
-                        help="the pinned GCTX. Given, the shRNA half compares the canonical "
-                             "artifact against this gate's own parse of the source, which is "
-                             "what Amendment 2 requires; `lincs_shrna.npz` is then read by "
-                             "nothing. Omitted, the retired extraction is the second source.")
-    parser.add_argument("--shrna-siginfo", type=Path,
-                        help="the pinned shRNA metadata, with --gctx")
-    parser.add_argument("--gene-info", type=Path,
-                        help="the pinned gene info, with --gctx")
-    parser.add_argument("--compound-siginfo", type=Path,
-                        help="the pinned compound metadata, with --gctx. Both halves are then "
-                             "verified against the source, which is what retaining "
-                             "`lincs_subset.npz` claims.")
-    parser.add_argument("--output", type=Path, default=OUT)
-    args = parser.parse_args()
-    assert (bool(args.gctx) == bool(args.shrna_siginfo) == bool(args.gene_info)
-            == bool(args.compound_siginfo)), (
-        "--gctx needs --shrna-siginfo, --compound-siginfo and --gene-info, which pin the "
-        "membership rules and the landmark set it reads against")
+def gate_report(args) -> dict:
+    """Everything the gate does, with every failure inside the record.
 
+    Loading, validation and comparison are all here, because a failure while
+    loading is exactly as informative as a failure while comparing and used to
+    leave no artifact: `compare_both` catches only what the comparisons raise, and
+    a missing identifier or an ambiguous orientation happens before them.
+    """
     records = json.loads(args.cohort.read_text())
     drugs = sorted({record["drug"] for record in records})
-    assert len(drugs) == len(records), (
-        f"{len(records)} records hold {len(drugs)} distinct drugs; the cohort unit is the drug")
+    require(len(drugs) == len(records),
+            f"{len(records)} records hold {len(drugs)} distinct drugs; the cohort unit is "
+            "the drug")
     targets = sorted({str(record["target"]) for record in records})
+
+    inputs = {"cohort": args.cohort, "gctx": args.gctx, "shrna_siginfo": args.shrna_siginfo,
+              "compound_siginfo": args.compound_siginfo, "gene_info": args.gene_info,
+              "landmark_gene_ids": Path(args.rebuilt) / "landmark_gene_ids.json"}
+    for name in ("shrna_signatures.npz", "shrna_consensus.npz"):
+        inputs[name] = Path(args.rebuilt) / name
+    for shard in sorted(Path(args.rebuilt).glob("shard_*.npz")):
+        inputs[shard.name] = shard
+    if args.extraction:
+        inputs["lincs_subset.npz"] = Path(args.extraction) / "lincs_subset.npz"
+    result = {"cohort": {"file": str(args.cohort), "n_records": len(records),
+                         "n_unique_drugs": len(drugs), "n_unique_targets": len(targets)},
+              "input_sha256": {name: sha256_file(path) for name, path in inputs.items()
+                               if path is not None and Path(path).exists()},
+              "gate_code_sha256": sha256_file(Path(__file__)),
+              "identifier_hashes": {"drugs": sha256_text("\n".join(drugs)),
+                                    "targets": sha256_text("\n".join(targets))}}
+    missing = sorted(name for name, path in inputs.items()
+                     if path is None or not Path(path).exists())
+    require(not missing, f"inputs the gate must hash are absent: {missing}")
 
     rebuilt_signatures, rebuilt_membership, rebuilt_genes, stored = load_shrna_rebuild_strict(
         args.rebuilt)
-    source_hashes = {}
-    if args.gctx:
-        shrna_second, source_hashes["shrna"] = shrna_from_source(
-            args.gctx, args.shrna_siginfo, args.gene_info, targets_wanted=set(targets))
-        compound_second, source_hashes["compound"] = compounds_from_source(
-            args.gctx, args.compound_siginfo, args.gene_info, cohort=drugs)
-    else:
-        shrna_second = load_shrna_extraction(args.extraction, targets_wanted=set(targets))
-        compound_second = load_extraction(args.extraction, cohort=drugs)
-    result = compare_both(
-        load_rebuild(args.rebuilt),
-        compound_second,
-        (rebuilt_signatures, rebuilt_membership, rebuilt_genes),
-        shrna_second,
-        cohort=drugs, stored=stored)
-    if args.gctx:
-        result["second_source"] = {
-            "route": "the gate's own HDF5 read of " + str(args.gctx),
-            "gctx_sha256": sha256_file(args.gctx), "axes": source_hashes,
-            "halves_verified_against_the_source": ["compound", "shrna"]}
-        result["canonical_artifact_sha256"] = {
-            name: sha256_file(Path(args.rebuilt) / name)
-            for name in ("shrna_signatures.npz", "shrna_consensus.npz")
-            if (Path(args.rebuilt) / name).exists()}
-    else:
-        result["second_source"] = {"route": "lincs_shrna.npz, retired by Amendment 2"}
+    shrna_second, shrna_hashes = shrna_from_source(
+        args.gctx, args.shrna_siginfo, args.gene_info, targets_wanted=set(targets))
+    compound_second, compound_hashes = compounds_from_source(
+        args.gctx, args.compound_siginfo, args.gene_info, cohort=drugs)
+    result["second_source"] = {"route": f"the gate's own HDF5 read of {args.gctx}",
+                               "axes": {"shrna": shrna_hashes, "compound": compound_hashes}}
 
-    result["cohort"] = {"file": str(args.cohort), "sha256": sha256_file(args.cohort),
-                        "n_records": len(records), "n_unique_drugs": len(drugs),
-                        "n_unique_targets": len(targets)}
-    result["identifier_hashes"] = {"drugs": sha256_text("\n".join(drugs)),
-                                   "targets": sha256_text("\n".join(targets))}
-    result["gate_code_sha256"] = sha256_file(Path(__file__))
-    passed = result["all_within_tolerance"]
-    result["gate"] = ("reconstruction" if passed
-                      else "failed: the analyses registered against this gate are void")
+    result.update(compare_both(
+        load_rebuild(args.rebuilt), compound_second,
+        (rebuilt_signatures, rebuilt_membership, rebuilt_genes), shrna_second,
+        cohort=drugs, stored=stored, expected_targets=targets,
+        retained_compound=load_extraction(args.extraction, cohort=drugs)))
+    return result
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--rebuilt", type=Path, required=True,
+                        help="directory holding the GCTX rebuild's shards and artifacts")
+    parser.add_argument("--extraction", type=Path, required=True,
+                        help="directory holding the retained compound extraction, which is "
+                             "compared against the source rather than carried forward")
+    parser.add_argument("--cohort", type=Path, default=REFERENCE_ARTIFACT,
+                        help="the artifact whose drugs and targets every side must hold")
+    parser.add_argument("--gctx", type=Path, required=True,
+                        help="the pinned GCTX, read by the gate itself. Required: Amendment 2 "
+                             "registers a comparison against the source, and a run without it "
+                             "is not that gate.")
+    parser.add_argument("--shrna-siginfo", type=Path, required=True)
+    parser.add_argument("--compound-siginfo", type=Path, required=True)
+    parser.add_argument("--gene-info", type=Path, required=True)
+    parser.add_argument("--output", type=Path, default=OUT)
+    args = parser.parse_args(argv)
 
     args.output.mkdir(parents=True, exist_ok=True)
     path = args.output / "reconstruction_gate.json"
+    try:
+        result = gate_report(args)
+    except Exception as failure:          # the record is written whatever broke
+        path.write_text(json.dumps(
+            {"gate": "failed: the analyses registered against this gate are void",
+             "failure": f"{type(failure).__name__}: {failure}"}, indent=2))
+        print(f"the gate failed before it could compare; the record is at {path}")
+        raise
+    passed = result["all_within_tolerance"]
+    result["gate"] = ("reconstruction" if passed
+                      else "failed: the analyses registered against this gate are void")
     path.write_text(json.dumps(result, indent=2))
     print(json.dumps({k: v for k, v in result.items()
-                      if k not in ("compound_signatures", "shrna_signatures_and_consensuses")},
-                     indent=2))
-    assert passed, f"the gate failed; the record is at {path}"
+                      if k not in ("compound_signatures", "retained_compound_extraction",
+                                   "shrna_signatures_and_consensuses")}, indent=2))
+    require(passed, f"the gate failed; the record is at {path}")
+    return result
 
 
 if __name__ == "__main__":

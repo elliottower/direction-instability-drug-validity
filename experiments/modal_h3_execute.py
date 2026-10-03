@@ -145,6 +145,7 @@ def stage_gate():
           "--extraction", str(staged),
           "--gctx", f"/rebuild/raw/{GCTX}",
           "--shrna-siginfo", "/rebuild/raw/lincs_shrna_siginfo.csv.gz",
+          "--compound-siginfo", "/rebuild/raw/GSE92742_Broad_LINCS_sig_info.txt.gz",
           "--gene-info", "/rebuild/raw/GSE92742_Broad_LINCS_gene_info.txt.gz",
           "--cohort", "/app/results/03_phenotype_projection/phenotype_projection_results.json",
           "--output", "/out/03c_h3_sensitivity"])

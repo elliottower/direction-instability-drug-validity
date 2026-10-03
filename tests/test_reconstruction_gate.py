@@ -2,6 +2,7 @@ import json
 import sys
 from pathlib import Path
 
+import h5py
 import numpy as np
 import pytest
 
@@ -154,8 +155,17 @@ def test_shrna_gate_catches_a_missing_signature_and_a_missing_target():
     left, right = _shrna_pair()
     dropped = dict(right[0])
     dropped.pop("SIG_2_1")
-    with pytest.raises(AssertionError, match="signature-id sets differ"):
+    # a target grouping a signature the side does not hold is refused by name,
+    # before any comparison indexes it
+    with pytest.raises(AssertionError, match=r"groups 1 signatures it does not hold"):
         _mod.compare_shrna((dropped, right[1], right[2]), left)
+
+    # and a signature held by one side alone, inside nobody's membership, is
+    # refused on the identifier sets
+    extra = dict(right[0])
+    extra["SIG_UNGROUPED"] = np.zeros(len(right[2]))
+    with pytest.raises(AssertionError, match="signature-id sets differ"):
+        _mod.compare_shrna((extra, right[1], right[2]), left)
 
     left, right = _shrna_pair()
     fewer = {k: v for k, v in right[1].items() if k != "TARGET3"}
@@ -513,54 +523,6 @@ def test_compare_both_records_a_structural_failure_instead_of_losing_it():
     assert failed["compound_signatures"]["all_within_tolerance"]
 
 
-def _parsed_frame(n_genes=6, n_sigs=5, extra_rows=2, gene_order=None):
-    """A frame shaped like a cmapPy parse: genes down the index, signatures across."""
-    import pandas as pd
-
-    rng = np.random.default_rng()
-    genes = gene_order or [str(3000 + i) for i in range(n_genes)]
-    rows = genes + [f"NOT_LANDMARK_{i}" for i in range(extra_rows)]
-    sigs = [f"SIG_{i}" for i in range(n_sigs)]
-    return pd.DataFrame(rng.standard_normal((len(rows), n_sigs)), index=rows, columns=sigs), genes
-
-
-def test_the_parse_keeps_each_value_with_the_label_the_frame_gave_it():
-    frame, genes = _parsed_frame()
-    membership = {"TARGET0": ["SIG_0", "SIG_1", "SIG_2"]}
-
-    signatures, parsed_genes = _mod.shrna_from_parsed_frame(frame, membership, genes)
-    assert parsed_genes == genes                       # the frame's own order, not the request's
-    assert set(signatures) == {"SIG_0", "SIG_1", "SIG_2"}
-    for sig_id, vector in signatures.items():
-        for gene, value in zip(parsed_genes, vector):
-            assert value == pytest.approx(frame.loc[gene, sig_id])
-
-
-def test_the_parse_reports_the_frames_order_not_the_requested_one():
-    # the production route asks for a row order and reindexes onto it, which hides
-    # a frame whose rows arrive in another order; this must not
-    frame, genes = _parsed_frame()
-    shuffled = list(reversed(genes))
-
-    signatures, parsed_genes = _mod.shrna_from_parsed_frame(
-        frame, {"TARGET0": ["SIG_0", "SIG_1", "SIG_2"]}, shuffled)
-    assert parsed_genes == genes
-    for gene, value in zip(parsed_genes, signatures["SIG_0"]):
-        assert value == pytest.approx(frame.loc[gene, "SIG_0"])
-
-
-def test_the_parse_refuses_a_frame_missing_a_landmark_or_repeating_an_identifier():
-    frame, genes = _parsed_frame()
-    with pytest.raises(AssertionError, match="of .* landmark genes"):
-        _mod.shrna_from_parsed_frame(frame, {"T": ["SIG_0"]}, genes + ["9999"])
-
-    duplicated = frame.copy()
-    duplicated.index = [frame.index[0]] + list(frame.index[1:])
-    duplicated = duplicated.set_axis([frame.index[0]] * 2 + list(frame.index[2:]), axis=0)
-    with pytest.raises(AssertionError, match="repeats a gene identifier"):
-        _mod.shrna_from_parsed_frame(duplicated, {"T": ["SIG_0"]}, genes)
-
-
 def _write_gctx(path, gene_order, signature_order, orientation="signatures_then_genes"):
     """A GCTX in the real layout, with a sentinel per (gene, signature) pair.
 
@@ -666,3 +628,241 @@ def test_a_globally_permuted_canonical_artifact_fails_against_the_source(tmp_pat
     result = _mod.compare_shrna((mislabeled, membership, list(read_genes)), source)
     assert not result["all_within_tolerance"]
     assert result["n_signature_failures"] == len(read_signatures)
+
+
+def test_an_empty_comparison_is_refused_rather_than_passing():
+    # the gate's worst failure mode: nothing to compare, so nothing can fail
+    rng = np.random.default_rng()
+    genes = [str(100 + i) for i in range(5)]
+    compound = ({"drugA": rng.standard_normal((2, 5))}, {"drugA": ["MCF7", "PC3"]}, list(genes))
+    empty = ({}, {}, list(genes))
+
+    result = _mod.compare_both(compound, compound, empty, empty, cohort=["drugA"],
+                               stored=({}, genes), expected_targets=["TARGET0"])
+    assert not result["all_within_tolerance"]
+    assert "registered targets are absent" in result["structural_failure"]
+
+    with pytest.raises(AssertionError, match="holds no signatures"):
+        _mod.compare_shrna(empty, empty)
+
+
+def test_a_registered_target_missing_from_both_sides_is_refused():
+    left, right = _shrna_pair(n_targets=3, per_target=3)
+    # both sides agree, and agree about a universe smaller than the registered one
+    with pytest.raises(AssertionError, match="registered targets are absent from the rebuild"):
+        _mod.compare_shrna(right, left,
+                           expected_targets=["TARGET0", "TARGET1", "TARGET2", "TARGET_GONE"])
+
+    honest = {}
+    for target, ids in right[1].items():
+        mean = np.vstack([right[0][i] for i in ids]).mean(axis=0)
+        honest[target] = mean / np.linalg.norm(mean)
+    short = {t: v for t, v in honest.items() if t != "TARGET2"}
+    with pytest.raises(AssertionError, match="have no stored direction"):
+        _mod.compare_shrna(right, left, stored=(short, right[2]),
+                           expected_targets=sorted(right[1]))
+
+
+def test_a_matrix_whose_row_count_contradicts_its_cell_lines_is_refused():
+    # one numeric row declaring two cell lines would broadcast against two equal
+    # source rows and pass
+    genes = [str(100 + i) for i in range(5)]
+    one_row = ({"drugB": np.ones((1, 5))}, {"drugB": ["MCF7", "PC3"]}, list(genes))
+    two_rows = ({"drugB": np.ones((2, 5))}, {"drugB": ["MCF7", "PC3"]}, list(genes))
+
+    with pytest.raises(AssertionError, match=r"the rebuild matrix is \(1, 5\) against 2"):
+        _mod.compare(one_row, two_rows, cohort=["drugB"])
+
+
+def test_a_repeated_gene_identifier_on_a_compound_axis_is_refused():
+    rng = np.random.default_rng()
+    genes = [str(100 + i) for i in range(5)]
+    duplicated = genes[:-1] + [genes[0]]
+    matrix = rng.standard_normal((2, 5))
+    left = ({"drugC": matrix}, {"drugC": ["MCF7", "PC3"]}, duplicated)
+
+    with pytest.raises(AssertionError, match="compound gene axis repeats an identifier"):
+        _mod.compare(left, left, cohort=["drugC"])
+
+
+def test_an_empty_cohort_cannot_pass_the_compound_comparison():
+    with pytest.raises(AssertionError, match="the cohort is empty"):
+        _mod.compare(({}, {}, ["1"]), ({}, {}, ["1"]), cohort=[])
+
+
+def test_a_consensus_repeating_a_target_is_refused_before_the_dictionary_keeps_one(tmp_path):
+    rng = np.random.default_rng()
+    genes = [str(i) for i in range(5)]
+    np.savez_compressed(tmp_path / "shrna_signatures.npz",
+                        sig_ids=np.array(["SIG1", "SIG2", "SIG3"]),
+                        signatures=rng.standard_normal((3, 5)),
+                        gene_ids=np.array(genes),
+                        membership=json.dumps({"TARGET0": ["SIG1", "SIG2", "SIG3"]}))
+    # the corrupted direction comes first and the correct one second, which a
+    # dictionary comprehension would silently resolve in favour of the correct one
+    np.savez_compressed(tmp_path / "shrna_consensus.npz",
+                        genes=np.array(["TARGET0", "TARGET0"]),
+                        directions=np.vstack([np.ones(5) / np.sqrt(5), rng.standard_normal(5)]),
+                        gene_ids=np.array(genes))
+
+    with pytest.raises(AssertionError, match="repeats a target"):
+        _mod.load_shrna_rebuild(tmp_path)
+
+
+def test_a_drug_arriving_from_two_shards_is_refused(tmp_path):
+    rng = np.random.default_rng()
+    cells = {"drugA": ["MCF7", "PC3"]}
+    _write_shard(tmp_path / "shard_000.npz", {"drugA": rng.standard_normal((2, 6))}, cells)
+    _write_shard(tmp_path / "shard_001.npz", {"drugA": rng.standard_normal((2, 6))}, cells)
+    (tmp_path / "landmark_gene_ids.json").write_text(json.dumps([str(i) for i in range(6)]))
+
+    with pytest.raises(AssertionError, match="arrives from more than one shard"):
+        _mod.load_rebuild(tmp_path)
+
+
+def test_the_gate_contracts_survive_python_minus_o():
+    # `assert` disappears under -O, so a contract written as one is not a contract
+    import subprocess
+
+    probe = (
+        "import importlib.util, numpy as np;"
+        "spec = importlib.util.spec_from_file_location('g', "
+        f"{str(Path(__file__).resolve().parents[1] / 'experiments' / '03e_reconstruction_gate.py')!r});"
+        "g = importlib.util.module_from_spec(spec); spec.loader.exec_module(g);"
+        "r = g.compare(({}, {}, ['1']), ({}, {}, ['1']), cohort=[])"
+    )
+    finished = subprocess.run(["python", "-O", "-c", probe], capture_output=True, text=True)
+    assert finished.returncode != 0
+    assert "the cohort is empty" in finished.stderr
+
+
+def _gate_fixture(tmp_path):
+    """Every input the registered gate takes, small but structurally complete."""
+    import pandas as pd
+
+    rng = np.random.default_rng()
+    n_genes = _mod.N_LANDMARK
+    genes = [str(10_000 + i) for i in range(n_genes)]
+    targets = {"TARGETA": [f"SHRNA_A{i}" for i in range(3)],
+               "TARGETB": [f"SHRNA_B{i}" for i in range(3)]}
+    drug_cells = {"drugone": {"MCF7": ["CPD_1_1", "CPD_1_2"], "PC3": ["CPD_1_3"]},
+                  "drugtwo": {"MCF7": ["CPD_2_1"], "A375": ["CPD_2_2"]}}
+    shrna_ids = [sig for ids in targets.values() for sig in ids]
+    compound_ids = [sig for cells in drug_cells.values() for ids in cells.values()
+                    for sig in ids]
+
+    # the source, with its genes physically stored in an order of their own
+    stored_order = list(rng.permutation(genes))
+    values = {sig: rng.standard_normal(n_genes) for sig in shrna_ids + compound_ids}
+    rebuild = tmp_path / "rebuilt"
+    extraction = tmp_path / "extraction"
+    rebuild.mkdir(), extraction.mkdir()
+
+    gctx = tmp_path / "source.gctx"
+    with h5py.File(gctx, "w") as handle:
+        matrix = np.vstack([[values[sig][genes.index(gene)] for gene in stored_order]
+                            for sig in shrna_ids + compound_ids])
+        handle.create_dataset("/0/DATA/0/matrix", data=matrix.astype(np.float32))
+        handle.create_dataset("/0/META/ROW/id",
+                              data=np.array(stored_order, dtype=h5py.string_dtype()))
+        handle.create_dataset("/0/META/COL/id",
+                              data=np.array(shrna_ids + compound_ids,
+                                            dtype=h5py.string_dtype()))
+
+    gene_info = tmp_path / "gene_info.txt.gz"
+    pd.DataFrame({"pr_gene_id": genes + ["999999"],
+                  "pr_is_lm": [1] * n_genes + [0],
+                  "pr_gene_symbol": [f"SYM{i}" for i in range(n_genes + 1)]}).to_csv(
+        gene_info, sep="\t", index=False, compression="gzip")
+
+    shrna_siginfo = tmp_path / "shrna_siginfo.csv.gz"
+    pd.DataFrame({"sig_id": shrna_ids,
+                  "pert_iname": [t for t, ids in targets.items() for _ in ids]}).to_csv(
+        shrna_siginfo, index=False, compression="gzip")
+
+    compound_siginfo = tmp_path / "sig_info.txt.gz"
+    pd.DataFrame({"sig_id": compound_ids,
+                  "pert_iname": [drug for drug, cells in drug_cells.items()
+                                 for ids in cells.values() for _ in ids],
+                  "cell_id": [cell for cells in drug_cells.values()
+                              for cell, ids in cells.items() for _ in ids]}).to_csv(
+        compound_siginfo, sep="\t", index=False, compression="gzip")
+
+    # the canonical artifact and its derived consensus, in the frozen landmark order
+    signatures = np.vstack([values[sig] for sig in shrna_ids])
+    np.savez_compressed(rebuild / "shrna_signatures.npz", sig_ids=np.array(shrna_ids),
+                        signatures=signatures, gene_ids=np.array(genes),
+                        membership=json.dumps(targets))
+    directions = []
+    for ids in targets.values():
+        mean = np.vstack([values[sig] for sig in ids]).mean(axis=0)
+        directions.append(mean / np.linalg.norm(mean))
+    np.savez_compressed(rebuild / "shrna_consensus.npz", genes=np.array(list(targets)),
+                        directions=np.vstack(directions), gene_ids=np.array(genes))
+
+    # the compound shards, and the retained extraction they are checked beside
+    matrices, cells = {}, {}
+    for drug, by_cell in drug_cells.items():
+        matrices[drug] = np.vstack([np.vstack([values[s] for s in ids]).mean(axis=0)
+                                    for ids in by_cell.values()])
+        cells[drug] = list(by_cell)
+    _write_shard(rebuild / "shard_000.npz", matrices, cells)
+    (rebuild / "landmark_gene_ids.json").write_text(json.dumps(genes))
+    np.savez_compressed(extraction / "lincs_subset.npz", sig_ids=np.array(compound_ids),
+                        signatures=np.vstack([values[sig] for sig in compound_ids]),
+                        gene_ids=np.array(genes))
+    (extraction / "GSE92742_Broad_LINCS_sig_info.txt.gz").write_bytes(
+        compound_siginfo.read_bytes())
+
+    cohort = tmp_path / "cohort.json"
+    cohort.write_text(json.dumps([{"drug": "drugone", "target": "TARGETA"},
+                                  {"drug": "drugtwo", "target": "TARGETB"}]))
+    output = tmp_path / "out"
+    return ["--rebuilt", str(rebuild), "--extraction", str(extraction),
+            "--cohort", str(cohort), "--gctx", str(gctx),
+            "--shrna-siginfo", str(shrna_siginfo),
+            "--compound-siginfo", str(compound_siginfo),
+            "--gene-info", str(gene_info), "--output", str(output)], rebuild, output
+
+
+def test_the_whole_gate_passes_on_consistent_inputs_and_records_its_provenance(tmp_path):
+    argv, _, output = _gate_fixture(tmp_path)
+
+    result = _mod.main(argv)
+    assert result["gate"] == "reconstruction"
+    assert set(result["halves_compared"]) == {"compound_signatures",
+                                              "retained_compound_extraction",
+                                              "shrna_signatures_and_consensuses"}
+    written = json.loads((output / "reconstruction_gate.json").read_text())
+    assert written["all_within_tolerance"]
+    # every input that decides membership, aggregation or coordinates is hashed
+    assert set(written["input_sha256"]) == {
+        "cohort", "gctx", "shrna_siginfo", "compound_siginfo", "gene_info",
+        "landmark_gene_ids", "shrna_signatures.npz", "shrna_consensus.npz",
+        "shard_000.npz", "lincs_subset.npz"}
+    assert written["gate_code_sha256"]
+
+
+def test_the_whole_gate_fails_on_a_canonical_artifact_whose_columns_were_permuted(tmp_path):
+    argv, rebuild, output = _gate_fixture(tmp_path)
+
+    # Deviation 11, through the command line: the declared axis is untouched and
+    # every column of the canonical artifact moves
+    with np.load(rebuild / "shrna_signatures.npz", allow_pickle=True) as data:
+        contents = {key: data[key] for key in data.files}
+    rng = np.random.default_rng()
+    scramble = rng.permutation(contents["signatures"].shape[1])
+    while (scramble == np.arange(len(scramble))).all():
+        scramble = rng.permutation(len(scramble))
+    contents["signatures"] = contents["signatures"][:, scramble]
+    np.savez_compressed(rebuild / "shrna_signatures.npz", **contents)
+
+    with pytest.raises(AssertionError, match="the gate failed"):
+        _mod.main(argv)
+
+    written = json.loads((output / "reconstruction_gate.json").read_text())
+    assert written["gate"].startswith("failed")
+    assert not written["all_within_tolerance"]
+    shrna = written["shrna_signatures_and_consensuses"]
+    assert shrna["n_signature_failures"] == 6
+    assert written["compound_signatures"]["all_within_tolerance"]
