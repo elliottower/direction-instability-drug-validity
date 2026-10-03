@@ -1,0 +1,32 @@
+{
+  "all_inputs_match_their_pins": true,
+  "inputs": {
+    "GSE92742_Broad_LINCS_sig_info.txt.gz": {
+      "expected": "19da29c0ee12ddf27f9698cd0da40beaff58657dcde9d382aae068737e831299",
+      "found": "19da29c0ee12ddf27f9698cd0da40beaff58657dcde9d382aae068737e831299",
+      "matches": true
+    },
+    "lincs_shrna_siginfo.csv.gz": {
+      "expected": "bd396fa0e1a2f00c1b5f2c8d2b35f9a056f5e5353382475655869038037ec014",
+      "found": "bd396fa0e1a2f00c1b5f2c8d2b35f9a056f5e5353382475655869038037ec014",
+      "matches": true
+    },
+    "phenotype_projection_results.json": {
+      "expected": "fd69e26fc9a3917323065b631688baeab8b283f735c8bf5b16210ba67bd21425",
+      "found": "fd69e26fc9a3917323065b631688baeab8b283f735c8bf5b16210ba67bd21425",
+      "matches": true
+    },
+    "GSE92742_Broad_LINCS_Level5_COMPZ.MODZ_n473647x12328.gctx": {
+      "expected": "b293f3fb7c2298a60526de727e5400d8400af4b77a23c4ed2116f86199fb45e8",
+      "found": "b293f3fb7c2298a60526de727e5400d8400af4b77a23c4ed2116f86199fb45e8",
+      "matches": true,
+      "note": "stamped on first retrieval, not registered in advance"
+    },
+    "GSE92742_Broad_LINCS_gene_info.txt.gz": {
+      "expected": "741216ccc53320119b47ab006de3bcad48963c57087c9e07f50f0d6cd088711a",
+      "found": "741216ccc53320119b47ab006de3bcad48963c57087c9e07f50f0d6cd088711a",
+      "matches": true
+    }
+  },
+  "reading": "a mismatch means the gate would compare a file the registration does not name, and the run is refused rather than reported"
+}

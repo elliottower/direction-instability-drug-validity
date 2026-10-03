@@ -65,6 +65,8 @@ COMMON = dict(image=image, timeout=86400, memory=32768, cpu=8.0, retries=0,
                        "/inputs": inputs})
 
 GCTX = "GSE92742_Broad_LINCS_Level5_COMPZ.MODZ_n473647x12328.gctx"
+# a report never overwrites an earlier one
+GATE_RUN = "gate_run_2026-10-03"
 
 MAPPING_SHA256 = "152361cb3174a5fb7aae0229c3e3d049dc00d49d9e442925156a9fe0564b89d3"
 
@@ -133,6 +135,69 @@ def _run(argv):
     runpy.run_path(argv[0], run_name="__main__")
 
 
+# the registration's pins, restated here so the gate run can be refused if an
+# input is not the file the registration names. The GCTX checksum could not exist
+# before first retrieval and was stamped on the volume at that time.
+REGISTERED_PINS = {
+    "GSE92742_Broad_LINCS_sig_info.txt.gz":
+        "19da29c0ee12ddf27f9698cd0da40beaff58657dcde9d382aae068737e831299",
+    "lincs_shrna_siginfo.csv.gz":
+        "bd396fa0e1a2f00c1b5f2c8d2b35f9a056f5e5353382475655869038037ec014",
+    "phenotype_projection_results.json":
+        "fd69e26fc9a3917323065b631688baeab8b283f735c8bf5b16210ba67bd21425",
+}
+
+
+@app.function(**COMMON)
+def stage_verify_pins():
+    """Are the inputs the gate will read the files the registration names?
+
+    The gate records the hash of everything it reads, which says what ran. It does
+    not say that what ran is what was registered, and those are different claims.
+    This compares the files on the volume against the registration's pins and
+    against the checksum stamped beside the GCTX on first retrieval.
+    """
+    import hashlib
+    import json
+    from pathlib import Path
+
+    raw = Path("/rebuild/raw")
+
+    def digest(path):
+        sha = hashlib.sha256()
+        with open(path, "rb") as handle:
+            for block in iter(lambda: handle.read(1 << 22), b""):
+                sha.update(block)
+        return sha.hexdigest()
+
+    checked = {}
+    for name, expected in REGISTERED_PINS.items():
+        found = digest(raw / name)
+        checked[name] = {"expected": expected, "found": found, "matches": found == expected}
+
+    stamped = (raw / "gctx.sha256").read_text().split()[0]
+    found = digest(raw / GCTX)
+    checked[GCTX] = {"expected": stamped, "found": found, "matches": found == stamped,
+                     "note": "stamped on first retrieval, not registered in advance"}
+
+    gene_info = "GSE92742_Broad_LINCS_gene_info.txt.gz"
+    checked[gene_info] = {"expected": (raw / f"{gene_info}.sha256").read_text().split()[0],
+                          "found": digest(raw / gene_info)}
+    checked[gene_info]["matches"] = (checked[gene_info]["expected"]
+                                     == checked[gene_info]["found"])
+
+    summary = {"all_inputs_match_their_pins": all(entry["matches"]
+                                                  for entry in checked.values()),
+               "inputs": checked,
+               "reading": ("a mismatch means the gate would compare a file the registration "
+                           "does not name, and the run is refused rather than reported")}
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "input_pin_check.json").write_text(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps(summary, indent=2)
+
+
 @app.function(**COMMON)
 def stage_gate():
     """The reconstruction gate. A failure here voids the analyses registered against it."""
@@ -148,9 +213,10 @@ def stage_gate():
           "--compound-siginfo", "/rebuild/raw/GSE92742_Broad_LINCS_sig_info.txt.gz",
           "--gene-info", "/rebuild/raw/GSE92742_Broad_LINCS_gene_info.txt.gz",
           "--cohort", "/app/results/03_phenotype_projection/phenotype_projection_results.json",
-          "--output", "/out/03c_h3_sensitivity"])
+          "--output", f"/out/03c_h3_sensitivity/{GATE_RUN}"])
     results.commit()
-    return (Path("/out/03c_h3_sensitivity/reconstruction_gate.json")).read_text()[:2000]
+    return (Path(f"/out/03c_h3_sensitivity/{GATE_RUN}/reconstruction_gate.json")
+            ).read_text()[:2000]
 
 
 @app.function(**COMMON)

@@ -5,19 +5,30 @@ corrected artifact was computed from. The comparison joins on identifiers, never
 on row or column order: the defect of Deviation 9 was an identifier-versus-position
 error, and a gate that compares by position could not see it.
 
-Both halves of the registered gate are here. Compound matrices are joined on
-(drug, cell line) and genes on Entrez id. shRNA signatures are joined on signature
-id, and each target consensus is then rebuilt independently on both sides and
-compared, because the defect this gate exists to catch was in the target
+Three comparisons are made, all of them against the pinned GCTX read through its
+HDF5 metadata by this module rather than by the parser production uses. The
+compound rebuild's drug-by-cell matrices and the retained extraction's drug-by-cell
+matrices are each compared against source aggregates, joined on (drug, cell line)
+and genes on Entrez id. The claim that follows is about those aggregates, not about
+every raw compound signature individually. shRNA signatures are joined on signature
+id, and each target consensus is rebuilt independently and compared along with the
+persisted direction, because the defect this gate exists to catch was in the target
 directions rather than in the compound data. Identifier sequences are hashed
-separately from the numeric arrays. The tolerance
-is the float32 one, because the GCTX holds float32 values whose magnitude reaches
-about ten.
+separately from the numeric arrays. The tolerance is the elementwise float32 rule,
+because the GCTX holds float32 values whose magnitude reaches about ten.
 
-    PYTHONPATH=. uv run --no-project --with numpy --with pandas python \\
+Amendment 2 (frozen `fd1ae8d`) requires the source comparison, so every source
+argument below is required: a run without them is not this gate.
+
+    PYTHONPATH=. uv run --no-project --with numpy --with pandas --with h5py python \\
         experiments/03e_reconstruction_gate.py \\
         --rebuilt results/03c_h3_sensitivity/gctx_rebuild \\
-        --extraction ../drug-perturbation-geometry/data
+        --extraction ../drug-perturbation-geometry/data \\
+        --gctx <dir>/GSE92742_Broad_LINCS_Level5_COMPZ.MODZ_n473647x12328.gctx \\
+        --shrna-siginfo <dir>/lincs_shrna_siginfo.csv.gz \\
+        --compound-siginfo <dir>/GSE92742_Broad_LINCS_sig_info.txt.gz \\
+        --gene-info <dir>/GSE92742_Broad_LINCS_gene_info.txt.gz \\
+        --output results/03c_h3_sensitivity/<a fresh directory>
 """
 import argparse
 import hashlib
