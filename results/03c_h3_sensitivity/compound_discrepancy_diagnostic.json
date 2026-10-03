@@ -1,0 +1,106 @@
+{
+  "metadata_copies": {
+    "beside the extraction": "19da29c0ee12ddf27f9698cd0da40beaff58657dcde9d382aae068737e831299",
+    "pinned on the rebuild volume": "19da29c0ee12ddf27f9698cd0da40beaff58657dcde9d382aae068737e831299"
+  },
+  "metadata_copies_identical": true,
+  "n_cohort_signatures_in_metadata": 41643,
+  "n_of_those_held_by_the_extraction": 41643,
+  "n_sampled": 50,
+  "max_abs_difference_at_signature_level": 20.0,
+  "median_cosine": 0.002937446610051738,
+  "n_explained_by_negation": 0,
+  "worst_five": [
+    {
+      "sig_id": "AML001_CD34_24H:BRD-K27316855:3.33333",
+      "max_abs_difference": 20.0,
+      "cosine": 0.060742842856984454,
+      "max_abs_difference_if_negated": 20.0,
+      "extraction_range": [
+        -10.0,
+        10.0
+      ],
+      "source_range": [
+        -10.0,
+        10.0
+      ],
+      "n_at_plus_ten_extraction": 19,
+      "n_at_minus_ten_extraction": 37,
+      "n_at_plus_ten_source": 19,
+      "n_at_minus_ten_source": 37
+    },
+    {
+      "sig_id": "AML001_CD34_6H:BRD-K43389675:3.33333",
+      "max_abs_difference": 17.92430019378662,
+      "cosine": -0.03159375702734979,
+      "max_abs_difference_if_negated": 19.440500259399414,
+      "extraction_range": [
+        -10.0,
+        10.0
+      ],
+      "source_range": [
+        -10.0,
+        10.0
+      ],
+      "n_at_plus_ten_extraction": 2,
+      "n_at_minus_ten_extraction": 16,
+      "n_at_plus_ten_source": 2,
+      "n_at_minus_ten_source": 16
+    },
+    {
+      "sig_id": "AML001_CD34_6H:BRD-K43389675:10",
+      "max_abs_difference": 17.621899604797363,
+      "cosine": 0.009214051011968384,
+      "max_abs_difference_if_negated": 16.472350120544434,
+      "extraction_range": [
+        -10.0,
+        10.0
+      ],
+      "source_range": [
+        -10.0,
+        10.0
+      ],
+      "n_at_plus_ten_extraction": 1,
+      "n_at_minus_ten_extraction": 7,
+      "n_at_plus_ten_source": 1,
+      "n_at_minus_ten_source": 7
+    },
+    {
+      "sig_id": "AML001_CD34_6H:BRD-K43389675:1.11111",
+      "max_abs_difference": 15.982359409332275,
+      "cosine": -0.008254789590072536,
+      "max_abs_difference_if_negated": 17.161903381347656,
+      "extraction_range": [
+        -9.999999046325684,
+        8.41861343383789
+      ],
+      "source_range": [
+        -9.999999046325684,
+        8.41861343383789
+      ],
+      "n_at_plus_ten_extraction": 0,
+      "n_at_minus_ten_extraction": 3,
+      "n_at_plus_ten_source": 0,
+      "n_at_minus_ten_source": 3
+    },
+    {
+      "sig_id": "AML001_CD34_24H:BRD-A19037878:10",
+      "max_abs_difference": 15.854899883270264,
+      "cosine": -0.020689933379716908,
+      "max_abs_difference_if_negated": 16.558899879455566,
+      "extraction_range": [
+        -10.0,
+        10.0
+      ],
+      "source_range": [
+        -10.0,
+        10.0
+      ],
+      "n_at_plus_ten_extraction": 2,
+      "n_at_minus_ten_extraction": 12,
+      "n_at_plus_ten_source": 2,
+      "n_at_minus_ten_source": 12
+    }
+  ],
+  "reading": "a disagreement at the level of single signatures rules out grouping and aggregation; a cosine near -1 or agreement under negation would mean a sign convention, and saturation counts say whether clipping is involved"
+}

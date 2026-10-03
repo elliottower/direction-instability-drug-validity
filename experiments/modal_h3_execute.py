@@ -786,6 +786,201 @@ def stage_reader_agreement():
     return json.dumps(summary, indent=2)
 
 
+@app.function(**COMMON)
+def stage_diagnose_compound():
+    """Why does the retained extraction disagree with the source by exactly 20.0?
+
+    The gate compares drug-by-cell aggregates. A constant maximum of 20.0 across
+    every drug is not what a grouping difference looks like, and the rebuild agrees
+    with the source to 1e-7, so this compares the retained extraction against the
+    source at the level of single signatures, joined on signature id and gene id,
+    where no aggregation can be responsible. It also hashes both copies of the
+    compound metadata, because two exist on two volumes.
+    """
+    import hashlib
+    import importlib.util
+    import json
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+
+    _repo_at_its_absolute_path()
+    staged = _stage_inputs()
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    raw = Path("/rebuild/raw")
+
+    def digest(path):
+        sha = hashlib.sha256()
+        with open(path, "rb") as handle:
+            for block in iter(lambda: handle.read(1 << 22), b""):
+                sha.update(block)
+        return sha.hexdigest()
+
+    metadata = {
+        "beside the extraction": digest(Path("/extraction")
+                                        / "GSE92742_Broad_LINCS_sig_info.txt.gz"),
+        "pinned on the rebuild volume": digest(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz"),
+    }
+
+    records = json.loads(Path("/app/results/03_phenotype_projection/"
+                              "phenotype_projection_results.json").read_text())
+    drugs = sorted({r["drug"] for r in records})
+    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+                          low_memory=False)
+    siginfo = siginfo[siginfo.pert_iname.isin(set(drugs))]
+
+    extraction = np.load(Path(staged) / "lincs_subset.npz", allow_pickle=True)
+    held = {str(s): i for i, s in enumerate(extraction["sig_ids"])}
+    extraction_genes = [str(g) for g in extraction["gene_ids"]]
+    matrix = extraction["signatures"]
+
+    shared = sorted(set(siginfo.sig_id.astype(str)) & set(held))
+    sample = shared[:50]
+    values, genes, signatures, _ = gate.read_gctx_slice(raw / GCTX, sample, extraction_genes)
+    rows = {s: i for i, s in enumerate(signatures)}
+    column = {g: i for i, g in enumerate(genes)}
+    order = np.array([column[g] for g in extraction_genes])
+
+    rows_out = []
+    for sig_id in sample:
+        left = np.asarray(matrix[held[sig_id]], dtype=np.float64)
+        right = values[rows[sig_id]][order]           # source, on the extraction's axis
+        denominator = float(np.linalg.norm(left) * np.linalg.norm(right))
+        rows_out.append({
+            "sig_id": sig_id,
+            "max_abs_difference": float(np.abs(left - right).max()),
+            "cosine": float(left @ right / denominator) if denominator else None,
+            "max_abs_difference_if_negated": float(np.abs(left + right).max()),
+            "extraction_range": [float(left.min()), float(left.max())],
+            "source_range": [float(right.min()), float(right.max())],
+            "n_at_plus_ten_extraction": int((left >= 9.999).sum()),
+            "n_at_minus_ten_extraction": int((left <= -9.999).sum()),
+            "n_at_plus_ten_source": int((right >= 9.999).sum()),
+            "n_at_minus_ten_source": int((right <= -9.999).sum()),
+        })
+
+    worst = max(r["max_abs_difference"] for r in rows_out)
+    cosines = [r["cosine"] for r in rows_out if r["cosine"] is not None]
+    summary = {
+        "metadata_copies": metadata,
+        "metadata_copies_identical": len(set(metadata.values())) == 1,
+        "n_cohort_signatures_in_metadata": len(set(siginfo.sig_id.astype(str))),
+        "n_of_those_held_by_the_extraction": len(shared),
+        "n_sampled": len(sample),
+        "max_abs_difference_at_signature_level": worst,
+        "median_cosine": float(np.median(cosines)) if cosines else None,
+        "n_explained_by_negation": sum(1 for r in rows_out
+                                       if r["max_abs_difference_if_negated"] < 1e-3),
+        "worst_five": sorted(rows_out, key=lambda r: -r["max_abs_difference"])[:5],
+        "reading": ("a disagreement at the level of single signatures rules out grouping and "
+                    "aggregation; a cosine near -1 or agreement under negation would mean a "
+                    "sign convention, and saturation counts say whether clipping is involved"),
+    }
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "compound_discrepancy_diagnostic.json").write_text(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps({k: v for k, v in summary.items() if k != "worst_five"}, indent=2)
+
+
+@app.function(**COMMON)
+def stage_compound_axis_recovery():
+    """Is the compound extraction's axis permuted too, and is it the same permutation?
+
+    A median cosine of 0.003 at single-signature level, with matching value ranges,
+    is what Deviation 11 looked like. This asks the same questions of the compound
+    matrix: does one bijection reconcile it with the source for every sampled
+    signature, does that order match anything the pipeline uses, and is it the same
+    permutation the shRNA matrix carries.
+    """
+    import importlib.util
+    import json
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+
+    _repo_at_its_absolute_path()
+    staged = _stage_inputs()
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    raw = Path("/rebuild/raw")
+    records = json.loads(Path("/app/results/03_phenotype_projection/"
+                              "phenotype_projection_results.json").read_text())
+    drugs = sorted({r["drug"] for r in records})
+    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+                          low_memory=False)
+    siginfo = siginfo[siginfo.pert_iname.isin(set(drugs))]
+
+    extraction = np.load(Path(staged) / "lincs_subset.npz", allow_pickle=True)
+    held = {str(s): i for i, s in enumerate(extraction["sig_ids"])}
+    declared = [str(g) for g in extraction["gene_ids"]]
+    matrix = extraction["signatures"]
+
+    sample = sorted(set(siginfo.sig_id.astype(str)) & set(held))[:300]
+    values, genes, signatures, _ = gate.read_gctx_slice(raw / GCTX, sample, declared)
+    rows = {s: i for i, s in enumerate(signatures)}
+    column = {g: i for i, g in enumerate(genes)}
+    on_declared = np.array([column[g] for g in declared])
+
+    probe = sample[0]
+    left = np.asarray(matrix[held[probe]], dtype=np.float64)       # extraction
+    right = values[rows[probe]][on_declared]                       # source, declared order
+    permutation = np.argsort(left)[np.argsort(np.argsort(right))]
+    is_bijection = sorted(permutation.tolist()) == list(range(len(declared)))
+
+    worst, agree = 0.0, 0
+    for sig_id in sample:
+        a = values[rows[sig_id]][on_declared]
+        b = np.asarray(matrix[held[sig_id]], dtype=np.float64)[permutation]
+        error = float(np.abs(a - b).max())
+        worst = max(worst, error)
+        agree += error <= 1e-4
+
+    # what order does the extraction's matrix actually sit in?
+    actual = [None] * len(declared)
+    for position, gene in zip(permutation, declared):
+        actual[int(position)] = gene
+    gene_info = pd.read_csv(raw / "GSE92742_Broad_LINCS_gene_info.txt.gz", sep="\t",
+                            low_memory=False)
+    landmark = gene_info[gene_info.pr_is_lm == 1]
+    frozen = [str(g) for g in landmark.sort_values("pr_gene_id").pr_gene_id]
+
+    shrna_recovery = Path("/app/results/03c_h3_sensitivity/shrna_axis_recovery.json")
+    shrna_order = (json.loads(shrna_recovery.read_text()).get("actual_column_order_head")
+                   if shrna_recovery.exists() else None)
+
+    summary = {
+        "n_sampled": len(sample),
+        "recovered_map_is_a_bijection": is_bijection,
+        "n_agreeing_under_one_permutation": agree,
+        "max_abs_difference_under_the_permutation": worst,
+        "one_permutation_reconciles_every_sampled_signature": agree == len(sample),
+        "declared_order_head": declared[:8],
+        "actual_column_order_head": actual[:8],
+        "declared_equals_frozen_landmark_order": declared == frozen,
+        "actual_equals_frozen_landmark_order": actual == frozen,
+        "actual_equals_gene_info_file_order": actual == [str(g) for g in landmark.pr_gene_id],
+        "shrna_actual_order_head_for_comparison": shrna_order,
+        "reading": ("one bijection reconciling every signature means the compound matrix "
+                    "carries correct values under a wrong axis, as the shRNA matrix does; "
+                    "comparing the two recovered orders says whether it is the same wrong axis"),
+    }
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "compound_axis_recovery.json").write_text(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps(summary, indent=2)
+
+
 @app.local_entrypoint()
 def main(stage: str):
     """stage: gate | s1s3 | driver | diagnostic"""

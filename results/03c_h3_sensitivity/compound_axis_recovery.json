@@ -1,0 +1,32 @@
+{
+  "n_sampled": 300,
+  "recovered_map_is_a_bijection": true,
+  "n_agreeing_under_one_permutation": 1,
+  "max_abs_difference_under_the_permutation": 11.425899744033813,
+  "one_permutation_reconciles_every_sampled_signature": false,
+  "declared_order_head": [
+    "780",
+    "7849",
+    "6193",
+    "23",
+    "9552",
+    "387",
+    "10921",
+    "10285"
+  ],
+  "actual_column_order_head": [
+    "5720",
+    "466",
+    "6009",
+    "2309",
+    "387",
+    "3553",
+    "427",
+    "5898"
+  ],
+  "declared_equals_frozen_landmark_order": false,
+  "actual_equals_frozen_landmark_order": false,
+  "actual_equals_gene_info_file_order": false,
+  "shrna_actual_order_head_for_comparison": null,
+  "reading": "one bijection reconciling every signature means the compound matrix carries correct values under a wrong axis, as the shRNA matrix does; comparing the two recovered orders says whether it is the same wrong axis"
+}
