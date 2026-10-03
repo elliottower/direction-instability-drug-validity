@@ -720,6 +720,18 @@ def test_a_drug_arriving_from_two_shards_is_refused(tmp_path):
         _mod.load_rebuild(tmp_path)
 
 
+def test_the_gate_holds_no_assert_statements():
+    # `assert` disappears under -O, so a contract written as one is not a contract.
+    # An earlier pass converted some and left thirty-eight, which read as done.
+    import ast
+
+    source = (Path(__file__).resolve().parents[1] / "experiments"
+              / "03e_reconstruction_gate.py").read_text()
+    remaining = [node.lineno for node in ast.walk(ast.parse(source))
+                 if isinstance(node, ast.Assert)]
+    assert remaining == [], f"assert statements at lines {remaining}"
+
+
 def test_the_gate_contracts_survive_python_minus_o():
     # `assert` disappears under -O, so a contract written as one is not a contract
     import subprocess
@@ -811,8 +823,13 @@ def _gate_fixture(tmp_path):
     np.savez_compressed(extraction / "lincs_subset.npz", sig_ids=np.array(compound_ids),
                         signatures=np.vstack([values[sig] for sig in compound_ids]),
                         gene_ids=np.array(genes))
-    (extraction / "GSE92742_Broad_LINCS_sig_info.txt.gz").write_bytes(
-        compound_siginfo.read_bytes())
+    # deliberately NOT the same bytes as the hashed metadata: a copy beside the
+    # extraction that disagrees must not be the one the gate groups by
+    pd.DataFrame({"sig_id": compound_ids,
+                  "pert_iname": ["drugone"] * len(compound_ids),
+                  "cell_id": ["MCF7"] * len(compound_ids)}).to_csv(
+        extraction / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t", index=False,
+        compression="gzip")
 
     cohort = tmp_path / "cohort.json"
     cohort.write_text(json.dumps([{"drug": "drugone", "target": "TARGETA"},
@@ -866,3 +883,108 @@ def test_the_whole_gate_fails_on_a_canonical_artifact_whose_columns_were_permute
     shrna = written["shrna_signatures_and_consensuses"]
     assert shrna["n_signature_failures"] == 6
     assert written["compound_signatures"]["all_within_tolerance"]
+
+
+def _under_optimization(body):
+    """Run a probe against the gate module with assertions removed."""
+    import subprocess
+
+    gate = Path(__file__).resolve().parents[1] / "experiments" / "03e_reconstruction_gate.py"
+    probe = ("import importlib.util, numpy as np;"
+             f"spec = importlib.util.spec_from_file_location('g', {str(gate)!r});"
+             "g = importlib.util.module_from_spec(spec); spec.loader.exec_module(g);"
+             + body)
+    return subprocess.run(["python", "-O", "-c", probe], capture_output=True, text=True)
+
+
+def test_unequal_cell_sets_are_refused_even_under_optimization():
+    # with `assert` removed, align() used to drop the unmatched cell line silently
+    finished = _under_optimization(
+        "genes = ['1', '2'];"
+        "left = ({'d': np.ones((1, 2))}, {'d': ['C1']}, genes);"
+        "right = ({'d': np.ones((2, 2))}, {'d': ['C1', 'C2']}, genes);"
+        "g.compare(left, right, cohort=['d'])")
+    assert finished.returncode != 0
+    assert "declared cell lines" in finished.stderr or "identifier sets differ" in finished.stderr
+
+
+def test_unequal_membership_is_refused_even_under_optimization():
+    finished = _under_optimization(
+        "genes = ['1', '2'];"
+        "v = {s: np.ones(2) for s in ('A', 'B', 'C')};"
+        "left = (dict(v), {'T': ['A', 'B']}, genes);"
+        "right = (dict(v), {'T': ['A', 'B', 'C']}, genes);"
+        "g.compare_shrna(left, right)")
+    assert finished.returncode != 0
+    assert "group different signatures" in finished.stderr
+
+
+def test_a_signature_array_contradicting_its_identifiers_is_refused(tmp_path):
+    rng = np.random.default_rng()
+    genes = [str(i) for i in range(3)]
+    ids = ["SIG1", "SIG2", "SIG3"]
+    membership = json.dumps({"TARGET0": ids})
+
+    # an unlabeled fourth row would never be read, so its contents never compared
+    np.savez_compressed(tmp_path / "shrna_signatures.npz", sig_ids=np.array(ids),
+                        signatures=rng.standard_normal((4, 3)), gene_ids=np.array(genes),
+                        membership=membership)
+    with pytest.raises(AssertionError, match=r"holds a \(4, 3\) array against 3 signature"):
+        _mod.load_shrna_rebuild(tmp_path)
+
+    # an extra dimension survives vstack by broadcasting
+    np.savez_compressed(tmp_path / "shrna_signatures.npz", sig_ids=np.array(ids),
+                        signatures=rng.standard_normal((3, 2, 3)), gene_ids=np.array(genes),
+                        membership=membership)
+    with pytest.raises(AssertionError, match=r"holds a \(3, 2, 3\) array"):
+        _mod.load_shrna_rebuild(tmp_path)
+
+    np.savez_compressed(tmp_path / "shrna_signatures.npz", sig_ids=np.array(ids),
+                        signatures=np.full((3, 3), np.nan), gene_ids=np.array(genes),
+                        membership=membership)
+    with pytest.raises(AssertionError, match="nonfinite values"):
+        _mod.load_shrna_rebuild(tmp_path)
+
+
+def test_the_retained_extraction_is_refused_when_it_repeats_a_signature(tmp_path):
+    import pandas as pd
+
+    rng = np.random.default_rng()
+    genes = [str(i) for i in range(4)]
+    # the first occurrence is corrupted and the later one correct, which a position
+    # lookup would resolve in favour of the later one
+    np.savez_compressed(tmp_path / "lincs_subset.npz",
+                        sig_ids=np.array(["CPD1", "CPD1", "CPD2"]),
+                        signatures=rng.standard_normal((3, 4)),
+                        gene_ids=np.array(genes))
+    pd.DataFrame({"sig_id": ["CPD1", "CPD2"], "pert_iname": ["drug", "drug"],
+                  "cell_id": ["MCF7", "PC3"]}).to_csv(
+        tmp_path / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t", index=False,
+        compression="gzip")
+
+    with pytest.raises(AssertionError, match="repeats a signature"):
+        _mod.load_extraction(tmp_path, cohort=["drug"])
+
+
+def test_the_retained_extraction_uses_the_metadata_the_gate_hashed(tmp_path):
+    # two copies of the metadata existed: one hashed on the command line, one sitting
+    # beside the extraction and read instead
+    import pandas as pd
+
+    rng = np.random.default_rng()
+    genes = [str(i) for i in range(4)]
+    np.savez_compressed(tmp_path / "lincs_subset.npz", sig_ids=np.array(["CPD1", "CPD2"]),
+                        signatures=rng.standard_normal((2, 4)), gene_ids=np.array(genes))
+    beside = tmp_path / "GSE92742_Broad_LINCS_sig_info.txt.gz"
+    pd.DataFrame({"sig_id": ["CPD1", "CPD2"], "pert_iname": ["drug", "drug"],
+                  "cell_id": ["MCF7", "MCF7"]}).to_csv(beside, sep="\t", index=False,
+                                                       compression="gzip")
+    hashed = tmp_path / "hashed_sig_info.txt.gz"
+    pd.DataFrame({"sig_id": ["CPD1", "CPD2"], "pert_iname": ["drug", "drug"],
+                  "cell_id": ["MCF7", "PC3"]}).to_csv(hashed, sep="\t", index=False,
+                                                      compression="gzip")
+
+    _, beside_cells, _ = _mod.load_extraction(tmp_path, cohort=["drug"])
+    _, hashed_cells, _ = _mod.load_extraction(tmp_path, cohort=["drug"], siginfo_path=hashed)
+    assert beside_cells["drug"] == ["MCF7"]
+    assert sorted(hashed_cells["drug"]) == ["MCF7", "PC3"]
