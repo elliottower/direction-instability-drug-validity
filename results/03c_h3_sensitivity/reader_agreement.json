@@ -1,0 +1,12 @@
+{
+  "n_signatures": 200,
+  "n_genes": 978,
+  "max_abs_difference_after_identifier_alignment": 0.0,
+  "readers_agree": true,
+  "orientation_the_reader_found": "signatures_then_genes",
+  "parser_returned_the_requested_order": false,
+  "parser_returned_the_source_order": true,
+  "selected_gene_axis_sha256": "5ad472af030c79260c6db4085979c821dcd7a06551d60d402c2be1f0af248622",
+  "source_row_axis_sha256": "c61472a86b0ac4e6d9347fb6bdace724deb801f8d8ba0682c067e9715ecefa56",
+  "reading": "agreement after aligning on identifiers means the gate's own read of the HDF5 metadata finds the same value under the same gene as the parser production uses, by a route that shares no lookup with it"
+}

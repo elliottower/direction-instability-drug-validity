@@ -559,3 +559,110 @@ def test_the_parse_refuses_a_frame_missing_a_landmark_or_repeating_an_identifier
     duplicated = duplicated.set_axis([frame.index[0]] * 2 + list(frame.index[2:]), axis=0)
     with pytest.raises(AssertionError, match="repeats a gene identifier"):
         _mod.shrna_from_parsed_frame(duplicated, {"T": ["SIG_0"]}, genes)
+
+
+def _write_gctx(path, gene_order, signature_order, orientation="signatures_then_genes"):
+    """A GCTX in the real layout, with a sentinel per (gene, signature) pair.
+
+    The value at a pair encodes both identifiers, so a value found under the wrong
+    label is visible rather than merely different.
+    """
+    import h5py
+
+    genes, signatures = list(gene_order), list(signature_order)
+    sentinel = np.array([[1000.0 * (g + 1) + (s + 1) for g in range(len(genes))]
+                         for s in range(len(signatures))])
+    stored = sentinel if orientation == "signatures_then_genes" else sentinel.T
+    with h5py.File(path, "w") as handle:
+        handle.create_dataset("/0/DATA/0/matrix", data=stored.astype(np.float32))
+        handle.create_dataset("/0/META/ROW/id",
+                              data=np.array(genes, dtype=h5py.string_dtype()))
+        handle.create_dataset("/0/META/COL/id",
+                              data=np.array(signatures, dtype=h5py.string_dtype()))
+    return {(genes[g], signatures[s]): sentinel[s, g]
+            for g in range(len(genes)) for s in range(len(signatures))}
+
+
+def test_the_source_reader_pairs_each_value_with_the_identifier_the_file_stores(tmp_path):
+    # rows are physically C, A, B and are requested as B, C, A
+    genes = ["C", "A", "B", "D"]
+    signatures = [f"SIG{i}" for i in range(5)]
+    expected = _write_gctx(tmp_path / "x.gctx", genes, signatures)
+
+    values, read_genes, read_signatures, hashes = _mod.read_gctx_slice(
+        tmp_path / "x.gctx", ["SIG3", "SIG0"], ["B", "C", "A"])
+    assert set(read_genes) == {"A", "B", "C"}
+    assert set(read_signatures) == {"SIG0", "SIG3"}
+    for row, sig_id in enumerate(read_signatures):
+        for column, gene in enumerate(read_genes):
+            assert values[row, column] == pytest.approx(expected[(gene, sig_id)])
+    assert hashes["orientation"] == "signatures_then_genes"
+    assert hashes["source_row_axis_sha256"] != hashes["selected_gene_axis_sha256"]
+
+
+def test_the_source_reader_reads_either_orientation_and_refuses_an_ambiguous_one(tmp_path):
+    genes, signatures = ["G1", "G2", "G3"], [f"SIG{i}" for i in range(6)]
+    expected = _write_gctx(tmp_path / "t.gctx", genes, signatures,
+                           orientation="genes_then_signatures")
+
+    values, read_genes, read_signatures, hashes = _mod.read_gctx_slice(
+        tmp_path / "t.gctx", signatures, genes)
+    assert hashes["orientation"] == "genes_then_signatures"
+    for row, sig_id in enumerate(read_signatures):
+        for column, gene in enumerate(read_genes):
+            assert values[row, column] == pytest.approx(expected[(gene, sig_id)])
+
+    # a square matrix fits both readings, and nothing in the file settles it
+    square = ["G1", "G2", "G3"]
+    _write_gctx(tmp_path / "square.gctx", square, ["SIG0", "SIG1", "SIG2"])
+    with pytest.raises(AssertionError, match="fits 2 orientations"):
+        _mod.read_gctx_slice(tmp_path / "square.gctx", ["SIG0"], square)
+
+
+def test_the_source_reader_refuses_a_missing_or_repeated_identifier(tmp_path):
+    genes, signatures = ["G1", "G2", "G3", "G4"], [f"SIG{i}" for i in range(5)]
+    _write_gctx(tmp_path / "x.gctx", genes, signatures)
+
+    with pytest.raises(AssertionError, match="requested genes are absent"):
+        _mod.read_gctx_slice(tmp_path / "x.gctx", ["SIG0"], genes + ["G9"])
+    with pytest.raises(AssertionError, match="requested signatures are absent"):
+        _mod.read_gctx_slice(tmp_path / "x.gctx", ["SIG_NOT_THERE"], genes)
+
+    import h5py
+    with h5py.File(tmp_path / "dup.gctx", "w") as handle:
+        handle.create_dataset("/0/DATA/0/matrix", data=np.zeros((5, 4), dtype=np.float32))
+        handle.create_dataset("/0/META/ROW/id",
+                              data=np.array(["G1", "G1", "G3", "G4"],
+                                            dtype=h5py.string_dtype()))
+        handle.create_dataset("/0/META/COL/id",
+                              data=np.array(signatures, dtype=h5py.string_dtype()))
+    with pytest.raises(AssertionError, match="repeats an identifier"):
+        _mod.read_gctx_slice(tmp_path / "dup.gctx", ["SIG0"], ["G1"])
+
+
+def test_a_globally_permuted_canonical_artifact_fails_against_the_source(tmp_path):
+    # the defect, end to end: the canonical artifact declares the right axis and
+    # its columns follow another one, and the source read is what catches it
+    genes = [f"G{i}" for i in range(8)]
+    signatures = [f"SIG{i}" for i in range(6)]
+    _write_gctx(tmp_path / "x.gctx", genes, signatures)
+    values, read_genes, read_signatures, _ = _mod.read_gctx_slice(
+        tmp_path / "x.gctx", signatures, genes)
+
+    membership = {"TARGET0": sorted(read_signatures[:3]),
+                  "TARGET1": sorted(read_signatures[3:])}
+    honest = {sig_id: values[i] for i, sig_id in enumerate(read_signatures)}
+    source = (honest, membership, read_genes)
+
+    assert _mod.compare_shrna((dict(honest), membership, list(read_genes)),
+                              source)["all_within_tolerance"]
+
+    rng = np.random.default_rng()
+    scramble = rng.permutation(len(read_genes))
+    while (scramble == np.arange(len(scramble))).all():
+        scramble = rng.permutation(len(scramble))
+    mislabeled = {sig_id: vector[scramble] for sig_id, vector in honest.items()}
+
+    result = _mod.compare_shrna((mislabeled, membership, list(read_genes)), source)
+    assert not result["all_within_tolerance"]
+    assert result["n_signature_failures"] == len(read_signatures)

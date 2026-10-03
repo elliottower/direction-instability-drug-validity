@@ -24,6 +24,7 @@ import hashlib
 import json
 from pathlib import Path
 
+import h5py
 import numpy as np
 import pandas as pd
 from cmapPy.pandasGEXpress import parse
@@ -352,10 +353,12 @@ def shrna_from_parsed_frame(frame, membership, landmark_ids):
     """Signatures keyed by id, carrying the gene labels the frame itself reports.
 
     The pairing of a value with a gene comes from the parsed frame's own index and
-    is never reordered here. Deviation 11 was a matrix whose columns did not follow
-    the labels it declared, and a loader that reindexes onto an expected order
-    destroys the only evidence of that: after the reindex both sides agree about
-    the labels and disagree about nothing visible.
+    is never reordered here. Reordering by labels read from the source is correct
+    and is what coordinate harmonization requires; assigning expected labels
+    positionally, before the source's own identifier-to-value pairing has been
+    established, is what cannot be undone. Deviation 11 was a matrix whose columns
+    did not follow the labels it declared, and reindexing an artifact that is
+    already falsely labeled neither repairs nor reveals it.
     """
     labels = [str(gene) for gene in frame.index]
     assert len(set(labels)) == len(labels), "the parsed frame repeats a gene identifier"
@@ -402,6 +405,135 @@ def load_shrna_from_gctx(gctx_path: Path, siginfo_path: Path, gene_info_path: Pa
     gct = parse.parse(str(gctx_path), cid=wanted, rid=landmark_ids)
     signatures, genes = shrna_from_parsed_frame(gct.data_df, membership, landmark_ids)
     return signatures, membership, genes
+
+
+def _decoded(values) -> list:
+    """Identifiers as text, without letting two of them collapse into one."""
+    out = [value.decode() if isinstance(value, bytes) else str(value) for value in values]
+    assert len(set(out)) == len(out), "the source metadata repeats an identifier"
+    return out
+
+
+def read_gctx_slice(gctx_path, wanted_signatures, wanted_genes, block=2000):
+    """Read the registered signatures and genes straight out of the GCTX's HDF5.
+
+    This is the gate's second source, and it is independent of production in the
+    way that matters: the identifiers come from the file's own row and column
+    metadata, the integer positions are built here from those identifiers, only the
+    needed slices are read, and no expected label is ever attached to a value. The
+    production route asks a parser for an order and trusts what comes back, so a
+    parser whose identifier lookup is wrong would be wrong in both places.
+
+    Returns (values, genes, signature ids, hashes). `genes` and the signature ids
+    are read from the file, never from the request.
+    """
+    with h5py.File(gctx_path, "r") as handle:
+        row_ids = _decoded(handle["/0/META/ROW/id"][:])
+        column_ids = _decoded(handle["/0/META/COL/id"][:])
+        matrix = handle["/0/DATA/0/matrix"]
+
+        # orientation is decided by the metadata lengths, never by assuming one:
+        # a transposed matrix must not pass on a shape coincidence
+        fits = [name for name, shape in (("genes_then_signatures",
+                                          (len(row_ids), len(column_ids))),
+                                         ("signatures_then_genes",
+                                          (len(column_ids), len(row_ids))))
+                if tuple(matrix.shape) == shape]
+        assert len(fits) == 1, (
+            f"{Path(gctx_path).name} is {tuple(matrix.shape)} against {len(row_ids)} row and "
+            f"{len(column_ids)} column identifiers, which fits {len(fits)} orientations; "
+            "a shape coincidence must not decide which axis is which")
+        orientation = fits[0]
+
+        gene_position = {gene: i for i, gene in enumerate(row_ids)}
+        signature_position = {sig: i for i, sig in enumerate(column_ids)}
+        missing_genes = sorted(set(map(str, wanted_genes)) - set(gene_position))
+        missing_signatures = sorted(set(map(str, wanted_signatures)) - set(signature_position))
+        assert not missing_genes, (
+            f"{len(missing_genes)} requested genes are absent from the source: "
+            f"{missing_genes[:5]}")
+        assert not missing_signatures, (
+            f"{len(missing_signatures)} requested signatures are absent from the source: "
+            f"{missing_signatures[:5]}")
+
+        gene_rows = sorted(gene_position[gene] for gene in set(map(str, wanted_genes)))
+        signature_columns = sorted(signature_position[sig]
+                                   for sig in set(map(str, wanted_signatures)))
+        genes = [row_ids[i] for i in gene_rows]
+        signatures = [column_ids[i] for i in signature_columns]
+
+        blocks = []
+        for start in range(0, len(signature_columns), block):
+            columns = signature_columns[start:start + block]
+            if orientation == "signatures_then_genes":
+                blocks.append(np.asarray(matrix[columns, :])[:, gene_rows])
+            else:
+                blocks.append(np.asarray(matrix[:, columns])[gene_rows, :].T)
+        values = np.vstack(blocks) if blocks else np.empty((0, len(gene_rows)))
+
+        hashes = {"source_row_axis_sha256": sha256_text("\n".join(row_ids)),
+                  "source_column_axis_sha256": sha256_text("\n".join(column_ids)),
+                  "selected_gene_axis_sha256": sha256_text("\n".join(genes)),
+                  "selected_signature_axis_sha256": sha256_text("\n".join(signatures)),
+                  "orientation": orientation}
+
+    assert values.shape == (len(signatures), len(genes)), f"read {values.shape}"
+    assert np.isfinite(values).all(), f"{Path(gctx_path).name} holds nonfinite values"
+    return values, genes, signatures, hashes
+
+
+def shrna_from_source(gctx_path, siginfo_path, gene_info_path, targets_wanted=None,
+                      min_signatures=MIN_SIGNATURES):
+    """The shRNA half's second source: the pinned GCTX, read independently."""
+    gene_info = pd.read_csv(gene_info_path, sep="\t", low_memory=False)
+    landmark_ids = [str(gene) for gene in gene_info[gene_info.pr_is_lm == 1].pr_gene_id]
+    assert len(landmark_ids) == N_LANDMARK, f"{len(landmark_ids)} landmark genes"
+
+    siginfo = pd.read_csv(siginfo_path)
+    membership = {}
+    for gene, group in siginfo.groupby("pert_iname"):
+        members = sorted(set(group.sig_id.astype(str)))
+        if len(members) < min_signatures:
+            continue
+        if targets_wanted is None or gene in targets_wanted:
+            membership[str(gene)] = members
+
+    wanted = sorted({sig_id for members in membership.values() for sig_id in members})
+    values, genes, signatures, hashes = read_gctx_slice(gctx_path, wanted, landmark_ids)
+    assert set(genes) == set(landmark_ids), "the source returned a different gene set"
+    assert set(signatures) == set(wanted), "the source returned a different signature set"
+    rows = {sig_id: i for i, sig_id in enumerate(signatures)}
+    return ({sig_id: values[rows[sig_id]] for sig_id in signatures}, membership, genes), hashes
+
+
+def compounds_from_source(gctx_path, siginfo_path, gene_info_path, cohort):
+    """The compound half's second source, by the same reader.
+
+    Amendment 2 retains `lincs_subset.npz` on the strength of its earlier pass.
+    Retaining it is a claim about its values, so the claim is checked against the
+    source rather than carried forward.
+    """
+    gene_info = pd.read_csv(gene_info_path, sep="\t", low_memory=False)
+    landmark_ids = [str(gene) for gene in gene_info[gene_info.pr_is_lm == 1].pr_gene_id]
+    siginfo = pd.read_csv(siginfo_path, sep="\t", low_memory=False)
+    siginfo = siginfo[siginfo.pert_iname.isin(set(cohort))].copy()
+    siginfo["sig_id"] = siginfo.sig_id.astype(str)
+
+    wanted = sorted(set(siginfo.sig_id))
+    values, genes, signatures, hashes = read_gctx_slice(gctx_path, wanted, landmark_ids)
+    assert set(genes) == set(landmark_ids), "the source returned a different gene set"
+    rows = {sig_id: i for i, sig_id in enumerate(signatures)}
+
+    matrices, cells = {}, {}
+    for drug, group in siginfo.groupby("pert_iname"):
+        per_cell, identifiers = [], []
+        for cell_id, members in group.groupby("cell_id"):
+            positions = [rows[sig_id] for sig_id in sorted(set(members.sig_id))]
+            per_cell.append(values[positions].mean(axis=0))
+            identifiers.append(str(cell_id))
+        matrices[drug] = np.vstack(per_cell)
+        cells[drug] = identifiers
+    return (matrices, cells, genes), hashes
 
 
 def load_shrna_extraction(data_dir: Path, targets_wanted=None):
@@ -476,11 +608,16 @@ def main():
                         help="the pinned shRNA metadata, with --gctx")
     parser.add_argument("--gene-info", type=Path,
                         help="the pinned gene info, with --gctx")
+    parser.add_argument("--compound-siginfo", type=Path,
+                        help="the pinned compound metadata, with --gctx. Both halves are then "
+                             "verified against the source, which is what retaining "
+                             "`lincs_subset.npz` claims.")
     parser.add_argument("--output", type=Path, default=OUT)
     args = parser.parse_args()
-    assert bool(args.gctx) == bool(args.shrna_siginfo) == bool(args.gene_info), (
-        "--gctx needs --shrna-siginfo and --gene-info, which pin the membership rule and "
-        "the landmark set it parses against")
+    assert (bool(args.gctx) == bool(args.shrna_siginfo) == bool(args.gene_info)
+            == bool(args.compound_siginfo)), (
+        "--gctx needs --shrna-siginfo, --compound-siginfo and --gene-info, which pin the "
+        "membership rules and the landmark set it reads against")
 
     records = json.loads(args.cohort.read_text())
     drugs = sorted({record["drug"] for record in records})
@@ -490,25 +627,39 @@ def main():
 
     rebuilt_signatures, rebuilt_membership, rebuilt_genes, stored = load_shrna_rebuild_strict(
         args.rebuilt)
+    source_hashes = {}
     if args.gctx:
-        second_source = load_shrna_from_gctx(args.gctx, args.shrna_siginfo, args.gene_info,
-                                             targets_wanted=set(targets))
+        shrna_second, source_hashes["shrna"] = shrna_from_source(
+            args.gctx, args.shrna_siginfo, args.gene_info, targets_wanted=set(targets))
+        compound_second, source_hashes["compound"] = compounds_from_source(
+            args.gctx, args.compound_siginfo, args.gene_info, cohort=drugs)
     else:
-        second_source = load_shrna_extraction(args.extraction, targets_wanted=set(targets))
+        shrna_second = load_shrna_extraction(args.extraction, targets_wanted=set(targets))
+        compound_second = load_extraction(args.extraction, cohort=drugs)
     result = compare_both(
         load_rebuild(args.rebuilt),
-        load_extraction(args.extraction, cohort=drugs),
+        compound_second,
         (rebuilt_signatures, rebuilt_membership, rebuilt_genes),
-        second_source,
+        shrna_second,
         cohort=drugs, stored=stored)
-    result["shrna_second_source"] = ("the gate's own parse of " + str(args.gctx) if args.gctx
-                                     else "lincs_shrna.npz, retired by Amendment 2")
+    if args.gctx:
+        result["second_source"] = {
+            "route": "the gate's own HDF5 read of " + str(args.gctx),
+            "gctx_sha256": sha256_file(args.gctx), "axes": source_hashes,
+            "halves_verified_against_the_source": ["compound", "shrna"]}
+        result["canonical_artifact_sha256"] = {
+            name: sha256_file(Path(args.rebuilt) / name)
+            for name in ("shrna_signatures.npz", "shrna_consensus.npz")
+            if (Path(args.rebuilt) / name).exists()}
+    else:
+        result["second_source"] = {"route": "lincs_shrna.npz, retired by Amendment 2"}
 
     result["cohort"] = {"file": str(args.cohort), "sha256": sha256_file(args.cohort),
                         "n_records": len(records), "n_unique_drugs": len(drugs),
                         "n_unique_targets": len(targets)}
     result["identifier_hashes"] = {"drugs": sha256_text("\n".join(drugs)),
                                    "targets": sha256_text("\n".join(targets))}
+    result["gate_code_sha256"] = sha256_file(Path(__file__))
     passed = result["all_within_tolerance"]
     result["gate"] = ("reconstruction" if passed
                       else "failed: the analyses registered against this gate are void")

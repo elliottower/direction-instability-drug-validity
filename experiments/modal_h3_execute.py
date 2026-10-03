@@ -643,6 +643,74 @@ def stage_tests():
     return finished.stdout[-2000:]
 
 
+@app.function(**COMMON)
+def stage_reader_agreement():
+    """Do the production parser and the gate's own HDF5 read agree on the real file?
+
+    The gate's reader takes the GCTX's row and column identifiers from its HDF5
+    metadata and builds the positions itself. Those paths come from the format's
+    layout rather than from this file, so they are checked against it before the
+    gate relies on them. This also records what the production parser returns:
+    the file's own row order, or the order it was asked for.
+    """
+    import json
+    import importlib.util
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+    from cmapPy.pandasGEXpress import parse
+
+    _repo_at_its_absolute_path()
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    raw = Path("/rebuild/raw")
+    gene_info = pd.read_csv(raw / "GSE92742_Broad_LINCS_gene_info.txt.gz", sep="\t",
+                            low_memory=False)
+    landmark = [str(g) for g in gene_info[gene_info.pr_is_lm == 1].pr_gene_id]
+    siginfo = pd.read_csv(raw / "lincs_shrna_siginfo.csv.gz")
+    sample = sorted(set(siginfo.sig_id.astype(str)))[:200]
+
+    values, genes, signatures, hashes = gate.read_gctx_slice(raw / GCTX, sample, landmark)
+
+    # the production route: ask for an order, and see what comes back
+    requested = list(reversed(landmark))
+    gct = parse.parse(str(raw / GCTX), cid=sample, rid=requested)
+    frame = gct.data_df
+    frame.index = frame.index.astype(str)
+    frame.columns = frame.columns.astype(str)
+
+    rows = {sig_id: i for i, sig_id in enumerate(signatures)}
+    columns = {gene: i for i, gene in enumerate(genes)}
+    worst = 0.0
+    for sig_id in signatures:
+        for gene in frame.index:
+            left = float(values[rows[sig_id], columns[gene]])
+            worst = max(worst, abs(left - float(frame.loc[gene, sig_id])))
+
+    summary = {
+        "n_signatures": len(signatures), "n_genes": len(genes),
+        "max_abs_difference_after_identifier_alignment": worst,
+        "readers_agree": worst <= gate.ATOL + gate.RTOL * float(np.abs(values).mean()),
+        "orientation_the_reader_found": hashes["orientation"],
+        "parser_returned_the_requested_order": list(frame.index) == requested,
+        "parser_returned_the_source_order": list(frame.index) == genes,
+        "selected_gene_axis_sha256": hashes["selected_gene_axis_sha256"],
+        "source_row_axis_sha256": hashes["source_row_axis_sha256"],
+        "reading": ("agreement after aligning on identifiers means the gate's own read of the "
+                    "HDF5 metadata finds the same value under the same gene as the parser "
+                    "production uses, by a route that shares no lookup with it"),
+    }
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "reader_agreement.json").write_text(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps(summary, indent=2)
+
+
 @app.local_entrypoint()
 def main(stage: str):
     """stage: gate | s1s3 | driver | diagnostic"""
