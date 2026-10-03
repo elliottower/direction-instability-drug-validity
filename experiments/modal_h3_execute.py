@@ -634,12 +634,20 @@ def stage_tests():
     import subprocess
 
     _repo_at_its_absolute_path()
+    from pathlib import Path
+
     finished = subprocess.run(
-        ["python", "-m", "pytest", "/app/tests", "-q",
+        ["python", "-m", "pytest", "/app/tests", "-v", "-rs", "--no-header",
          "--ignore=/app/tests/test_combined_experiments.py"],
         cwd="/app", capture_output=True, text=True)
     print(finished.stdout[-8000:], flush=True)
     print(finished.stderr[-4000:], flush=True)
+    # the collected list and the skip reasons are the record of what actually ran,
+    # so they go to a file rather than only to a log that scrolls
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "test_output.txt").write_text(finished.stdout + finished.stderr)
+    results.commit()
     assert finished.returncode == 0, f"the suite failed with {finished.returncode}"
     return finished.stdout[-2000:]
 
