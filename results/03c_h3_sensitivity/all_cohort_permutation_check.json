@@ -1,0 +1,9 @@
+{
+  "n_cohort_signatures_compared": 41643,
+  "n_recovered_from": 400,
+  "max_abs_difference_under_the_permutation": 0.0,
+  "n_failures": 0,
+  "failures": [],
+  "one_permutation_holds_for_every_cohort_signature": true,
+  "reading": "the permutation was recovered from a 400-signature block and applied to every cohort signature; holding throughout makes the invariance claim general rather than sampled"
+}

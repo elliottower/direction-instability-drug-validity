@@ -609,6 +609,9 @@ there.
 
 The shared permutation was recovered from 400 compound signatures and matches the
 shRNA permutation, itself verified on all 14,656 shRNA signatures, at every one of
-978 positions. The multiset test covered 40 signatures and the direction-instability
-reproduction 20 drugs. A comparison across all 41,643 cohort compound signatures is
-the check that would make the invariance claim general rather than sampled.
+978 positions. Applied to **all 41,643 cohort compound signatures**, it reconciles
+every one of them with the pinned source at a maximum absolute difference of
+**0.0**, with no failures. The invariance claim therefore rests on the cohort
+rather than on the block the permutation was recovered from. The multiset test
+covered 40 signatures and the direction-instability reproduction 20 drugs; both are
+now corollaries of the exact all-cohort agreement.
