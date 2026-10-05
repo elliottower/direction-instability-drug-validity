@@ -132,8 +132,50 @@ class Arm:
                           for S in self.signatures])
 
 
+class DiscordanceError(AssertionError):
+    """A contract this script refuses to run without.
+
+    It subclasses AssertionError so the failure type is unchanged, and is raised
+    explicitly so `python -O`, which removes `assert`, cannot switch it off. The
+    rest of this file still uses `assert`; converting those is a separate pass.
+    """
+
+
+def require(condition, message) -> None:
+    if not condition:
+        raise DiscordanceError(message)
+
+
+def build_drug_signatures_from_rebuild(rebuild_dir: Path):
+    """Per drug and cell line, read from the rebuild the gate verified.
+
+    Amendment 3 makes the rebuild the authoritative compound source. Its shards
+    already hold the per-drug per-cell mean this function used to compute, built
+    from the pinned GCTX in the frozen landmark order, so the aggregation rule is
+    unchanged and only its provenance is.
+    """
+    matrices, cells = {}, {}
+    for shard in sorted(Path(rebuild_dir).glob("shard_*.npz")):
+        with np.load(shard, allow_pickle=True) as data:
+            require(("__cells__" in data.files),
+                    f"{shard.name} carries no cell-line identifiers")
+            blob = json.loads(str(data["__cells__"]))
+            for key in data.files:
+                if key in ("fingerprint", "__cells__"):
+                    continue
+                require(key not in matrices, f"{key} arrives from more than one shard")
+                matrices[key] = np.asarray(data[key], dtype=np.float64)
+            cells.update({drug: [str(c) for c in ids] for drug, ids in blob.items()})
+    gene_file = Path(rebuild_dir) / "landmark_gene_ids.json"
+    require(gene_file.exists(), f"{gene_file} is missing; the rebuild must record its axis")
+    genes = [str(g) for g in json.loads(gene_file.read_text())]
+    per_drug = {drug: dict(zip(cells[drug], matrix)) for drug, matrix in matrices.items()
+                if drug in cells}
+    return per_drug, genes
+
+
 def build_drug_signatures(data_dir: Path):
-    """Per drug and cell line, the mean over every signature, as the artifact does."""
+    """The retired route, kept only so the deposited analysis stays reproducible."""
     compounds = np.load(data_dir / "lincs_subset.npz", allow_pickle=True)
     signatures = compounds["signatures"]
     position = {str(sig_id): i for i, sig_id in enumerate(compounds["sig_ids"])}
@@ -157,11 +199,35 @@ def build_drug_signatures(data_dir: Path):
     return per_drug, gene_ids
 
 
-def build_shrna_reference(data_dir: Path, name="shRNA") -> Reference:
-    """Consensus shRNA direction per target, indexed by signature id.
+def build_shrna_reference_from_rebuild(rebuild_dir: Path, gene_ids, name="shRNA") -> Reference:
+    """The consensus directions the gate verified, rather than the retired extraction.
 
-    The defect of Deviation 9 was to index the signature matrix by the metadata's
-    row order. The map below is built from the matrix's own identifiers.
+    A1 of Amendment 2 makes `shrna_consensus.npz` a checked cache of directions
+    derived from the canonical signatures; the gate compares it against directions
+    recomputed from those signatures before any statistic runs. This reads it and
+    requires that it carry the axis the drug signatures are on.
+    """
+    path = Path(rebuild_dir) / "shrna_consensus.npz"
+    require(path.exists(), f"{path} is missing; Amendment 3 reads the verified consensus")
+    with np.load(path, allow_pickle=True) as data:
+        stored = [str(g) for g in data["gene_ids"]]
+        require(stored == [str(g) for g in gene_ids],
+                "the consensus axis is not the axis the drug signatures are on")
+        directions = {str(target): np.asarray(data["directions"][i])
+                      for i, target in enumerate(data["genes"])}
+    require(len(directions) == len(set(directions)), f"{path} repeats a target")
+    audit = {"n_targets": len(directions), "source": str(path),
+             "min_distinct_signatures": MIN_SIGNATURES}
+    return Reference(name, directions, np.arange(N_LANDMARK), audit)
+
+
+def build_shrna_reference(data_dir: Path, name="shRNA") -> Reference:
+    """The retired route, kept only so the deposited analysis stays reproducible.
+
+    Amendment 3 reads the verified consensus instead. The defect of Deviation 9 was
+    to index the signature matrix by the metadata's row order; the map below is
+    built from the matrix's own identifiers, and Deviation 12 records that those
+    identifiers do not describe the matrix.
     """
     shrna = np.load(data_dir / "lincs_shrna.npz", allow_pickle=True)
     signatures = shrna["signatures"]
@@ -379,6 +445,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--data", type=Path, required=True)
+    parser.add_argument("--rebuilt", type=Path, required=True,
+                        help="the GCTX rebuild the gate verified against the pinned source. "
+                             "Amendment 3 makes it the compound source; lincs_subset.npz is "
+                             "read by no production loader.")
     # the mapping stage opens neither, and demanding them would make a
     # mapping-only invocation depend on files it never reads
     parser.add_argument("--perturbseq", type=Path)
@@ -607,12 +677,19 @@ def run(args):
               "inputs": verify_inputs(args), "modules": {}}
 
     log("building drug signatures and references")
-    per_drug, gene_ids = build_drug_signatures(args.data)
+    # Amendment 3: the compound source is the rebuild the gate verified, and the
+    # symbol list that places every external reference is built from its axis
+    per_drug, gene_ids = build_drug_signatures_from_rebuild(args.rebuilt)
+    frozen = frozen_landmark_order(args.data / "GSE92742_Broad_LINCS_gene_info.txt.gz")
+    require(gene_ids == frozen,
+            "the rebuild's axis is not the frozen landmark order, so the symbol list "
+            "that places C0, C1-K562, C1-RPE1, C1-GW and R7f's removed coordinate "
+            "cannot be trusted")
     symbols = landmark_symbols(args.data / "GSE92742_Broad_LINCS_gene_info.txt.gz", gene_ids)
     targets, multi_target, moa = drug_targets(args.data)
     records = json.loads(CRISPRI_RECORDS.read_text())
 
-    shrna = build_shrna_reference(args.data)
+    shrna = build_shrna_reference_from_rebuild(args.rebuilt, gene_ids)
     c0 = pooled_crispri_reference(args.perturbseq, symbols, name="C0")
     c1 = load_replogle_bulk(args.replogle / "K562_essential_normalized_bulk_01.h5ad",
                             symbols, "C1-K562")
