@@ -1157,6 +1157,209 @@ def stage_compound_column_match():
     return json.dumps(summary, indent=2)
 
 
+@app.function(**COMMON)
+def stage_scope_of_the_compound_defect():
+    """Does raw direction instability itself differ between the extraction and the source?
+
+    Deviation 11 scoped the axis defect to quantities that pair the two matrices, on
+    the ground that a permutation applied to every signature alike leaves the cosines
+    between signatures unchanged. The compound disagreement is not a shared
+    permutation, so that reasoning does not carry, and D is computed from this file.
+    This recomputes D for a sample of cohort drugs from both sources and compares them
+    against the deposited values. It also tests the multiset directly, by sorting each
+    signature's values, which the earlier summary statistics only suggested.
+    """
+    import importlib.util
+    import json
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+
+    _repo_at_its_absolute_path()
+    staged = _stage_inputs()
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    raw = Path("/rebuild/raw")
+    records = json.loads(Path("/app/results/03_phenotype_projection/"
+                              "phenotype_projection_results.json").read_text())
+    deposited = {r["drug"]: r for r in records}
+    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+                          low_memory=False)
+    siginfo = siginfo[siginfo.pert_iname.isin(set(deposited))]
+
+    extraction = np.load(Path(staged) / "lincs_subset.npz", allow_pickle=True)
+    held = {str(s): i for i, s in enumerate(extraction["sig_ids"])}
+    declared = [str(g) for g in extraction["gene_ids"]]
+    stored = extraction["signatures"]            # decompressed once
+
+    drugs = sorted(deposited)[:20]
+    wanted = sorted(set(siginfo[siginfo.pert_iname.isin(drugs)].sig_id.astype(str))
+                    & set(held))
+    values, genes, signatures, _ = gate.read_gctx_slice(raw / GCTX, wanted, declared)
+    column = {g: i for i, g in enumerate(genes)}
+    on_declared = np.array([column[g] for g in declared])
+    source_row = {s: i for i, s in enumerate(signatures)}
+
+    def instability(matrix):
+        unit = matrix / np.linalg.norm(matrix, axis=1, keepdims=True)
+        upper = np.triu_indices(matrix.shape[0], 1)
+        return float(1.0 - (unit @ unit.T)[upper].mean())
+
+    # the multiset test the summary statistics only hinted at
+    multiset_matches, probes = 0, wanted[:40]
+    for sig_id in probes:
+        left = np.sort(np.asarray(stored[held[sig_id]], dtype=np.float64))
+        right = np.sort(values[source_row[sig_id]][on_declared])
+        multiset_matches += bool(np.allclose(left, right, rtol=1e-5, atol=1e-5))
+    monotone = sum(1 for sig_id in probes
+                   if np.all(np.diff(np.asarray(stored[held[sig_id]])) >= 0)
+                   or np.all(np.diff(np.asarray(stored[held[sig_id]])) <= 0))
+
+    rows = []
+    for drug, group in siginfo[siginfo.pert_iname.isin(drugs)].groupby("pert_iname"):
+        per_cell_left, per_cell_right = [], []
+        for cell, members in group.groupby("cell_id"):
+            ids = sorted({s for s in members.sig_id.astype(str) if s in held})
+            if not ids:
+                continue
+            per_cell_left.append(np.vstack([np.asarray(stored[held[s]], dtype=np.float64)
+                                            for s in ids]).mean(axis=0))
+            per_cell_right.append(np.vstack([values[source_row[s]][on_declared]
+                                             for s in ids]).mean(axis=0))
+        if len(per_cell_left) < 2:
+            continue
+        left, right = np.vstack(per_cell_left), np.vstack(per_cell_right)
+        rows.append({"drug": drug, "n_cell_lines": left.shape[0],
+                     "D_extraction": instability(left), "D_source": instability(right),
+                     "D_deposited": deposited[drug]["raw_instability"]})
+
+    for entry in rows:
+        entry["extraction_minus_deposited"] = entry["D_extraction"] - entry["D_deposited"]
+        entry["source_minus_deposited"] = entry["D_source"] - entry["D_deposited"]
+
+    summary = {
+        "n_drugs": len(rows),
+        "multiset_test": {"n_probed": len(probes), "n_matching_sorted_values": multiset_matches,
+                          "n_rows_monotonic": monotone},
+        "D_extraction_reproduces_deposited": bool(rows) and all(
+            abs(e["extraction_minus_deposited"]) < 1e-6 for e in rows),
+        "D_source_reproduces_deposited": bool(rows) and all(
+            abs(e["source_minus_deposited"]) < 1e-6 for e in rows),
+        "max_abs_extraction_minus_deposited": max((abs(e["extraction_minus_deposited"])
+                                                   for e in rows), default=None),
+        "max_abs_source_minus_deposited": max((abs(e["source_minus_deposited"])
+                                               for e in rows), default=None),
+        "per_drug": rows,
+        "reading": ("if D from the extraction reproduces the deposited values and D from the "
+                    "source does not, every quantity the paper reports was computed from this "
+                    "file and the disagreement reaches the primary construct, not only H3"),
+    }
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "compound_defect_scope.json").write_text(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps({k: v for k, v in summary.items() if k != "per_drug"}, indent=2)
+
+
+@app.function(**COMMON)
+def stage_compare_the_two_permutations():
+    """Is the compound axis permuted, and is it the same permutation the shRNA axis carries?
+
+    The earlier column match compared a float64 array from the npz against a float32
+    array from HDF5 by their bytes, which cannot match whatever the values are, so its
+    zero of 978 said nothing. Both sides are cast here before comparison.
+
+    The question this settles matters more than the mechanism. H3 pairs a drug
+    signature with a target direction. If both files carry the same wrong axis, the
+    pairing was consistent and the cosine between them is unaffected; if they carry
+    different wrong axes, it is not.
+    """
+    import importlib.util
+    import json
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+
+    _repo_at_its_absolute_path()
+    staged = _stage_inputs()
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    raw = Path("/rebuild/raw")
+    records = json.loads(Path("/app/results/03_phenotype_projection/"
+                              "phenotype_projection_results.json").read_text())
+    drugs = sorted({r["drug"] for r in records})
+    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+                          low_memory=False)
+    cohort = sorted(set(siginfo[siginfo.pert_iname.isin(set(drugs))].sig_id.astype(str)))
+
+    extraction = np.load(Path(staged) / "lincs_subset.npz", allow_pickle=True)
+    held = {str(s): i for i, s in enumerate(extraction["sig_ids"])}
+    declared = [str(g) for g in extraction["gene_ids"]]
+    stored = extraction["signatures"]
+    sample = [s for s in cohort if s in held][:400]
+
+    left = np.vstack([np.asarray(stored[held[s]]) for s in sample]).astype(np.float32)
+    values, genes, signatures, _ = gate.read_gctx_slice(raw / GCTX, sample, declared)
+    row_of = {s: i for i, s in enumerate(signatures)}
+    right = np.vstack([values[row_of[s]] for s in sample]).astype(np.float32)
+
+    profiles = {}
+    for index in range(right.shape[1]):
+        profiles.setdefault(np.ascontiguousarray(right[:, index]).tobytes(), []).append(index)
+
+    matched, unmatched = {}, []
+    for index, gene in enumerate(declared):
+        where = profiles.get(np.ascontiguousarray(left[:, index]).tobytes())
+        if where and len(where) == 1:
+            matched[gene] = genes[where[0]]
+        else:
+            unmatched.append(gene)
+
+    # the shRNA permutation, as Deviation 11 recovered it
+    shrna = json.loads(Path("/app/results/03c_h3_sensitivity/shrna_axis_recovery.json")
+                       .read_text()) if Path(
+        "/app/results/03c_h3_sensitivity/shrna_axis_recovery.json").exists() else {}
+    shrna_actual = shrna.get("actual_column_order_head")
+
+    # the compound matrix's actual order: declared position -> the gene it really holds
+    actual = [matched.get(gene) for gene in declared]
+    agreement = None
+    if shrna_actual and all(a is not None for a in actual[:len(shrna_actual)]):
+        agreement = actual[:len(shrna_actual)] == shrna_actual
+
+    summary = {
+        "n_signatures_used": len(sample),
+        "n_declared_columns": len(declared),
+        "n_matched_exactly": len(matched),
+        "n_unmatched": len(unmatched),
+        "match_is_a_bijection": len(set(matched.values())) == len(matched) == len(declared),
+        "n_columns_already_correct": sum(1 for gene, image in matched.items()
+                                         if gene == image),
+        "declared_head": declared[:8],
+        "compound_actual_order_head": actual[:8],
+        "compound_actual_order": actual,
+        "declared_order": declared,
+        "shrna_actual_order_head": shrna_actual,
+        "the_two_files_share_the_same_wrong_axis": agreement,
+        "reading": ("a bijection with few columns in place means the compound matrix is "
+                    "permuted like the shRNA one; whether the two orders agree decides "
+                    "whether H3 paired two matrices in one coordinate system or two"),
+    }
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "two_permutations_compared.json").write_text(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps(summary, indent=2)
+
+
 @app.local_entrypoint()
 def main(stage: str):
     """stage: gate | s1s3 | driver | diagnostic"""

@@ -1,0 +1,195 @@
+{
+  "n_drugs": 20,
+  "multiset_test": {
+    "n_probed": 40,
+    "n_matching_sorted_values": 40,
+    "n_rows_monotonic": 0
+  },
+  "D_extraction_reproduces_deposited": true,
+  "D_source_reproduces_deposited": true,
+  "max_abs_extraction_minus_deposited": 7.31416816002195e-09,
+  "max_abs_source_minus_deposited": 2.9802322387695312e-08,
+  "per_drug": [
+    {
+      "drug": "1,2,3,4,5,6-hexabromocyclohexane",
+      "n_cell_lines": 9,
+      "D_extraction": 0.9329361972093726,
+      "D_source": 0.9329361915588379,
+      "D_deposited": 0.9329361915588379,
+      "extraction_minus_deposited": 5.650534706802546e-09,
+      "source_minus_deposited": 0.0
+    },
+    {
+      "drug": "10-DEBC",
+      "n_cell_lines": 53,
+      "D_extraction": 0.923732161057943,
+      "D_source": 0.9237321615219116,
+      "D_deposited": 0.9237321615219116,
+      "extraction_minus_deposited": -4.6396864128439574e-10,
+      "source_minus_deposited": 0.0
+    },
+    {
+      "drug": "10-hydroxycamptothecin",
+      "n_cell_lines": 9,
+      "D_extraction": 0.9346072913849565,
+      "D_source": 0.9346072673797607,
+      "D_deposited": 0.9346072897315025,
+      "extraction_minus_deposited": 1.6534539293289185e-09,
+      "source_minus_deposited": -2.2351741790771484e-08
+    },
+    {
+      "drug": "16,16-dimethylprostaglandin-e2",
+      "n_cell_lines": 51,
+      "D_extraction": 0.8702561797428712,
+      "D_source": 0.8702561855316162,
+      "D_deposited": 0.8702561855316162,
+      "extraction_minus_deposited": -5.788745038870502e-09,
+      "source_minus_deposited": 0.0
+    },
+    {
+      "drug": "17-hydroxyprogesterone-caproate",
+      "n_cell_lines": 9,
+      "D_extraction": 0.9437580051866052,
+      "D_source": 0.9437580108642578,
+      "D_deposited": 0.9437580034136772,
+      "extraction_minus_deposited": 1.7729280266109981e-09,
+      "source_minus_deposited": 7.450580596923828e-09
+    },
+    {
+      "drug": "3,3'-diindolylmethane",
+      "n_cell_lines": 15,
+      "D_extraction": 0.8778881446403504,
+      "D_source": 0.8778881430625916,
+      "D_deposited": 0.8778881430625916,
+      "extraction_minus_deposited": 1.577758812487673e-09,
+      "source_minus_deposited": 0.0
+    },
+    {
+      "drug": "3-amino-benzamide",
+      "n_cell_lines": 51,
+      "D_extraction": 0.9272651956104889,
+      "D_source": 0.9272651672363281,
+      "D_deposited": 0.9272651970386505,
+      "extraction_minus_deposited": -1.4281615889899513e-09,
+      "source_minus_deposited": -2.9802322387695312e-08
+    },
+    {
+      "drug": "3-methyl-GABA",
+      "n_cell_lines": 9,
+      "D_extraction": 0.8737562808743051,
+      "D_source": 0.8737562894821167,
+      "D_deposited": 0.8737562745809555,
+      "extraction_minus_deposited": 6.293349619213018e-09,
+      "source_minus_deposited": 1.4901161193847656e-08
+    },
+    {
+      "drug": "4,5,6,7-tetrabromobenzotriazole",
+      "n_cell_lines": 13,
+      "D_extraction": 0.9627460070861176,
+      "D_source": 0.9627460241317749,
+      "D_deposited": 0.9627460092306137,
+      "extraction_minus_deposited": -2.144496136224916e-09,
+      "source_minus_deposited": 1.4901161193847656e-08
+    },
+    {
+      "drug": "4-iodo-6-phenylpyrimidine",
+      "n_cell_lines": 51,
+      "D_extraction": 0.917095944260144,
+      "D_source": 0.917095959186554,
+      "D_deposited": 0.9170959442853928,
+      "extraction_minus_deposited": -2.5248803048327773e-11,
+      "source_minus_deposited": 1.4901161193847656e-08
+    },
+    {
+      "drug": "5-FP",
+      "n_cell_lines": 7,
+      "D_extraction": 0.9079219971665603,
+      "D_source": 0.9079219698905945,
+      "D_deposited": 0.9079219996929169,
+      "extraction_minus_deposited": -2.5263565683886213e-09,
+      "source_minus_deposited": -2.9802322387695312e-08
+    },
+    {
+      "drug": "5-aminolevulinic-acid",
+      "n_cell_lines": 8,
+      "D_extraction": 0.937683729410013,
+      "D_source": 0.9376837015151978,
+      "D_deposited": 0.9376837275922298,
+      "extraction_minus_deposited": 1.8177831462296012e-09,
+      "source_minus_deposited": -2.60770320892334e-08
+    },
+    {
+      "drug": "ABT-737",
+      "n_cell_lines": 55,
+      "D_extraction": 0.9197835126538875,
+      "D_source": 0.9197835326194763,
+      "D_deposited": 0.9197835177183151,
+      "extraction_minus_deposited": -5.064427655021575e-09,
+      "source_minus_deposited": 1.4901161193847656e-08
+    },
+    {
+      "drug": "AC-55649",
+      "n_cell_lines": 51,
+      "D_extraction": 0.9288636490673386,
+      "D_source": 0.9288636445999146,
+      "D_deposited": 0.9288636445999146,
+      "extraction_minus_deposited": 4.467424097320816e-09,
+      "source_minus_deposited": 0.0
+    },
+    {
+      "drug": "AG-14361",
+      "n_cell_lines": 51,
+      "D_extraction": 0.6728529938869768,
+      "D_source": 0.6728529930114746,
+      "D_deposited": 0.6728529930114746,
+      "extraction_minus_deposited": 8.755022262718626e-10,
+      "source_minus_deposited": 0.0
+    },
+    {
+      "drug": "AG-490",
+      "n_cell_lines": 13,
+      "D_extraction": 0.8526873929388852,
+      "D_source": 0.8526873588562012,
+      "D_deposited": 0.8526873886585236,
+      "extraction_minus_deposited": 4.280361620701001e-09,
+      "source_minus_deposited": -2.9802322387695312e-08
+    },
+    {
+      "drug": "AM-580",
+      "n_cell_lines": 58,
+      "D_extraction": 0.9398793250734838,
+      "D_source": 0.939879298210144,
+      "D_deposited": 0.9398793242871761,
+      "extraction_minus_deposited": 7.863076856295947e-10,
+      "source_minus_deposited": -2.60770320892334e-08
+    },
+    {
+      "drug": "AR-A014418",
+      "n_cell_lines": 16,
+      "D_extraction": 0.8459625019259083,
+      "D_source": 0.8459625244140625,
+      "D_deposited": 0.8459624946117401,
+      "extraction_minus_deposited": 7.31416816002195e-09,
+      "source_minus_deposited": 2.9802322387695312e-08
+    },
+    {
+      "drug": "ARC-239",
+      "n_cell_lines": 8,
+      "D_extraction": 0.8558738055009814,
+      "D_source": 0.8558738231658936,
+      "D_deposited": 0.8558738082647324,
+      "extraction_minus_deposited": -2.7637510058298176e-09,
+      "source_minus_deposited": 1.4901161193847656e-08
+    },
+    {
+      "drug": "AS-604850",
+      "n_cell_lines": 14,
+      "D_extraction": 0.9698283528263087,
+      "D_source": 0.9698283672332764,
+      "D_deposited": 0.9698283523321152,
+      "extraction_minus_deposited": 4.941935749513959e-10,
+      "source_minus_deposited": 1.4901161193847656e-08
+    }
+  ],
+  "reading": "if D from the extraction reproduces the deposited values and D from the source does not, every quantity the paper reports was computed from this file and the disagreement reaches the primary construct, not only H3"
+}

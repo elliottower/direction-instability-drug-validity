@@ -1,0 +1,33 @@
+{
+  "n_columns": 978,
+  "both_extractions_declare_the_same_axis": true,
+  "compound_recovery_is_a_bijection": true,
+  "the_two_files_carry_the_same_wrong_axis": true,
+  "n_positions_differing": 0,
+  "n_columns_where_declared_equals_actual": {
+    "compound": 2,
+    "shrna": 2
+  },
+  "declared_head": [
+    "780",
+    "7849",
+    "6193",
+    "23",
+    "9552",
+    "387",
+    "10921",
+    "10285"
+  ],
+  "actual_head": [
+    "5720",
+    "466",
+    "6009",
+    "2309",
+    "387",
+    "3553",
+    "427",
+    "5898"
+  ],
+  "consequence": "a cosine is invariant under a permutation applied to both operands, so every quantity computed from these two files alone sits in one coordinate system and is unaffected by the mislabeling. A quantity pairing either file with an externally labeled reference does not.",
+  "method": "the compound order comes from matching each declared column against the source columns by profile across 400 signatures, both cast to float32. The shRNA order is the permutation of Deviation 11, verified on all 14,656 signatures at maximum absolute difference 0.0, reconstructed here against the rebuild's gene order and checked against the stored head."
+}
