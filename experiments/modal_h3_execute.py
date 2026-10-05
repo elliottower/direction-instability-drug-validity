@@ -65,8 +65,9 @@ COMMON = dict(image=image, timeout=86400, memory=32768, cpu=8.0, retries=0,
                        "/inputs": inputs})
 
 GCTX = "GSE92742_Broad_LINCS_Level5_COMPZ.MODZ_n473647x12328.gctx"
-# a report never overwrites an earlier one
-GATE_RUN = "gate_run_2026-10-03"
+# a report never overwrites an earlier one, so the directory carries the time the
+# run started rather than a date typed by hand
+GATE_RUN = None          # set per invocation in stage_gate
 
 MAPPING_SHA256 = "152361cb3174a5fb7aae0229c3e3d049dc00d49d9e442925156a9fe0564b89d3"
 
@@ -199,10 +200,13 @@ def stage_verify_pins():
 
 
 @app.function(**COMMON)
-def stage_gate():
+def stage_gate(cohort: str = "/app/results/03_phenotype_projection/phenotype_projection_results.json"):
     """The reconstruction gate. A failure here voids the analyses registered against it."""
     from pathlib import Path
 
+    from datetime import datetime
+
+    run = f"gate_run_{datetime.now():%Y-%m-%dT%H%M%S}"
     _repo_at_its_absolute_path()
     staged, rebuilt = _stage_inputs(), _stage_rebuild()
     _run(["/app/experiments/03e_reconstruction_gate.py",
@@ -212,10 +216,10 @@ def stage_gate():
           "--shrna-siginfo", "/rebuild/raw/lincs_shrna_siginfo.csv.gz",
           "--compound-siginfo", "/rebuild/raw/GSE92742_Broad_LINCS_sig_info.txt.gz",
           "--gene-info", "/rebuild/raw/GSE92742_Broad_LINCS_gene_info.txt.gz",
-          "--cohort", "/app/results/03_phenotype_projection/phenotype_projection_results.json",
-          "--output", f"/out/03c_h3_sensitivity/{GATE_RUN}"])
+          "--cohort", cohort,
+          "--output", f"/out/03c_h3_sensitivity/{run}"])
     results.commit()
-    return (Path(f"/out/03c_h3_sensitivity/{GATE_RUN}/reconstruction_gate.json")
+    return (Path(f"/out/03c_h3_sensitivity/{run}/reconstruction_gate.json")
             ).read_text()[:2000]
 
 
@@ -1548,6 +1552,120 @@ def stage_core_gene_identities():
     (out / "core_gene_identities.json").write_text(json.dumps(summary, indent=2))
     results.commit()
     return json.dumps({k: v for k, v in summary.items() if k != "core_size_per_drug"}, indent=2)
+
+
+EXTENSION_COHORT = [
+    "ABT-751", "CYT-997", "D-64131", "PJ-34", "SB-334867", "SB-408124",
+    "cycloheximide", "emetine", "fenbendazole", "flubendazole", "homoharringtonine",
+    "ketoconazole", "oxibendazole", "parbendazole", "salubrinal", "tipifarnib",
+    "vindesine",
+]
+
+
+@app.function(**COMMON)        # cmapPy is already in the analysis image
+def stage_extend_rebuild():
+    """Add the 17 drugs the CRISPRi arm needs and the rebuild lacks.
+
+    The rebuild covers the H3 and H4 cohort completely, 795 drugs over 258 targets,
+    and is short of the 812-drug CRISPRi arm by these seventeen. They are built the
+    way `modal_h3_rebuild.py` builds every other shard: the pinned GCTX, the frozen
+    landmark order, reindexed after the parse because `rid=` selects rows without
+    ordering them, and the per-drug per-cell mean the deposited artifact takes.
+    """
+    import json
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+    from cmapPy.pandasGEXpress import parse
+
+    raw = Path("/rebuild/raw")
+    shards = Path("/rebuild/shards")
+    gene_info = pd.read_csv(raw / "GSE92742_Broad_LINCS_gene_info.txt.gz", sep="\t",
+                            low_memory=False)
+    landmark = gene_info[gene_info.pr_is_lm == 1].sort_values("pr_gene_id")
+    ids = [str(g) for g in landmark.pr_gene_id]
+    assert len(ids) == 978, f"{len(ids)} landmark genes"
+
+    existing = set()
+    for shard in sorted(shards.glob("shard_*.npz")):
+        with np.load(shard, allow_pickle=True) as data:
+            existing |= {k for k in data.files if k not in ("fingerprint", "__cells__")}
+    wanted = [d for d in EXTENSION_COHORT if d not in existing]
+    print(f"{len(existing)} drugs present; extending by {len(wanted)}", flush=True)
+    if not wanted:
+        return "nothing to add"
+
+    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+                          low_memory=False)
+    sub = siginfo[siginfo.pert_iname.isin(set(wanted)) & siginfo.pert_iname.notna()]
+    gct = parse.parse(str(raw / GCTX), cid=sorted(set(sub.sig_id.astype(str))), rid=ids)
+    assert gct.data_df.shape[0] == 978, f"parsed {gct.data_df.shape[0]} rows"
+    assert gct.data_df.columns.is_unique, "parsed matrix has duplicate signature ids"
+    frame = gct.data_df
+    frame.index = frame.index.astype(str)
+    frame = frame.reindex(index=ids)               # rid= selects, it does not order
+    assert not frame.isna().any().any(), "a landmark gene is missing from the parse"
+    assert list(frame.index) == ids, "landmark order is not the frozen order"
+    mat = frame.T
+
+    payload, cells_by_drug = {}, {}
+    for drug, group in sub.groupby("pert_iname"):
+        per_cell, cell_ids = [], []
+        for cell_id, rows in group.groupby("cell_id"):
+            sids = [s for s in sorted(set(rows.sig_id.astype(str))) if s in mat.index]
+            if sids:
+                per_cell.append(np.vstack([mat.loc[s].to_numpy(np.float64)
+                                           for s in sids]).mean(axis=0))
+                cell_ids.append(str(cell_id))
+        if per_cell:
+            payload[drug] = np.vstack(per_cell)
+            cells_by_drug[drug] = cell_ids
+
+    out = shards / "shard_ext_000.npz"
+    np.savez_compressed(out, fingerprint=np.array("crispri-extension-2026-10-05"),
+                        __cells__=np.array(json.dumps(cells_by_drug)), **payload)
+    rebuild.commit()
+
+    summary = {"n_requested": len(wanted), "n_written": len(payload),
+               "not_found_in_the_metadata": sorted(set(wanted) - set(payload)),
+               "cells_per_drug": {d: len(c) for d, c in cells_by_drug.items()},
+               "shard": str(out), "gene_axis": "the frozen landmark order, reindexed",
+               "reading": ("these drugs are built by the same route as every other shard, "
+                           "so the gate can verify them against the source alongside the rest")}
+    result_dir = Path("/out/03c_h3_sensitivity")
+    result_dir.mkdir(parents=True, exist_ok=True)
+    (result_dir / "rebuild_extension.json").write_text(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps(summary, indent=2)
+
+
+@app.function(**COMMON)
+def stage_gate_on_cohort(cohort_path: str):
+    """The gate against a cohort other than H3's, so the extension can be verified.
+
+    `stage_gate` runs the registered H3 cohort. The CRISPRi arm is a wider set, 812
+    drugs, and the seventeen added to the rebuild sit outside H3's 795, so they are
+    not covered by a run of the registered gate. This runs the same gate against the
+    cohort given.
+    """
+    from datetime import datetime
+    from pathlib import Path
+
+    run = f"gate_cohort_{datetime.now():%Y-%m-%dT%H%M%S}"
+    _repo_at_its_absolute_path()
+    staged, rebuilt = _stage_inputs(), _stage_rebuild()
+    _run(["/app/experiments/03e_reconstruction_gate.py",
+          "--rebuilt", str(rebuilt),
+          "--extraction", str(staged),
+          "--gctx", f"/rebuild/raw/{GCTX}",
+          "--shrna-siginfo", "/rebuild/raw/lincs_shrna_siginfo.csv.gz",
+          "--compound-siginfo", "/rebuild/raw/GSE92742_Broad_LINCS_sig_info.txt.gz",
+          "--gene-info", "/rebuild/raw/GSE92742_Broad_LINCS_gene_info.txt.gz",
+          "--cohort", cohort_path,
+          "--output", f"/out/03c_h3_sensitivity/{run}"])
+    results.commit()
+    return (Path(f"/out/03c_h3_sensitivity/{run}/reconstruction_gate.json")).read_text()[:2500]
 
 
 @app.local_entrypoint()

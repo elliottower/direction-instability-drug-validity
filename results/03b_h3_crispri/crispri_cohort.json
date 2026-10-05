@@ -1,0 +1,3250 @@
+[
+  {
+    "drug": "1,2,3,4,5,6-hexabromocyclohexane",
+    "target": "JAK2"
+  },
+  {
+    "drug": "10-DEBC",
+    "target": "PIM1"
+  },
+  {
+    "drug": "10-hydroxycamptothecin",
+    "target": "TOP1"
+  },
+  {
+    "drug": "16,16-dimethylprostaglandin-e2",
+    "target": "HPGD"
+  },
+  {
+    "drug": "17-hydroxyprogesterone-caproate",
+    "target": "AR"
+  },
+  {
+    "drug": "3,3'-diindolylmethane",
+    "target": "AR"
+  },
+  {
+    "drug": "3-amino-benzamide",
+    "target": "PARP1"
+  },
+  {
+    "drug": "3-methyl-GABA",
+    "target": "ABAT"
+  },
+  {
+    "drug": "4,5,6,7-tetrabromobenzotriazole",
+    "target": "AKT1"
+  },
+  {
+    "drug": "4-iodo-6-phenylpyrimidine",
+    "target": "MIF"
+  },
+  {
+    "drug": "5-FP",
+    "target": "TYMS"
+  },
+  {
+    "drug": "5-aminolevulinic-acid",
+    "target": "ALAD"
+  },
+  {
+    "drug": "ABT-737",
+    "target": "BCL2"
+  },
+  {
+    "drug": "ABT-751",
+    "target": "TUBB"
+  },
+  {
+    "drug": "AC-55649",
+    "target": "RARA"
+  },
+  {
+    "drug": "AG-14361",
+    "target": "PARP1"
+  },
+  {
+    "drug": "AG-490",
+    "target": "EGFR"
+  },
+  {
+    "drug": "AM-580",
+    "target": "RARA"
+  },
+  {
+    "drug": "AR-A014418",
+    "target": "GSK3B"
+  },
+  {
+    "drug": "ARC-239",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "AS-604850",
+    "target": "PIK3CA"
+  },
+  {
+    "drug": "AS-703026",
+    "target": "MAP2K1"
+  },
+  {
+    "drug": "AT-7519",
+    "target": "CDK1"
+  },
+  {
+    "drug": "AT-9283",
+    "target": "AURKA"
+  },
+  {
+    "drug": "AT7867",
+    "target": "AKT2"
+  },
+  {
+    "drug": "AZ-10417808",
+    "target": "CASP3"
+  },
+  {
+    "drug": "AZ-628",
+    "target": "BRAF"
+  },
+  {
+    "drug": "BADGE",
+    "target": "PPARG"
+  },
+  {
+    "drug": "BAX-channel-blocker",
+    "target": "BAX"
+  },
+  {
+    "drug": "BAY-11-7082",
+    "target": "RELA"
+  },
+  {
+    "drug": "BAY-K-8644-(S)-(-)",
+    "target": "CACNA1C"
+  },
+  {
+    "drug": "BI-2536",
+    "target": "BRD4"
+  },
+  {
+    "drug": "BI-78D3",
+    "target": "MAPK8"
+  },
+  {
+    "drug": "BIBU-1361",
+    "target": "EGFR"
+  },
+  {
+    "drug": "BIBX-1382",
+    "target": "EGFR"
+  },
+  {
+    "drug": "BIX-02188",
+    "target": "MAP2K5"
+  },
+  {
+    "drug": "BIX-02189",
+    "target": "MAP2K5"
+  },
+  {
+    "drug": "BMS-191011",
+    "target": "KCNMA1"
+  },
+  {
+    "drug": "BMS-345541",
+    "target": "CHUK"
+  },
+  {
+    "drug": "BMS-387032",
+    "target": "CDK2"
+  },
+  {
+    "drug": "BMS-536924",
+    "target": "AKT1"
+  },
+  {
+    "drug": "BMS-754807",
+    "target": "AKT1"
+  },
+  {
+    "drug": "BMS-777607",
+    "target": "AXL"
+  },
+  {
+    "drug": "BVT-948",
+    "target": "PTPN1"
+  },
+  {
+    "drug": "BX-795",
+    "target": "CDK2"
+  },
+  {
+    "drug": "BX-912",
+    "target": "CDK2"
+  },
+  {
+    "drug": "CD-1530",
+    "target": "RARG"
+  },
+  {
+    "drug": "CD-437",
+    "target": "RARG"
+  },
+  {
+    "drug": "CGK-733",
+    "target": "ATM"
+  },
+  {
+    "drug": "CGP-13501",
+    "target": "GABBR1"
+  },
+  {
+    "drug": "CGP-52411",
+    "target": "EGFR"
+  },
+  {
+    "drug": "CGP-53353",
+    "target": "EGFR"
+  },
+  {
+    "drug": "CGP-54626",
+    "target": "GABBR1"
+  },
+  {
+    "drug": "CGP-55845",
+    "target": "GABBR1"
+  },
+  {
+    "drug": "CGP-57380",
+    "target": "AURKB"
+  },
+  {
+    "drug": "CGP-60474",
+    "target": "CDK1"
+  },
+  {
+    "drug": "CGP-7930",
+    "target": "GABBR1"
+  },
+  {
+    "drug": "CGS-20625",
+    "target": "GABRA1"
+  },
+  {
+    "drug": "CHIR-99021",
+    "target": "CDK1"
+  },
+  {
+    "drug": "CI-976",
+    "target": "ACAT1"
+  },
+  {
+    "drug": "CL-218872",
+    "target": "GABRA1"
+  },
+  {
+    "drug": "CP-724714",
+    "target": "ERBB2"
+  },
+  {
+    "drug": "CV-1808",
+    "target": "ADORA2A"
+  },
+  {
+    "drug": "CYT-997",
+    "target": "TUBB"
+  },
+  {
+    "drug": "CYT387",
+    "target": "JAK1"
+  },
+  {
+    "drug": "D-4476",
+    "target": "CSNK1A1"
+  },
+  {
+    "drug": "D-64131",
+    "target": "TUBB"
+  },
+  {
+    "drug": "DAU-5884",
+    "target": "CHRM3"
+  },
+  {
+    "drug": "DPPE",
+    "target": "ABCB1"
+  },
+  {
+    "drug": "DR-2313",
+    "target": "PARP1"
+  },
+  {
+    "drug": "DUP-697",
+    "target": "PTGS2"
+  },
+  {
+    "drug": "EBPC",
+    "target": "AKR1B1"
+  },
+  {
+    "drug": "EMD-66684",
+    "target": "AGTR1"
+  },
+  {
+    "drug": "ENMD-2076",
+    "target": "AURKA"
+  },
+  {
+    "drug": "EO-1428",
+    "target": "MAPK11"
+  },
+  {
+    "drug": "ER-27319",
+    "target": "SYK"
+  },
+  {
+    "drug": "EX-527",
+    "target": "SIRT1"
+  },
+  {
+    "drug": "FK-866",
+    "target": "NAMPT"
+  },
+  {
+    "drug": "FPL-64176",
+    "target": "CACNA1C"
+  },
+  {
+    "drug": "FR-180204",
+    "target": "MAPK1"
+  },
+  {
+    "drug": "GANT-58",
+    "target": "GLI1"
+  },
+  {
+    "drug": "GANT-61",
+    "target": "GLI1"
+  },
+  {
+    "drug": "GBR-12935",
+    "target": "AGTR1"
+  },
+  {
+    "drug": "GDC-0879",
+    "target": "BRAF"
+  },
+  {
+    "drug": "GDC-0941",
+    "target": "PIK3CA"
+  },
+  {
+    "drug": "GNF-2",
+    "target": "ABL1"
+  },
+  {
+    "drug": "GR-235",
+    "target": "NR1H4"
+  },
+  {
+    "drug": "GS-39783",
+    "target": "GABBR1"
+  },
+  {
+    "drug": "GSK-3-inhibitor-IX",
+    "target": "GSK3A"
+  },
+  {
+    "drug": "GTP-14564",
+    "target": "CSF1R"
+  },
+  {
+    "drug": "GW-0742",
+    "target": "PPARD"
+  },
+  {
+    "drug": "GW-1929",
+    "target": "PPARG"
+  },
+  {
+    "drug": "GW-3965",
+    "target": "NR1H2"
+  },
+  {
+    "drug": "GW-4064",
+    "target": "NR1H4"
+  },
+  {
+    "drug": "GW-441756",
+    "target": "NTRK1"
+  },
+  {
+    "drug": "GW-501516",
+    "target": "PPARA"
+  },
+  {
+    "drug": "GW-5074",
+    "target": "NTRK1"
+  },
+  {
+    "drug": "GW-583340",
+    "target": "EGFR"
+  },
+  {
+    "drug": "GW-6471",
+    "target": "PPARA"
+  },
+  {
+    "drug": "GW-7647",
+    "target": "PPARA"
+  },
+  {
+    "drug": "GW-843682X",
+    "target": "PLK1"
+  },
+  {
+    "drug": "GW-9508",
+    "target": "FFAR1"
+  },
+  {
+    "drug": "GW-9662",
+    "target": "NCOA2"
+  },
+  {
+    "drug": "H-89",
+    "target": "GSG2"
+  },
+  {
+    "drug": "HMN-214",
+    "target": "PLK1"
+  },
+  {
+    "drug": "IKK-16",
+    "target": "IKBKB"
+  },
+  {
+    "drug": "IKK-2-inhibitor",
+    "target": "IKBKB"
+  },
+  {
+    "drug": "IKK-2-inhibitor-V",
+    "target": "IKBKB"
+  },
+  {
+    "drug": "IRL-2500",
+    "target": "EDNRB"
+  },
+  {
+    "drug": "ITE",
+    "target": "AHR"
+  },
+  {
+    "drug": "JAK3-inhibitor-V",
+    "target": "JAK3"
+  },
+  {
+    "drug": "JLK-6",
+    "target": "PSEN1"
+  },
+  {
+    "drug": "JNJ-26481585",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "JNJ-38877605",
+    "target": "MET"
+  },
+  {
+    "drug": "JNJ-7706621",
+    "target": "AURKA"
+  },
+  {
+    "drug": "JX-401",
+    "target": "MAPK14"
+  },
+  {
+    "drug": "JZL-184",
+    "target": "MGLL"
+  },
+  {
+    "drug": "K-858",
+    "target": "KIF11"
+  },
+  {
+    "drug": "KI-16425",
+    "target": "LPAR1"
+  },
+  {
+    "drug": "KI-8751",
+    "target": "KDR"
+  },
+  {
+    "drug": "KN-62",
+    "target": "AKT1"
+  },
+  {
+    "drug": "KN-93",
+    "target": "CAMK2A"
+  },
+  {
+    "drug": "KU-0063794",
+    "target": "MTOR"
+  },
+  {
+    "drug": "KU-55933",
+    "target": "ATM"
+  },
+  {
+    "drug": "KU-60019",
+    "target": "ATM"
+  },
+  {
+    "drug": "L-161982",
+    "target": "PTGER4"
+  },
+  {
+    "drug": "L-165041",
+    "target": "PPARD"
+  },
+  {
+    "drug": "L-690330",
+    "target": "IMPA1"
+  },
+  {
+    "drug": "LE-135",
+    "target": "RARB"
+  },
+  {
+    "drug": "LFM-A13",
+    "target": "BTK"
+  },
+  {
+    "drug": "MDL-29951",
+    "target": "FBP1"
+  },
+  {
+    "drug": "MEK1-2-inhibitor",
+    "target": "MAP2K2"
+  },
+  {
+    "drug": "MG-132",
+    "target": "PSMB1"
+  },
+  {
+    "drug": "MGCD-265",
+    "target": "AXL"
+  },
+  {
+    "drug": "MK-1775",
+    "target": "WEE1"
+  },
+  {
+    "drug": "MK-2206",
+    "target": "AKT1"
+  },
+  {
+    "drug": "MK-5108",
+    "target": "AURKA"
+  },
+  {
+    "drug": "MRS-1220",
+    "target": "ADORA2B"
+  },
+  {
+    "drug": "Merck60",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "NCS-382",
+    "target": "GABBR1"
+  },
+  {
+    "drug": "NFKB-activation-inhibitor-II",
+    "target": "RELA"
+  },
+  {
+    "drug": "NPC-15199",
+    "target": "PPARG"
+  },
+  {
+    "drug": "NSC-3852",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "NSC-632839",
+    "target": "SENP2"
+  },
+  {
+    "drug": "NSC-663284",
+    "target": "CDC25A"
+  },
+  {
+    "drug": "NSC-95397",
+    "target": "CDC25A"
+  },
+  {
+    "drug": "NU-1025",
+    "target": "PARP1"
+  },
+  {
+    "drug": "NU-7026",
+    "target": "PRKDC"
+  },
+  {
+    "drug": "NU-7441",
+    "target": "PRKDC"
+  },
+  {
+    "drug": "NVP-AEW541",
+    "target": "IGF1R"
+  },
+  {
+    "drug": "NVP-AUY922",
+    "target": "HSP90AA1"
+  },
+  {
+    "drug": "NVP-BEZ235",
+    "target": "ATR"
+  },
+  {
+    "drug": "NVP-BGJ398",
+    "target": "FGFR1"
+  },
+  {
+    "drug": "NVP-TAE684",
+    "target": "ALK"
+  },
+  {
+    "drug": "OMDM-2",
+    "target": "GPR119"
+  },
+  {
+    "drug": "OSI-027",
+    "target": "MTOR"
+  },
+  {
+    "drug": "OSI-930",
+    "target": "FLT1"
+  },
+  {
+    "drug": "PAC-1",
+    "target": "CASP3"
+  },
+  {
+    "drug": "PCI-24781",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "PCI-34051",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "PD-0325901",
+    "target": "MAP2K1"
+  },
+  {
+    "drug": "PD-158780",
+    "target": "EGFR"
+  },
+  {
+    "drug": "PD-160170",
+    "target": "NPY1R"
+  },
+  {
+    "drug": "PD-173074",
+    "target": "FGFR1"
+  },
+  {
+    "drug": "PD-184352",
+    "target": "MAP2K1"
+  },
+  {
+    "drug": "PD-198306",
+    "target": "MAP2K1"
+  },
+  {
+    "drug": "PD-407824",
+    "target": "WEE1"
+  },
+  {
+    "drug": "PD-98059",
+    "target": "AKT1"
+  },
+  {
+    "drug": "PETCM",
+    "target": "CASP3"
+  },
+  {
+    "drug": "PF-04217903",
+    "target": "MET"
+  },
+  {
+    "drug": "PF-3845",
+    "target": "FAAH"
+  },
+  {
+    "drug": "PF-431396",
+    "target": "PTK2"
+  },
+  {
+    "drug": "PF-477736",
+    "target": "CHEK1"
+  },
+  {
+    "drug": "PF-562271",
+    "target": "PTK2"
+  },
+  {
+    "drug": "PF-750",
+    "target": "FAAH"
+  },
+  {
+    "drug": "PHA-665752",
+    "target": "MET"
+  },
+  {
+    "drug": "PHA-793887",
+    "target": "CDK1"
+  },
+  {
+    "drug": "PHTPP",
+    "target": "ESR2"
+  },
+  {
+    "drug": "PI-103",
+    "target": "MTOR"
+  },
+  {
+    "drug": "PIK-75",
+    "target": "PIK3CA"
+  },
+  {
+    "drug": "PJ-34",
+    "target": "EEF2"
+  },
+  {
+    "drug": "PNU-74654",
+    "target": "CTNNB1"
+  },
+  {
+    "drug": "PP-1",
+    "target": "HCK"
+  },
+  {
+    "drug": "PP-2",
+    "target": "ABL1"
+  },
+  {
+    "drug": "PPT",
+    "target": "ESR1"
+  },
+  {
+    "drug": "PQ-401",
+    "target": "IGF1R"
+  },
+  {
+    "drug": "PU-H71",
+    "target": "HSP90AA1"
+  },
+  {
+    "drug": "QX-314",
+    "target": "MAPK14"
+  },
+  {
+    "drug": "R-59022",
+    "target": "DGKA"
+  },
+  {
+    "drug": "RITA",
+    "target": "MDM2"
+  },
+  {
+    "drug": "RS-504393",
+    "target": "CCL2"
+  },
+  {
+    "drug": "RS-79948",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "RWJ-21757",
+    "target": "TLR7"
+  },
+  {
+    "drug": "Ro-15-4513",
+    "target": "GABRA1"
+  },
+  {
+    "drug": "Ro-19-4605",
+    "target": "GABRA1"
+  },
+  {
+    "drug": "Ro-28-1675",
+    "target": "GCK"
+  },
+  {
+    "drug": "Ro-3306",
+    "target": "CDK1"
+  },
+  {
+    "drug": "Ro-90-7501",
+    "target": "APP"
+  },
+  {
+    "drug": "SANT-1",
+    "target": "SHH"
+  },
+  {
+    "drug": "SAR-245409",
+    "target": "MTOR"
+  },
+  {
+    "drug": "SB-202190",
+    "target": "AKT1"
+  },
+  {
+    "drug": "SB-203580",
+    "target": "AKT1"
+  },
+  {
+    "drug": "SB-216763",
+    "target": "CCNA2"
+  },
+  {
+    "drug": "SB-218078",
+    "target": "CHEK1"
+  },
+  {
+    "drug": "SB-225002",
+    "target": "CXCR2"
+  },
+  {
+    "drug": "SB-239063",
+    "target": "MAPK11"
+  },
+  {
+    "drug": "SB-334867",
+    "target": "HCRTR1"
+  },
+  {
+    "drug": "SB-408124",
+    "target": "HCRTR1"
+  },
+  {
+    "drug": "SB-415286",
+    "target": "GSK3A"
+  },
+  {
+    "drug": "SB-431542",
+    "target": "ACVR1C"
+  },
+  {
+    "drug": "SB-525334",
+    "target": "TGFBR1"
+  },
+  {
+    "drug": "SB-590885",
+    "target": "BRAF"
+  },
+  {
+    "drug": "SC-10",
+    "target": "PRKCA"
+  },
+  {
+    "drug": "SC-9",
+    "target": "PRKCA"
+  },
+  {
+    "drug": "SD-169",
+    "target": "MAPK14"
+  },
+  {
+    "drug": "SGX523",
+    "target": "MET"
+  },
+  {
+    "drug": "SJ-172550",
+    "target": "MDM4"
+  },
+  {
+    "drug": "SKI-II",
+    "target": "SPHK1"
+  },
+  {
+    "drug": "SN-38",
+    "target": "TOP1"
+  },
+  {
+    "drug": "SNS-314",
+    "target": "AURKA"
+  },
+  {
+    "drug": "SR-95639A",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "SRC-kinase-inhibitor-I",
+    "target": "CSK"
+  },
+  {
+    "drug": "STAT3-inhibitor-VI",
+    "target": "STAT3"
+  },
+  {
+    "drug": "T-0070907",
+    "target": "PPARG"
+  },
+  {
+    "drug": "TAK-715",
+    "target": "MAPK14"
+  },
+  {
+    "drug": "TCS-359",
+    "target": "FLT3"
+  },
+  {
+    "drug": "TGX-221",
+    "target": "PIK3CB"
+  },
+  {
+    "drug": "TPCA-1",
+    "target": "IKBKB"
+  },
+  {
+    "drug": "TTNPB",
+    "target": "RARA"
+  },
+  {
+    "drug": "TW-37",
+    "target": "BCL2"
+  },
+  {
+    "drug": "TWS-119",
+    "target": "GSK3B"
+  },
+  {
+    "drug": "U-0126",
+    "target": "AKT1"
+  },
+  {
+    "drug": "VER-155008",
+    "target": "HSPA1A"
+  },
+  {
+    "drug": "VX-702",
+    "target": "IL1B"
+  },
+  {
+    "drug": "VX-745",
+    "target": "MAPK11"
+  },
+  {
+    "drug": "WAY-161503",
+    "target": "HTR2C"
+  },
+  {
+    "drug": "WAY-629",
+    "target": "HTR2C"
+  },
+  {
+    "drug": "WHI-P154",
+    "target": "EGFR"
+  },
+  {
+    "drug": "WYE-125132",
+    "target": "MTOR"
+  },
+  {
+    "drug": "WYE-354",
+    "target": "MTOR"
+  },
+  {
+    "drug": "WZ-3146",
+    "target": "EGFR"
+  },
+  {
+    "drug": "WZ-4002",
+    "target": "EGFR"
+  },
+  {
+    "drug": "XE-991",
+    "target": "KCNQ1"
+  },
+  {
+    "drug": "Y-134",
+    "target": "ESR1"
+  },
+  {
+    "drug": "Y-27632",
+    "target": "PKIA"
+  },
+  {
+    "drug": "Y-39983",
+    "target": "ROCK1"
+  },
+  {
+    "drug": "YM-155",
+    "target": "BIRC5"
+  },
+  {
+    "drug": "ZD-7155",
+    "target": "AGTR1"
+  },
+  {
+    "drug": "ZK-164015",
+    "target": "ESR1"
+  },
+  {
+    "drug": "ZK-93423",
+    "target": "GABRA1"
+  },
+  {
+    "drug": "ZK-93426",
+    "target": "GABRA1"
+  },
+  {
+    "drug": "ZM-306416",
+    "target": "EGFR"
+  },
+  {
+    "drug": "ZM-323881",
+    "target": "KDR"
+  },
+  {
+    "drug": "ZM-336372",
+    "target": "BRAF"
+  },
+  {
+    "drug": "ZM-39923",
+    "target": "JAK1"
+  },
+  {
+    "drug": "ZM-447439",
+    "target": "AURKA"
+  },
+  {
+    "drug": "ZSTK-474",
+    "target": "PIK3CB"
+  },
+  {
+    "drug": "acamprosate",
+    "target": "GABRA1"
+  },
+  {
+    "drug": "acetyl-farnesyl-cysteine",
+    "target": "PPARG"
+  },
+  {
+    "drug": "acitretin",
+    "target": "RARA"
+  },
+  {
+    "drug": "acyclovir",
+    "target": "PNP"
+  },
+  {
+    "drug": "afatinib",
+    "target": "EGFR"
+  },
+  {
+    "drug": "albendazole",
+    "target": "TUBA1A"
+  },
+  {
+    "drug": "alda-1",
+    "target": "ALDH2"
+  },
+  {
+    "drug": "alfacalcidol",
+    "target": "CYP27B1"
+  },
+  {
+    "drug": "alimemazine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "alisertib",
+    "target": "AURKA"
+  },
+  {
+    "drug": "alrestatin",
+    "target": "AKR1B1"
+  },
+  {
+    "drug": "alvespimycin",
+    "target": "HSP90AA1"
+  },
+  {
+    "drug": "alvocidib",
+    "target": "CDK1"
+  },
+  {
+    "drug": "amcinonide",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "aminopentamide",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "aminopurvalanol-a",
+    "target": "CDK1"
+  },
+  {
+    "drug": "amlodipine",
+    "target": "CACNA1C"
+  },
+  {
+    "drug": "amodiaquine",
+    "target": "HNMT"
+  },
+  {
+    "drug": "amonafide",
+    "target": "TOP2A"
+  },
+  {
+    "drug": "amperozide",
+    "target": "FAAH"
+  },
+  {
+    "drug": "amuvatinib",
+    "target": "KIT"
+  },
+  {
+    "drug": "andarine",
+    "target": "AR"
+  },
+  {
+    "drug": "antimycin-a",
+    "target": "CYCS"
+  },
+  {
+    "drug": "apigenin",
+    "target": "AKR1B1"
+  },
+  {
+    "drug": "arctigenin",
+    "target": "CHUK"
+  },
+  {
+    "drug": "arcyriaflavin-a",
+    "target": "CCND1"
+  },
+  {
+    "drug": "arecaidine-propargyl-ester",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "argatroban",
+    "target": "F2"
+  },
+  {
+    "drug": "artemether",
+    "target": "ATP1A1"
+  },
+  {
+    "drug": "aspirin",
+    "target": "AKR1C1"
+  },
+  {
+    "drug": "ataluren",
+    "target": "DMD"
+  },
+  {
+    "drug": "atorvastatin",
+    "target": "AHR"
+  },
+  {
+    "drug": "auranofin",
+    "target": "IKBKB"
+  },
+  {
+    "drug": "aurora-a-inhibitor-i",
+    "target": "AURKA"
+  },
+  {
+    "drug": "azacitidine",
+    "target": "DNMT1"
+  },
+  {
+    "drug": "azacyclonol",
+    "target": "HRH1"
+  },
+  {
+    "drug": "azathioprine",
+    "target": "HPRT1"
+  },
+  {
+    "drug": "azelastine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "barasertib-HQPA",
+    "target": "AURKB"
+  },
+  {
+    "drug": "belinostat",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "bemegride",
+    "target": "GABRA1"
+  },
+  {
+    "drug": "benidipine",
+    "target": "CACNA1C"
+  },
+  {
+    "drug": "benzbromarone",
+    "target": "ABCC1"
+  },
+  {
+    "drug": "benzthiazide",
+    "target": "CA2"
+  },
+  {
+    "drug": "bergenin",
+    "target": "IL1B"
+  },
+  {
+    "drug": "betahistine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "betamethasone",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "betamethasone-acetate",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "bethanechol",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "betulinic-acid",
+    "target": "GPBAR1"
+  },
+  {
+    "drug": "bezafibrate",
+    "target": "PPARA"
+  },
+  {
+    "drug": "bicalutamide",
+    "target": "AR"
+  },
+  {
+    "drug": "bimatoprost",
+    "target": "AKR1C3"
+  },
+  {
+    "drug": "biotin",
+    "target": "ACACA"
+  },
+  {
+    "drug": "biperiden",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "bisindolylmaleimide-ix",
+    "target": "AKT1"
+  },
+  {
+    "drug": "bithionol",
+    "target": "ESR1"
+  },
+  {
+    "drug": "bortezomib",
+    "target": "PSMA1"
+  },
+  {
+    "drug": "bosutinib",
+    "target": "ABL1"
+  },
+  {
+    "drug": "brefeldin-a",
+    "target": "ARF1"
+  },
+  {
+    "drug": "brimonidine",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "brompheniramine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "brucine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "bucladesine",
+    "target": "PRKACA"
+  },
+  {
+    "drug": "budesonide",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "bumetanide",
+    "target": "CFTR"
+  },
+  {
+    "drug": "buparlisib",
+    "target": "PIK3CA"
+  },
+  {
+    "drug": "buphenine",
+    "target": "ADRB2"
+  },
+  {
+    "drug": "buthionine-sulfoximine",
+    "target": "GCLM"
+  },
+  {
+    "drug": "calcifediol",
+    "target": "VDR"
+  },
+  {
+    "drug": "calcipotriol",
+    "target": "VDR"
+  },
+  {
+    "drug": "calcitriol",
+    "target": "VDR"
+  },
+  {
+    "drug": "camptothecin",
+    "target": "TOP1"
+  },
+  {
+    "drug": "canertinib",
+    "target": "AKT1"
+  },
+  {
+    "drug": "capecitabine",
+    "target": "TYMS"
+  },
+  {
+    "drug": "capsaicin",
+    "target": "CFTR"
+  },
+  {
+    "drug": "carbenoxolone",
+    "target": "GJA1"
+  },
+  {
+    "drug": "carbetocin",
+    "target": "OXTR"
+  },
+  {
+    "drug": "carbidopa",
+    "target": "DDC"
+  },
+  {
+    "drug": "carbinoxamine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "carmofur",
+    "target": "TYMS"
+  },
+  {
+    "drug": "carprofen",
+    "target": "PTGS2"
+  },
+  {
+    "drug": "cediranib",
+    "target": "CSF1R"
+  },
+  {
+    "drug": "celecoxib",
+    "target": "CA12"
+  },
+  {
+    "drug": "cerulenin",
+    "target": "FASN"
+  },
+  {
+    "drug": "cetirizine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "chloramphenicol",
+    "target": "CD55"
+  },
+  {
+    "drug": "chloroquine",
+    "target": "MRGPRX1"
+  },
+  {
+    "drug": "chlorprothixene",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "ciglitazone",
+    "target": "PPARG"
+  },
+  {
+    "drug": "ciprofibrate",
+    "target": "PPARA"
+  },
+  {
+    "drug": "cladribine",
+    "target": "ADA"
+  },
+  {
+    "drug": "clemastine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "clobenpropit",
+    "target": "HRH1"
+  },
+  {
+    "drug": "clocortolone-pivalate",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "clofarabine",
+    "target": "POLA1"
+  },
+  {
+    "drug": "clofibrate",
+    "target": "LPL"
+  },
+  {
+    "drug": "clofibric-acid",
+    "target": "PPARA"
+  },
+  {
+    "drug": "clomethiazole",
+    "target": "GABRA1"
+  },
+  {
+    "drug": "clomifene",
+    "target": "ESR1"
+  },
+  {
+    "drug": "clomipramine",
+    "target": "GSTP1"
+  },
+  {
+    "drug": "clopidogrel",
+    "target": "P2RY12"
+  },
+  {
+    "drug": "cortisone",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "cortisone-acetate",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "crizotinib",
+    "target": "ALK"
+  },
+  {
+    "drug": "cromoglicic-acid",
+    "target": "KCNMA1"
+  },
+  {
+    "drug": "curcumin",
+    "target": "APP"
+  },
+  {
+    "drug": "cycloheximide",
+    "target": "RPL3"
+  },
+  {
+    "drug": "cytarabine",
+    "target": "POLA1"
+  },
+  {
+    "drug": "cytochalasin-b",
+    "target": "ACTB"
+  },
+  {
+    "drug": "dacinostat",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "dactinomycin",
+    "target": "POLR2A"
+  },
+  {
+    "drug": "daidzein",
+    "target": "ESRRA"
+  },
+  {
+    "drug": "danazol",
+    "target": "AR"
+  },
+  {
+    "drug": "danusertib",
+    "target": "AURKA"
+  },
+  {
+    "drug": "dapsone",
+    "target": "DHFR"
+  },
+  {
+    "drug": "dasatinib",
+    "target": "ABL1"
+  },
+  {
+    "drug": "daunorubicin",
+    "target": "TOP2A"
+  },
+  {
+    "drug": "decitabine",
+    "target": "DNMT1"
+  },
+  {
+    "drug": "deferiprone",
+    "target": "UGT1A6"
+  },
+  {
+    "drug": "deforolimus",
+    "target": "MTOR"
+  },
+  {
+    "drug": "deracoxib",
+    "target": "PTGS2"
+  },
+  {
+    "drug": "desloratadine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "desmethylclozapine",
+    "target": "HTR2C"
+  },
+  {
+    "drug": "desoximetasone",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "desoxycortone",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "dexamethasone",
+    "target": "ANXA1"
+  },
+  {
+    "drug": "dexrazoxane",
+    "target": "TOP2A"
+  },
+  {
+    "drug": "diarylpropionitrile",
+    "target": "ESR2"
+  },
+  {
+    "drug": "diazoxide",
+    "target": "ATP1A1"
+  },
+  {
+    "drug": "diclofenac",
+    "target": "AKR1C3"
+  },
+  {
+    "drug": "dicycloverine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "didanosine",
+    "target": "PNP"
+  },
+  {
+    "drug": "dienestrol",
+    "target": "ESR1"
+  },
+  {
+    "drug": "diethylstilbestrol",
+    "target": "ESR1"
+  },
+  {
+    "drug": "digitoxigenin",
+    "target": "ATP1A1"
+  },
+  {
+    "drug": "digitoxin",
+    "target": "ATP1A1"
+  },
+  {
+    "drug": "digoxin",
+    "target": "ATP1A1"
+  },
+  {
+    "drug": "dihydroergotamine",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "dilazep",
+    "target": "SLC29A1"
+  },
+  {
+    "drug": "diltiazem",
+    "target": "CACNA1C"
+  },
+  {
+    "drug": "dimercaptosuccinic-acid",
+    "target": "DNMT1"
+  },
+  {
+    "drug": "diphemanil",
+    "target": "CHRM3"
+  },
+  {
+    "drug": "diphenhydramine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "diphenidol",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "dipyridamole",
+    "target": "ADA"
+  },
+  {
+    "drug": "disopyramide",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "disulfiram",
+    "target": "ALDH2"
+  },
+  {
+    "drug": "docetaxel",
+    "target": "BCL2"
+  },
+  {
+    "drug": "doconexent",
+    "target": "FFAR1"
+  },
+  {
+    "drug": "doramapimod",
+    "target": "MAPK11"
+  },
+  {
+    "drug": "dorsomorphin",
+    "target": "ACVR1"
+  },
+  {
+    "drug": "dosulepin",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "dovitinib",
+    "target": "CSF1R"
+  },
+  {
+    "drug": "doxepin",
+    "target": "HRH1"
+  },
+  {
+    "drug": "doxercalciferol",
+    "target": "VDR"
+  },
+  {
+    "drug": "doxorubicin",
+    "target": "TOP2A"
+  },
+  {
+    "drug": "doxylamine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "droxinostat",
+    "target": "HDAC6"
+  },
+  {
+    "drug": "ebselen",
+    "target": "ALB"
+  },
+  {
+    "drug": "econazole",
+    "target": "NPY1R"
+  },
+  {
+    "drug": "edaravone",
+    "target": "BCL2"
+  },
+  {
+    "drug": "elesclomol",
+    "target": "HSPA1A"
+  },
+  {
+    "drug": "embelin",
+    "target": "XIAP"
+  },
+  {
+    "drug": "emetine",
+    "target": "RPS2"
+  },
+  {
+    "drug": "entacapone",
+    "target": "COMT"
+  },
+  {
+    "drug": "entinostat",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "enzalutamide",
+    "target": "AR"
+  },
+  {
+    "drug": "enzastaurin",
+    "target": "AKT1"
+  },
+  {
+    "drug": "epicatechin-gallate-(-)",
+    "target": "BACE1"
+  },
+  {
+    "drug": "epirubicin",
+    "target": "CHD1"
+  },
+  {
+    "drug": "eprosartan",
+    "target": "AGTR1"
+  },
+  {
+    "drug": "equol",
+    "target": "ESR1"
+  },
+  {
+    "drug": "erbstatin-analog",
+    "target": "EGFR"
+  },
+  {
+    "drug": "erlotinib",
+    "target": "EGFR"
+  },
+  {
+    "drug": "erythromycin-estolate",
+    "target": "ABCB1"
+  },
+  {
+    "drug": "erythromycin-ethylsuccinate",
+    "target": "ABCB1"
+  },
+  {
+    "drug": "estradiol",
+    "target": "ESR1"
+  },
+  {
+    "drug": "estradiol-benzoate",
+    "target": "ESR1"
+  },
+  {
+    "drug": "estradiol-cypionate",
+    "target": "ESR1"
+  },
+  {
+    "drug": "estradiol-valerate",
+    "target": "ESR1"
+  },
+  {
+    "drug": "estriol",
+    "target": "ESR1"
+  },
+  {
+    "drug": "estrone",
+    "target": "ESR1"
+  },
+  {
+    "drug": "estropipate",
+    "target": "ESR1"
+  },
+  {
+    "drug": "etacrynic-acid",
+    "target": "ATP1A1"
+  },
+  {
+    "drug": "etazolate",
+    "target": "GABRB3"
+  },
+  {
+    "drug": "ethinyl-estradiol",
+    "target": "ESR1"
+  },
+  {
+    "drug": "etodolac",
+    "target": "PTGS2"
+  },
+  {
+    "drug": "etomoxir",
+    "target": "CPT1A"
+  },
+  {
+    "drug": "etoposide",
+    "target": "TOP2A"
+  },
+  {
+    "drug": "eugenol",
+    "target": "AR"
+  },
+  {
+    "drug": "everolimus",
+    "target": "MTOR"
+  },
+  {
+    "drug": "ezetimibe",
+    "target": "ANPEP"
+  },
+  {
+    "drug": "fasudil",
+    "target": "PKIA"
+  },
+  {
+    "drug": "felodipine",
+    "target": "CFTR"
+  },
+  {
+    "drug": "fenbendazole",
+    "target": "TUBB"
+  },
+  {
+    "drug": "fenoterol",
+    "target": "ADRB2"
+  },
+  {
+    "drug": "fenretinide",
+    "target": "RARA"
+  },
+  {
+    "drug": "fexaramine",
+    "target": "NR1H4"
+  },
+  {
+    "drug": "fexofenadine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "flavoxate",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "floxuridine",
+    "target": "TYMS"
+  },
+  {
+    "drug": "flubendazole",
+    "target": "TUBB"
+  },
+  {
+    "drug": "fluconazole",
+    "target": "CYP51A1"
+  },
+  {
+    "drug": "flucytosine",
+    "target": "DNMT1"
+  },
+  {
+    "drug": "fludarabine",
+    "target": "ADA"
+  },
+  {
+    "drug": "fludroxycortide",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "flufenamic-acid",
+    "target": "AKR1C3"
+  },
+  {
+    "drug": "flumazenil",
+    "target": "GABRA1"
+  },
+  {
+    "drug": "flunisolide",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "fluocinolone-acetonide",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "fluocinonide",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "fluorometholone",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "fluoxetine",
+    "target": "ANO1"
+  },
+  {
+    "drug": "fluphenazine",
+    "target": "CALM1"
+  },
+  {
+    "drug": "flupirtine",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "flutamide",
+    "target": "AHR"
+  },
+  {
+    "drug": "fluticasone-propionate",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "fluvastatin",
+    "target": "HMGCR"
+  },
+  {
+    "drug": "foretinib",
+    "target": "FLT1"
+  },
+  {
+    "drug": "formoterol",
+    "target": "ADRB2"
+  },
+  {
+    "drug": "fostamatinib",
+    "target": "SYK"
+  },
+  {
+    "drug": "fulvestrant",
+    "target": "ESR1"
+  },
+  {
+    "drug": "gabazine",
+    "target": "GABRA1"
+  },
+  {
+    "drug": "gedunin",
+    "target": "HSP90AA1"
+  },
+  {
+    "drug": "gefitinib",
+    "target": "EGFR"
+  },
+  {
+    "drug": "geldanamycin",
+    "target": "HSP90AA1"
+  },
+  {
+    "drug": "gemcitabine",
+    "target": "CMPK1"
+  },
+  {
+    "drug": "gemfibrozil",
+    "target": "LPL"
+  },
+  {
+    "drug": "genistein",
+    "target": "CFTR"
+  },
+  {
+    "drug": "gestrinone",
+    "target": "AR"
+  },
+  {
+    "drug": "givinostat",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "glycopyrrolate",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "gossypol",
+    "target": "BCL2"
+  },
+  {
+    "drug": "guanaben-acetate",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "guanfacine",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "halcinonide",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "hesperidin",
+    "target": "AURKB"
+  },
+  {
+    "drug": "hexamethylenebisacetamide",
+    "target": "AKT1"
+  },
+  {
+    "drug": "homatropine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "homochlorcyclizine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "homoharringtonine",
+    "target": "RPL3"
+  },
+  {
+    "drug": "hydrocortisone",
+    "target": "ANXA1"
+  },
+  {
+    "drug": "hydrocortisone-acetate",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "hydrocortisone-valerate",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "hydroflumethiazide",
+    "target": "ATP1A1"
+  },
+  {
+    "drug": "hydroxychloroquine",
+    "target": "TLR7"
+  },
+  {
+    "drug": "hydroxyfasudil",
+    "target": "PKIA"
+  },
+  {
+    "drug": "hyoscyamine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "ibrutinib",
+    "target": "BLK"
+  },
+  {
+    "drug": "ibudilast",
+    "target": "IL1B"
+  },
+  {
+    "drug": "icosapent",
+    "target": "ACSL3"
+  },
+  {
+    "drug": "idarubicin",
+    "target": "TOP2A"
+  },
+  {
+    "drug": "imatinib",
+    "target": "ABL1"
+  },
+  {
+    "drug": "imiloxan",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "imiquimod",
+    "target": "TLR7"
+  },
+  {
+    "drug": "indapamide",
+    "target": "CA2"
+  },
+  {
+    "drug": "indirubin",
+    "target": "CDK1"
+  },
+  {
+    "drug": "indirubin-3-monoxime",
+    "target": "CDK1"
+  },
+  {
+    "drug": "indole-3-carbinol",
+    "target": "AHR"
+  },
+  {
+    "drug": "ingenol",
+    "target": "PRKCD"
+  },
+  {
+    "drug": "ipratropium",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "irbesartan",
+    "target": "AGTR1"
+  },
+  {
+    "drug": "irinotecan",
+    "target": "TOP1"
+  },
+  {
+    "drug": "isoflupredone-acetate",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "isoliquiritigenin",
+    "target": "GABBR1"
+  },
+  {
+    "drug": "isotretinoin",
+    "target": "RARA"
+  },
+  {
+    "drug": "isoxsuprine",
+    "target": "ADRB2"
+  },
+  {
+    "drug": "ispinesib",
+    "target": "KIF11"
+  },
+  {
+    "drug": "isradipine",
+    "target": "CACNA1D"
+  },
+  {
+    "drug": "itopride",
+    "target": "CHRM3"
+  },
+  {
+    "drug": "kenpaullone",
+    "target": "CCNB1"
+  },
+  {
+    "drug": "ketoconazole",
+    "target": "KCNA10"
+  },
+  {
+    "drug": "ketotifen",
+    "target": "HRH1"
+  },
+  {
+    "drug": "lacidipine",
+    "target": "CACNA1C"
+  },
+  {
+    "drug": "lapatinib",
+    "target": "EGFR"
+  },
+  {
+    "drug": "latanoprost",
+    "target": "PTGFR"
+  },
+  {
+    "drug": "latrepirdine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "leflunomide",
+    "target": "AHR"
+  },
+  {
+    "drug": "lenalidomide",
+    "target": "TNF"
+  },
+  {
+    "drug": "lestaurtinib",
+    "target": "FLT3"
+  },
+  {
+    "drug": "levocabastine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "levocetirizine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "levofloxacin",
+    "target": "TOP2A"
+  },
+  {
+    "drug": "lidocaine",
+    "target": "EGFR"
+  },
+  {
+    "drug": "linoleic-acid",
+    "target": "FABP4"
+  },
+  {
+    "drug": "linsitinib",
+    "target": "IGF1R"
+  },
+  {
+    "drug": "lithocholic-acid",
+    "target": "GPBAR1"
+  },
+  {
+    "drug": "lonidamine",
+    "target": "GCK"
+  },
+  {
+    "drug": "loratadine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "losartan",
+    "target": "AGTR1"
+  },
+  {
+    "drug": "loteprednol",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "lovastatin",
+    "target": "HDAC2"
+  },
+  {
+    "drug": "loxoprofen",
+    "target": "PTGS2"
+  },
+  {
+    "drug": "lupanine",
+    "target": "INS"
+  },
+  {
+    "drug": "mafenide",
+    "target": "CA12"
+  },
+  {
+    "drug": "masitinib",
+    "target": "FGFR3"
+  },
+  {
+    "drug": "mebendazole",
+    "target": "TUBA1A"
+  },
+  {
+    "drug": "mebeverine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "medrysone",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "mefenamic-acid",
+    "target": "KCNQ1"
+  },
+  {
+    "drug": "mepyramine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "mercaptopurine",
+    "target": "HPRT1"
+  },
+  {
+    "drug": "mestranol",
+    "target": "ESR1"
+  },
+  {
+    "drug": "metformin",
+    "target": "ACACB"
+  },
+  {
+    "drug": "methantheline",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "methapyrilene",
+    "target": "HRH1"
+  },
+  {
+    "drug": "methotrexate",
+    "target": "DHFR"
+  },
+  {
+    "drug": "methoxsalen",
+    "target": "CYP1A1"
+  },
+  {
+    "drug": "methylprednisolone",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "metoclopramide",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "mevastatin",
+    "target": "HMGCR"
+  },
+  {
+    "drug": "mexiletine",
+    "target": "PLAU"
+  },
+  {
+    "drug": "mibefradil",
+    "target": "ANO1"
+  },
+  {
+    "drug": "midostaurin",
+    "target": "FLT3"
+  },
+  {
+    "drug": "mifepristone",
+    "target": "AR"
+  },
+  {
+    "drug": "mifobate",
+    "target": "PPARG"
+  },
+  {
+    "drug": "miglitol",
+    "target": "GAA"
+  },
+  {
+    "drug": "mirtazapine",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "mitoxantrone",
+    "target": "TOP2A"
+  },
+  {
+    "drug": "mocetinostat",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "mometasone",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "monastrol",
+    "target": "KIF11"
+  },
+  {
+    "drug": "motesanib",
+    "target": "FLT1"
+  },
+  {
+    "drug": "moxifloxacin",
+    "target": "TOP2A"
+  },
+  {
+    "drug": "moxonidine",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "mycophenolate-mofetil",
+    "target": "IMPDH1"
+  },
+  {
+    "drug": "mycophenolic-acid",
+    "target": "IMPDH1"
+  },
+  {
+    "drug": "myricetin",
+    "target": "PIK3CG"
+  },
+  {
+    "drug": "nTZDpa",
+    "target": "PPARG"
+  },
+  {
+    "drug": "naloxone",
+    "target": "CREB1"
+  },
+  {
+    "drug": "navitoclax",
+    "target": "BCL2"
+  },
+  {
+    "drug": "necrostatin-1",
+    "target": "RIPK1"
+  },
+  {
+    "drug": "neratinib",
+    "target": "EGFR"
+  },
+  {
+    "drug": "nialamide",
+    "target": "COMT"
+  },
+  {
+    "drug": "niclosamide",
+    "target": "STAT3"
+  },
+  {
+    "drug": "nicorandil",
+    "target": "KCNJ11"
+  },
+  {
+    "drug": "nifedipine",
+    "target": "CACNA1C"
+  },
+  {
+    "drug": "niflumic-acid",
+    "target": "ANO1"
+  },
+  {
+    "drug": "nilotinib",
+    "target": "ABL1"
+  },
+  {
+    "drug": "nilutamide",
+    "target": "AR"
+  },
+  {
+    "drug": "nimodipine",
+    "target": "CFTR"
+  },
+  {
+    "drug": "nintedanib",
+    "target": "FGFR1"
+  },
+  {
+    "drug": "nisoldipine",
+    "target": "CACNA1C"
+  },
+  {
+    "drug": "nitrendipine",
+    "target": "CACNA1D"
+  },
+  {
+    "drug": "nitrocaramiphen",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "nobiletin",
+    "target": "MAP2K1"
+  },
+  {
+    "drug": "norgestimate",
+    "target": "ESR1"
+  },
+  {
+    "drug": "norgestrel",
+    "target": "AR"
+  },
+  {
+    "drug": "nutlin-3",
+    "target": "MDM2"
+  },
+  {
+    "drug": "obatoclax",
+    "target": "BCL2"
+  },
+  {
+    "drug": "octopamine",
+    "target": "F10"
+  },
+  {
+    "drug": "olaparib",
+    "target": "PARP1"
+  },
+  {
+    "drug": "oligomycin-a",
+    "target": "ATP5A1"
+  },
+  {
+    "drug": "olmesartan",
+    "target": "AGTR1"
+  },
+  {
+    "drug": "olmesartan-medoxomil",
+    "target": "AGTR1"
+  },
+  {
+    "drug": "olomoucine",
+    "target": "CDK1"
+  },
+  {
+    "drug": "olopatadine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "orantinib",
+    "target": "AURKA"
+  },
+  {
+    "drug": "ouabain",
+    "target": "ATP1A1"
+  },
+  {
+    "drug": "oxibendazole",
+    "target": "TUBB"
+  },
+  {
+    "drug": "oxotremorine-sesquifumarate",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "oxybutynin",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "oxyphenonium",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "paclitaxel",
+    "target": "BCL2"
+  },
+  {
+    "drug": "palbociclib",
+    "target": "CDK4"
+  },
+  {
+    "drug": "panobinostat",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "parbendazole",
+    "target": "TUBB"
+  },
+  {
+    "drug": "paroxetine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "parthenolide-(alternate-stereo)",
+    "target": "IKBKB"
+  },
+  {
+    "drug": "pazopanib",
+    "target": "CSF1R"
+  },
+  {
+    "drug": "pefloxacin",
+    "target": "TOP2A"
+  },
+  {
+    "drug": "pelitinib",
+    "target": "EGFR"
+  },
+  {
+    "drug": "pemetrexed",
+    "target": "ATIC"
+  },
+  {
+    "drug": "pepstatin",
+    "target": "CTSB"
+  },
+  {
+    "drug": "perhexiline",
+    "target": "CPT1A"
+  },
+  {
+    "drug": "perphenazine",
+    "target": "CALM1"
+  },
+  {
+    "drug": "pevonedistat",
+    "target": "NAE1"
+  },
+  {
+    "drug": "phenelzine",
+    "target": "ABAT"
+  },
+  {
+    "drug": "pheniramine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "phenolphthalein",
+    "target": "UGT1A9"
+  },
+  {
+    "drug": "phenylbutyrate",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "piceatannol",
+    "target": "ATP5A1"
+  },
+  {
+    "drug": "picotamide",
+    "target": "TBXA2R"
+  },
+  {
+    "drug": "pifithrin-alpha",
+    "target": "TP53"
+  },
+  {
+    "drug": "pifithrin-mu",
+    "target": "HSPA1A"
+  },
+  {
+    "drug": "pilocarpine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "pinocembrin",
+    "target": "CYP1B1"
+  },
+  {
+    "drug": "pioglitazone",
+    "target": "PPARG"
+  },
+  {
+    "drug": "piperidolate",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "pirarubicin",
+    "target": "TOP2A"
+  },
+  {
+    "drug": "pirenzepine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "pirfenidone",
+    "target": "FURIN"
+  },
+  {
+    "drug": "pirinixic-acid",
+    "target": "PPARA"
+  },
+  {
+    "drug": "pitavastatin",
+    "target": "HMGCR"
+  },
+  {
+    "drug": "podophyllotoxin",
+    "target": "IGF1R"
+  },
+  {
+    "drug": "polydatin",
+    "target": "ICAM1"
+  },
+  {
+    "drug": "ponatinib",
+    "target": "ABL1"
+  },
+  {
+    "drug": "pramipexole",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "pravastatin",
+    "target": "HMGCR"
+  },
+  {
+    "drug": "prednisolone",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "prednisolone-acetate",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "prednisolone-hemisuccinate",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "pregnenolone",
+    "target": "SULT2B1"
+  },
+  {
+    "drug": "probucol",
+    "target": "ABCA1"
+  },
+  {
+    "drug": "procainamide",
+    "target": "DNMT1"
+  },
+  {
+    "drug": "procaterol",
+    "target": "ADRB2"
+  },
+  {
+    "drug": "profenamine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "proguanil",
+    "target": "DHFR"
+  },
+  {
+    "drug": "promethazine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "propantheline",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "propofol",
+    "target": "FAAH"
+  },
+  {
+    "drug": "pterostilbene",
+    "target": "PTGS2"
+  },
+  {
+    "drug": "purmorphamine",
+    "target": "SMO"
+  },
+  {
+    "drug": "purvalanol-a",
+    "target": "CDK1"
+  },
+  {
+    "drug": "purvalanol-b",
+    "target": "CDK2"
+  },
+  {
+    "drug": "pyrazinamide",
+    "target": "FASN"
+  },
+  {
+    "drug": "pyrazolanthrone",
+    "target": "MAPK10"
+  },
+  {
+    "drug": "pyrimethamine",
+    "target": "DHFR"
+  },
+  {
+    "drug": "pyroxamide",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "pyrvinium-pamoate",
+    "target": "AR"
+  },
+  {
+    "drug": "quercetin",
+    "target": "ATP5A1"
+  },
+  {
+    "drug": "quizartinib",
+    "target": "CSF1R"
+  },
+  {
+    "drug": "raloxifene",
+    "target": "ESR1"
+  },
+  {
+    "drug": "raltitrexed",
+    "target": "FPGS"
+  },
+  {
+    "drug": "resorcinol",
+    "target": "CA12"
+  },
+  {
+    "drug": "resveratrol",
+    "target": "CSNK2A1"
+  },
+  {
+    "drug": "retinol",
+    "target": "ALDH1A1"
+  },
+  {
+    "drug": "reversine",
+    "target": "AURKB"
+  },
+  {
+    "drug": "ribavirin",
+    "target": "ADK"
+  },
+  {
+    "drug": "riboflavin",
+    "target": "BLVRB"
+  },
+  {
+    "drug": "rilmenidine",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "rimexolone",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "rivaroxaban",
+    "target": "F10"
+  },
+  {
+    "drug": "ropinirole",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "roscovitine",
+    "target": "CDK2"
+  },
+  {
+    "drug": "rosiglitazone",
+    "target": "FFAR1"
+  },
+  {
+    "drug": "rosmarinic-acid",
+    "target": "MCL1"
+  },
+  {
+    "drug": "rosuvastatin",
+    "target": "HMGCR"
+  },
+  {
+    "drug": "rucaparib",
+    "target": "PARP1"
+  },
+  {
+    "drug": "rutin",
+    "target": "AKR1C3"
+  },
+  {
+    "drug": "ruxolitinib",
+    "target": "JAK1"
+  },
+  {
+    "drug": "ryuvidine",
+    "target": "CDK2"
+  },
+  {
+    "drug": "saclofen",
+    "target": "GABBR1"
+  },
+  {
+    "drug": "safinamide",
+    "target": "MAOB"
+  },
+  {
+    "drug": "salmeterol",
+    "target": "ADRB2"
+  },
+  {
+    "drug": "salubrinal",
+    "target": "EIF2S1"
+  },
+  {
+    "drug": "saracatinib",
+    "target": "ABL1"
+  },
+  {
+    "drug": "scopolamine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "scopolamine-n-oxide",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "scriptaid",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "securinine",
+    "target": "GABRA1"
+  },
+  {
+    "drug": "selumetinib",
+    "target": "MAP2K1"
+  },
+  {
+    "drug": "semaxanib",
+    "target": "FGFR1"
+  },
+  {
+    "drug": "serdemetan",
+    "target": "MDM2"
+  },
+  {
+    "drug": "simvastatin",
+    "target": "HMGCR"
+  },
+  {
+    "drug": "sirolimus",
+    "target": "FKBP1A"
+  },
+  {
+    "drug": "sitagliptin",
+    "target": "DPP4"
+  },
+  {
+    "drug": "sonidegib",
+    "target": "SMO"
+  },
+  {
+    "drug": "sorafenib",
+    "target": "BRAF"
+  },
+  {
+    "drug": "spironolactone",
+    "target": "AR"
+  },
+  {
+    "drug": "splitomycin",
+    "target": "SIRT1"
+  },
+  {
+    "drug": "strychnine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "sulfasalazine",
+    "target": "ACAT1"
+  },
+  {
+    "drug": "sulfinpyrazone",
+    "target": "ABCC1"
+  },
+  {
+    "drug": "sulforaphane",
+    "target": "NFE2L2"
+  },
+  {
+    "drug": "sulindac",
+    "target": "AKR1B1"
+  },
+  {
+    "drug": "sunitinib",
+    "target": "CSF1R"
+  },
+  {
+    "drug": "tacedinaline",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "tacrolimus",
+    "target": "FKBP1A"
+  },
+  {
+    "drug": "talipexole",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "tamibarotene",
+    "target": "RARA"
+  },
+  {
+    "drug": "tamoxifen",
+    "target": "EBP"
+  },
+  {
+    "drug": "tandutinib",
+    "target": "CSF1R"
+  },
+  {
+    "drug": "tanespimycin",
+    "target": "HSP90AA1"
+  },
+  {
+    "drug": "targinine",
+    "target": "NOS3"
+  },
+  {
+    "drug": "telenzepine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "telmisartan",
+    "target": "AGTR1"
+  },
+  {
+    "drug": "temozolomide",
+    "target": "MGMT"
+  },
+  {
+    "drug": "temsirolimus",
+    "target": "MTOR"
+  },
+  {
+    "drug": "teniposide",
+    "target": "TOP2A"
+  },
+  {
+    "drug": "tenovin-1",
+    "target": "SIRT1"
+  },
+  {
+    "drug": "terbinafine",
+    "target": "SQLE"
+  },
+  {
+    "drug": "terbutaline",
+    "target": "ADRB2"
+  },
+  {
+    "drug": "terfenadine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "terreic-acid-(-)",
+    "target": "BTK"
+  },
+  {
+    "drug": "thalidomide",
+    "target": "TNF"
+  },
+  {
+    "drug": "thiocolchicoside",
+    "target": "GABRA1"
+  },
+  {
+    "drug": "tiaprofenic-acid",
+    "target": "PTGS2"
+  },
+  {
+    "drug": "tibolone",
+    "target": "ESR1"
+  },
+  {
+    "drug": "ticlopidine",
+    "target": "P2RY12"
+  },
+  {
+    "drug": "tipifarnib",
+    "target": "FNTA"
+  },
+  {
+    "drug": "tivantinib",
+    "target": "MET"
+  },
+  {
+    "drug": "tivozanib",
+    "target": "FLT1"
+  },
+  {
+    "drug": "tizanidine",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "tofacitinib",
+    "target": "JAK1"
+  },
+  {
+    "drug": "tolcapone",
+    "target": "COMT"
+  },
+  {
+    "drug": "tolterodine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "topotecan",
+    "target": "TOP1"
+  },
+  {
+    "drug": "toremifene",
+    "target": "ESR1"
+  },
+  {
+    "drug": "torin-1",
+    "target": "MTOR"
+  },
+  {
+    "drug": "torin-2",
+    "target": "MTOR"
+  },
+  {
+    "drug": "tosedostat",
+    "target": "ANPEP"
+  },
+  {
+    "drug": "tozasertib",
+    "target": "AURKA"
+  },
+  {
+    "drug": "tracazolate",
+    "target": "GABRA1"
+  },
+  {
+    "drug": "trametinib",
+    "target": "MAP2K1"
+  },
+  {
+    "drug": "tranylcypromine",
+    "target": "KDM1A"
+  },
+  {
+    "drug": "trapidil",
+    "target": "PDGFRA"
+  },
+  {
+    "drug": "treprostinil",
+    "target": "P2RY12"
+  },
+  {
+    "drug": "tretinoin",
+    "target": "ALDH1A1"
+  },
+  {
+    "drug": "triamcinolone",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "triamcinolone-acetonide",
+    "target": "NR3C1"
+  },
+  {
+    "drug": "triamterene",
+    "target": "SCNN1A"
+  },
+  {
+    "drug": "trichostatin-a",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "triciribine",
+    "target": "AKT1"
+  },
+  {
+    "drug": "triclabendazole",
+    "target": "DNMT1"
+  },
+  {
+    "drug": "triclosan",
+    "target": "DNMT1"
+  },
+  {
+    "drug": "triflupromazine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "trifluridine",
+    "target": "TYMS"
+  },
+  {
+    "drug": "tripelennamine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "triprolidine",
+    "target": "HRH1"
+  },
+  {
+    "drug": "triptolide",
+    "target": "RELA"
+  },
+  {
+    "drug": "tropicamide",
+    "target": "CHRM3"
+  },
+  {
+    "drug": "tubastatin-a",
+    "target": "HDAC6"
+  },
+  {
+    "drug": "tyrphostin-AG-1296",
+    "target": "FLT3"
+  },
+  {
+    "drug": "tyrphostin-AG-1478",
+    "target": "EGFR"
+  },
+  {
+    "drug": "tyrphostin-AG-18",
+    "target": "EGFR"
+  },
+  {
+    "drug": "tyrphostin-AG-494",
+    "target": "EGFR"
+  },
+  {
+    "drug": "tyrphostin-AG-825",
+    "target": "ERBB2"
+  },
+  {
+    "drug": "tyrphostin-AG-835",
+    "target": "EGFR"
+  },
+  {
+    "drug": "tyrphostin-AG-879",
+    "target": "ERBB2"
+  },
+  {
+    "drug": "tyrphostin-AG-99",
+    "target": "EGFR"
+  },
+  {
+    "drug": "ubenimex",
+    "target": "LTA4H"
+  },
+  {
+    "drug": "valdecoxib",
+    "target": "CA12"
+  },
+  {
+    "drug": "valproic-acid",
+    "target": "ABAT"
+  },
+  {
+    "drug": "valsartan",
+    "target": "AGTR1"
+  },
+  {
+    "drug": "veliparib",
+    "target": "PARP1"
+  },
+  {
+    "drug": "vemurafenib",
+    "target": "BRAF"
+  },
+  {
+    "drug": "vidarabine",
+    "target": "ADA"
+  },
+  {
+    "drug": "vinblastine",
+    "target": "JUN"
+  },
+  {
+    "drug": "vinburnine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "vincamine",
+    "target": "CHRM1"
+  },
+  {
+    "drug": "vindesine",
+    "target": "TUBB"
+  },
+  {
+    "drug": "vinorelbine",
+    "target": "TUBA1A"
+  },
+  {
+    "drug": "vorinostat",
+    "target": "HDAC1"
+  },
+  {
+    "drug": "warfarin",
+    "target": "VKORC1"
+  },
+  {
+    "drug": "wortmannin",
+    "target": "PI4KA"
+  },
+  {
+    "drug": "xylazine",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "yohimbine",
+    "target": "ADRA2A"
+  },
+  {
+    "drug": "zaldaride",
+    "target": "CALM1"
+  },
+  {
+    "drug": "zamifenacin",
+    "target": "CHRM3"
+  },
+  {
+    "drug": "zaprinast",
+    "target": "GPR35"
+  },
+  {
+    "drug": "zardaverine",
+    "target": "PDE4D"
+  },
+  {
+    "drug": "zebularine",
+    "target": "CDA"
+  },
+  {
+    "drug": "zosuquidar",
+    "target": "ABCB1"
+  }
+]

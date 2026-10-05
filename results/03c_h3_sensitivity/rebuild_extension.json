@@ -1,0 +1,27 @@
+{
+  "n_requested": 17,
+  "n_written": 17,
+  "not_found_in_the_metadata": [],
+  "cells_per_drug": {
+    "ABT-751": 51,
+    "CYT-997": 50,
+    "D-64131": 15,
+    "PJ-34": 51,
+    "SB-334867": 13,
+    "SB-408124": 13,
+    "cycloheximide": 16,
+    "emetine": 56,
+    "fenbendazole": 13,
+    "flubendazole": 7,
+    "homoharringtonine": 13,
+    "ketoconazole": 8,
+    "oxibendazole": 13,
+    "parbendazole": 52,
+    "salubrinal": 8,
+    "tipifarnib": 51,
+    "vindesine": 7
+  },
+  "shard": "/rebuild/shards/shard_ext_000.npz",
+  "gene_axis": "the frozen landmark order, reindexed",
+  "reading": "these drugs are built by the same route as every other shard, so the gate can verify them against the source alongside the rest"
+}
