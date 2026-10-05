@@ -1360,6 +1360,89 @@ def stage_compare_the_two_permutations():
     return json.dumps(summary, indent=2)
 
 
+@app.function(**COMMON)
+def stage_all_cohort_permutation_check():
+    """Does the recovered permutation hold for every cohort signature, not a sample?
+
+    The permutation was recovered from 400 signatures and the invariance claim now
+    sits in a deviation record, so it is checked against all 41,643 cohort
+    signatures: apply the inverse to the extraction and compare against the source,
+    signature by signature, on the identifiers.
+    """
+    import importlib.util
+    import json
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+
+    _repo_at_its_absolute_path()
+    staged = _stage_inputs()
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    raw = Path("/rebuild/raw")
+    records = json.loads(Path("/app/results/03_phenotype_projection/"
+                              "phenotype_projection_results.json").read_text())
+    drugs = sorted({r["drug"] for r in records})
+    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+                          low_memory=False)
+    cohort = sorted(set(siginfo[siginfo.pert_iname.isin(set(drugs))].sig_id.astype(str)))
+
+    extraction = np.load(Path(staged) / "lincs_subset.npz", allow_pickle=True)
+    held = {str(s): i for i, s in enumerate(extraction["sig_ids"])}
+    declared = [str(g) for g in extraction["gene_ids"]]
+    stored = extraction["signatures"]
+    wanted = [s for s in cohort if s in held]
+
+    # the permutation, recovered from a 400-signature block and then applied here
+    block = wanted[:400]
+    left = np.vstack([np.asarray(stored[held[s]]) for s in block]).astype(np.float32)
+    values, genes, signatures, _ = gate.read_gctx_slice(raw / GCTX, block, declared)
+    row_of = {s: i for i, s in enumerate(signatures)}
+    right = np.vstack([values[row_of[s]] for s in block]).astype(np.float32)
+    profiles = {np.ascontiguousarray(right[:, i]).tobytes(): i for i in range(right.shape[1])}
+    onto = [profiles.get(np.ascontiguousarray(left[:, i]).tobytes()) for i in range(len(declared))]
+    assert all(index is not None for index in onto), "the permutation did not recover"
+    onto = np.array(onto)
+    genes_in_source_order = list(genes)
+
+    worst, failures, compared = 0.0, [], 0
+    for start in range(0, len(wanted), 2000):
+        chunk = wanted[start:start + 2000]
+        values, genes, signatures, _ = gate.read_gctx_slice(raw / GCTX, chunk,
+                                                            genes_in_source_order)
+        assert genes == genes_in_source_order, "the source returned a different gene order"
+        row_of = {s: i for i, s in enumerate(signatures)}
+        for sig_id in chunk:
+            mine = np.asarray(stored[held[sig_id]], dtype=np.float64)
+            theirs = values[row_of[sig_id]].astype(np.float64)
+            error = float(np.abs(theirs[onto] - mine).max())
+            worst = max(worst, error)
+            compared += 1
+            if error > gate.ATOL + gate.RTOL * 10.0 and len(failures) < 10:
+                failures.append({"sig_id": sig_id, "max_abs_difference": error})
+
+    summary = {
+        "n_cohort_signatures_compared": compared,
+        "n_recovered_from": len(block),
+        "max_abs_difference_under_the_permutation": worst,
+        "n_failures": len(failures),
+        "failures": failures,
+        "one_permutation_holds_for_every_cohort_signature": not failures,
+        "reading": ("the permutation was recovered from a 400-signature block and applied to "
+                    "every cohort signature; holding throughout makes the invariance claim "
+                    "general rather than sampled"),
+    }
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "all_cohort_permutation_check.json").write_text(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps({k: v for k, v in summary.items() if k != "failures"}, indent=2)
+
+
 @app.local_entrypoint()
 def main(stage: str):
     """stage: gate | s1s3 | driver | diagnostic"""

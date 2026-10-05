@@ -577,7 +577,38 @@ statements are about the run each was written from and have not been reconciled.
 
 ### What this does NOT change
 
-- Any reported quantity. H1, H2, H3, H4, H5, raw direction instability and the
-  66-fold held-out prediction are all computed within one coordinate system
+No deposited value has been replaced. Quantities computed solely between the
+compound and shRNA extractions are invariant to their shared permutation and
+reproduce the deposited results in the checks reported above: H1, H2, H3, H4, H5,
+raw direction instability and the 66-fold held-out prediction. Quantities involving
+an externally labeled reference or a coordinate selected by gene name remain under
+investigation and are not to be interpreted until recomputed.
+
 - The canonical shRNA artifacts, which the gate verified against the source
 - The R5 mapping, which is frozen and uses neither matrix
+
+### The affected surface, named
+
+`experiments/03d_h3_reference_discordance.py:604` builds the symbol list from the
+extraction's declared `gene_ids`, and that list places five external references:
+C0, C1-K562, C1-RPE1, C1-GW and C1-GW-phenotype-positive. Every externally mapped
+CRISPRi arm in R0-R7 therefore inherits the mismatch, not only the pooled
+construction of `03b`. The same list feeds R7f's target-gene sensitivity at
+`03d:950`, where `Reference.without_gene` removes the coordinate *named* for a
+target rather than the one holding that target's values.
+
+The deposited manuscript reports CRISPRi quantities. Those are reported values and
+they are the exception to the paragraph above: the CRISPRi arm is affected and has
+not been recomputed.
+
+`03d` calls no load-time axis check, so the script most directly concerned with the
+CRISPRi comparison could consume the known-bad declaration. The check is added
+there.
+
+### Scope of the generalization
+
+The shared permutation was recovered from 400 compound signatures and matches the
+shRNA permutation, itself verified on all 14,656 shRNA signatures, at every one of
+978 positions. The multiset test covered 40 signatures and the direction-instability
+reproduction 20 drugs. A comparison across all 41,643 cohort compound signatures is
+the check that would make the invariance claim general rather than sampled.

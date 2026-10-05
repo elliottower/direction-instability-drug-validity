@@ -37,6 +37,7 @@ from geometry.inference import (cluster_bootstrap, comparison_reading, excludes_
                                 two_sided_permutation_p, unique_target_permutations)
 from geometry.single_cell import split_half_reliability_by_unit
 from geometry.references import (MIN_LANDMARKS, N_LANDMARK, Reference, alignment_matrix,
+                                 check_declared_axis, frozen_landmark_order,
                                  landmark_symbols, load_replogle_bulk, pooled_crispri_reference,
                                  projected_dispersion, shared_space, unit)
 
@@ -147,6 +148,12 @@ def build_drug_signatures(data_dir: Path):
     for (drug, cell), group in siginfo.groupby(["pert_iname", "cell_id"]):
         per_drug.setdefault(drug, {})[cell] = signatures[group._row.values].mean(axis=0)
     gene_ids = [str(g) for g in compounds["gene_ids"]]
+    # the symbol list built from these ids places every external reference and
+    # selects the coordinate R7f removes, so a declaration that does not describe
+    # the matrix is refused here rather than carried into five references
+    check_declared_axis(gene_ids,
+                        frozen_landmark_order(data_dir / "GSE92742_Broad_LINCS_gene_info.txt.gz"),
+                        "lincs_subset.npz")
     return per_drug, gene_ids
 
 
