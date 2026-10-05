@@ -43,6 +43,10 @@ from geometry.references import (MIN_LANDMARKS, N_LANDMARK, Reference, alignment
 
 REPO = Path("/Users/elliottower/Documents/GitHub/direction-instability-drug-validity")
 CRISPRI_RECORDS = REPO / "results" / "03b_h3_crispri" / "h3_crispri_results.json"
+
+# Amendment 3 pins the rebuild production reads. Filled at the amendment freeze;
+# every entry present here is required to match, and the run records the rest.
+EXPECTED_REBUILD_SHA256: dict = {}
 OUT = REPO / "results" / "03d_h3_reference_discordance"
 
 # pinned in the registration
@@ -89,7 +93,7 @@ class Draws(dict):
     """
 
     def keep(self, key, array):
-        assert key not in self, f"two distributions claim the key {key}"
+        require(key not in self, f"two distributions claim the key {key}")
         self[key] = np.asarray(array)
         return array
 
@@ -136,8 +140,8 @@ class DiscordanceError(AssertionError):
     """A contract this script refuses to run without.
 
     It subclasses AssertionError so the failure type is unchanged, and is raised
-    explicitly so `python -O`, which removes `assert`, cannot switch it off. The
-    rest of this file still uses `assert`; converting those is a separate pass.
+    explicitly so `python -O`, which removes `assert`, cannot switch it off. Every
+    contract in this file is raised this way; a test refuses any `ast.Assert` node.
     """
 
 
@@ -154,23 +158,46 @@ def build_drug_signatures_from_rebuild(rebuild_dir: Path):
     from the pinned GCTX in the frozen landmark order, so the aggregation rule is
     unchanged and only its provenance is.
     """
+    shards = sorted(Path(rebuild_dir).glob("shard_*.npz"))
+    require(shards, f"no shards in {rebuild_dir}; the rebuild is the compound source")
     matrices, cells = {}, {}
-    for shard in sorted(Path(rebuild_dir).glob("shard_*.npz")):
+    for shard in shards:
         with np.load(shard, allow_pickle=True) as data:
-            require(("__cells__" in data.files),
-                    f"{shard.name} carries no cell-line identifiers")
+            require("__cells__" in data.files,
+                    f"{shard.name} carries no cell-line identifiers; the join would fall "
+                    "back to row order")
             blob = json.loads(str(data["__cells__"]))
             for key in data.files:
                 if key in ("fingerprint", "__cells__"):
                     continue
-                require(key not in matrices, f"{key} arrives from more than one shard")
+                require(key not in matrices,
+                        f"{key} arrives from more than one shard, and the later one would "
+                        "replace the earlier without either being compared")
                 matrices[key] = np.asarray(data[key], dtype=np.float64)
-            cells.update({drug: [str(c) for c in ids] for drug, ids in blob.items()})
+            for drug, ids in blob.items():
+                require(drug not in cells, f"{drug}: cell identifiers from two shards")
+                cells[drug] = [str(c) for c in ids]
+    require(set(matrices) == set(cells),
+            "matrices and cell identifiers cover different drugs: "
+            f"{sorted(set(matrices) ^ set(cells))[:5]}")
+
     gene_file = Path(rebuild_dir) / "landmark_gene_ids.json"
     require(gene_file.exists(), f"{gene_file} is missing; the rebuild must record its axis")
     genes = [str(g) for g in json.loads(gene_file.read_text())]
-    per_drug = {drug: dict(zip(cells[drug], matrix)) for drug, matrix in matrices.items()
-                if drug in cells}
+    require(len(set(genes)) == len(genes) == N_LANDMARK,
+            f"the rebuild declares {len(genes)} gene identifiers")
+
+    per_drug = {}
+    for drug, matrix in matrices.items():
+        identifiers = cells[drug]
+        # zip() would truncate a disagreement silently, which is the whole failure
+        require(matrix.shape == (len(identifiers), len(genes)),
+                f"{drug}: the matrix is {matrix.shape} against {len(identifiers)} declared "
+                f"cell lines and {len(genes)} genes")
+        require(len(set(identifiers)) == len(identifiers),
+                f"{drug}: a cell line is declared twice")
+        require(np.isfinite(matrix).all(), f"{drug}: nonfinite values")
+        per_drug[drug] = dict(zip(identifiers, matrix))
     return per_drug, genes
 
 
@@ -179,8 +206,7 @@ def build_drug_signatures(data_dir: Path):
     compounds = np.load(data_dir / "lincs_subset.npz", allow_pickle=True)
     signatures = compounds["signatures"]
     position = {str(sig_id): i for i, sig_id in enumerate(compounds["sig_ids"])}
-    assert len(position) == len(compounds["sig_ids"]), (
-        "duplicate signature ids in the compound extraction")
+    require(len(position) == len(compounds["sig_ids"]), "duplicate signature ids in the compound extraction")
     siginfo = pd.read_csv(data_dir / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                           low_memory=False)
     siginfo = siginfo[siginfo.sig_id.astype(str).isin(position) & siginfo.pert_iname.notna()].copy()
@@ -213,9 +239,15 @@ def build_shrna_reference_from_rebuild(rebuild_dir: Path, gene_ids, name="shRNA"
         stored = [str(g) for g in data["gene_ids"]]
         require(stored == [str(g) for g in gene_ids],
                 "the consensus axis is not the axis the drug signatures are on")
-        directions = {str(target): np.asarray(data["directions"][i])
-                      for i, target in enumerate(data["genes"])}
-    require(len(directions) == len(set(directions)), f"{path} repeats a target")
+        names = [str(target) for target in data["genes"]]
+        # checked on the array, before the dictionary: comparing a dict against
+        # set(dict) is always true and refuses nothing
+        require(len(set(names)) == len(names),
+                f"{path} repeats a target: "
+                f"{sorted({n for n in names if names.count(n) > 1})}")
+        require(len(names) == len(data["directions"]),
+                f"{path} holds {len(names)} targets and {len(data['directions'])} directions")
+        directions = {name: np.asarray(data["directions"][i]) for i, name in enumerate(names)}
     audit = {"n_targets": len(directions), "source": str(path),
              "min_distinct_signatures": MIN_SIGNATURES}
     return Reference(name, directions, np.arange(N_LANDMARK), audit)
@@ -232,7 +264,7 @@ def build_shrna_reference(data_dir: Path, name="shRNA") -> Reference:
     shrna = np.load(data_dir / "lincs_shrna.npz", allow_pickle=True)
     signatures = shrna["signatures"]
     position = {str(sig_id): i for i, sig_id in enumerate(shrna["sig_ids"])}
-    assert len(position) == len(shrna["sig_ids"]), "duplicate signature ids in the shRNA extraction"
+    require(len(position) == len(shrna["sig_ids"]), "duplicate signature ids in the shRNA extraction")
     siginfo = pd.read_csv(data_dir / "lincs_shrna_siginfo.csv.gz")
     siginfo = siginfo[siginfo.sig_id.astype(str).isin(position)].copy()
     siginfo["_row"] = siginfo.sig_id.astype(str).map(position)
@@ -379,8 +411,7 @@ def permutation_null(arm: Arm, values, genes, projection_table, percentiles_or_m
                                percentiles_or_matrix[rows, assigned])
                      for assigned in unique_target_permutations(arm.targets, N_PERM, SEED_PERM)])
     identity = statistic(projection_table[rows, own], percentiles_or_matrix[rows, own])
-    assert abs(identity - observed) < 1e-9, (
-        f"{label}: the lookup gives {identity:.12f} where the direct statistic gives {observed:.12f}")
+    require(abs(identity - observed) < 1e-9, f"{label}: the lookup gives {identity:.12f} where the direct statistic gives {observed:.12f}")
     return {"label": label, "observed": observed, "null_median": float(np.median(null)),
             "null_pct": {"p1": float(np.percentile(null, 1)), "p2.5": float(np.percentile(null, 2.5)),
                          "p50": float(np.percentile(null, 50)),
@@ -445,7 +476,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--data", type=Path, required=True)
-    parser.add_argument("--rebuilt", type=Path, required=True,
+    parser.add_argument("--rebuilt", type=Path,
                         help="the GCTX rebuild the gate verified against the pinned source. "
                              "Amendment 3 makes it the compound source; lincs_subset.npz is "
                              "read by no production loader.")
@@ -466,28 +497,66 @@ def main():
 
 def verify_inputs(args):
     """Every pinned input, checked before anything is computed."""
+    # Amendment 3: production reads the rebuild. The retired extractions are
+    # recorded so the deposited analysis stays reproducible, not because anything
+    # reads them.
     pins = {"crispri_records": (CRISPRI_RECORDS, EXPECTED_RECORDS_SHA256),
-            "lincs_subset": (args.data / "lincs_subset.npz", EXPECTED_LINCS_SUBSET_SHA256),
-            "lincs_shrna": (args.data / "lincs_shrna.npz", EXPECTED_LINCS_SHRNA_SHA256),
             "perturbseq": (args.perturbseq, EXPECTED_PERTURBSEQ_SHA256)}
+    legacy = {"lincs_subset": (args.data / "lincs_subset.npz", EXPECTED_LINCS_SUBSET_SHA256),
+              "lincs_shrna": (args.data / "lincs_shrna.npz", EXPECTED_LINCS_SHRNA_SHA256)}
     for name, path in EXPECTED_BULK_SHA256.items():
         pins[name] = (args.replogle / name, EXPECTED_BULK_SHA256[name])
-    recorded = {}
+
+    recorded = {"production_inputs": {}, "legacy_artifacts": {}, "rebuild": {}}
     for name, (path, expected) in pins.items():
         digest = sha256_file(path)
-        assert digest == expected, f"{name}: sha256 {digest}, pinned {expected}"
-        recorded[name] = digest
+        require(digest == expected, f"{name}: sha256 {digest}, pinned {expected}")
+        recorded["production_inputs"][name] = digest
+    for name, (path, expected) in legacy.items():
+        if Path(path).exists():
+            recorded["legacy_artifacts"][name] = sha256_file(path)
+
+    # the rebuild is what production reads, so its identity is recorded even where
+    # no expected hash is pinned yet; a value that is reported cannot be silently
+    # swapped, and the manifest carries the expected values once frozen
+    if getattr(args, "rebuilt", None):
+        rebuilt = Path(args.rebuilt)
+        for name in ("landmark_gene_ids.json", "shrna_consensus.npz",
+                     "shrna_signatures.npz", "rebuild_manifest.json"):
+            if (rebuilt / name).exists():
+                recorded["rebuild"][name] = sha256_file(rebuilt / name)
+        shards = sorted(rebuilt.glob("shard_*.npz"))
+        require(shards, f"no shards in {rebuilt}")
+        recorded["rebuild"]["shards"] = {s.name: sha256_file(s) for s in shards}
+        expected = EXPECTED_REBUILD_SHA256
+        for name, digest in {**recorded["rebuild"]}.items():
+            if name in expected:
+                require(digest == expected[name],
+                        f"rebuild/{name}: sha256 {digest}, pinned {expected[name]}")
     return recorded
 
 
-def reproduction_gate(arm: Arm, shrna_values, crispri_values, records):
-    """The arms must reproduce the corrected per-drug records before anything runs."""
+def reproduction_gate(arm: Arm, shrna_values, crispri_values, records,
+                      crispri_reproduces=False):
+    """What the deposited records can and cannot be a reproduction target for.
+
+    Raw instability and the shRNA quantities are invariant under a permutation
+    applied to both operands, which Deviation 12 establishes both extractions
+    carried, so they must still reproduce the deposited values and are asserted.
+
+    The C0 quantities are not a reproduction target under Amendment 3. The
+    deposited values placed the reference by the extraction's declared labels while
+    the drug signatures followed another axis; the corrected run places both on the
+    verified axis, so the two are deliberately different. Their difference is
+    measured and reported rather than required to vanish. `crispri_reproduces`
+    restores the old behavior for a legacy rerun of the deposited configuration.
+    """
     by_drug = {r["drug"]: r for r in records}
     worst = {"D": 0.0, "P_shrna": 0.0, "E_shrna": 0.0, "P_crispri": 0.0, "E_crispri": 0.0}
     for i, drug in enumerate(arm.drugs):
         record = by_drug[drug]
-        assert record["target"] == arm.targets[i], f"{drug}: target differs"
-        assert int(record["n_celllines"]) == len(arm.cell_lines[i]), f"{drug}: n_celllines differs"
+        require(record["target"] == arm.targets[i], f"{drug}: target differs")
+        require(int(record["n_celllines"]) == len(arm.cell_lines[i]), f"{drug}: n_celllines differs")
         reference_D = (shrna_values or crispri_values)["D"]
         worst["D"] = max(worst["D"], abs(reference_D[i] - record["raw_instability"]))
         if "proj_shrna" in record and shrna_values is not None:
@@ -498,9 +567,18 @@ def reproduction_gate(arm: Arm, shrna_values, crispri_values, records):
                                      abs(crispri_values["P"][i] - record["proj_crispri"]))
             worst["E_crispri"] = max(worst["E_crispri"],
                                      abs(crispri_values["E"][i] - record["enrich_crispri"]))
-    for quantity, error in worst.items():
-        assert error < RECON_TOL, f"{quantity} reproduces to {error:.3g}, tolerance {RECON_TOL}"
-    return {k: float(v) for k, v in worst.items()}
+    invariant = {k: v for k, v in worst.items() if not k.endswith("_crispri")}
+    for quantity, error in invariant.items():
+        require(error < RECON_TOL,
+                f"{quantity} reproduces to {error:.3g}, tolerance {RECON_TOL}. These "
+                "quantities are invariant under the shared permutation and must agree "
+                "with the deposited records")
+    if crispri_reproduces:
+        for quantity in ("P_crispri", "E_crispri"):
+            require(worst[quantity] < RECON_TOL,
+                    f"{quantity} reproduces to {worst[quantity]:.3g}")
+    return {**{k: float(v) for k, v in worst.items()},
+            "crispri_fields_are_a_correction_not_a_reproduction": not crispri_reproduces}
 
 
 DOSE_WINDOW = (2.0, 3.0)         # Amendment 1, A1: the registered 2.5 uM with a tolerance
@@ -582,25 +660,21 @@ def write_mapping(mapping: dict, path: Path) -> str:
 def validate_mapping(frozen: dict, drugs, expected_sha256: str, path: Path):
     """Everything about the frozen mapping that must hold before a value is read."""
     actual = sha256_file(path)
-    assert actual == expected_sha256, (
-        f"the mapping at {path} hashes to {actual}, and the manifest expects "
+    require(actual == expected_sha256, f"the mapping at {path} hashes to {actual}, and the manifest expects "
         f"{expected_sha256}; a mapping edited after it was frozen is not a frozen mapping")
-    assert frozen["dose_window"] == list(DOSE_WINDOW), "the mapping used a different dose window"
-    assert frozen["min_lines"] == R5_MIN_LINES, "the mapping used a different cell-line floor"
+    require(frozen["dose_window"] == list(DOSE_WINDOW), "the mapping used a different dose window")
+    require(frozen["min_lines"] == R5_MIN_LINES, "the mapping used a different cell-line floor")
     accepted, rejected = frozen["accepted"], frozen["rejected"]
-    assert frozen["n_accepted"] == len(accepted) and frozen["n_rejected"] == len(rejected), (
-        "the mapping's counts do not match its own records")
-    assert not (set(accepted) & set(rejected)), "a drug is both accepted and rejected"
-    assert set(accepted) | set(rejected) == set(frozen["drugs_offered"]), (
-        "the mapping does not account for every drug it was offered")
-    assert set(frozen["drugs_offered"]) == set(drugs), (
-        "the frozen mapping was built for a different cohort")
+    require(frozen["n_accepted"] == len(accepted) and frozen["n_rejected"] == len(rejected), "the mapping's counts do not match its own records")
+    require(not (set(accepted) & set(rejected)), "a drug is both accepted and rejected")
+    require(set(accepted) | set(rejected) == set(frozen["drugs_offered"]), "the mapping does not account for every drug it was offered")
+    require(set(frozen["drugs_offered"]) == set(drugs), "the frozen mapping was built for a different cohort")
     columns = [entry["column"] for entry in accepted.values()]
-    assert len(set(columns)) == len(columns), "two drugs claim the same treatment column"
+    require(len(set(columns)) == len(columns), "two drugs claim the same treatment column")
     for drug, entry in accepted.items():
-        assert DOSE_WINDOW[0] <= entry["dose"] <= DOSE_WINDOW[1], f"{drug}: dose outside the window"
-        assert entry["n_lines"] >= R5_MIN_LINES, f"{drug}: too few cell lines"
-        assert entry["route"] in ("broad identifier", "exact name"), f"{drug}: unregistered route"
+        require(DOSE_WINDOW[0] <= entry["dose"] <= DOSE_WINDOW[1], f"{drug}: dose outside the window")
+        require(entry["n_lines"] >= R5_MIN_LINES, f"{drug}: too few cell lines")
+        require(entry["route"] in ("broad identifier", "exact name"), f"{drug}: unregistered route")
 
 
 def prism_response(prism_dir: Path, mapping_path: Path):
@@ -610,17 +684,15 @@ def prism_response(prism_dir: Path, mapping_path: Path):
     build one of its own, so no mapping can be revised after a response value has
     been summarized.
     """
-    assert mapping_path.exists(), (
-        f"{mapping_path} is missing: the mapping must be frozen before any response "
+    require(mapping_path.exists(), f"{mapping_path} is missing: the mapping must be frozen before any response "
         "value is summarized")
     frozen = json.loads(mapping_path.read_text())
-    assert frozen.get("accepted"), "the frozen mapping accepts no drug"
+    require(frozen.get("accepted"), "the frozen mapping accepts no drug")
     lfc_path = prism_dir / "primary-screen-replicate-collapsed-logfold-change.csv"
-    assert sha256_file(lfc_path) == frozen["provenance"]["lfc_sha256"], (
-        "the response matrix is not the one the mapping was frozen against")
+    require(sha256_file(lfc_path) == frozen["provenance"]["lfc_sha256"], "the response matrix is not the one the mapping was frozen against")
 
     columns = sorted({entry["column"] for entry in frozen["accepted"].values()})
-    assert columns, "the frozen mapping names no column to read"
+    require(columns, "the frozen mapping names no column to read")
     responses = pd.read_csv(lfc_path, index_col=0, usecols=["Unnamed: 0"] + columns)
     toxicity = {column: -float(responses[column].median(skipna=True)) for column in columns}
     killed = {column: float((responses[column] < -1).sum() / responses[column].notna().sum())
@@ -640,12 +712,10 @@ def run_mapping_stage(args):
     """
     args.output.mkdir(parents=True, exist_ok=True)
     mapping_path = args.output / "r5_prism_mapping.json"
-    assert args.prism is not None, "--prism is required by the mapping stage"
-    assert not mapping_path.exists(), (
-        f"{mapping_path} already exists; remove or supersede it deliberately rather than "
+    require(args.prism is not None, "--prism is required by the mapping stage")
+    require(not mapping_path.exists(), f"{mapping_path} already exists; remove or supersede it deliberately rather than "
         "rewriting a frozen mapping")
-    assert sha256_file(CRISPRI_RECORDS) == EXPECTED_RECORDS_SHA256, (
-        "the CRISPRi records are not the corrected ones")
+    require(sha256_file(CRISPRI_RECORDS) == EXPECTED_RECORDS_SHA256, "the CRISPRi records are not the corrected ones")
 
     records = json.loads(CRISPRI_RECORDS.read_text())
     drugs = sorted({record["drug"] for record in records if "proj_crispri" in record})
@@ -667,8 +737,10 @@ def run(args):
     if args.r5_stage == "mapping":
         return run_mapping_stage(args)
 
-    assert args.perturbseq and args.replogle, (
-        "--perturbseq and --replogle are required by the response stage")
+    require(args.perturbseq and args.replogle,
+            "--perturbseq and --replogle are required by the response stage")
+    require(args.rebuilt, "--rebuilt is required by the response stage: Amendment 3 makes "
+                          "the rebuild the compound source")
     OUT.mkdir(parents=True, exist_ok=True)
     args.output.mkdir(parents=True, exist_ok=True)
     draws = Draws()
@@ -703,8 +775,7 @@ def run(args):
         reference.name: {k: v for k, v in reference.audit.items()
                          if k not in ("rows_per_gene", "rows_used_per_gene", "cells_per_gene")}
         for reference in (c0, c1, c1_rpe1, c1_gw, c1_gw_positive)}
-    assert len(c1.positions) >= MIN_LANDMARKS, (
-        f"C1 covers {len(c1.positions)} landmarks, below the registered floor of {MIN_LANDMARKS}")
+    require(len(c1.positions) >= MIN_LANDMARKS, f"C1 covers {len(c1.positions)} landmarks, below the registered floor of {MIN_LANDMARKS}")
     result["modules"]["R0.2_gene_space"]["landmark_floor"] = {
         "floor": MIN_LANDMARKS, "C1_landmarks": int(len(c1.positions)),
         "note": "a usability floor, not evidence that C1 covers the landmark space"}
@@ -903,11 +974,9 @@ def run(args):
         # the response stage reads the frozen mapping and never builds one, so it
         # needs no identifier metadata of its own
         mapping_path = args.output / "r5_prism_mapping.json"
-        assert args.expected_mapping_sha256, (
-            "--expected-mapping-sha256 is required: the response stage runs against a hash "
+        require(args.expected_mapping_sha256, "--expected-mapping-sha256 is required: the response stage runs against a hash "
             "recorded before it, not against whatever file is on disk")
-        assert mapping_path.exists(), (
-            f"{mapping_path} does not exist. The response stage never builds a mapping: run "
+        require(mapping_path.exists(), f"{mapping_path} does not exist. The response stage never builds a mapping: run "
             "--r5-stage mapping, review and commit the table, then rerun with its hash")
         frozen = json.loads(mapping_path.read_text())
         validate_mapping(frozen, crispri_arm.drugs, args.expected_mapping_sha256, mapping_path)
@@ -932,7 +1001,7 @@ def run(args):
             T = np.array([toxicity[accepted[crispri_arm.drugs[i]]["column"]] for i in idx])
             fraction_killed = np.array([killed[accepted[crispri_arm.drugs[i]]["column"]]
                                         for i in idx])
-            assert np.isfinite(T).all(), "a mapped drug has no toxicity value"
+            require(np.isfinite(T).all(), "a mapped drug has no toxicity value")
             sub_targets = crispri_arm.targets[idx]
             e_t, e_t_draws = association(c1_values["E"][idx], T, sub_targets, "rho(E, toxicity)")
             d_e, d_e_draws = association(c1_values["D"][idx], c1_values["E"][idx], sub_targets,

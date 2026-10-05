@@ -553,9 +553,9 @@ outside it, and any operation that selects a column by gene name.
 `experiments/03b_h3_crispri_ground_truth.py` maps symbols through the declared gene
 ids and places the Perturb-seq reference in that order while the drug signatures sit
 in the permuted order, and `geometry/references.py`'s `without_gene` drops a
-coordinate by symbol. Neither has been measured. The CRISPRi arm is the arm whose
-disagreement with the shRNA arm this investigation began from, so the measurement is
-the next step rather than a note.
+coordinate by symbol. At discovery neither had been measured. The pooled C0 arm has
+since been recomputed, below; the registered C1-K562, C1-RPE1 and C1-GW arms and
+R7f have not run.
 
 **How it was identified:** the registered reconstruction gate, on the comparison
 Amendment 2 added — the retained compound extraction against an independent read of
@@ -595,7 +595,7 @@ the two corrected paths agree, and the control returns the corrected value, whic
 it must, because no cosine changes when one permutation is applied to both
 operands.
 
-The reversal the registration set out to explain did not occur. The registered
+The deposited C0 reversal did not survive coordinate correction. The registered
 K562-only confound explanation addressed an artifact of the reference coordinates
 and is not applied. The registered H3 criterion is projected `|rho| > 0.3` and raw
 `|rho| < 0.15`: corrected, the CRISPRi arm meets the first and not the second,
@@ -611,8 +611,10 @@ No deposited value has been replaced. Quantities computed solely between the
 compound and shRNA extractions are invariant to their shared permutation and
 reproduce the deposited results in the checks reported above: H1, H2, H3, H4, H5,
 raw direction instability and the 66-fold held-out prediction. Quantities involving
-an externally labeled reference or a coordinate selected by gene name remain under
-investigation and are not to be interpreted until recomputed.
+an externally labeled reference or a coordinate selected by gene name: corrected C0
+is measured and reported below, and the rest await computation and are not to be
+interpreted until recomputed. No stored deposited value has been overwritten; one
+reported scientific quantity now has a corrected replacement estimate.
 
 - The canonical shRNA artifacts, which the gate verified against the source
 - The R5 mapping, which is frozen and uses neither matrix
@@ -627,9 +629,10 @@ construction of `03b`. The same list feeds R7f's target-gene sensitivity at
 `03d:950`, where `Reference.without_gene` removes the coordinate *named* for a
 target rather than the one holding that target's values.
 
-The deposited manuscript reports CRISPRi quantities. Those are reported values and
-they are the exception to the paragraph above: the CRISPRi arm is affected and has
-not been recomputed.
+The deposited manuscript reports CRISPRi quantities, and they are the exception to
+the paragraph above. The deposited C0 arm has now been recomputed; the remaining
+R0-R7 external-reference quantities and the symbol-selected sensitivity of R7f
+await computation.
 
 `03d` calls no load-time axis check, so the script most directly concerned with the
 CRISPRi comparison could consume the known-bad declaration. The check is added

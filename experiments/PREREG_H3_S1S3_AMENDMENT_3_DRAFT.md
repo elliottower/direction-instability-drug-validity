@@ -25,7 +25,8 @@ with an intersection defect that wrote no record.
 the per-drug, per-cell-line matrices written by `experiments/modal_h3_rebuild.py`
 from the pinned GCTX in the frozen landmark order, extended on 2026-10-05 by the
 seventeen drugs the CRISPRi arm needs. `lincs_subset.npz` is read by no production
-loader. A1's treatment of the shRNA side is unchanged and now applies to both.
+loader. A1 remains unchanged for the shRNA side; B1 establishes the analogous
+source-derived rule for compound signatures.
 
 **B2. The gene axis every reference is placed on is the frozen landmark order.**
 `experiments/03d_h3_reference_discordance.py:604` builds its symbol list from the
@@ -53,6 +54,40 @@ registered against it.
 reproducible. The recovered permutation stays a forensic record and is never a
 production transformation.
 
+**B7. What is superseded, exactly.** Amendment 2's A2, in full: "The compound
+source is unchanged. `lincs_subset.npz` follows its declared axis, which the
+compound half of the gate confirmed before the shRNA half ran. Drug signatures are
+aligned to the rebuild's axis by gene identifier, never by position." Its first two
+sentences are false and are replaced by B1. Its third stands and is subsumed: the
+alignment is by identifier. The input pins of
+`PREREG_H3_REFERENCE_DISCORDANCE.md` naming `lincs_subset.npz` and
+`lincs_shrna.npz` as production inputs are replaced by B8. A2 is not edited or
+erased; every other clause of Amendment 2 remains operative.
+
+**B8. The production identity, pinned.** The run consumes and records: the rebuild's
+`landmark_gene_ids.json`, `shrna_consensus.npz`, `shrna_signatures.npz`,
+`rebuild_manifest.json` and every compound shard, each by sha256; the rebuild
+manifest's cohort-identifier hash; the exact 812-drug identifier set, which is the
+registered 795 plus the seventeen named in Deviation 12 and in
+`results/03c_h3_sensitivity/rebuild_extension.json`; a passing gate report on both
+cohorts, by sha256, with its cohorts, comparisons and tolerances; this amendment's
+freeze commit and file hash; and the analysis code commit. The retired extractions
+are recorded as legacy artifacts, separately from production inputs.
+
+**B9. What the deposited records are a reproduction target for.** Raw direction
+instability and the shRNA quantities are invariant under the permutation both
+extractions carried, so they must still reproduce the deposited per-drug values to
+the registered tolerance, and a failure voids the run. The C0 projected dispersion
+and alignment are not a reproduction target: the deposited values placed the
+reference on the declared axis while the signatures followed another, so the
+corrected values are deliberately different. Their difference from the deposited
+values is measured and reported as a correction. The four-route audit of Deviation
+12 is the separate aggregate record and is not a gate.
+
+**B10. Freeze discipline.** After this amendment is frozen, no code, cohort,
+statistic, criterion or interpretive rule changes except through another recorded
+amendment or deviation.
+
 ## Foreknowledge at the time of this amendment
 
 Deviation 12 and everything in it, including the corrected pooled CRISPRi arm:
@@ -62,18 +97,24 @@ one `03b` reports. **No R0-R7 statistic has been computed**, and the C1-K562,
 C1-RPE1 and C1-GW arms this amendment governs have never been run under either
 axis.
 
-That the C0 arm moved from -0.1247 to +0.5410 is known. The direction of the C1
-arms is not, and the registered readings apply to them unchanged.
+At this freeze the corrected C0 result is known. No C1-K562, C1-RPE1 or C1-GW
+association has been computed, and their previously frozen analyses, cohorts,
+hierarchy and readings are left unchanged. Corrected C0 is a known-outcome
+correction interpreted under criteria frozen before it; the C1 arms are
+prospectively evaluated under the earlier frozen design with this foreknowledge
+disclosed; anything added or altered after seeing the C0 result is exploratory
+unless justified independently of it.
 
 ## Maximum claim under this registration
 
-With the gate passing on both cohorts, the R0-R7 arms can say what the frozen
-registration lets them say about the agreement between a drug's consistency and
-its target's genetic direction, under five reference constructions, with both
-operands in one coordinate system verified against the pinned source. They cannot
-say that the earlier disagreement between references was biological: Deviation 12
-records that the C0 disagreement was a coordinate artifact, and the C1 arms have
-no earlier result to be compared against.
+With the required gates passing, R0-R7 may report the registered associations
+between cross-cell-line drug-response geometry and target-reference alignment under
+the five prespecified reference constructions, with each operand derived from its
+own pinned source and both placed on a verified common coordinate axis. These
+analyses cannot support the claim that the previously reported C0 disagreement was
+biological, because that disagreement did not survive coordinate correction. The
+C1, RPE1 and genome-wide analyses are first measurements under their respective
+constructions, not replications of the C0 reversal.
 
 ## What the paper may say afterwards
 

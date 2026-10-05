@@ -120,7 +120,8 @@ def test_reproduction_gate_accepts_the_values_it_was_built_from_and_rejects_a_dr
                for i in range(len(arm))]
 
     worst = _mod.reproduction_gate(arm, values, None, records)
-    assert max(worst.values()) < 1e-12
+    assert max(v for v in worst.values() if isinstance(v, float)) < 1e-12
+    assert worst["crispri_fields_are_a_correction_not_a_reproduction"] is True
 
     records[3]["proj_shrna"] += 1e-4
     with pytest.raises(AssertionError):
@@ -436,3 +437,101 @@ def test_an_exact_tie_goes_to_the_lexically_first_column(tmp_path):
     entry = mapping["accepted"]["tied"]
     assert entry["n_candidates"] == 2
     assert entry["column"] == "BRD-K11111111-001-01-9::2.5::HTS"   # lexically first, both at 120
+
+
+
+def test_the_discordance_script_holds_no_assert_statements():
+    # `assert` disappears under -O. The gate was converted first and this file was
+    # left, which reads as finished when it is not.
+    import ast
+
+    source = (Path(__file__).resolve().parents[1] / "experiments"
+              / "03d_h3_reference_discordance.py").read_text()
+    remaining = [node.lineno for node in ast.walk(ast.parse(source))
+                 if isinstance(node, ast.Assert)]
+    assert remaining == [], f"assert statements at lines {remaining}"
+
+
+def test_the_rebuild_loader_refuses_what_it_used_to_tolerate(tmp_path):
+    import json
+
+    import numpy as np
+
+    rng = np.random.default_rng()
+    genes = [str(i) for i in range(_mod.N_LANDMARK)]
+    (tmp_path / "landmark_gene_ids.json").write_text(json.dumps(genes))
+
+    with pytest.raises(AssertionError, match="no shards"):
+        _mod.build_drug_signatures_from_rebuild(tmp_path)
+
+    def shard(path, matrices, cells):
+        np.savez_compressed(path, fingerprint=np.array("fp"),
+                            __cells__=np.array(json.dumps(cells)), **matrices)
+
+    # a matrix whose rows contradict its declared cell lines: zip() would truncate
+    shard(tmp_path / "shard_000.npz",
+          {"drugA": rng.standard_normal((1, _mod.N_LANDMARK))},
+          {"drugA": ["MCF7", "PC3"]})
+    with pytest.raises(AssertionError, match=r"the matrix is \(1, 978\) against 2"):
+        _mod.build_drug_signatures_from_rebuild(tmp_path)
+
+    # the same drug from two shards
+    shard(tmp_path / "shard_000.npz", {"drugA": rng.standard_normal((2, _mod.N_LANDMARK))},
+          {"drugA": ["MCF7", "PC3"]})
+    shard(tmp_path / "shard_001.npz", {"drugA": rng.standard_normal((2, _mod.N_LANDMARK))},
+          {"drugA": ["MCF7", "PC3"]})
+    with pytest.raises(AssertionError, match="more than one shard"):
+        _mod.build_drug_signatures_from_rebuild(tmp_path)
+
+    # a cell line declared twice
+    (tmp_path / "shard_001.npz").unlink()
+    shard(tmp_path / "shard_000.npz", {"drugA": rng.standard_normal((2, _mod.N_LANDMARK))},
+          {"drugA": ["MCF7", "MCF7"]})
+    with pytest.raises(AssertionError, match="declared twice"):
+        _mod.build_drug_signatures_from_rebuild(tmp_path)
+
+    # consistent input loads
+    shard(tmp_path / "shard_000.npz", {"drugA": rng.standard_normal((2, _mod.N_LANDMARK))},
+          {"drugA": ["MCF7", "PC3"]})
+    per_drug, axis = _mod.build_drug_signatures_from_rebuild(tmp_path)
+    assert sorted(per_drug["drugA"]) == ["MCF7", "PC3"]
+    assert axis == genes
+
+
+
+def test_the_gate_measures_the_crispri_correction_rather_than_requiring_it_to_vanish():
+    # Amendment 3: the deposited C0 fields placed the reference by the extraction's
+    # declared labels while the signatures followed another axis, so the corrected
+    # run is deliberately different from them and must not be asserted equal
+    arm = _arm()
+    reference = _reference(arm)
+    values = _mod.quantities(arm, reference)
+    records = [{"drug": arm.drugs[i], "target": arm.targets[i],
+                "n_celllines": len(arm.cell_lines[i]),
+                "raw_instability": values["D"][i],
+                "proj_crispri": values["P"][i] + 0.5,
+                "enrich_crispri": values["E"][i] + 0.5}
+               for i in range(len(arm))]
+
+    worst = _mod.reproduction_gate(arm, None, values, records)
+    assert worst["P_crispri"] == pytest.approx(0.5, abs=1e-9)
+    assert worst["D"] < 1e-12
+    assert worst["crispri_fields_are_a_correction_not_a_reproduction"] is True
+
+    # the legacy rerun of the deposited configuration still demands equality
+    with pytest.raises(AssertionError, match="P_crispri reproduces"):
+        _mod.reproduction_gate(arm, None, values, records, crispri_reproduces=True)
+
+
+def test_the_invariant_quantities_are_still_required_to_reproduce():
+    arm = _arm()
+    reference = _reference(arm)
+    values = _mod.quantities(arm, reference)
+    records = [{"drug": arm.drugs[i], "target": arm.targets[i],
+                "n_celllines": len(arm.cell_lines[i]),
+                "raw_instability": values["D"][i] + (0.5 if i == 2 else 0.0),
+                "proj_shrna": values["P"][i], "enrich_shrna": values["E"][i]}
+               for i in range(len(arm))]
+
+    with pytest.raises(AssertionError, match="invariant under the shared permutation"):
+        _mod.reproduction_gate(arm, values, None, records)
