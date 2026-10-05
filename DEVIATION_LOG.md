@@ -575,6 +575,36 @@ before the run.
 signatures. Deviation 9 describes the source files as carrying 154,993. The two
 statements are about the run each was written from and have not been reconciled.
 
+### The CRISPRi arm, measured
+
+The registered convergent-validity check pairs a drug signature with a CRISPRi
+reference placed by gene symbol, so it is the one quantity here whose operands sit
+in different coordinate systems. Four routes on one fixed 131-drug, 41-target
+cohort, with the permutation recovered from the pinned source before any CRISPRi
+quantity was computed:
+
+| route | projected rho | raw rho |
+|---|---|---|
+| the deposited configuration | -0.1247 (p = 0.16) | +0.2723 |
+| corrected, extraction relabeled | **+0.5410** (p = 2.6e-11) | -0.1920 |
+| corrected, through the verified rebuild | +0.5410 | -0.1920 |
+| control: one permutation applied to both operands | +0.5410 | -0.1920 |
+
+The deposited configuration reproduces the deposited values to sixteen decimals,
+the two corrected paths agree, and the control returns the corrected value, which
+it must, because no cosine changes when one permutation is applied to both
+operands.
+
+The reversal the registration set out to explain did not occur. The registered
+K562-only confound explanation addressed an artifact of the reference coordinates
+and is not applied. The registered H3 criterion is projected `|rho| > 0.3` and raw
+`|rho| < 0.15`: corrected, the CRISPRi arm meets the first and not the second,
+0.541 and 0.192, so it satisfies one of the two conditions. The shRNA arm
+satisfies both.
+
+This covers the pooled C0 construction on the deposited cohort. The registered
+R0-R7 arms built on C1-K562, C1-RPE1 and C1-GW have not run.
+
 ### What this does NOT change
 
 No deposited value has been replaced. Quantities computed solely between the
