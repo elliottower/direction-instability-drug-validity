@@ -496,3 +496,88 @@ comparison behind the uniqueness of the recovered permutation.
   matrices
 - The CRISPRi directions, or any quantity built from them alone
 - The R5 mapping, which is frozen and uses neither matrix
+
+**Superseded in part by Deviation 12.** The evidence above stands. The reading
+drawn from it does not: the compound matrix carries the same permutation, so the
+quantities said here to pair vectors in different gene orders did not.
+
+## Deviation 12: both extractions carry the same wrong gene axis, and the paired quantities hold
+
+**Pre-registered:** Amendment 2 to the corrected-baseline registration, frozen
+`fd1ae8d`, specifies a repair on the reading that the shRNA extraction's gene axis
+is mislabeled while the compound extraction's is not. Its A7 requires the
+reconstruction gate to pass on both halves before any statistic runs.
+
+**Actual:** the gate ran on 2026-10-03 against the preserved canonical artifacts.
+Two of its three comparisons passed and one failed.
+
+| comparison | result |
+|---|---|
+| canonical shRNA signatures and consensuses against the source | passes: 14,656 signatures at maximum absolute difference 0.0, 258 targets, stored directions at 1.1e-16 |
+| compound rebuild's drug-by-cell matrices against the source | passes: 3.1e-06 across the 795-drug cohort |
+| retained `lincs_subset.npz` against the source | fails: every one of the 795 drugs at exactly 20.0, the distance between the clipping bounds |
+
+The forensics that followed establish what the compound disagreement is.
+
+- It is present at the level of single signatures, so no grouping or aggregation is
+  responsible. Coverage is complete at 41,643 of 41,643 cohort signatures, the two
+  copies of the compound metadata are identical, and negation does not explain it.
+- Each signature holds the same multiset of values as the source signature its label
+  names, tested by sorting: 40 of 40, and no row is monotonic.
+- Matching each declared column against the source columns by its profile across
+  400 signatures recovers a bijection: **978 of 978 columns, two of them in place.**
+- That order is the same order the shRNA extraction carries. Compared against the
+  permutation of Deviation 11 across all 978 columns, **no position differs.**
+
+**What this means:** both extractions declare one gene axis and hold another, and it
+is the same other. A cosine is invariant under a permutation applied to both
+operands, so every quantity computed from the two files together sits in one
+coordinate system and is unaffected by the mislabeling. Raw direction instability
+recomputed from the extraction and from the pinned source both reproduce the
+deposited values, to 7.3e-09 and 3.0e-08 across twenty drugs, which is what that
+invariance predicts.
+
+Deviation 11's evidence stands and its reading does not. H3 and H4 were not
+computed between vectors in different gene orders. The reading rested on the
+compound half of the gate appearing to pass, which came from a gate version with a
+known intersection defect that wrote no record.
+
+**Amendment 2's premise is therefore refuted.** The amendment is frozen and is not
+edited. Its repair — rebuilding the target directions from the GEO rebuild — would
+change no reported quantity, because the quantity it was meant to repair was never
+computed across mismatched axes. Its A8 layers, its supersession discipline and the
+source comparison it requires of the gate stand on their own and are kept.
+
+**What is affected.** Any quantity pairing an extraction with a reference labeled
+outside it, and any operation that selects a column by gene name.
+`experiments/03b_h3_crispri_ground_truth.py` maps symbols through the declared gene
+ids and places the Perturb-seq reference in that order while the drug signatures sit
+in the permuted order, and `geometry/references.py`'s `without_gene` drops a
+coordinate by symbol. Neither has been measured. The CRISPRi arm is the arm whose
+disagreement with the shRNA arm this investigation began from, so the measurement is
+the next step rather than a note.
+
+**How it was identified:** the registered reconstruction gate, on the comparison
+Amendment 2 added — the retained compound extraction against an independent read of
+the pinned source. The earlier gate compared that file only against the rebuild.
+
+**When:** before any S1-S3 statistic and before any R0-R7 statistic was computed.
+
+**Artifacts:** `results/03c_h3_sensitivity/gate_run_2026-10-03/reconstruction_gate.json`
+is the gate's own report, the first a failing gate has written.
+`compound_discrepancy_diagnostic.json`, `compound_row_test.json`,
+`compound_column_match.json`, `compound_defect_scope.json` and
+`shared_axis_confirmed.json` carry the forensics above, and
+`input_pin_check.json` records that the five inputs matched the registration's pins
+before the run.
+
+**A count that does not match the record.** `lincs_subset.npz` holds 167,266
+signatures. Deviation 9 describes the source files as carrying 154,993. The two
+statements are about the run each was written from and have not been reconciled.
+
+### What this does NOT change
+
+- Any reported quantity. H1, H2, H3, H4, H5, raw direction instability and the
+  66-fold held-out prediction are all computed within one coordinate system
+- The canonical shRNA artifacts, which the gate verified against the source
+- The R5 mapping, which is frozen and uses neither matrix
