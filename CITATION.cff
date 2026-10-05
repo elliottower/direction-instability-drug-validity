@@ -9,4 +9,6 @@ authors:
 type: software
 license: MIT
 repository-code: "https://github.com/elliottower/direction-instability-drug-validity"
-doi: "10.5281/zenodo.21213699"
+# No deposit of its own yet. 10.5281/zenodo.21213699 is the concept DOI of the
+# companion paper, "Direction Instability Predicts Cross-Cell-Line Drug Mechanism
+# Transport in LINCS L1000", and was claimed here in error.
