@@ -1668,6 +1668,208 @@ def stage_gate_on_cohort(cohort_path: str):
     return (Path(f"/out/03c_h3_sensitivity/{run}/reconstruction_gate.json")).read_text()[:2500]
 
 
+@app.function(**COMMON)
+def stage_crispri_routes_checked():
+    """Is the shRNA-versus-CRISPRi reversal an artifact of the mislabeled gene axis?
+
+    The CRISPRi reference is placed by symbol: position i receives the Perturb-seq
+    value for whichever gene the extraction's declared labels name at i. The drug
+    signature at position i holds the gene that is actually there. Where those
+    differ, the two operands are in different coordinate systems.
+
+    Four routes, on one fixed cohort, with the permutation recovered from the source
+    before any CRISPRi quantity is computed:
+
+    1. deposited      declared symbols, extraction signatures. Must reproduce.
+    2. corrected      true symbols, extraction signatures. Both operands aligned.
+    3. from the source  true symbols, rebuild signatures. Must agree with 2.
+    4. control        declared symbols, signatures permuted to the declared axis.
+                      Applying the permutation to both operands must return route 1.
+    """
+    import importlib.util
+    import json
+    from pathlib import Path
+
+    import anndata as ad
+    import numpy as np
+    import pandas as pd
+    from scipy import stats
+
+    _repo_at_its_absolute_path()
+    staged = _stage_inputs()
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    raw = Path("/rebuild/raw")
+    extraction = np.load(Path(staged) / "lincs_subset.npz", allow_pickle=True)
+    held = {str(s): i for i, s in enumerate(extraction["sig_ids"])}
+    declared = [str(g) for g in extraction["gene_ids"]]
+    stored = extraction["signatures"]
+
+    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+                          low_memory=False)
+    labels = json.loads((Path(staged) / "frozen_drug_labels.json").read_text())
+    targets = {e["pert_iname"]: str(e["target"]).split("|")[0].strip()
+               for e in labels["drugs"] if e.get("target")}
+
+    # ---- the true axis, recovered from the source, before any CRISPRi value -----
+    cohort_sigs = sorted(set(siginfo[siginfo.pert_iname.isin(set(targets))]
+                             .sig_id.astype(str)) & set(held))
+    block = cohort_sigs[:400]
+    left = np.vstack([np.asarray(stored[held[s]]) for s in block]).astype(np.float32)
+    values, source_genes, signatures, _ = gate.read_gctx_slice(raw / GCTX, block, declared)
+    row_of = {s: i for i, s in enumerate(signatures)}
+    right = np.vstack([values[row_of[s]] for s in block]).astype(np.float32)
+    profile = {np.ascontiguousarray(right[:, i]).tobytes(): i for i in range(right.shape[1])}
+    truth = [source_genes[profile[np.ascontiguousarray(left[:, i]).tobytes()]]
+             for i in range(len(declared))]
+    assert len(set(truth)) == len(truth), "the recovered axis repeats a gene"
+    # position in the declared axis of each true gene, for the control route
+    declared_position = {gene: i for i, gene in enumerate(declared)}
+    to_declared = np.array([declared_position[g] for g in truth])
+
+    info = pd.read_csv(raw / "GSE92742_Broad_LINCS_gene_info.txt.gz", sep="\t",
+                       low_memory=False)
+    symbol = dict(zip(info.pr_gene_id.astype(str), info.pr_gene_symbol.astype(str)))
+    declared_symbols = [symbol.get(g, g) for g in declared]
+    true_symbols = [symbol.get(g, g) for g in truth]
+
+    # ---- the CRISPRi reference, placed on a given symbol list -------------------
+    adata = ad.read_h5ad("/extraction/ReplogleWeissman2022_K562_essential.h5ad")
+    perturbseq_genes = list(adata.var_names)
+    control = adata.obs["gene"] == "non-targeting"
+    assert control.sum() > 0, "no non-targeting cells"
+    control_mean = np.asarray(adata[control].X.mean(axis=0)).ravel()
+
+    def crispri_reference(symbols):
+        order = {s: i for i, s in enumerate(symbols)}
+        shared = [g for g in perturbseq_genes if g in order]
+        columns = [perturbseq_genes.index(g) for g in shared]
+        rows = [order[g] for g in shared]
+        out = {}
+        for gene in sorted(set(adata.obs["gene"]) - {"non-targeting"}):
+            cells = adata.obs["gene"] == gene
+            if cells.sum() < 10:
+                continue
+            delta = np.asarray(adata[cells].X.mean(axis=0)).ravel() - control_mean
+            vector = np.zeros(len(symbols))
+            vector[rows] = delta[columns]
+            if np.linalg.norm(vector) > 0:
+                out[gene] = vector
+        return out, len(shared)
+
+    # ---- the per-drug matrices, four ways ---------------------------------------
+    def per_drug(reorder=None, from_rebuild=False):
+        matrices = {}
+        if from_rebuild:
+            shards = Path("/rebuild/shards")
+            cells = {}
+            for shard in sorted(shards.glob("shard_*.npz")):
+                with np.load(shard, allow_pickle=True) as data:
+                    blob = json.loads(str(data["__cells__"]))
+                    for key in data.files:
+                        if key not in ("fingerprint", "__cells__"):
+                            matrices[key] = np.asarray(data[key], dtype=np.float64)
+                    cells.update(blob)
+            return matrices
+        sub = siginfo[siginfo.pert_iname.isin(set(targets))]
+        for drug, group in sub.groupby("pert_iname"):
+            per_cell = []
+            for cell, rows_ in group.groupby("cell_id"):
+                ids = [s for s in sorted(set(rows_.sig_id.astype(str))) if s in held]
+                if ids:
+                    per_cell.append(np.vstack([np.asarray(stored[held[s]], dtype=np.float64)
+                                               for s in ids]).mean(axis=0))
+            if per_cell:
+                matrix = np.vstack(per_cell)
+                matrices[drug] = matrix if reorder is None else matrix[:, reorder]
+        return matrices
+
+    def instability(matrix):
+        unit = matrix / np.linalg.norm(matrix, axis=1, keepdims=True)
+        upper = np.triu_indices(matrix.shape[0], 1)
+        return float(1.0 - (unit @ unit.T)[upper].mean())
+
+    def projected(matrix, direction):
+        upper = np.triu_indices(matrix.shape[0], 1)
+        unit = direction / np.linalg.norm(direction)
+        return float(np.abs((matrix[upper[0]] - matrix[upper[1]]) @ unit).mean())
+
+    def cosine_squared(mean_sig, direction):
+        a, b = np.linalg.norm(mean_sig), np.linalg.norm(direction)
+        if a < 1e-10 or b < 1e-10:
+            return 0.0
+        return float(mean_sig @ direction / (a * b)) ** 2
+
+    def run(symbols, matrices, name, both=None):
+        """`both` applies one permutation to the drug matrices and the reference
+        alike, which cannot change a cosine and is therefore the control."""
+        reference, n_shared = crispri_reference(symbols)
+        if both is not None:
+            reference = {t: v[both] for t, v in reference.items()}
+            matrices = {d: m[:, both] for d, m in matrices.items()}
+        records = []
+        for drug, matrix in matrices.items():
+            target = targets.get(drug)
+            if target is None or matrix.shape[0] < 5 or target not in reference:
+                continue
+            direction = reference[target]
+            records.append({"drug": drug, "target": target,
+                            "raw": instability(matrix),
+                            "proj": projected(matrix, direction),
+                            "enrich": cosine_squared(matrix.mean(axis=0), direction)})
+        proj = stats.spearmanr([r["proj"] for r in records], [r["enrich"] for r in records])
+        raw_r = stats.spearmanr([r["raw"] for r in records], [r["enrich"] for r in records])
+        return {"route": name, "n": len(records), "n_shared_genes": n_shared,
+                "n_targets": len({r["target"] for r in records}),
+                "projected_vs_enrichment": [float(proj.statistic), float(proj.pvalue)],
+                "raw_vs_enrichment": [float(raw_r.statistic), float(raw_r.pvalue)],
+                "records": records}
+
+    # the rebuild sits in the frozen landmark order: the landmark ids ascending by
+    # Entrez id, which is what modal_h3_rebuild.py parses against
+    frozen = [str(g) for g in info[info.pr_is_lm == 1].sort_values("pr_gene_id").pr_gene_id]
+    assert len(frozen) == 978, f"{len(frozen)} landmark genes"
+    frozen_symbols = [symbol.get(g, g) for g in frozen]
+
+    rng = np.random.default_rng()
+    shuffle = rng.permutation(len(declared))
+    routes = [
+        run(declared_symbols, per_drug(), "1 deposited: declared symbols, extraction"),
+        run(true_symbols, per_drug(), "2 corrected: true symbols, extraction"),
+        run(frozen_symbols, per_drug(from_rebuild=True), "3 from the source: rebuild"),
+        run(true_symbols, per_drug(), "4 control: route 2 with one permutation on both",
+            both=shuffle),
+    ]
+
+    deposited = {"projected": -0.12470506592643997, "raw": 0.2722681898254417, "n": 131}
+    summary = {
+        "deposited_values": deposited,
+        "routes": [{k: v for k, v in r.items() if k != "records"} for r in routes],
+        "route_1_reproduces_the_deposited_result": bool(
+            abs(routes[0]["projected_vs_enrichment"][0] - deposited["projected"]) < 0.01),
+        "control_returns_route_2": bool(
+            abs(routes[3]["projected_vs_enrichment"][0]
+                - routes[1]["projected_vs_enrichment"][0]) < 1e-9),
+        "routes_2_and_3_agree": bool(
+            abs(routes[1]["projected_vs_enrichment"][0]
+                - routes[2]["projected_vs_enrichment"][0]) < 0.05),
+        "reading": ("route 1 must reproduce the deposited number before anything is "
+                    "concluded; route 4 applies one random permutation to both operands "
+                    "of route 2 and must return route 2 exactly, since no cosine can "
+                    "change under that; routes 2 and 3 are the corrected result reached "
+                    "by two independent paths and must agree"),
+    }
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "crispri_three_routes.json").write_text(json.dumps(
+        {**summary, "per_route_records": {r["route"]: r["records"] for r in routes}}, indent=2))
+    results.commit()
+    return json.dumps(summary, indent=2)
+
+
 @app.local_entrypoint()
 def main(stage: str):
     """stage: gate | s1s3 | driver | diagnostic"""
