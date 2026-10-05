@@ -1443,6 +1443,113 @@ def stage_all_cohort_permutation_check():
     return json.dumps({k: v for k, v in summary.items() if k != "failures"}, indent=2)
 
 
+@app.function(**COMMON)
+def stage_core_gene_identities():
+    """Which genes are the HDAC core, under the declared labels and under the true ones?
+
+    `drug-perturbation-geometry/experiments/03_core_defenses.py:321-325` selects a
+    core by column-wise statistics and then names it with `gene_ids[i]` from the
+    extraction. The statistics travel with the column, so the core set is right and
+    the names are not. This recomputes the core for the pan-HDAC drugs the paper
+    describes and reports both namings, so the corrected identities exist rather
+    than only the knowledge that the printed ones are wrong.
+    """
+    import importlib.util
+    import json
+    from collections import Counter
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+
+    _repo_at_its_absolute_path()
+    staged = _stage_inputs()
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+
+    raw = Path("/rebuild/raw")
+    labels = json.loads((Path(staged) / "frozen_drug_labels.json").read_text())
+    hdac = sorted({entry["pert_iname"] for entry in labels["drugs"]
+                   if "HDAC inhibitor" in str(entry.get("moa", ""))})
+
+    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+                          low_memory=False)
+    siginfo = siginfo[siginfo.pert_iname.isin(set(hdac))]
+    extraction = np.load(Path(staged) / "lincs_subset.npz", allow_pickle=True)
+    held = {str(s): i for i, s in enumerate(extraction["sig_ids"])}
+    declared = [str(g) for g in extraction["gene_ids"]]
+    stored = extraction["signatures"]
+
+    # the permutation, recovered from the source exactly as before
+    wanted = sorted(set(siginfo.sig_id.astype(str)) & set(held))
+    block = wanted[:400]
+    left = np.vstack([np.asarray(stored[held[s]]) for s in block]).astype(np.float32)
+    values, source_genes, signatures, _ = gate.read_gctx_slice(raw / GCTX, block, declared)
+    row_of = {s: i for i, s in enumerate(signatures)}
+    right = np.vstack([values[row_of[s]] for s in block]).astype(np.float32)
+    profiles = {np.ascontiguousarray(right[:, i]).tobytes(): i for i in range(right.shape[1])}
+    truth = [source_genes[profiles[np.ascontiguousarray(left[:, i]).tobytes()]]
+             for i in range(len(declared))]
+
+    symbols = pd.read_csv(raw / "GSE92742_Broad_LINCS_gene_info.txt.gz", sep="\t",
+                          low_memory=False)
+    symbol = dict(zip(symbols.pr_gene_id.astype(str), symbols.pr_gene_symbol))
+
+    # the paper's core rule, per drug, over its per-cell mean signatures
+    counts_declared, counts_true, per_drug = Counter(), Counter(), {}
+    for drug, group in siginfo.groupby("pert_iname"):
+        per_cell = []
+        for cell, members in group.groupby("cell_id"):
+            ids = sorted({s for s in members.sig_id.astype(str) if s in held})
+            if ids:
+                per_cell.append(np.vstack([np.asarray(stored[held[s]], dtype=np.float64)
+                                           for s in ids]).mean(axis=0))
+        if len(per_cell) < 5:
+            continue
+        sigs = np.vstack(per_cell)
+        consistency = np.mean(np.sign(sigs) == np.sign(sigs.mean(axis=0, keepdims=True)), axis=0)
+        cv = np.std(np.abs(sigs), axis=0) / np.maximum(np.mean(np.abs(sigs), axis=0), 1e-10)
+        effect = np.abs(sigs.mean(axis=0))
+        mask = (consistency > 0.8) & (cv < 1.0) & (effect > 0.5)
+        positions = np.where(mask)[0]
+        per_drug[drug] = int(mask.sum())
+        for i in positions:
+            counts_declared[declared[i]] += 1
+            counts_true[truth[i]] += 1
+
+    n_drugs = len(per_drug)
+    shared_declared = sorted(g for g, c in counts_declared.items() if c == n_drugs)
+    shared_true = sorted(g for g, c in counts_true.items() if c == n_drugs)
+    named_in_the_paper = ["SUV39H1", "MYC", "CDK6", "BIRC5", "ORC1"]
+    declared_symbols = sorted(symbol.get(g, g) for g in shared_declared)
+    true_symbols = sorted(symbol.get(g, g) for g in shared_true)
+
+    summary = {
+        "n_hdac_drugs_used": n_drugs,
+        "core_size_per_drug": per_drug,
+        "n_shared_core_declared": len(shared_declared),
+        "n_shared_core_true": len(shared_true),
+        "core_size_is_invariant": len(shared_declared) == len(shared_true),
+        "shared_core_under_declared_labels": declared_symbols,
+        "shared_core_under_the_true_axis": true_symbols,
+        "genes_named_in_the_paper": named_in_the_paper,
+        "named_genes_in_the_declared_core": [g for g in named_in_the_paper
+                                             if g in declared_symbols],
+        "named_genes_in_the_true_core": [g for g in named_in_the_paper if g in true_symbols],
+        "n_names_unchanged": len(set(declared_symbols) & set(true_symbols)),
+        "reading": ("the core is selected by column statistics, so its size is invariant and "
+                    "its membership as a set of columns is too; only the names differ. The "
+                    "paper's named genes are read off the declared labels."),
+    }
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "core_gene_identities.json").write_text(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps({k: v for k, v in summary.items() if k != "core_size_per_drug"}, indent=2)
+
+
 @app.local_entrypoint()
 def main(stage: str):
     """stage: gate | s1s3 | driver | diagnostic"""

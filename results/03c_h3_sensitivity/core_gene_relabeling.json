@@ -1,0 +1,175 @@
+{
+  "source": "drug-perturbation-geometry/results/03_core_defenses/all_results.json, core_genes.hdac_shared_core, the 26 ids with count 8",
+  "paper": "drug-perturbation-geometry/paper/drug_transport_bioinformatics_v7.tex:416-424",
+  "n_core": 26,
+  "n_names_unchanged": 0,
+  "genes_named_in_the_paper": [
+    "SUV39H1",
+    "MYC",
+    "CDK6",
+    "BIRC5",
+    "ORC1"
+  ],
+  "paper_names_in_the_corrected_core": [
+    "SUV39H1",
+    "BIRC5"
+  ],
+  "relabeling": [
+    {
+      "declared_id": "332",
+      "declared_symbol": "BIRC5",
+      "true_id": "5347",
+      "true_symbol": "PLK1"
+    },
+    {
+      "declared_id": "1021",
+      "declared_symbol": "CDK6",
+      "true_id": "8444",
+      "true_symbol": "DYRK3"
+    },
+    {
+      "declared_id": "1831",
+      "declared_symbol": "TSC22D3",
+      "true_id": "10273",
+      "true_symbol": "STUB1"
+    },
+    {
+      "declared_id": "2109",
+      "declared_symbol": "ETFB",
+      "true_id": "3978",
+      "true_symbol": "LIG1"
+    },
+    {
+      "declared_id": "2115",
+      "declared_symbol": "ETV1",
+      "true_id": "8202",
+      "true_symbol": "NCOA3"
+    },
+    {
+      "declared_id": "2542",
+      "declared_symbol": "SLC37A4",
+      "true_id": "6182",
+      "true_symbol": "MRPL12"
+    },
+    {
+      "declared_id": "4609",
+      "declared_symbol": "MYC",
+      "true_id": "332",
+      "true_symbol": "BIRC5"
+    },
+    {
+      "declared_id": "4998",
+      "declared_symbol": "ORC1",
+      "true_id": "5092",
+      "true_symbol": "PCBD1"
+    },
+    {
+      "declared_id": "5019",
+      "declared_symbol": "OXCT1",
+      "true_id": "890",
+      "true_symbol": "CCNA2"
+    },
+    {
+      "declared_id": "5054",
+      "declared_symbol": "SERPINE1",
+      "true_id": "23326",
+      "true_symbol": "USP22"
+    },
+    {
+      "declared_id": "5261",
+      "declared_symbol": "PHKG2",
+      "true_id": "7538",
+      "true_symbol": "ZFP36"
+    },
+    {
+      "declared_id": "5331",
+      "declared_symbol": "PLCB3",
+      "true_id": "51021",
+      "true_symbol": "MRPS16"
+    },
+    {
+      "declared_id": "5529",
+      "declared_symbol": "PPP2R5E",
+      "true_id": "51031",
+      "true_symbol": "GLOD4"
+    },
+    {
+      "declared_id": "6839",
+      "declared_symbol": "SUV39H1",
+      "true_id": "9133",
+      "true_symbol": "CCNB2"
+    },
+    {
+      "declared_id": "7849",
+      "declared_symbol": "PAX8",
+      "true_id": "466",
+      "true_symbol": "ATF1"
+    },
+    {
+      "declared_id": "7867",
+      "declared_symbol": "MAPKAPK3",
+      "true_id": "4303",
+      "true_symbol": "FOXO4"
+    },
+    {
+      "declared_id": "9097",
+      "declared_symbol": "USP14",
+      "true_id": "6839",
+      "true_symbol": "SUV39H1"
+    },
+    {
+      "declared_id": "9270",
+      "declared_symbol": "ITGB1BP1",
+      "true_id": "6599",
+      "true_symbol": "SMARCC1"
+    },
+    {
+      "declared_id": "9670",
+      "declared_symbol": "IPO13",
+      "true_id": "10051",
+      "true_symbol": "SMC4"
+    },
+    {
+      "declared_id": "9702",
+      "declared_symbol": "CEP57",
+      "true_id": "5110",
+      "true_symbol": "PCMT1"
+    },
+    {
+      "declared_id": "10973",
+      "declared_symbol": "ASCC3",
+      "true_id": "55748",
+      "true_symbol": "CNDP2"
+    },
+    {
+      "declared_id": "23014",
+      "declared_symbol": "FBXO21",
+      "true_id": "7866",
+      "true_symbol": "IFRD2"
+    },
+    {
+      "declared_id": "26054",
+      "declared_symbol": "SENP6",
+      "true_id": "2553",
+      "true_symbol": "GABPB1"
+    },
+    {
+      "declared_id": "55837",
+      "declared_symbol": "EAPP",
+      "true_id": "9761",
+      "true_symbol": "MLEC"
+    },
+    {
+      "declared_id": "55893",
+      "declared_symbol": "ZNF395",
+      "true_id": "26520",
+      "true_symbol": "TIMM9"
+    },
+    {
+      "declared_id": "79090",
+      "declared_symbol": "TRAPPC6A",
+      "true_id": "9817",
+      "true_symbol": "KEAP1"
+    }
+  ]
+}
