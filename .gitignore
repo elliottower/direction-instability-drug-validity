@@ -17,3 +17,6 @@ reviews/
 *.fdb_latexmk
 *.fls
 *.toc
+
+# submission and venue records, never tracked
+SUBMISSION_STATUS.md
