@@ -535,3 +535,46 @@ def test_the_invariant_quantities_are_still_required_to_reproduce():
 
     with pytest.raises(AssertionError, match="invariant under the shared permutation"):
         _mod.reproduction_gate(arm, values, None, records)
+
+
+def test_the_rebuild_pin_check_actually_compares_the_shards(tmp_path):
+    # the shards sit one level below the other artifacts in the recorded structure,
+    # so a comparison that walks only the top level pins them and checks nothing
+    import json
+
+    import numpy as np
+
+    rng = np.random.default_rng()
+    genes = [str(i) for i in range(_mod.N_LANDMARK)]
+    (tmp_path / "landmark_gene_ids.json").write_text(json.dumps(genes))
+    np.savez_compressed(tmp_path / "shard_000.npz", fingerprint=np.array("fp"),
+                        __cells__=np.array(json.dumps({"drugA": ["MCF7"]})),
+                        drugA=rng.standard_normal((1, _mod.N_LANDMARK)))
+    axis = _mod.sha256_file(tmp_path / "landmark_gene_ids.json")
+    shard = _mod.sha256_file(tmp_path / "shard_000.npz")
+
+    original = dict(_mod.EXPECTED_REBUILD_SHA256)
+    try:
+        _mod.EXPECTED_REBUILD_SHA256.clear()
+        _mod.EXPECTED_REBUILD_SHA256.update({"landmark_gene_ids.json": axis,
+                                             "shard_000.npz": "0" * 64})
+        with pytest.raises(AssertionError, match="rebuild/shard_000.npz"):
+            _mod.verify_rebuild(tmp_path)
+
+        _mod.EXPECTED_REBUILD_SHA256["shard_000.npz"] = shard
+        recorded = _mod.verify_rebuild(tmp_path)
+        assert recorded["shards"]["shard_000.npz"] == shard
+
+        # an artifact the run reads but the amendment does not pin is refused
+        del _mod.EXPECTED_REBUILD_SHA256["landmark_gene_ids.json"]
+        with pytest.raises(AssertionError, match="does not pin"):
+            _mod.verify_rebuild(tmp_path)
+
+        # and a pin naming something absent from the run
+        _mod.EXPECTED_REBUILD_SHA256.update({"landmark_gene_ids.json": axis,
+                                             "shard_999.npz": "0" * 64})
+        with pytest.raises(AssertionError, match="absent from the run"):
+            _mod.verify_rebuild(tmp_path)
+    finally:
+        _mod.EXPECTED_REBUILD_SHA256.clear()
+        _mod.EXPECTED_REBUILD_SHA256.update(original)

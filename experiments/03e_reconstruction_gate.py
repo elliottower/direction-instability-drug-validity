@@ -57,6 +57,17 @@ class GateError(AssertionError):
     """
 
 
+def listing(items) -> str:
+    """Every failing identifier, because a failure message is the only record of it.
+
+    These messages were truncated to five. A structural failure raises before the
+    report is written, so the message is all there is, and a gate that said "8
+    registered targets are absent" and then named five of them cost a diagnosis.
+    """
+    items = sorted(map(str, items))
+    return f"{len(items)}: " + ", ".join(items)
+
+
 def require(condition, message) -> None:
     if not condition:
         raise GateError(message)
@@ -98,10 +109,8 @@ def compare(rebuilt, extraction, cohort=None, rtol=RTOL, atol=ATOL):
     cohort = set(rebuilt_matrices) if cohort is None else set(cohort)
     missing_rebuilt = cohort - set(rebuilt_matrices)
     missing_extraction = cohort - set(extraction_matrices)
-    require(not missing_rebuilt, f"{len(missing_rebuilt)} cohort drugs absent from the rebuild: "
-        f"{sorted(missing_rebuilt)[:5]}")
-    require(not missing_extraction, f"{len(missing_extraction)} cohort drugs absent from the extraction: "
-        f"{sorted(missing_extraction)[:5]}")
+    require(not missing_rebuilt, f"cohort drugs absent from the rebuild, {listing(missing_rebuilt)}")
+    require(not missing_extraction, f"cohort drugs absent from the extraction, {listing(missing_extraction)}")
     rebuilt_matrices = {d: rebuilt_matrices[d] for d in cohort}
     extraction_matrices = {d: extraction_matrices[d] for d in cohort}
 
@@ -241,13 +250,11 @@ def compare_shrna(rebuilt, extraction, stored=None, expected_targets=None,
                                ("source", extraction_membership)):
             missing = sorted(expected - set(map(str, observed)))
             require(not missing,
-                    f"{len(missing)} registered targets are absent from the {name}: "
-                    f"{missing[:5]}")
+                    f"registered targets absent from the {name}, {listing(missing)}")
         if stored is not None:
             missing = sorted(expected - set(map(str, stored[0])))
             require(not missing,
-                    f"{len(missing)} registered targets have no stored direction: "
-                    f"{missing[:5]}")
+                    f"registered targets with no stored direction, {listing(missing)}")
     require(rebuilt_signatures and extraction_signatures,
             "one side holds no signatures, so the comparison would check nothing")
     require(rebuilt_membership and extraction_membership,
@@ -259,7 +266,7 @@ def compare_shrna(rebuilt, extraction, stored=None, expected_targets=None,
         uncovered = sorted(union - set(map(str, signatures)))
         require(not uncovered,
                 f"the {name} groups {len(uncovered)} signatures it does not hold: "
-                f"{uncovered[:5]}")
+                f"{listing(uncovered)}")
 
     for name, axis in (("rebuild", rebuilt_genes), ("extraction", extraction_genes)):
         require(len(set(map(str, axis))) == len(axis), f"the {name} gene axis repeats an identifier, which makes its coordinate map "
@@ -283,7 +290,7 @@ def compare_shrna(rebuilt, extraction, stored=None, expected_targets=None,
             signature_failures.append({"sig_id": sig_id,
                                        "max_abs_difference": float(difference.max())})
 
-    require(set(rebuilt_membership) == set(extraction_membership), f"target sets differ: {sorted(set(rebuilt_membership) ^ set(extraction_membership))[:5]}")
+    require(set(rebuilt_membership) == set(extraction_membership), f"target sets differ, {listing(set(rebuilt_membership) ^ set(extraction_membership))}")
 
     stored_permutation = None
     if stored is not None:
@@ -292,7 +299,7 @@ def compare_shrna(rebuilt, extraction, stored=None, expected_targets=None,
         require(len(set(stored_genes)) == len(stored_genes), "the stored consensus repeats a gene identifier")
         require(set(stored_genes) == set(map(str, rebuilt_genes)), "the stored consensus does not share the rebuild's gene axis")
         require(set(stored_directions) == set(rebuilt_membership), "the stored consensus covers a different set of targets than the rebuild: "
-            f"{sorted(set(stored_directions) ^ set(rebuilt_membership))[:5]}")
+            f"{listing(set(stored_directions) ^ set(rebuilt_membership))}")
         stored_index = {gene: i for i, gene in enumerate(stored_genes)}
         stored_permutation = np.array([stored_index[gene] for gene in map(str, rebuilt_genes)])
 
@@ -370,7 +377,7 @@ def compare_shrna(rebuilt, extraction, stored=None, expected_targets=None,
                 set(map(str, rebuilt_signatures))
                 - {str(s) for members in rebuilt_membership.values() for s in members}),
             "n_target_failures": len(target_failures),
-            "targets_outside_tolerance": target_failures[:20],
+            "targets_outside_tolerance": sorted(target_failures),
             "all_within_tolerance": bool(not signature_failures and not target_failures),
             "rtol": rtol, "atol": atol, "per_target": per_target}
 
@@ -487,9 +494,9 @@ def read_gctx_slice(gctx_path, wanted_signatures, wanted_genes, block=2000):
         missing_genes = sorted(set(map(str, wanted_genes)) - set(gene_position))
         missing_signatures = sorted(set(map(str, wanted_signatures)) - set(signature_position))
         require(not missing_genes, f"{len(missing_genes)} requested genes are absent from the source: "
-            f"{missing_genes[:5]}")
+            f"{listing(missing_genes)}")
         require(not missing_signatures, f"{len(missing_signatures)} requested signatures are absent from the source: "
-            f"{missing_signatures[:5]}")
+            f"{listing(missing_signatures)}")
 
         gene_rows = sorted(gene_position[gene] for gene in set(map(str, wanted_genes)))
         signature_columns = sorted(signature_position[sig]

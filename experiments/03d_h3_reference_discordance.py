@@ -44,9 +44,21 @@ from geometry.references import (MIN_LANDMARKS, N_LANDMARK, Reference, alignment
 REPO = Path("/Users/elliottower/Documents/GitHub/direction-instability-drug-validity")
 CRISPRI_RECORDS = REPO / "results" / "03b_h3_crispri" / "h3_crispri_results.json"
 
-# Amendment 3 pins the rebuild production reads. Filled at the amendment freeze;
-# every entry present here is required to match, and the run records the rest.
-EXPECTED_REBUILD_SHA256: dict = {}
+# Amendment 3, B8: the rebuild production reads, pinned from the volume it reads
+# rather than from a retrieved copy. Recorded by the preflight of 2026-10-05
+# (results/03c_h3_sensitivity/preflight.json); every entry is required to match.
+EXPECTED_REBUILD_SHA256 = {
+    "cohort_bundle.npz": "bfa02ff0b991c99efc40310dca28e03978a93f1913664982f04fc5c3d657e8f6",
+    "landmark_gene_ids.json": "f3e8089ed9ac555700ba92e6d2ccd5dfedd11340a3cc2c30e09a2ba7a604da1e",
+    "rebuild_manifest.json": "b05bbad6aafc2064bfd949893ad2263b8d1f2a99c9da45bff21148e0d3c75c81",
+    "shard_000.npz": "2d7b572e86079859a27c2a62c20ab6495a9e5f937d357e4897c273a5cf6499b9",
+    "shard_001.npz": "71e06602d72308e3f88d7083ed03871c4db8cb06aaeb9e983be79d156e341744",
+    "shard_002.npz": "58fa8d288211f6d535d5cb89d3e5f522044d2cb0fce2eac36cea9a857bde1b3a",
+    "shard_003.npz": "90d3e2f1feb511c81e51436de76529d2ece4a86d2ee64ac2990042085974ffc1",
+    "shard_ext_000.npz": "53f4fd1668e10766fc6729f22cf206fe1ec72d839d616aa1405967f40e015d20",
+    "shrna_consensus.npz": "df2863d599edfd4e45e40c6a174cbfb372fcf76a1596dd9d614ffd8ec9e04e4f",
+    "shrna_signatures.npz": "9a6412fca8bbb48413a06f4a1eda468b4a2a988a8ab509e39eaf1444e1624bc1",
+}
 OUT = REPO / "results" / "03d_h3_reference_discordance"
 
 # pinned in the registration
@@ -145,6 +157,12 @@ class DiscordanceError(AssertionError):
     """
 
 
+def listing(items) -> str:
+    """Every failing identifier; a truncated failure message hides failures."""
+    items = sorted(map(str, items))
+    return f"{len(items)}: " + ", ".join(items)
+
+
 def require(condition, message) -> None:
     if not condition:
         raise DiscordanceError(message)
@@ -179,7 +197,7 @@ def build_drug_signatures_from_rebuild(rebuild_dir: Path):
                 cells[drug] = [str(c) for c in ids]
     require(set(matrices) == set(cells),
             "matrices and cell identifiers cover different drugs: "
-            f"{sorted(set(matrices) ^ set(cells))[:5]}")
+            f"{listing(set(matrices) ^ set(cells))}")
 
     gene_file = Path(rebuild_dir) / "landmark_gene_ids.json"
     require(gene_file.exists(), f"{gene_file} is missing; the rebuild must record its axis")
@@ -495,6 +513,39 @@ def main():
     run(args)
 
 
+# Amendment 3, B8: the CRISPRi arm's cohort is the registered 795 plus these
+# seventeen, named in Deviation 12 and in results/03c_h3_sensitivity/rebuild_extension.json
+EXTENSION_DRUGS = frozenset({
+    "ABT-751", "CYT-997", "D-64131", "PJ-34", "SB-334867", "SB-408124",
+    "cycloheximide", "emetine", "fenbendazole", "flubendazole", "homoharringtonine",
+    "ketoconazole", "oxibendazole", "parbendazole", "salubrinal", "tipifarnib",
+    "vindesine",
+})
+
+
+def check_cohort_identity(records, per_drug):
+    """The 812 the rebuild holds are the registered 795 plus the seventeen named.
+
+    B8 requires the relationship stated rather than the count. A cohort that drifts
+    by one drug would otherwise look like the registered one at a glance.
+    """
+    registered = {r["drug"] for r in records if "proj_shrna" in r}
+    require(len(registered) == 795,
+            f"the registered shRNA cohort holds {len(registered)} drugs, not 795")
+    expected = registered | EXTENSION_DRUGS
+    require(EXTENSION_DRUGS.isdisjoint(registered),
+            "an extension drug is already in the registered cohort: "
+            f"{sorted(EXTENSION_DRUGS & registered)}")
+    held = set(per_drug)
+    require(held == expected,
+            f"the rebuild holds {len(held)} drugs against the expected {len(expected)}; "
+            f"{len(expected - held)} absent, {len(held - expected)} unexpected: "
+            f"{listing(held - expected)}")
+    return {"n_registered": len(registered), "n_extension": len(EXTENSION_DRUGS),
+            "n_expected": len(expected), "n_held": len(held),
+            "relationship": "795 registered plus 17 named in Deviation 12"}
+
+
 def verify_inputs(args):
     """Every pinned input, checked before anything is computed."""
     # Amendment 3: production reads the rebuild. The retired extractions are
@@ -509,6 +560,9 @@ def verify_inputs(args):
 
     recorded = {"production_inputs": {}, "legacy_artifacts": {}, "rebuild": {}}
     for name, (path, expected) in pins.items():
+        # named rather than left to fail as a TypeError inside the hash
+        require(path is not None, f"{name}: no path given, and it is a pinned input")
+        require(Path(path).exists(), f"{name}: {path} does not exist")
         digest = sha256_file(path)
         require(digest == expected, f"{name}: sha256 {digest}, pinned {expected}")
         recorded["production_inputs"][name] = digest
@@ -516,23 +570,42 @@ def verify_inputs(args):
         if Path(path).exists():
             recorded["legacy_artifacts"][name] = sha256_file(path)
 
-    # the rebuild is what production reads, so its identity is recorded even where
-    # no expected hash is pinned yet; a value that is reported cannot be silently
-    # swapped, and the manifest carries the expected values once frozen
     if getattr(args, "rebuilt", None):
-        rebuilt = Path(args.rebuilt)
-        for name in ("landmark_gene_ids.json", "shrna_consensus.npz",
-                     "shrna_signatures.npz", "rebuild_manifest.json"):
-            if (rebuilt / name).exists():
-                recorded["rebuild"][name] = sha256_file(rebuilt / name)
-        shards = sorted(rebuilt.glob("shard_*.npz"))
-        require(shards, f"no shards in {rebuilt}")
-        recorded["rebuild"]["shards"] = {s.name: sha256_file(s) for s in shards}
-        expected = EXPECTED_REBUILD_SHA256
-        for name, digest in {**recorded["rebuild"]}.items():
-            if name in expected:
-                require(digest == expected[name],
-                        f"rebuild/{name}: sha256 {digest}, pinned {expected[name]}")
+        recorded["rebuild"] = verify_rebuild(args.rebuilt)
+    return recorded
+
+
+def verify_rebuild(rebuilt_dir):
+    """Every rebuild artifact production reads, hashed and compared to its pin.
+
+    Amendment 3, B8. Separate from `verify_inputs` so the comparison can be
+    exercised on its own: when it sat inside, an earlier pin failed first and the
+    shard comparison was unreachable in a test.
+    """
+    rebuilt = Path(rebuilt_dir)
+    recorded = {}
+    for name in ("landmark_gene_ids.json", "shrna_consensus.npz", "shrna_signatures.npz",
+                 "rebuild_manifest.json", "cohort_bundle.npz"):
+        if (rebuilt / name).exists():
+            recorded[name] = sha256_file(rebuilt / name)
+    shards = sorted(rebuilt.glob("shard_*.npz"))
+    require(shards, f"no shards in {rebuilt}")
+    recorded["shards"] = {s.name: sha256_file(s) for s in shards}
+
+    # flattened, because the shards sit one level down and a comparison that walks
+    # only the top level pins them and checks none of them
+    flat = {name: value for name, value in recorded.items() if isinstance(value, str)}
+    flat.update(recorded["shards"])
+    expected = EXPECTED_REBUILD_SHA256
+    require(set(expected) <= set(flat),
+            f"pinned rebuild artifacts absent from the run: {sorted(set(expected) - set(flat))}")
+    for name, digest in sorted(flat.items()):
+        if name in expected:
+            require(digest == expected[name],
+                    f"rebuild/{name}: sha256 {digest}, pinned {expected[name]}")
+    unpinned = sorted(set(flat) - set(expected))
+    require(not unpinned,
+            f"the run reads rebuild artifacts Amendment 3 does not pin: {unpinned}")
     return recorded
 
 
@@ -760,6 +833,7 @@ def run(args):
     symbols = landmark_symbols(args.data / "GSE92742_Broad_LINCS_gene_info.txt.gz", gene_ids)
     targets, multi_target, moa = drug_targets(args.data)
     records = json.loads(CRISPRI_RECORDS.read_text())
+    result["cohort_identity"] = check_cohort_identity(records, per_drug)
 
     shrna = build_shrna_reference_from_rebuild(args.rebuilt, gene_ids)
     c0 = pooled_crispri_reference(args.perturbseq, symbols, name="C0")

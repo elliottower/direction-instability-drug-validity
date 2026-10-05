@@ -20,3 +20,12 @@ reviews/
 
 # submission and venue records, never tracked
 SUBMISSION_STATUS.md
+
+# working documents and venue templates, never tracked
+planning/
+paper/drafts/
+paper/psb_template/
+
+# the Modal rebuild mirror: 202 MB, addressed by the sha256 pins in
+# results/03d_h3_reference_discordance/implementation_manifest_amendment_3.json
+results/03c_h3_sensitivity/gctx_rebuild/

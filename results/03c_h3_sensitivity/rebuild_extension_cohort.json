@@ -1,0 +1,24 @@
+{
+  "n_missing": 17,
+  "drugs": [
+    "ABT-751",
+    "CYT-997",
+    "D-64131",
+    "PJ-34",
+    "SB-334867",
+    "SB-408124",
+    "cycloheximide",
+    "emetine",
+    "fenbendazole",
+    "flubendazole",
+    "homoharringtonine",
+    "ketoconazole",
+    "oxibendazole",
+    "parbendazole",
+    "salubrinal",
+    "tipifarnib",
+    "vindesine"
+  ],
+  "source": "results/03b_h3_crispri/h3_crispri_results.json",
+  "rebuild": "results/03c_h3_sensitivity/gctx_rebuild"
+}

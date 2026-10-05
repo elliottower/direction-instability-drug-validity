@@ -1,0 +1,133 @@
+{
+  "what_this_binds": "the production identity Amendment 3's B8 requires: the rebuild that became the authoritative compound source, the cohort it is read on, the gate reports, and the code and freeze commits. It supersedes the inputs block of implementation_manifest.json in part; that file is left byte-identical and its seal stands.",
+  "supersedes_in_part": {
+    "file": "results/03d_h3_reference_discordance/implementation_manifest.json",
+    "sha256": "f73b1f9c42c9dc74bb96476f8e959c2ec6ebb3fc39d40c9582866a377646a6be",
+    "what": "its `inputs` entries naming lincs_subset.npz and lincs_shrna.npz as production inputs, and its `commands_in_order` steps 3 and 6, whose commands predate --rebuilt becoming required by the response stage"
+  },
+  "amendment": {
+    "file": "experiments/PREREG_H3_S1S3_AMENDMENT_3_DRAFT.md",
+    "draft_sha256": "0f529dfe89cb687a25829ded959c76da0e33703e45021831146fc162b279518d",
+    "freeze_commit": "PENDING: the amendment is not frozen; Perplexity round 17 is open on the gate semantics",
+    "amends": {
+      "file": "experiments/PREREG_H3_S1S3_AMENDMENT_2.md",
+      "commit": "fd1ae8d",
+      "clause_replaced": "A2"
+    }
+  },
+  "rebuild": {
+    "what": "the authoritative compound and shRNA source under B1 and A1, written by experiments/modal_h3_rebuild.py from the pinned GCTX in the frozen landmark order, extended on 2026-10-05 by seventeen drugs",
+    "sha256": {
+      "landmark_gene_ids.json": "f3e8089ed9ac555700ba92e6d2ccd5dfedd11340a3cc2c30e09a2ba7a604da1e",
+      "shrna_consensus.npz": "df2863d599edfd4e45e40c6a174cbfb372fcf76a1596dd9d614ffd8ec9e04e4f",
+      "shrna_signatures.npz": "9a6412fca8bbb48413a06f4a1eda468b4a2a988a8ab509e39eaf1444e1624bc1",
+      "rebuild_manifest.json": "b05bbad6aafc2064bfd949893ad2263b8d1f2a99c9da45bff21148e0d3c75c81",
+      "cohort_bundle.npz": "bfa02ff0b991c99efc40310dca28e03978a93f1913664982f04fc5c3d657e8f6",
+      "shards": {
+        "shard_000.npz": "2d7b572e86079859a27c2a62c20ab6495a9e5f937d357e4897c273a5cf6499b9",
+        "shard_001.npz": "71e06602d72308e3f88d7083ed03871c4db8cb06aaeb9e983be79d156e341744",
+        "shard_002.npz": "58fa8d288211f6d535d5cb89d3e5f522044d2cb0fce2eac36cea9a857bde1b3a",
+        "shard_003.npz": "90d3e2f1feb511c81e51436de76529d2ece4a86d2ee64ac2990042085974ffc1",
+        "shard_ext_000.npz": "53f4fd1668e10766fc6729f22cf206fe1ec72d839d616aa1405967f40e015d20"
+      }
+    },
+    "extension": {
+      "n_drugs": 17,
+      "drugs": [
+        "ABT-751",
+        "CYT-997",
+        "D-64131",
+        "PJ-34",
+        "SB-334867",
+        "SB-408124",
+        "cycloheximide",
+        "emetine",
+        "fenbendazole",
+        "flubendazole",
+        "homoharringtonine",
+        "ketoconazole",
+        "oxibendazole",
+        "parbendazole",
+        "salubrinal",
+        "tipifarnib",
+        "vindesine"
+      ],
+      "recorded_in": "results/03c_h3_sensitivity/rebuild_extension_cohort.json"
+    }
+  },
+  "cohort_identity": {
+    "registered": 795,
+    "extension": 17,
+    "total": 812,
+    "relationship": "795 registered plus 17 named in Deviation 12",
+    "enforced_by": "check_cohort_identity in experiments/03d_h3_reference_discordance.py"
+  },
+  "shrna_coverage": {
+    "targets": 258,
+    "drugs_paired": 795,
+    "cohort_targets": 266,
+    "absent_from_shrna": [
+      "EEF2",
+      "EIF2S1",
+      "FNTA",
+      "HCRTR1",
+      "KCNA10",
+      "RPL3",
+      "RPS2",
+      "TUBB"
+    ],
+    "identical_to_the_deposited_universe": true,
+    "measured_in": "results/03c_h3_sensitivity/shrna_coverage_identity.json",
+    "measurement_sha256": "1cef05ef5c1b9f00b3cb8c8761c15aecbbb9b885b1c940e02c36b6fcdc653b70",
+    "note": "the eight targets absent from the rebuild's shRNA side are exactly the eight the deposited analysis left unvalued, and the two 258-target universes are the same set"
+  },
+  "gate_reports": {
+    "passing_on_both_cohorts": "PENDING: both production halves pass on the 795 cohort and the compound half passes on the 812, and the two runs below are recorded as failed. B5 is not satisfied until the shRNA universe and the retained-artifact half are settled.",
+    "runs_so_far": [
+      {
+        "cohort_file": "results/03_phenotype_projection/phenotype_projection_results.json",
+        "n_drugs": 795,
+        "report": "results/03c_h3_sensitivity/gate_run_2026-10-03/reconstruction_gate.json",
+        "sha256": "a492e350da9b79be16e8bfa00eba90ece51b53eaebe5f624aaae0dec022fd1e5",
+        "verdict": "failed",
+        "compound_rebuild_against_source": "pass, max 3.1192366982679687e-06",
+        "shrna": "pass: 0.0 signatures, 8.143169782925952e-07 consensus, 1.1102230246251565e-16 stored directions",
+        "retained_extraction_against_source": "fail, max 20.0, which is the permutation B6 retires"
+      },
+      {
+        "cohort_file": "results/03b_h3_crispri/crispri_cohort.json",
+        "n_drugs": 812,
+        "report": "results/03c_h3_sensitivity/gate_cohort_2026-10-05T171323/reconstruction_gate.json",
+        "sha256": "cb155841b17410d4daeadbf7d544fce143f6badc6b6f6435824697132c4fa4ef",
+        "verdict": "failed",
+        "compound_rebuild_against_source": "pass, max 3.1192366982679687e-06 across 812 drugs",
+        "shrna": "did not run: refused because the gate took the cohort's 266 target symbols as the shRNA universe",
+        "retained_extraction_against_source": "fail, max 20.0"
+      }
+    ]
+  },
+  "code": {
+    "commit": "PENDING: the day's changes to 03d, 03e, 03f and the Modal wrapper are uncommitted",
+    "files": {
+      "experiments/03d_h3_reference_discordance.py": "d3e7a79a01023d06f2cae0887e417334df6e6a8353ac9d23377a774d7a6a1792",
+      "experiments/03e_reconstruction_gate.py": "9dc69bea8cf9e5635acad16084056a08c8d7fe2739f1ce329626d296dd8e24d1",
+      "experiments/03f_shrna_coverage_identity.py": "5d21698f2ad48f20f60a026c03ec918346a47d516f457ecb4f1f7ce18e592c4e",
+      "experiments/modal_h3_execute.py": "a3a246014bb9240288a69dedc493488316fcc0896f46fa4df17898564d8b8ab0",
+      "experiments/modal_h3_rebuild.py": "cb8eae0f29da0fce8d0304aff3d8f98752c062c7e57ca41c87c86302916ae6fc"
+    },
+    "no_asserts": "03d and 03e carry no ast.Assert node, so python -O cannot strip a contract; a test enforces this"
+  },
+  "corrected_commands": {
+    "why": "the superseded manifest's steps 3 and 6 predate --rebuilt and the second cohort",
+    "gate_795": "python experiments/03e_reconstruction_gate.py --rebuilt results/03c_h3_sensitivity/gctx_rebuild --extraction <dpg>/data --cohort results/03_phenotype_projection/phenotype_projection_results.json --gctx <gctx> --shrna-siginfo <s> --compound-siginfo <c> --gene-info <g> --output results/03c_h3_sensitivity",
+    "gate_812": "the same, with --cohort results/03b_h3_crispri/crispri_cohort.json",
+    "response": "the superseded step 6 command, plus --rebuilt results/03c_h3_sensitivity/gctx_rebuild, which the response stage now requires",
+    "run_on": "Modal, via experiments/modal_h3_execute.py"
+  },
+  "open_before_the_freeze": [
+    "Perplexity round 17: the shRNA universe of 258, and whether the retained-artifact half becomes a two-sided check or leaves the pass condition",
+    "a gate run that passes on both cohorts",
+    "results seal of the changed code, and results run of the gate",
+    "this file's own sha256 written into the freeze commit message"
+  ]
+}

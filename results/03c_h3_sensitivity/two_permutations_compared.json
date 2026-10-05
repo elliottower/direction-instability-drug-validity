@@ -1,0 +1,31 @@
+{
+  "n_signatures_used": 400,
+  "n_declared_columns": 978,
+  "n_matched_exactly": 978,
+  "n_unmatched": 0,
+  "match_is_a_bijection": true,
+  "n_columns_already_correct": 2,
+  "declared_head": [
+    "780",
+    "7849",
+    "6193",
+    "23",
+    "9552",
+    "387",
+    "10921",
+    "10285"
+  ],
+  "compound_actual_order_head": [
+    "5720",
+    "466",
+    "6009",
+    "2309",
+    "387",
+    "3553",
+    "427",
+    "5898"
+  ],
+  "shrna_actual_order_head": null,
+  "the_two_files_share_the_same_wrong_axis": null,
+  "reading": "a bijection with few columns in place means the compound matrix is permuted like the shRNA one; whether the two orders agree decides whether H3 paired two matrices in one coordinate system or two"
+}

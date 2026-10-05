@@ -1,0 +1,30 @@
+{
+  "rebuild_sha256": {
+    "landmark_gene_ids.json": "f3e8089ed9ac555700ba92e6d2ccd5dfedd11340a3cc2c30e09a2ba7a604da1e",
+    "shrna_consensus.npz": "df2863d599edfd4e45e40c6a174cbfb372fcf76a1596dd9d614ffd8ec9e04e4f",
+    "shrna_signatures.npz": "9a6412fca8bbb48413a06f4a1eda468b4a2a988a8ab509e39eaf1444e1624bc1",
+    "rebuild_manifest.json": "b05bbad6aafc2064bfd949893ad2263b8d1f2a99c9da45bff21148e0d3c75c81",
+    "cohort_bundle.npz": "bfa02ff0b991c99efc40310dca28e03978a93f1913664982f04fc5c3d657e8f6",
+    "shards": {
+      "shard_000.npz": "2d7b572e86079859a27c2a62c20ab6495a9e5f937d357e4897c273a5cf6499b9",
+      "shard_001.npz": "71e06602d72308e3f88d7083ed03871c4db8cb06aaeb9e983be79d156e341744",
+      "shard_002.npz": "58fa8d288211f6d535d5cb89d3e5f522044d2cb0fce2eac36cea9a857bde1b3a",
+      "shard_003.npz": "90d3e2f1feb511c81e51436de76529d2ece4a86d2ee64ac2990042085974ffc1",
+      "shard_ext_000.npz": "53f4fd1668e10766fc6729f22cf206fe1ec72d839d616aa1405967f40e015d20"
+    }
+  },
+  "cohort_identity": {
+    "n_registered": 795,
+    "n_extension": 17,
+    "n_expected": 812,
+    "n_held": 812,
+    "relationship": "795 registered plus 17 named in Deviation 12"
+  },
+  "n_drugs_loaded": 812,
+  "n_cell_lines_seen": 70,
+  "n_shrna_targets": 258,
+  "gene_axis_is_the_frozen_order": true,
+  "n_shards": 5,
+  "computed_no_registered_statistic": true,
+  "reading": "every loader and contract R0-R7 depends on ran without computing a registered quantity. The hashes here are the values Amendment 3's pin table takes, read from the volume production reads."
+}

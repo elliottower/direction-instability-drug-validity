@@ -1870,6 +1870,75 @@ def stage_crispri_routes_checked():
     return json.dumps(summary, indent=2)
 
 
+@app.function(**COMMON)
+def stage_preflight_checked():
+    """Load and validate every input R0-R7 will read, and compute no registered statistic.
+
+    Amendment 3 pins the rebuild production reads, and the pin table is empty until
+    the values exist. This reports them from the volume, which is what production
+    reads rather than a retrieved copy, and exercises every loader and contract so
+    a failure surfaces here rather than part way through the registered run.
+    """
+    import hashlib
+    import importlib.util
+    import json
+    import sys
+    from pathlib import Path
+
+    _repo_at_its_absolute_path()
+    staged, rebuilt = _stage_inputs(), _stage_rebuild()
+    sys.path.insert(0, "/app")          # 03d imports geometry, as `_run` arranges
+    spec = importlib.util.spec_from_file_location(
+        "discordance", "/app/experiments/03d_h3_reference_discordance.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    def digest(path):
+        sha = hashlib.sha256()
+        with open(path, "rb") as handle:
+            for block in iter(lambda: handle.read(1 << 22), b""):
+                sha.update(block)
+        return sha.hexdigest()
+
+    rebuild_hashes = {}
+    for name in ("landmark_gene_ids.json", "shrna_consensus.npz", "shrna_signatures.npz",
+                 "rebuild_manifest.json", "cohort_bundle.npz"):
+        candidate = Path(rebuilt) / name
+        if candidate.exists():
+            rebuild_hashes[name] = digest(candidate)
+    shards = sorted(Path(rebuilt).glob("shard_*.npz"))
+    rebuild_hashes["shards"] = {s.name: digest(s) for s in shards}
+
+    # every loader and contract, with nothing computed from them
+    per_drug, gene_axis = mod.build_drug_signatures_from_rebuild(rebuilt)
+    frozen = mod.frozen_landmark_order(
+        Path(staged) / "GSE92742_Broad_LINCS_gene_info.txt.gz")
+    mod.require(gene_axis == frozen, "the rebuild's axis is not the frozen landmark order")
+    shrna = mod.build_shrna_reference_from_rebuild(rebuilt, gene_axis)
+    records = json.loads(Path("/app/results/03b_h3_crispri/h3_crispri_results.json").read_text())
+    cohort = mod.check_cohort_identity(records, per_drug)
+
+    cells = sorted({cell for drug in per_drug.values() for cell in drug})
+    summary = {
+        "rebuild_sha256": rebuild_hashes,
+        "cohort_identity": cohort,
+        "n_drugs_loaded": len(per_drug),
+        "n_cell_lines_seen": len(cells),
+        "n_shrna_targets": len(shrna.directions),
+        "gene_axis_is_the_frozen_order": gene_axis == frozen,
+        "n_shards": len(shards),
+        "computed_no_registered_statistic": True,
+        "reading": ("every loader and contract R0-R7 depends on ran without computing a "
+                    "registered quantity. The hashes here are the values Amendment 3's pin "
+                    "table takes, read from the volume production reads."),
+    }
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "preflight.json").write_text(json.dumps(summary, indent=2))
+    results.commit()
+    return json.dumps(summary, indent=2)
+
+
 @app.local_entrypoint()
 def main(stage: str):
     """stage: gate | s1s3 | driver | diagnostic"""

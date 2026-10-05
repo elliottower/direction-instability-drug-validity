@@ -640,7 +640,7 @@ def test_an_empty_comparison_is_refused_rather_than_passing():
     result = _mod.compare_both(compound, compound, empty, empty, cohort=["drugA"],
                                stored=({}, genes), expected_targets=["TARGET0"])
     assert not result["all_within_tolerance"]
-    assert "registered targets are absent" in result["structural_failure"]
+    assert "registered targets absent" in result["structural_failure"]
 
     with pytest.raises(AssertionError, match="holds no signatures"):
         _mod.compare_shrna(empty, empty)
@@ -649,16 +649,25 @@ def test_an_empty_comparison_is_refused_rather_than_passing():
 def test_a_registered_target_missing_from_both_sides_is_refused():
     left, right = _shrna_pair(n_targets=3, per_target=3)
     # both sides agree, and agree about a universe smaller than the registered one
-    with pytest.raises(AssertionError, match="registered targets are absent from the rebuild"):
+    with pytest.raises(AssertionError,
+                       match="registered targets absent from the rebuild, 1: TARGET_GONE"):
         _mod.compare_shrna(right, left,
                            expected_targets=["TARGET0", "TARGET1", "TARGET2", "TARGET_GONE"])
+
+    # every missing identifier is named, because the message is the whole record of a
+    # structural failure: it raises before the report is written
+    absent = [f"GONE{i}" for i in range(9)]
+    with pytest.raises(AssertionError) as raised:
+        _mod.compare_shrna(right, left,
+                           expected_targets=["TARGET0", "TARGET1", "TARGET2", *absent])
+    assert all(name in str(raised.value) for name in absent)
 
     honest = {}
     for target, ids in right[1].items():
         mean = np.vstack([right[0][i] for i in ids]).mean(axis=0)
         honest[target] = mean / np.linalg.norm(mean)
     short = {t: v for t, v in honest.items() if t != "TARGET2"}
-    with pytest.raises(AssertionError, match="have no stored direction"):
+    with pytest.raises(AssertionError, match="with no stored direction, 1: TARGET2"):
         _mod.compare_shrna(right, left, stored=(short, right[2]),
                            expected_targets=sorted(right[1]))
 
