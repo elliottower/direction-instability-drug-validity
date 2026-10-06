@@ -1955,3 +1955,125 @@ def main(stage: str):
     print("\nretrieve with:")
     print("    modal volume get di-h3-results 03c_h3_sensitivity ./results/")
     print("    modal volume get di-h3-results 03d_h3_reference_discordance ./results/")
+
+
+@app.function(**COMMON)
+def stage_pin_the_legacy_axis_map():
+    """Build the legacy coordinate map Amendment 3's B6 pins, direction verified here.
+
+    The map says, for each column of the retained extraction, which index of its
+    declared axis holds the gene that column actually carries. Its direction is the
+    part I have already got wrong once, by zipping a reconstruction against the
+    extraction's declared genes instead of the rebuild's, so nothing here rests on a
+    field name: the recovery is the one `stage_all_cohort_permutation_check` already
+    ran to max 0.0 over every cohort signature, and the map is then applied and
+    required to reproduce the source exactly. A reversed map fails that step rather
+    than passing quietly.
+
+    Float32 on both sides before the byte comparison. A float64 view compared against
+    float32 source bytes returns zero matches whatever the data.
+    """
+    import hashlib
+    import importlib.util
+    import json
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+
+    _repo_at_its_absolute_path()
+    raw = Path(_stage_inputs())
+    spec = importlib.util.spec_from_file_location(
+        "gate", "/app/experiments/03e_reconstruction_gate.py")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+    out = Path("/results/legacy_axis_map")
+    out.mkdir(parents=True, exist_ok=True)
+
+    extraction_path = raw / "lincs_subset.npz"
+    extraction = np.load(extraction_path, allow_pickle=True)
+    held = {str(s): i for i, s in enumerate(extraction["sig_ids"])}
+    declared = [str(g) for g in extraction["gene_ids"]]
+    stored = extraction["signatures"]
+    if len(set(declared)) != len(declared):
+        raise AssertionError("the extraction's declared axis repeats an identifier")
+
+    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+                          usecols=["sig_id", "pert_iname"], low_memory=False)
+    drugs = {r["drug"] for r in json.loads(
+        Path("/app/registry/cohorts/cohort_812_compound.json").read_text())["records"]}
+    cohort = sorted(set(siginfo[siginfo.pert_iname.isin(drugs)].sig_id.astype(str)))
+    wanted = [s for s in cohort if s in held]
+    if not wanted:
+        raise AssertionError("no cohort signature is present in the extraction")
+
+    block = wanted[:400]
+    left = np.vstack([np.asarray(stored[held[s]]) for s in block]).astype(np.float32)
+    values, genes, signatures, _ = gate.read_gctx_slice(raw / GCTX, block, declared)
+    row_of = {s: i for i, s in enumerate(signatures)}
+    right = np.vstack([values[row_of[s]] for s in block]).astype(np.float32)
+    profiles = {np.ascontiguousarray(right[:, i]).tobytes(): i
+                for i in range(right.shape[1])}
+    onto = [profiles.get(np.ascontiguousarray(left[:, i]).tobytes())
+            for i in range(len(declared))]
+    if any(index is None for index in onto):
+        raise AssertionError(
+            f"{sum(1 for i in onto if i is None)} extraction columns matched no source "
+            "column by exact equality, so the map is not recoverable")
+    if sorted(onto) != list(range(len(declared))):
+        raise AssertionError("the recovered map is not a total bijection")
+
+    # onto[i] indexes the source's own gene order, so the gene truly in extraction
+    # column i is genes[onto[i]]; the map wants that gene's index in the declared axis
+    declared_index = {gene: i for i, gene in enumerate(declared)}
+    order = [declared_index[str(genes[onto[i]])] for i in range(len(declared))]
+    if sorted(order) != list(range(len(declared))):
+        raise AssertionError("the map over the declared axis is not a total bijection")
+    inverse = [0] * len(order)
+    for actual, j in enumerate(order):
+        inverse[j] = actual
+    if [inverse[order[i]] for i in range(len(order))] != list(range(len(order))):
+        raise AssertionError("the map does not round-trip to the identity")
+
+    genes_in_source_order = list(genes)
+    worst, compared = 0.0, 0
+    for start in range(0, len(wanted), 2000):
+        chunk = wanted[start:start + 2000]
+        values, chunk_genes, signatures, _ = gate.read_gctx_slice(
+            raw / GCTX, chunk, genes_in_source_order)
+        if chunk_genes != genes_in_source_order:
+            raise AssertionError("the source returned a different gene order")
+        row_of = {s: i for i, s in enumerate(signatures)}
+        for sig_id in chunk:
+            mine = np.asarray(stored[held[sig_id]], dtype=np.float64)
+            theirs = values[row_of[sig_id]].astype(np.float64)
+            worst = max(worst, float(np.abs(theirs[onto] - mine).max()))
+            compared += 1
+        json.dump({"compared": compared, "max_abs_difference": worst},
+                  open(out / "progress.json", "w"))      # RULE ONE: inside the loop
+        VOLUME.commit()
+    if worst != 0.0:
+        raise AssertionError(f"the map does not reproduce the source exactly: {worst}")
+
+    canonical = json.dumps(order, sort_keys=True, separators=(",", ":"))
+    payload = {
+        "name": "legacy_axis_map", "schema_version": 1,
+        "declared_index_of_each_actual_column": order,
+        "map_sha256": hashlib.sha256(canonical.encode()).hexdigest(),
+        "legacy_sha256_observed": hashlib.sha256(extraction_path.read_bytes()).hexdigest(),
+        "recovered_from": {"n_signatures_in_the_recovery_block": len(block),
+                           "n_cohort_signatures_confirmed": compared,
+                           "max_abs_difference_under_the_map": worst,
+                           "source": "the pinned GSE92742 GCTX, read by this stage"},
+        "direction": ("declared_index_of_each_actual_column[i] == j means column i of "
+                      "the extraction's matrix holds the gene its declared axis lists "
+                      "at index j"),
+    }
+    # no expected hash is written here: an artifact that carries its own expected hash
+    # attests to itself. The expected values go into registry/frozen/, which Amendment 3
+    # pins, and the gate reads them from there.
+    (out / "legacy_axis_map.json").write_text(json.dumps(payload, indent=2) + "\n")
+    VOLUME.commit()
+    print(json.dumps({k: v for k, v in payload.items()
+                      if k != "declared_index_of_each_actual_column"}, indent=2))
+    return payload["map_sha256"]

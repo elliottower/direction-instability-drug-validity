@@ -1,0 +1,101 @@
+{
+  "inputs": {
+    "deposited": "results/03b_h3_crispri/h3_crispri_results.json",
+    "deposited_sha256": "f00f8428071178bd2317139c5a1f534e458931684fb6da65c750f9f1e5456eb3",
+    "consensus": "results/03c_h3_sensitivity/gctx_rebuild/shrna_consensus.npz",
+    "consensus_sha256": "df2863d599edfd4e45e40c6a174cbfb372fcf76a1596dd9d614ffd8ec9e04e4f",
+    "eligible_manifest_sha256": "a15cd86775b9c8a5e5ef934264c3352da39e4b9097f6c1fcc0d560dd16265f9e",
+    "excluded_manifest_sha256": "409ee2c64b09eb7840481bd2ee6f58c44fe30bd8ab90be6a245d91be38acc53e",
+    "compound_manifest_sha256": "1cf72b86f0b6fa99afa924a129b3393abe6b943ad6c1d987b21c00a4cf7de7ca"
+  },
+  "counts": {
+    "deposited_records": 812,
+    "valued": 795,
+    "unvalued": 17,
+    "compound_cohort": 812,
+    "eligible_targets": 258,
+    "excluded_records": 17,
+    "rebuild_shrna_targets": 258,
+    "compound_cohort_targets": 266
+  },
+  "set_equalities": {
+    "rebuild_targets_equal_the_eligible_set": true,
+    "valued_targets_equal_the_eligible_set": true,
+    "unvalued_records_equal_the_excluded_manifest": true,
+    "deposited_corresponds_to_the_compound_cohort": true,
+    "no_record_half_valued": true,
+    "eligible_and_excluded_targets_disjoint": true,
+    "partition_is_exact": true
+  },
+  "differences": {
+    "rebuild_minus_eligible": [],
+    "eligible_minus_rebuild": [],
+    "valued_targets_symmetric_difference": [],
+    "unvalued_symmetric_difference": []
+  },
+  "excluded_targets": [
+    "EEF2",
+    "EIF2S1",
+    "FNTA",
+    "HCRTR1",
+    "KCNA10",
+    "RPL3",
+    "RPS2",
+    "TUBB"
+  ],
+  "how_the_quantities_are_missing": {
+    "proj_shrna": {
+      "key_absent": 17,
+      "key_present_and_null": 0
+    },
+    "enrich_shrna": {
+      "key_absent": 17,
+      "key_present_and_null": 0
+    }
+  },
+  "record_shapes": [
+    {
+      "keys": [
+        "drug",
+        "enrich_shrna",
+        "n_celllines",
+        "proj_shrna",
+        "raw_instability",
+        "target"
+      ],
+      "n_records": 681
+    },
+    {
+      "keys": [
+        "drug",
+        "enrich_crispri",
+        "enrich_shrna",
+        "n_celllines",
+        "proj_crispri",
+        "proj_shrna",
+        "raw_instability",
+        "target"
+      ],
+      "n_records": 114
+    },
+    {
+      "keys": [
+        "drug",
+        "enrich_crispri",
+        "n_celllines",
+        "proj_crispri",
+        "raw_instability",
+        "target"
+      ],
+      "n_records": 17
+    }
+  ],
+  "hashes": {
+    "rebuild_target_sha256": "3f6b38fd6e282620a6b5fe43945e5bdcf6d9615b4936a589ab25c4f1fce823e5",
+    "eligible_target_sha256": "3f6b38fd6e282620a6b5fe43945e5bdcf6d9615b4936a589ab25c4f1fce823e5",
+    "unvalued_pair_sha256": "573e0486a4e33bf83776d3344788e916b8a189214d73663721715cd299edb2dc",
+    "excluded_manifest_pair_sha256": "573e0486a4e33bf83776d3344788e916b8a189214d73663721715cd299edb2dc"
+  },
+  "holds": true,
+  "reading": "the shRNA-eligible universe is the 258 targets and 795 drug-target records pinned in the manifests; the complement in the compound cohort is exactly the 17 pinned records, whose targets are EEF2, EIF2S1, FNTA, HCRTR1, KCNA10, RPL3, RPS2, TUBB; the boundary is coverage in the source, carried identically by the deposited analysis, and not an artifact of the rebuild"
+}

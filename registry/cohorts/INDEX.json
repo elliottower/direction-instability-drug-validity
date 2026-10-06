@@ -1,0 +1,140 @@
+{
+  "built_from": {
+    "compound_source": "results/03b_h3_crispri/crispri_cohort.json",
+    "compound_source_sha256": "bb32f33bdbd6e94c1cf273143bf04ebae716fde0449b659f9d320a4d61d36a8a",
+    "shrna_paired_source": "results/03_phenotype_projection/phenotype_projection_results.json",
+    "shrna_paired_source_sha256": "fd69e26fc9a3917323065b631688baeab8b283f735c8bf5b16210ba67bd21425"
+  },
+  "excluded_records": [
+    {
+      "drug": "ABT-751",
+      "target": "TUBB"
+    },
+    {
+      "drug": "CYT-997",
+      "target": "TUBB"
+    },
+    {
+      "drug": "D-64131",
+      "target": "TUBB"
+    },
+    {
+      "drug": "PJ-34",
+      "target": "EEF2"
+    },
+    {
+      "drug": "SB-334867",
+      "target": "HCRTR1"
+    },
+    {
+      "drug": "SB-408124",
+      "target": "HCRTR1"
+    },
+    {
+      "drug": "cycloheximide",
+      "target": "RPL3"
+    },
+    {
+      "drug": "emetine",
+      "target": "RPS2"
+    },
+    {
+      "drug": "fenbendazole",
+      "target": "TUBB"
+    },
+    {
+      "drug": "flubendazole",
+      "target": "TUBB"
+    },
+    {
+      "drug": "homoharringtonine",
+      "target": "RPL3"
+    },
+    {
+      "drug": "ketoconazole",
+      "target": "KCNA10"
+    },
+    {
+      "drug": "oxibendazole",
+      "target": "TUBB"
+    },
+    {
+      "drug": "parbendazole",
+      "target": "TUBB"
+    },
+    {
+      "drug": "salubrinal",
+      "target": "EIF2S1"
+    },
+    {
+      "drug": "tipifarnib",
+      "target": "FNTA"
+    },
+    {
+      "drug": "vindesine",
+      "target": "TUBB"
+    }
+  ],
+  "identity": {
+    "cohort_795": {
+      "drug_sha256": "d7da526816db9c7b12069743dc460116c74b563c165ed9c18e143ca11b16e85a",
+      "n_records": 795,
+      "n_unique_drugs": 795,
+      "n_unique_targets": 258,
+      "name": "cohort_795_shrna_paired",
+      "pair_sha256": "2016bb19ab70afb54fcdfbf692f491579f42dd17f7d49e53f0dd0c4337224e84",
+      "schema_version": 1,
+      "target_sha256": "3f6b38fd6e282620a6b5fe43945e5bdcf6d9615b4936a589ab25c4f1fce823e5",
+      "uniqueness": "the drug is unique across records; the (drug, target) pair is unique"
+    },
+    "cohort_812": {
+      "drug_sha256": "9258d7a73ad4029973fcca5b34fa9d84f2b93031b4d6071c59e7a1396a3904e8",
+      "extension_over_795": {
+        "manifest": "shrna_excluded_records.json",
+        "n_records": 17,
+        "pair_sha256": "573e0486a4e33bf83776d3344788e916b8a189214d73663721715cd299edb2dc"
+      },
+      "n_records": 812,
+      "n_unique_drugs": 812,
+      "n_unique_targets": 266,
+      "name": "cohort_812_compound",
+      "pair_sha256": "e09ff6244c71453696eae1035584dfa7d58ad1f09d2217f8c7b41383cedb0fc9",
+      "schema_version": 1,
+      "target_sha256": "4c674e5699ff3d4fc6724edb70283c22a5b1ded5060137c08327dff310efe517",
+      "uniqueness": "the drug is unique across records; the (drug, target) pair is unique"
+    },
+    "shrna_eligible_targets": {
+      "n_targets": 258,
+      "name": "shrna_eligible_targets",
+      "schema_version": 1,
+      "target_sha256": "3f6b38fd6e282620a6b5fe43945e5bdcf6d9615b4936a589ab25c4f1fce823e5"
+    },
+    "shrna_excluded_records": {
+      "drug_sha256": "029cf61a15c585d7eac6010a87a94ad8ff5d542abe8ef734ff6d50da70fa4f44",
+      "n_records": 17,
+      "n_unique_drugs": 17,
+      "n_unique_targets": 8,
+      "name": "shrna_excluded_records",
+      "pair_sha256": "573e0486a4e33bf83776d3344788e916b8a189214d73663721715cd299edb2dc",
+      "schema_version": 1,
+      "target_sha256": "4a169546ad1cb5e786381dbd0dfd9c7945e4a3b79b04b746fc3d18ef0af47b57",
+      "targets": [
+        "EEF2",
+        "EIF2S1",
+        "FNTA",
+        "HCRTR1",
+        "KCNA10",
+        "RPL3",
+        "RPS2",
+        "TUBB"
+      ],
+      "uniqueness": "the drug is unique across records; the (drug, target) pair is unique"
+    }
+  },
+  "manifest_sha256": {
+    "cohort_795_shrna_paired.json": "003647018237f44effb8f60152eac2c3c780363f0d8bbbb22f21065bdc6c5739",
+    "cohort_812_compound.json": "1cf72b86f0b6fa99afa924a129b3393abe6b943ad6c1d987b21c00a4cf7de7ca",
+    "shrna_eligible_targets.json": "a15cd86775b9c8a5e5ef934264c3352da39e4b9097f6c1fcc0d560dd16265f9e",
+    "shrna_excluded_records.json": "409ee2c64b09eb7840481bd2ee6f58c44fe30bd8ab90be6a245d91be38acc53e"
+  }
+}

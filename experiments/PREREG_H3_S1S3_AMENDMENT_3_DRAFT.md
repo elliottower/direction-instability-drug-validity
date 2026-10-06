@@ -45,14 +45,55 @@ verified against the source.
 harmonized comparators, and R7f's target-gene sensitivity. The shRNA arm of R0-R7
 is built from the canonical signatures under A1.
 
-**B5. The gate runs first, on both cohorts.** The registered 795-drug cohort, and
-the 812-drug CRISPRi cohort the arms use. A failure on either voids the analyses
-registered against it.
+**B5. Frozen preflight and pass condition.** Before any R0-R7 computation the
+versioned gate runs on the two cohort manifests pinned in B8. Release is authorized
+only if every predicate the frozen gate specification names holds: cohort identity;
+compound reconstruction against the pinned source on each cohort; shRNA signature,
+consensus and stored-direction reconstruction on the exact pinned shRNA-eligible
+target set; the 812-to-795 coverage partition; and legacy-artifact identity under the
+forensic coordinate check B6 specifies. Every predicate is evaluated and recorded
+independently, so a structural failure in one does not leave the others unreported.
+Any failed predicate, any predicate absent from a run, and any structural failure
+voids the analyses. The predicate set is fixed in code as `RELEASE_PREDICATES` and
+cannot be narrowed by an invocation. The gate v1 reports are preserved as failed
+reports and are not superseded as records.
 
-**B6. The retired artifacts are preserved.** `lincs_subset.npz` and
+**B5a. The shRNA eligibility boundary.** The shRNA-eligible universe is the exact
+258-target identifier set pinned in B8, not every target represented in the 812-drug
+compound cohort. The complement in that cohort is exactly the seventeen pinned
+drug-target records whose targets are EEF2, EIF2S1, FNTA, HCRTR1, KCNA10, RPL3, RPS2
+and TUBB. The gate verifies the full eligible set, the full complement, that no
+deposited record carries one shRNA quantity and not the other, and that the rebuild's
+shRNA targets and the deposited analysis's valued targets are the same set.
+Cardinality does not satisfy any of these: a set with one target dropped and another
+substituted has the same count, so every comparison is on a set or on a canonical
+hash. In the deposited records the two shRNA quantities are absent as keys rather
+than present and null, and both forms count as missing.
+
+**B6. The retired artifacts, and what their check means.** `lincs_subset.npz` and
 `lincs_shrna.npz` keep their bytes and hashes so the deposited analysis remains
-reproducible. The recovered permutation stays a forensic record and is never a
-production transformation.
+reproducible. Neither is a production operand of anything, and the recovered
+permutation is never a production transformation.
+
+The legacy check in the release condition is a custody check on the deposited
+analysis, not a statement that the retired artifact is valid for any purpose. It
+holds when every one of the following does: the file's bytes match the sha256 frozen
+in `registry/frozen/expected_identities.json`; the coordinate map is a total
+bijection over the 978 landmarks; composing the map with its inverse is the identity,
+so its direction is the one its field name states; the map's canonical permutation
+hash and its file hash both match their frozen values, which are held outside the map
+because an artifact carrying its own expected hash attests to itself; the map
+reproduces the pinned source **exactly, at the raw-signature level**, which is where
+the map is recovered and where the map artifact records it; the relabeled matrices
+reproduce the source **within the production tolerance at the aggregated level**, of
+per-drug per-cell-line means; and the declared labels do not reproduce the source
+within that tolerance, with the count of drugs outside it recorded rather than a
+boolean. The two levels are named apart because exactness is true of raw signatures
+and false of aggregated means, where even the production rebuild sits at 3.12e-06
+against the source. Disagreement alone would not satisfy any of this, because almost
+any corruption disagrees.
+A legacy failure voids the run because custody of the deposited numbers has failed,
+and the report states production authorization and legacy custody separately.
 
 **B7. What is superseded, exactly.** Amendment 2's A2, in full: "The compound
 source is unchanged. `lincs_subset.npz` follows its declared axis, which the
@@ -64,15 +105,22 @@ alignment is by identifier. The input pins of
 `lincs_shrna.npz` as production inputs are replaced by B8. A2 is not edited or
 erased; every other clause of Amendment 2 remains operative.
 
-**B8. The production identity, pinned.** The run consumes and records: the rebuild's
-`landmark_gene_ids.json`, `shrna_consensus.npz`, `shrna_signatures.npz`,
-`rebuild_manifest.json` and every compound shard, each by sha256; the rebuild
-manifest's cohort-identifier hash; the exact 812-drug identifier set, which is the
-registered 795 plus the seventeen named in Deviation 12 and in
-`results/03c_h3_sensitivity/rebuild_extension.json`; a passing gate report on both
-cohorts, by sha256, with its cohorts, comparisons and tolerances; this amendment's
-freeze commit and file hash; and the analysis code commit. The retired extractions
-are recorded as legacy artifacts, separately from production inputs.
+**B8. The production identity, pinned.** The run consumes and records, each by
+sha256: the rebuild's `landmark_gene_ids.json`, `shrna_consensus.npz`,
+`shrna_signatures.npz`, `rebuild_manifest.json` and every compound shard; the four
+cohort manifests under `registry/cohorts/` — `cohort_795_shrna_paired.json`,
+`cohort_812_compound.json`, `shrna_eligible_targets.json` and
+`shrna_excluded_records.json` — each with its own canonical pair, drug and target
+hashes, its record and identifier counts, its uniqueness constraints and its schema
+version; the pinned legacy coordinate map and its canonical hash; the coverage
+measurement `shrna_coverage_identity_v2.json`; a passing gate report on both cohort
+scopes, with its predicates, cohorts and tolerances; this amendment's freeze commit
+and file hash; and the analysis code commit, including the gate version and the hash
+of the preserved v1 gate. The cohorts are pinned as minimal `(drug, target)`
+manifests rather than as results files, because
+`phenotype_projection_results.json` carries projected instability and on-target
+enrichment, and pinning it coupled cohort eligibility to derived values. The retired
+extractions are recorded as legacy artifacts, separately from production inputs.
 
 **B9. What the deposited records are a reproduction target for.** Raw direction
 instability and the shRNA quantities are invariant under the permutation both

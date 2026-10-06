@@ -31,7 +31,6 @@ argument below is required: a run without them is not this gate.
         --output results/03c_h3_sensitivity/<a fresh directory>
 """
 import argparse
-import datetime
 import hashlib
 import json
 from pathlib import Path
@@ -42,10 +41,10 @@ import pandas as pd
 
 REPO = Path("/Users/elliottower/Documents/GitHub/direction-instability-drug-validity")
 OUT = REPO / "results" / "03c_h3_sensitivity"
+REFERENCE_ARTIFACT = (REPO / "results" / "03_phenotype_projection"
+                      / "phenotype_projection_results.json")
 RTOL, ATOL = 1e-5, 1e-5
 N_LANDMARK = 978
-GATE_VERSION = 2
-
 MIN_SIGNATURES = 3        # distinct signature ids, not reagents
 
 
@@ -614,453 +613,88 @@ def load_shrna_extraction(data_dir: Path, targets_wanted=None):
     return signatures, membership, genes
 
 
-#: The release condition, frozen. Every predicate named here must be evaluated and must
-#: hold; a predicate that is absent from a run is a structural failure and not a pass.
-#: Nothing is added because an optional argument happened to be present, because a gate
-#: whose scope depends on its invocation lets a narrower run look like a passing one.
-def canonical(obj) -> str:
-    return json.dumps(obj, sort_keys=True, separators=(",", ":"))
+def compare_both(compound_rebuilt, compound_extraction, shrna_rebuilt, shrna_extraction,
+                 cohort, stored=None, expected_targets=None, retained_compound=None):
+    """Both registered halves, with a structural failure named rather than thrown.
 
-
-def load_manifest(path: Path, expected_name: str) -> dict:
-    """A pinned registry manifest, refused unless it is the one the gate was told to read."""
-    manifest = json.loads(Path(path).read_text())
-    require(manifest.get("name") == expected_name,
-            f"{path} names {manifest.get('name')!r}, not {expected_name!r}")
-    require(manifest.get("schema_version") == 1,
-            f"{path} is schema version {manifest.get('schema_version')}, not 1")
-    return manifest
-
-
-def manifest_pairs(manifest: dict) -> set:
-    """Every identity field the manifest declares, checked against its own records.
-
-    B8 promises the counts, the drug and target hashes and the uniqueness constraints,
-    so the gate enforces them rather than carrying them as decoration. A manifest that
-    declares 795 records and holds 794 is a manifest that disagrees with itself.
+    An assertion inside either comparison used to propagate before anything was
+    written, so the single failure the gate exists to document left no artifact of
+    itself. It is caught here and recorded; the caller writes the result and then
+    raises.
     """
-    name = manifest["name"]
-    records = manifest["records"]
-    pairs = {(str(r["drug"]), str(r["target"])) for r in records}
-    require(len(pairs) == len(records), f"{name}: a (drug, target) pair repeats")
-    drugs = sorted({d for d, _ in pairs})
-    targets = sorted({t for _, t in pairs})
-    require(len(drugs) == len(pairs),
-            f"{name}: {len(pairs)} records hold {len(drugs)} distinct drugs; the unit is "
-            "the drug")
-    for field, observed in (("n_records", len(pairs)), ("n_unique_drugs", len(drugs)),
-                            ("n_unique_targets", len(targets))):
-        require(manifest[field] == observed,
-                f"{name}: declares {field} {manifest[field]} and holds {observed}")
-    for field, value in (("pair_sha256", sorted(pairs)), ("drug_sha256", drugs),
-                         ("target_sha256", targets)):
-        require(sha256_text(canonical(value)) == manifest[field],
-                f"{name}: its records do not hash to its own {field}, so the manifest "
-                "disagrees with itself")
-    return pairs
-
-
-def manifest_targets(manifest: dict) -> set:
-    """The eligible-target set, with its count and duplicates checked, not only its hash."""
-    name = manifest["name"]
-    declared = [str(target) for target in manifest["targets"]]
-    require(len(set(declared)) == len(declared),
-            f"{name}: a target repeats, so the set is not well defined: "
-            f"{listing(t for t in declared if declared.count(t) > 1)}")
-    require(manifest["n_targets"] == len(declared),
-            f"{name}: declares n_targets {manifest['n_targets']} and holds {len(declared)}")
-    require(sha256_text(canonical(sorted(declared))) == manifest["target_sha256"],
-            f"{name}: its targets do not hash to its own target_sha256")
-    return set(declared)
-
-
-#: Every set equality the coverage measurement must report, named here so a report
-#: carrying a different set of names is refused rather than partly checked.
-REGISTERED_SET_EQUALITIES: tuple[str, ...] = (
-    "rebuild_targets_equal_the_eligible_set",
-    "valued_targets_equal_the_eligible_set",
-    "unvalued_records_equal_the_excluded_manifest",
-    "deposited_corresponds_to_the_compound_cohort",
-    "no_record_half_valued",
-    "eligible_and_excluded_targets_disjoint",
-    "partition_is_exact",
-)
-
-
-def load_frozen_identities(path: Path) -> dict:
-    """The expected hashes, held outside every artifact they describe.
-
-    An artifact that carries its own expected hash attests to itself. These values are
-    pinned in Amendment 3's B8 and in the implementation manifest, so a regenerated
-    report or a rebuilt map does not pass by agreeing with itself.
-    """
-    frozen = json.loads(Path(path).read_text())
-    require(frozen.get("name") == "frozen_identities",
-            f"{path} names {frozen.get('name')!r}, not 'frozen_identities'")
-    require(frozen.get("schema_version") == 1,
-            f"{path} is schema version {frozen.get('schema_version')}, not 1")
-    wanted = ("coverage_report_sha256", "coverage_code_sha256", "axis_map_file_sha256",
-              "axis_map_content_sha256", "legacy_extraction_sha256", "deposited_sha256",
-              "manifest_sha256", "rebuild_sha256")
-    missing = sorted(set(wanted) - set(frozen))
-    require(not missing, f"{path} pins nothing for: {listing(missing)}")
-    return frozen
-
-
-def check_cohort_identity(cohort_manifest: dict, paired_manifest: dict,
-                          excluded_manifest: dict) -> dict:
-    """The cohorts, by set and by hash, and the partition between them.
-
-    Counts are not identity: 812 = 795 + 17 is also satisfied by a cohort that drops one
-    record and adds another, so every comparison here is on a set or a canonical hash.
-    """
-    cohort = manifest_pairs(cohort_manifest)
-    paired = manifest_pairs(paired_manifest)
-    excluded = manifest_pairs(excluded_manifest)
-
-    require(paired <= cohort,
-            "the shRNA-paired cohort is not a subset of the compound cohort: "
-            f"{listing(f'{d}|{t}' for d, t in paired - cohort)}")
-    require(paired | excluded == cohort,
-            "the paired and excluded manifests do not cover the compound cohort: "
-            f"{listing(f'{d}|{t}' for d, t in cohort - (paired | excluded))}")
-    require(not (paired & excluded),
-            "a record is both shRNA-paired and excluded: "
-            f"{listing(f'{d}|{t}' for d, t in paired & excluded)}")
-    require(excluded == cohort - paired,
-            "the excluded manifest is not the complement of the paired cohort")
-    return {
-        "compound_cohort": {"n_records": len(cohort),
-                            "pair_sha256": cohort_manifest["pair_sha256"]},
-        "shrna_paired_cohort": {"n_records": len(paired),
-                                "pair_sha256": paired_manifest["pair_sha256"]},
-        "excluded_records": {"n_records": len(excluded),
-                             "pair_sha256": excluded_manifest["pair_sha256"]},
-        "partition_is_exact": True,
-        "all_within_tolerance": True,
-    }
-
-
-def check_legacy_integrity(legacy_path: Path, map_path: Path, declared_comparison: dict,
-                           relabeled_comparison: dict, mapping: dict, frozen: dict,
-                           rtol=RTOL, atol=ATOL) -> dict:
-    """The retired extraction still carries exactly the defect on record for it.
-
-    This is a legacy-integrity check, not a statement that the retired artifact is valid
-    for anything. Amendment 3's B1 makes it a production operand of nothing. What it
-    guards is reproducibility custody of the deposited analysis: the deposited numbers
-    were computed from this file, so the file has to keep being the file they came from.
-
-    Disagreement alone is far too weak, because almost any corruption disagrees. The
-    identity is positive and has to hold in both directions: the bytes are the pinned
-    bytes, the coordinate map is a total bijection whose direction is named, composing it
-    with its inverse is the identity, its canonical hash is the predeclared one, applying
-    it reproduces the source exactly, and not applying it fails the production tolerance.
-    """
-    order = [int(i) for i in mapping["declared_index_of_each_actual_column"]]
-    require(len(order) == N_LANDMARK,
-            f"the map has {len(order)} entries against {N_LANDMARK} landmarks")
-    require(sorted(order) == list(range(N_LANDMARK)),
-            "the map is not a total bijection over the landmark axis")
-
-    inverse = [0] * N_LANDMARK
-    for actual, declared in enumerate(order):
-        inverse[declared] = actual
-    round_trip = [inverse[order[i]] for i in range(N_LANDMARK)]
-    require(round_trip == list(range(N_LANDMARK)),
-            "composing the map with its inverse is not the identity, so its direction is "
-            "not what its field name says")
-
-    # three identities, kept apart. The content hash says the permutation is the one
-    # the map file describes; the file hash says the artifact is the sealed artifact;
-    # the expected values come from the frozen identities, because a map that carries
-    # its own expected hash attests to itself and proves nothing about registration.
-    content = sha256_text(canonical(order))
-    require(content == mapping["map_sha256"],
-            "the map's permutation does not hash to its own map_sha256")
-    require(content == frozen["axis_map_content_sha256"],
-            f"the map's permutation hashes to {content}, frozen "
-            f"{frozen['axis_map_content_sha256']}")
-    map_file = sha256_file(map_path)
-    require(map_file == frozen["axis_map_file_sha256"],
-            f"{map_path}: sha256 {map_file}, frozen {frozen['axis_map_file_sha256']}")
-
-    observed = sha256_file(legacy_path)
-    require(observed == frozen["legacy_extraction_sha256"],
-            f"{legacy_path}: sha256 {observed}, frozen "
-            f"{frozen['legacy_extraction_sha256']}")
-
-    # exactness holds where the map was recovered, over raw signatures, and that is
-    # what the map artifact records. It does not hold here: this comparison is on
-    # per-drug, per-cell-line means, where even the production rebuild sits at
-    # 3.12e-06 against the source. Two levels, named apart rather than one claim
-    # asserted at the level where it is false.
-    raw_exact = float(mapping["recovered_from"]["max_abs_difference_under_the_map"]) == 0.0
-    require(raw_exact,
-            "the map artifact does not record an exact raw-signature reproduction: "
-            f"{mapping['recovered_from']['max_abs_difference_under_the_map']}")
-    relabeled_agrees = bool(relabeled_comparison["all_within_tolerance"])
-    declared_agrees = bool(declared_comparison["all_within_tolerance"])
-    return {
-        "legacy_file": str(legacy_path), "legacy_sha256": observed,
-        "map_content_sha256": content, "map_file_sha256": map_file,
-        "map_is_a_total_bijection": True,
-        "map_round_trips_to_the_identity": True,
-        "raw_signature_reproduction": {
-            "max_abs_difference": mapping["recovered_from"][
-                "max_abs_difference_under_the_map"],
-            "n_signatures": mapping["recovered_from"]["n_cohort_signatures_confirmed"],
-            "exact": raw_exact,
-            "level": "raw signatures, where the map was recovered and verified"},
-        "under_the_map": {
-            "max_abs_difference": relabeled_comparison["max_abs_difference"],
-            "agrees_with_the_source": relabeled_agrees,
-            "level": "per-drug, per-cell-line means, at the production tolerance"},
-        "under_the_declared_labels": {
-            "max_abs_difference": declared_comparison["max_abs_difference"],
-            "agrees_with_the_source": declared_agrees,
-            "n_drugs_outside_tolerance": sum(
-                1 for entry in declared_comparison["per_drug"].values()
-                if not entry["within_tolerance"])},
-        "rtol": rtol, "atol": atol,
-        # both directions, so neither a file that agrees however it is labeled nor one
-        # that disagrees arbitrarily can satisfy this; and exactly, because B6 says
-        # exactly and a within-tolerance relabeling would otherwise pass
-        "all_within_tolerance": raw_exact and relabeled_agrees and not declared_agrees,
-        "reading": ("the retired extraction reproduces the source exactly under the pinned "
-                    "coordinate map and fails the production tolerance under its own "
-                    "declared labels, which is the defect on record for it"
-                    if raw_exact and relabeled_agrees and not declared_agrees else
-                    "the retired extraction no longer carries exactly the recorded defect"),
-    }
-
-
-RELEASE_PREDICATES: tuple[str, ...] = (
-    "cohort_identity",
-    "compound_source_reconstruction",
-    "shrna_reconstruction_on_the_eligible_set",
-    "shrna_eligibility_partition",
-    "legacy_artifact_integrity",
-)
-
-#: What the gate's verdict means, separated because the two have different scientific
-#: content: the first says production operands reproduce their source, the second says a
-#: retired artifact still carries exactly the defect on record for it. A legacy failure
-#: blocks release because reproducibility custody of the deposited analysis failed, and
-#: never because the retired data are a production operand. They are not.
-PRODUCTION_PREDICATES: tuple[str, ...] = (
-    "cohort_identity",
-    "compound_source_reconstruction",
-    "shrna_reconstruction_on_the_eligible_set",
-    "shrna_eligibility_partition",
-)
-
-
-def evaluate(predicates: dict) -> dict:
-    """Every named predicate, each evaluated independently, then one conjunction.
-
-    A single `try` around the comparisons meant an early structural failure stopped the
-    later ones, so a run that refused on the shRNA target universe reported nothing
-    about the compound half it had already computed. Each predicate gets its own
-    `try`, its result or its structural failure is recorded under its own name, and the
-    conjunction is computed from the record after everything has been attempted.
-
-    `predicates` maps a name to a zero-argument callable returning a dict with
-    `all_within_tolerance`.
-    """
-    require(set(predicates) == set(RELEASE_PREDICATES),
-            "the run does not evaluate the frozen release condition; missing "
-            f"{listing(set(RELEASE_PREDICATES) - set(predicates))}, unexpected "
-            f"{listing(set(predicates) - set(RELEASE_PREDICATES))}")
-
-    result, failures = {}, {}
-    for name in RELEASE_PREDICATES:          # frozen order, so reports are comparable
-        try:
-            result[name] = predicates[name]()
-        except Exception as failure:
-            # not only AssertionError: a malformed report raises KeyError, bad JSON
-            # raises JSONDecodeError, and either escaping the wrapper would stop the
-            # later predicates and break B5's promise that each is recorded. Not
-            # BaseException, so an interrupt still ends the run.
-            named = f"{type(failure).__name__}: {failure}"
-            failures[name] = named
-            result[name] = {"all_within_tolerance": False, "structural_failure": named}
-
-    held = {name: bool(result[name].get("all_within_tolerance"))
-            for name in RELEASE_PREDICATES}
-    return {
-        "gate_version": GATE_VERSION,
-        "predicates_evaluated": list(RELEASE_PREDICATES),
-        "predicate_held": held,
-        "structural_failures": failures,
-        "production_authorized": all(held[name] for name in PRODUCTION_PREDICATES),
-        "legacy_custody_intact": held["legacy_artifact_integrity"],
-        "release_authorized": all(held.values()),
-        **result,
-    }
-
-
-def relabel(extraction, order, declared_genes):
-    """The retained extraction with its columns given the identifiers they actually hold.
-
-    `order[i] == j` means column `i` of the matrix holds the gene the declared axis lists
-    at index `j`. Substituting that axis and letting the ordinary identifier-based
-    alignment do the rest keeps one notion of alignment in the gate. A reversed map does
-    not pass quietly: the comparison against the source fails.
-    """
-    matrices, cells, _ = extraction
-    return matrices, cells, [str(declared_genes[j]) for j in order]
+    halves = ["compound_signatures", "shrna_signatures_and_consensuses"]
+    result = {}
+    try:
+        result["compound_signatures"] = compare(compound_rebuilt, compound_extraction,
+                                                cohort=cohort)
+        if retained_compound is not None:
+            halves.append("retained_compound_extraction")
+            result["retained_compound_extraction"] = compare(
+                retained_compound, compound_extraction, cohort=cohort)
+        result["shrna_signatures_and_consensuses"] = compare_shrna(
+            shrna_rebuilt, shrna_extraction, stored=stored,
+            expected_targets=expected_targets)
+    except AssertionError as failure:
+        result["structural_failure"] = str(failure)
+    result["halves_compared"] = halves
+    result["all_within_tolerance"] = bool(
+        not result.get("structural_failure")
+        and all(result.get(half, {}).get("all_within_tolerance") for half in halves))
+    return result
 
 
 def gate_report(args, partial=None) -> dict:
-    """Every predicate the frozen release condition names, each recorded independently.
+    """Everything the gate does, with every failure inside the record.
 
-    Loading and validation are here with the comparisons, because a failure while
-    loading is exactly as informative as a failure while comparing and used to leave no
-    artifact of itself.
+    Loading, validation and comparison are all here, because a failure while
+    loading is exactly as informative as a failure while comparing and used to
+    leave no artifact: `compare_both` catches only what the comparisons raise, and
+    a missing identifier or an ambiguous orientation happens before them.
     """
-    cohort_manifest = load_manifest(args.cohort_manifest, "cohort_812_compound")
-    paired_manifest = load_manifest(args.paired_manifest, "cohort_795_shrna_paired")
-    excluded_manifest = load_manifest(args.excluded_records, "shrna_excluded_records")
-    eligible_manifest = load_manifest(args.eligible_targets, "shrna_eligible_targets")
+    records = json.loads(args.cohort.read_text())
+    drugs = sorted({record["drug"] for record in records})
+    require(len(drugs) == len(records),
+            f"{len(records)} records hold {len(drugs)} distinct drugs; the cohort unit is "
+            "the drug")
+    targets = sorted({str(record["target"]) for record in records})
 
-    frozen = load_frozen_identities(args.frozen_identities)
-    for name, path in (("cohort_795_shrna_paired.json", args.paired_manifest),
-                       ("cohort_812_compound.json", args.cohort_manifest),
-                       ("shrna_eligible_targets.json", args.eligible_targets),
-                       ("shrna_excluded_records.json", args.excluded_records)):
-        observed = sha256_file(path)
-        require(frozen["manifest_sha256"].get(name) == observed,
-                f"{name}: sha256 {observed}, frozen "
-                f"{frozen['manifest_sha256'].get(name)}")
-    eligible = sorted(manifest_targets(eligible_manifest))
-
-    # the cohort the compound halves run on is whichever manifest the invocation names,
-    # and the shRNA universe is always the pinned eligible set, never the cohort's targets
-    scoped = paired_manifest if args.cohort_scope == "shrna_paired" else cohort_manifest
-    which = (args.paired_manifest if args.cohort_scope == "shrna_paired"
-             else args.cohort_manifest)
-    drugs = sorted({d for d, _ in manifest_pairs(scoped)})
-    require(drugs, "the cohort scope resolved to no drugs")
-
-    axis_map = json.loads(Path(args.axis_map).read_text())
-    require(axis_map.get("name") == "legacy_axis_map",
-            f"{args.axis_map} names {axis_map.get('name')!r}, not 'legacy_axis_map'")
-
-    inputs = {"compound_cohort_manifest": args.cohort_manifest,
-              "shrna_paired_manifest": args.paired_manifest,
-              "eligible_targets_manifest": args.eligible_targets,
-              "excluded_records_manifest": args.excluded_records,
-              "axis_map": args.axis_map,
-              "coverage_report": args.coverage_report,
-              "deposited_records": args.deposited_records,
-              "frozen_identities": args.frozen_identities,
-              "gctx": args.gctx, "shrna_siginfo": args.shrna_siginfo,
+    inputs = {"cohort": args.cohort, "gctx": args.gctx, "shrna_siginfo": args.shrna_siginfo,
               "compound_siginfo": args.compound_siginfo, "gene_info": args.gene_info,
               "landmark_gene_ids": Path(args.rebuilt) / "landmark_gene_ids.json"}
-    for name in ("shrna_signatures.npz", "shrna_consensus.npz", "rebuild_manifest.json"):
+    for name in ("shrna_signatures.npz", "shrna_consensus.npz"):
         inputs[name] = Path(args.rebuilt) / name
     for shard in sorted(Path(args.rebuilt).glob("shard_*.npz")):
         inputs[shard.name] = shard
-    inputs["lincs_subset.npz"] = Path(args.extraction) / "lincs_subset.npz"
-
-    result = {"gate_version": GATE_VERSION,
-              "cohort_scope": args.cohort_scope,
-              "cohort": {"manifest": str(which), "n_drugs": len(drugs),
-                         "pair_sha256": scoped["pair_sha256"]},
+    if args.extraction:
+        inputs["lincs_subset.npz"] = Path(args.extraction) / "lincs_subset.npz"
+    result = {"cohort": {"file": str(args.cohort), "n_records": len(records),
+                         "n_unique_drugs": len(drugs), "n_unique_targets": len(targets)},
               "input_sha256": {name: sha256_file(path) for name, path in inputs.items()
                                if path is not None and Path(path).exists()},
               "gate_code_sha256": sha256_file(Path(__file__)),
               "identifier_hashes": {"drugs": sha256_text("\n".join(drugs)),
-                                    "eligible_targets": eligible_manifest["target_sha256"]}}
+                                    "targets": sha256_text("\n".join(targets))}}
     if partial is not None:
         partial.update(result)            # provenance survives a later failure
     missing = sorted(name for name, path in inputs.items()
                      if path is None or not Path(path).exists())
-    require(not missing, f"inputs the gate must hash are absent: {listing(missing)}")
+    require(not missing, f"inputs the gate must hash are absent: {missing}")
 
     rebuilt_signatures, rebuilt_membership, rebuilt_genes, stored = load_shrna_rebuild_strict(
         args.rebuilt)
     shrna_second, shrna_hashes = shrna_from_source(
-        args.gctx, args.shrna_siginfo, args.gene_info, targets_wanted=set(eligible))
+        args.gctx, args.shrna_siginfo, args.gene_info, targets_wanted=set(targets))
     compound_second, compound_hashes = compounds_from_source(
         args.gctx, args.compound_siginfo, args.gene_info, cohort=drugs)
     result["second_source"] = {"route": f"the gate's own HDF5 read of {args.gctx}",
                                "axes": {"shrna": shrna_hashes, "compound": compound_hashes}}
 
-    rebuild_loaded = load_rebuild(args.rebuilt)
-    retained = load_extraction(args.extraction, cohort=drugs,
-                               siginfo_path=args.compound_siginfo)
-    declared_genes = list(retained[2])
-
-    def coverage_partition() -> dict:
-        """The registered coverage measurement, made from these artifacts, pinned outside.
-
-        The report is not trusted for saying `holds`. It is required to be the report
-        the frozen identities name, to have been computed from the artifacts this run
-        reads, including the deposited records the valued-and-unvalued split came from,
-        and to report exactly the registered set equalities with every one true.
-        """
-        report_sha = sha256_file(args.coverage_report)
-        require(report_sha == frozen["coverage_report_sha256"],
-                f"{args.coverage_report}: sha256 {report_sha}, frozen "
-                f"{frozen['coverage_report_sha256']}")
-        report = json.loads(Path(args.coverage_report).read_text())
-        require(report.get("holds") is True,
-                f"the coverage report does not hold: {report.get('reading')}")
-
-        declared = report["inputs"]
-        for name, path in (
-                ("eligible_manifest_sha256", args.eligible_targets),
-                ("excluded_manifest_sha256", args.excluded_records),
-                ("compound_manifest_sha256", args.cohort_manifest),
-                ("deposited_sha256", args.deposited_records),
-                ("consensus_sha256", Path(args.rebuilt) / "shrna_consensus.npz")):
-            observed = sha256_file(path)
-            require(declared[name] == observed,
-                    f"the coverage report was computed against a different {name}: "
-                    f"{declared[name]}, against {observed} here")
-        require(declared["deposited_sha256"] == frozen["deposited_sha256"],
-                "the deposited records are not the frozen ones: "
-                f"{declared['deposited_sha256']}, frozen {frozen['deposited_sha256']}")
-
-        held = report["set_equalities"]
-        require(set(held) == set(REGISTERED_SET_EQUALITIES),
-                "the coverage report does not carry the registered set equalities: "
-                f"missing {listing(set(REGISTERED_SET_EQUALITIES) - set(held))}, "
-                f"unexpected {listing(set(held) - set(REGISTERED_SET_EQUALITIES))}")
-        false = sorted(name for name, value in held.items() if value is not True)
-        require(not false, f"set equalities that do not hold: {listing(false)}")
-        require(report["hashes"]["rebuild_target_sha256"]
-                == eligible_manifest["target_sha256"],
-                "the coverage report's rebuild targets do not hash to the eligible set")
-        return {"coverage_report": str(args.coverage_report),
-                "coverage_report_sha256": report_sha,
-                "set_equalities": held, "all_within_tolerance": True}
-
-    declared_comparison = {}
-
-    def legacy() -> dict:
-        declared_comparison.update(compare(retained, compound_second, cohort=set(drugs)))
-        relabeled = compare(relabel(retained, [int(i) for i in
-                                               axis_map["declared_index_of_each_actual_column"]],
-                                    declared_genes),
-                            compound_second, cohort=set(drugs))
-        return check_legacy_integrity(
-            Path(args.extraction) / "lincs_subset.npz", args.axis_map,
-            declared_comparison, relabeled, axis_map, frozen)
-
-    result.update(evaluate({
-        "cohort_identity": lambda: check_cohort_identity(
-            cohort_manifest, paired_manifest, excluded_manifest),
-        "compound_source_reconstruction": lambda: compare(
-            rebuild_loaded, compound_second, cohort=set(drugs)),
-        "shrna_reconstruction_on_the_eligible_set": lambda: compare_shrna(
-            (rebuilt_signatures, rebuilt_membership, rebuilt_genes), shrna_second,
-            stored=stored, expected_targets=eligible),
-        "shrna_eligibility_partition": coverage_partition,
-        "legacy_artifact_integrity": legacy,
-    }))
+    result.update(compare_both(
+        load_rebuild(args.rebuilt), compound_second,
+        (rebuilt_signatures, rebuilt_membership, rebuilt_genes), shrna_second,
+        cohort=drugs, stored=stored, expected_targets=targets,
+        retained_compound=load_extraction(args.extraction, cohort=drugs,
+                                          siginfo_path=args.compound_siginfo)))
     return result
 
 
@@ -1072,62 +706,38 @@ def main(argv=None):
     parser.add_argument("--extraction", type=Path, required=True,
                         help="directory holding the retained compound extraction, which is "
                              "compared against the source rather than carried forward")
-    parser.add_argument("--cohort-manifest", type=Path, required=True,
-                        help="registry/cohorts/cohort_812_compound.json")
-    parser.add_argument("--paired-manifest", type=Path, required=True,
-                        help="registry/cohorts/cohort_795_shrna_paired.json")
-    parser.add_argument("--eligible-targets", type=Path, required=True,
-                        help="registry/cohorts/shrna_eligible_targets.json")
-    parser.add_argument("--excluded-records", type=Path, required=True,
-                        help="registry/cohorts/shrna_excluded_records.json")
-    parser.add_argument("--axis-map", type=Path, required=True,
-                        help="the pinned legacy coordinate map, with its own hash")
-    parser.add_argument("--coverage-report", type=Path, required=True,
-                        help="the pinned shRNA eligibility measurement from 03f")
-    parser.add_argument("--deposited-records", type=Path, required=True,
-                        help="the deposited CRISPRi records the coverage split came from")
-    parser.add_argument("--frozen-identities", type=Path, required=True,
-                        help="registry/frozen/expected_identities.json: the expected "
-                             "hashes, held outside every artifact they describe")
-    parser.add_argument("--cohort-scope", choices=("compound", "shrna_paired"),
-                        required=True,
-                        help="which cohort the compound halves run on; the shRNA universe "
-                             "is the pinned eligible set either way")
+    parser.add_argument("--cohort", type=Path, default=REFERENCE_ARTIFACT,
+                        help="the artifact whose drugs and targets every side must hold")
     parser.add_argument("--gctx", type=Path, required=True,
-                        help="the pinned GCTX, read by the gate itself. Required: the "
-                             "registered comparison is against the source, and a run "
-                             "without it is not that gate.")
+                        help="the pinned GCTX, read by the gate itself. Required: Amendment 2 "
+                             "registers a comparison against the source, and a run without it "
+                             "is not that gate.")
     parser.add_argument("--shrna-siginfo", type=Path, required=True)
     parser.add_argument("--compound-siginfo", type=Path, required=True)
     parser.add_argument("--gene-info", type=Path, required=True)
     parser.add_argument("--output", type=Path, default=OUT)
     args = parser.parse_args(argv)
 
-    # one immutable directory per run, named for its scope: the report always has the
-    # same filename, so two scopes sharing a directory would overwrite one another and
-    # the first report would be gone with no trace that it existed
-    stamp = datetime.datetime.now(datetime.UTC).strftime("%Y%m%dT%H%M%S_%fZ")
-    run_dir = args.output / f"gate_v{GATE_VERSION}_{args.cohort_scope}_{stamp}"
-    require(not run_dir.exists(), f"{run_dir} already exists")
-    run_dir.mkdir(parents=True)
-    path = run_dir / "reconstruction_gate.json"
+    args.output.mkdir(parents=True, exist_ok=True)
+    path = args.output / "reconstruction_gate.json"
     partial = {}
     try:
         result = gate_report(args, partial)
     except Exception as failure:          # the record keeps whatever was assembled
         path.write_text(json.dumps(
-            {**partial, "release_authorized": False,
+            {**partial, "all_within_tolerance": False,
              "gate": "failed: the analyses registered against this gate are void",
              "failure": f"{type(failure).__name__}: {failure}"}, indent=2))
-        print(f"the gate failed before it could evaluate; the record is at {path}")
+        print(f"the gate failed before it could compare; the record is at {path}")
         raise
-    authorized = result["release_authorized"]
-    result["gate"] = ("reconstruction" if authorized
+    passed = result["all_within_tolerance"]
+    result["gate"] = ("reconstruction" if passed
                       else "failed: the analyses registered against this gate are void")
-    path.write_text(json.dumps(result, indent=2))     # written before any refusal
+    path.write_text(json.dumps(result, indent=2))
     print(json.dumps({k: v for k, v in result.items()
-                      if k not in RELEASE_PREDICATES}, indent=2))
-    require(authorized, f"the gate failed; the record is at {path}")
+                      if k not in ("compound_signatures", "retained_compound_extraction",
+                                   "shrna_signatures_and_consensuses")}, indent=2))
+    require(passed, f"the gate failed; the record is at {path}")
     return result
 
 

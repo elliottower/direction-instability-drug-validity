@@ -1,0 +1,91 @@
+{
+  "drug_sha256": "029cf61a15c585d7eac6010a87a94ad8ff5d542abe8ef734ff6d50da70fa4f44",
+  "n_records": 17,
+  "n_unique_drugs": 17,
+  "n_unique_targets": 8,
+  "name": "shrna_excluded_records",
+  "pair_sha256": "573e0486a4e33bf83776d3344788e916b8a189214d73663721715cd299edb2dc",
+  "records": [
+    {
+      "drug": "ABT-751",
+      "target": "TUBB"
+    },
+    {
+      "drug": "CYT-997",
+      "target": "TUBB"
+    },
+    {
+      "drug": "D-64131",
+      "target": "TUBB"
+    },
+    {
+      "drug": "PJ-34",
+      "target": "EEF2"
+    },
+    {
+      "drug": "SB-334867",
+      "target": "HCRTR1"
+    },
+    {
+      "drug": "SB-408124",
+      "target": "HCRTR1"
+    },
+    {
+      "drug": "cycloheximide",
+      "target": "RPL3"
+    },
+    {
+      "drug": "emetine",
+      "target": "RPS2"
+    },
+    {
+      "drug": "fenbendazole",
+      "target": "TUBB"
+    },
+    {
+      "drug": "flubendazole",
+      "target": "TUBB"
+    },
+    {
+      "drug": "homoharringtonine",
+      "target": "RPL3"
+    },
+    {
+      "drug": "ketoconazole",
+      "target": "KCNA10"
+    },
+    {
+      "drug": "oxibendazole",
+      "target": "TUBB"
+    },
+    {
+      "drug": "parbendazole",
+      "target": "TUBB"
+    },
+    {
+      "drug": "salubrinal",
+      "target": "EIF2S1"
+    },
+    {
+      "drug": "tipifarnib",
+      "target": "FNTA"
+    },
+    {
+      "drug": "vindesine",
+      "target": "TUBB"
+    }
+  ],
+  "schema_version": 1,
+  "target_sha256": "4a169546ad1cb5e786381dbd0dfd9c7945e4a3b79b04b746fc3d18ef0af47b57",
+  "targets": [
+    "EEF2",
+    "EIF2S1",
+    "FNTA",
+    "HCRTR1",
+    "KCNA10",
+    "RPL3",
+    "RPS2",
+    "TUBB"
+  ],
+  "uniqueness": "the drug is unique across records; the (drug, target) pair is unique"
+}

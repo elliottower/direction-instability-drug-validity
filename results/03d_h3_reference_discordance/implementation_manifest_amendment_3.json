@@ -1,72 +1,170 @@
 {
-  "what_this_binds": "the production identity Amendment 3's B8 requires: the rebuild that became the authoritative compound source, the cohort it is read on, the gate reports, and the code and freeze commits. It supersedes the inputs block of implementation_manifest.json in part; that file is left byte-identical and its seal stands.",
-  "supersedes_in_part": {
-    "file": "results/03d_h3_reference_discordance/implementation_manifest.json",
-    "sha256": "f73b1f9c42c9dc74bb96476f8e959c2ec6ebb3fc39d40c9582866a377646a6be",
-    "what": "its `inputs` entries naming lincs_subset.npz and lincs_shrna.npz as production inputs, and its `commands_in_order` steps 3 and 6, whose commands predate --rebuilt becoming required by the response stage"
-  },
   "amendment": {
-    "file": "experiments/PREREG_H3_S1S3_AMENDMENT_3_DRAFT.md",
-    "draft_sha256": "0f529dfe89cb687a25829ded959c76da0e33703e45021831146fc162b279518d",
-    "freeze_commit": "PENDING: the amendment is not frozen; Perplexity round 17 is open on the gate semantics",
     "amends": {
-      "file": "experiments/PREREG_H3_S1S3_AMENDMENT_2.md",
+      "clause_replaced": "A2",
       "commit": "fd1ae8d",
-      "clause_replaced": "A2"
-    }
+      "file": "experiments/PREREG_H3_S1S3_AMENDMENT_2.md"
+    },
+    "draft_sha256": "f014ecc32a0eb1efe6a2dceef006be1298e72419f5d4272c2eade5d137542269",
+    "file": "experiments/PREREG_H3_S1S3_AMENDMENT_3_DRAFT.md",
+    "freeze_commit": "PENDING"
   },
-  "rebuild": {
-    "what": "the authoritative compound and shRNA source under B1 and A1, written by experiments/modal_h3_rebuild.py from the pinned GCTX in the frozen landmark order, extended on 2026-10-05 by seventeen drugs",
-    "sha256": {
-      "landmark_gene_ids.json": "f3e8089ed9ac555700ba92e6d2ccd5dfedd11340a3cc2c30e09a2ba7a604da1e",
-      "shrna_consensus.npz": "df2863d599edfd4e45e40c6a174cbfb372fcf76a1596dd9d614ffd8ec9e04e4f",
-      "shrna_signatures.npz": "9a6412fca8bbb48413a06f4a1eda468b4a2a988a8ab509e39eaf1444e1624bc1",
-      "rebuild_manifest.json": "b05bbad6aafc2064bfd949893ad2263b8d1f2a99c9da45bff21148e0d3c75c81",
-      "cohort_bundle.npz": "bfa02ff0b991c99efc40310dca28e03978a93f1913664982f04fc5c3d657e8f6",
-      "shards": {
-        "shard_000.npz": "2d7b572e86079859a27c2a62c20ab6495a9e5f937d357e4897c273a5cf6499b9",
-        "shard_001.npz": "71e06602d72308e3f88d7083ed03871c4db8cb06aaeb9e983be79d156e341744",
-        "shard_002.npz": "58fa8d288211f6d535d5cb89d3e5f522044d2cb0fce2eac36cea9a857bde1b3a",
-        "shard_003.npz": "90d3e2f1feb511c81e51436de76529d2ece4a86d2ee64ac2990042085974ffc1",
-        "shard_ext_000.npz": "53f4fd1668e10766fc6729f22cf206fe1ec72d839d616aa1405967f40e015d20"
+  "code_sha256": {
+    "experiments/03d_h3_reference_discordance.py": "d3e7a79a01023d06f2cae0887e417334df6e6a8353ac9d23377a774d7a6a1792",
+    "experiments/03e_reconstruction_gate.py": "4eda8019f9298867c5404018fe6439995b792c3f8ddc65c34660ee6e9a7ee9d0",
+    "experiments/03f_shrna_coverage_identity.py": "f3ea6d69c8ef479e5b7fb3354d48626c36a63d7dc326c379151d16a35332ae9f",
+    "experiments/03g_build_cohort_manifests.py": "100888fc6b516233feced57520bd755e7f677a317378ce75dc8470e9f980699e",
+    "experiments/03h_freeze_identities.py": "1378bf7993eddaf8f2cf73f332c16da7bc7dcddb7cc63bf691828f7bcefd28d4",
+    "experiments/modal_h3_execute.py": "8a865fbf116bde8fe104c86233d39e4157b60b7e3058e78c69c924ed7826a3cf",
+    "experiments/modal_h3_rebuild.py": "cb8eae0f29da0fce8d0304aff3d8f98752c062c7e57ca41c87c86302916ae6fc",
+    "geometry/direction_instability.py": "e827ea0a739b207f9a736063862689b23161def07b929bbab91f973154184064",
+    "geometry/inference.py": "7b57e9b07bba2a0f6f0367b34aeaa9fb1620a3e5ee00b64bfe0890a6d826a60f",
+    "geometry/references.py": "f6efb45b600b40eb960896bcabe38ed35ec06eacf27ef069902a84aede208f45"
+  },
+  "cohort_manifests": {
+    "builder_sha256": "100888fc6b516233feced57520bd755e7f677a317378ce75dc8470e9f980699e",
+    "built_by": "experiments/03g_build_cohort_manifests.py",
+    "directory": "registry/cohorts",
+    "file_sha256": {
+      "cohort_795_shrna_paired.json": "003647018237f44effb8f60152eac2c3c780363f0d8bbbb22f21065bdc6c5739",
+      "cohort_812_compound.json": "1cf72b86f0b6fa99afa924a129b3393abe6b943ad6c1d987b21c00a4cf7de7ca",
+      "shrna_eligible_targets.json": "a15cd86775b9c8a5e5ef934264c3352da39e4b9097f6c1fcc0d560dd16265f9e",
+      "shrna_excluded_records.json": "409ee2c64b09eb7840481bd2ee6f58c44fe30bd8ab90be6a245d91be38acc53e"
+    },
+    "identity": {
+      "cohort_795": {
+        "drug_sha256": "d7da526816db9c7b12069743dc460116c74b563c165ed9c18e143ca11b16e85a",
+        "n_records": 795,
+        "n_unique_drugs": 795,
+        "n_unique_targets": 258,
+        "name": "cohort_795_shrna_paired",
+        "pair_sha256": "2016bb19ab70afb54fcdfbf692f491579f42dd17f7d49e53f0dd0c4337224e84",
+        "schema_version": 1,
+        "target_sha256": "3f6b38fd6e282620a6b5fe43945e5bdcf6d9615b4936a589ab25c4f1fce823e5",
+        "uniqueness": "the drug is unique across records; the (drug, target) pair is unique"
+      },
+      "cohort_812": {
+        "drug_sha256": "9258d7a73ad4029973fcca5b34fa9d84f2b93031b4d6071c59e7a1396a3904e8",
+        "extension_over_795": {
+          "manifest": "shrna_excluded_records.json",
+          "n_records": 17,
+          "pair_sha256": "573e0486a4e33bf83776d3344788e916b8a189214d73663721715cd299edb2dc"
+        },
+        "n_records": 812,
+        "n_unique_drugs": 812,
+        "n_unique_targets": 266,
+        "name": "cohort_812_compound",
+        "pair_sha256": "e09ff6244c71453696eae1035584dfa7d58ad1f09d2217f8c7b41383cedb0fc9",
+        "schema_version": 1,
+        "target_sha256": "4c674e5699ff3d4fc6724edb70283c22a5b1ded5060137c08327dff310efe517",
+        "uniqueness": "the drug is unique across records; the (drug, target) pair is unique"
+      },
+      "shrna_eligible_targets": {
+        "n_targets": 258,
+        "name": "shrna_eligible_targets",
+        "schema_version": 1,
+        "target_sha256": "3f6b38fd6e282620a6b5fe43945e5bdcf6d9615b4936a589ab25c4f1fce823e5"
+      },
+      "shrna_excluded_records": {
+        "drug_sha256": "029cf61a15c585d7eac6010a87a94ad8ff5d542abe8ef734ff6d50da70fa4f44",
+        "n_records": 17,
+        "n_unique_drugs": 17,
+        "n_unique_targets": 8,
+        "name": "shrna_excluded_records",
+        "pair_sha256": "573e0486a4e33bf83776d3344788e916b8a189214d73663721715cd299edb2dc",
+        "schema_version": 1,
+        "target_sha256": "4a169546ad1cb5e786381dbd0dfd9c7945e4a3b79b04b746fc3d18ef0af47b57",
+        "targets": [
+          "EEF2",
+          "EIF2S1",
+          "FNTA",
+          "HCRTR1",
+          "KCNA10",
+          "RPL3",
+          "RPS2",
+          "TUBB"
+        ],
+        "uniqueness": "the drug is unique across records; the (drug, target) pair is unique"
       }
     },
-    "extension": {
-      "n_drugs": 17,
-      "drugs": [
-        "ABT-751",
-        "CYT-997",
-        "D-64131",
-        "PJ-34",
-        "SB-334867",
-        "SB-408124",
-        "cycloheximide",
-        "emetine",
-        "fenbendazole",
-        "flubendazole",
-        "homoharringtonine",
-        "ketoconazole",
-        "oxibendazole",
-        "parbendazole",
-        "salubrinal",
-        "tipifarnib",
-        "vindesine"
-      ],
-      "recorded_in": "results/03c_h3_sensitivity/rebuild_extension_cohort.json"
-    }
+    "why": "the cohorts were results files; phenotype_projection_results.json carries projected instability and on-target enrichment, so pinning it coupled eligibility to derived values"
   },
-  "cohort_identity": {
-    "registered": 795,
-    "extension": 17,
-    "total": 812,
-    "relationship": "795 registered plus 17 named in Deviation 12",
-    "enforced_by": "check_cohort_identity in experiments/03d_h3_reference_discordance.py"
+  "commands_in_order": [
+    {
+      "command": "python experiments/03g_build_cohort_manifests.py --shrna-paired results/03_phenotype_projection/phenotype_projection_results.json --compound results/03b_h3_crispri/crispri_cohort.json --out-dir registry/cohorts --index registry/cohorts/INDEX.json",
+      "step": 1,
+      "what": "the cohort manifests"
+    },
+    {
+      "command": "python experiments/03f_shrna_coverage_identity.py --deposited results/03b_h3_crispri/h3_crispri_results.json --consensus results/03c_h3_sensitivity/gctx_rebuild/shrna_consensus.npz --eligible registry/cohorts/shrna_eligible_targets.json --excluded registry/cohorts/shrna_excluded_records.json --compound-cohort registry/cohorts/cohort_812_compound.json --out results/03c_h3_sensitivity/shrna_coverage_identity_v2.json",
+      "step": 2,
+      "what": "the shRNA eligibility measurement"
+    },
+    {
+      "command": "modal run experiments/modal_h3_execute.py::stage_pin_the_legacy_axis_map",
+      "step": 3,
+      "what": "the legacy coordinate map, where the pinned GCTX is"
+    },
+    {
+      "command": "python experiments/03h_freeze_identities.py (see --help)",
+      "step": 4,
+      "what": "the frozen identities and this manifest"
+    },
+    {
+      "command": "python experiments/03e_reconstruction_gate.py --rebuilt results/03c_h3_sensitivity/gctx_rebuild --extraction data/lincs_extraction --cohort-manifest registry/cohorts/cohort_812_compound.json --paired-manifest registry/cohorts/cohort_795_shrna_paired.json --eligible-targets registry/cohorts/shrna_eligible_targets.json --excluded-records registry/cohorts/shrna_excluded_records.json --axis-map registry/frozen/legacy_axis_map.json --coverage-report results/03c_h3_sensitivity/shrna_coverage_identity_v2.json --deposited-records results/03b_h3_crispri/h3_crispri_results.json --frozen-identities registry/frozen/expected_identities.json --cohort-scope {compound|shrna_paired} --gctx <gctx> --shrna-siginfo <s> --compound-siginfo <c> --gene-info <g> --output results/03c_h3_sensitivity",
+      "note": "run on Modal, via experiments/modal_h3_execute.py",
+      "step": 5,
+      "what": "gate v2, once per scope, into separate directories"
+    },
+    {
+      "command": "python experiments/03d_h3_reference_discordance.py --r5-stage response --rebuilt results/03c_h3_sensitivity/gctx_rebuild --expected-mapping-sha256 152361cb3174a5fb7aae0229c3e3d049dc00d49d9e442925156a9fe0564b89d3 ...",
+      "step": 6,
+      "what": "R0-R7, only after both scopes pass"
+    }
+  ],
+  "frozen_identities": {
+    "file": "registry/frozen/expected_identities.json",
+    "sha256": "928e9d2f075957c07e876fadf131a2c6e51d42629eec70132e74121721ee554f",
+    "why": "the gate's expectations live here and not inside the artifacts they describe"
+  },
+  "gate": {
+    "axis_map": {
+      "content_sha256": "PENDING",
+      "file_sha256": "PENDING"
+    },
+    "code": "experiments/03e_reconstruction_gate.py",
+    "code_sha256": "4eda8019f9298867c5404018fe6439995b792c3f8ddc65c34660ee6e9a7ee9d0",
+    "output_layout": "one immutable directory per run, gate_v2_<scope>_<timestamp>/reconstruction_gate.json, because the report filename is fixed and two scopes sharing a directory would overwrite one another",
+    "passing_reports": "PENDING",
+    "release_predicates": [
+      "cohort_identity",
+      "compound_source_reconstruction",
+      "shrna_reconstruction_on_the_eligible_set",
+      "shrna_eligibility_partition",
+      "legacy_artifact_integrity"
+    ],
+    "v1_preserved": "experiments/superseded/03e_reconstruction_gate_v1.py",
+    "v1_sha256": "9dc69bea8cf9e5635acad16084056a08c8d7fe2739f1ce329626d296dd8e24d1",
+    "version": 2
+  },
+  "generated_from_git": "3b824cf421b3e04409ce02b27959bea4e1604a4f+dirty",
+  "open_before_the_freeze": [
+    "build the legacy coordinate map on Modal",
+    "regenerate this manifest and the frozen identities once the map exists",
+    "run gate v2 on both cohort scopes, into separate directories",
+    "results seal of the code, and results run of both gate reports",
+    "this file's own sha256 written into the freeze commit message"
+  ],
+  "retained_not_consumed": {
+    "cohort_bundle.npz": "present in the rebuild and read by no gate predicate; recorded here as provenance rather than pinned as a gate input",
+    "results/03c_h3_sensitivity/shrna_consensus.npz": "a partial copy without gene_ids; the authoritative consensus is the one under gctx_rebuild/ that B1 names"
   },
   "shrna_coverage": {
-    "targets": 258,
-    "drugs_paired": 795,
-    "cohort_targets": 266,
-    "absent_from_shrna": [
+    "code_sha256": "f3ea6d69c8ef479e5b7fb3354d48626c36a63d7dc326c379151d16a35332ae9f",
+    "consensus_used": "results/03c_h3_sensitivity/gctx_rebuild/shrna_consensus.npz",
+    "eligible_targets": 258,
+    "excluded_records": 17,
+    "excluded_targets": [
       "EEF2",
       "EIF2S1",
       "FNTA",
@@ -76,58 +174,20 @@
       "RPS2",
       "TUBB"
     ],
-    "identical_to_the_deposited_universe": true,
-    "measured_in": "results/03c_h3_sensitivity/shrna_coverage_identity.json",
-    "measurement_sha256": "1cef05ef5c1b9f00b3cb8c8761c15aecbbb9b885b1c940e02c36b6fcdc653b70",
-    "note": "the eight targets absent from the rebuild's shRNA side are exactly the eight the deposited analysis left unvalued, and the two 258-target universes are the same set"
+    "how_the_quantities_are_missing": "the two shRNA keys are absent from the seventeen records rather than present and null; the file holds no explicit nulls, and eligibility means both quantities exist and are numeric, whichever way missingness is represented",
+    "measured_in": "results/03c_h3_sensitivity/shrna_coverage_identity_v2.json",
+    "measurement_sha256": "697902abf1b05a38b559cb0025c130f60cef0cbde005feaf3bf82c794fba1330",
+    "paired_records": 795,
+    "superseded": {
+      "file": "results/superseded/shrna_coverage_identity_v2_wrong_consensus_2026-10-06.json",
+      "why": "computed against results/03c_h3_sensitivity/shrna_consensus.npz, a partial copy without gene_ids, rather than the authoritative rebuild consensus B1 names. The 258-target set, its hash and every set equality are identical; only the provenance was wrong."
+    }
   },
-  "gate_reports": {
-    "passing_on_both_cohorts": "PENDING: both production halves pass on the 795 cohort and the compound half passes on the 812, and the two runs below are recorded as failed. B5 is not satisfied until the shRNA universe and the retained-artifact half are settled.",
-    "runs_so_far": [
-      {
-        "cohort_file": "results/03_phenotype_projection/phenotype_projection_results.json",
-        "n_drugs": 795,
-        "report": "results/03c_h3_sensitivity/gate_run_2026-10-03/reconstruction_gate.json",
-        "sha256": "a492e350da9b79be16e8bfa00eba90ece51b53eaebe5f624aaae0dec022fd1e5",
-        "verdict": "failed",
-        "compound_rebuild_against_source": "pass, max 3.1192366982679687e-06",
-        "shrna": "pass: 0.0 signatures, 8.143169782925952e-07 consensus, 1.1102230246251565e-16 stored directions",
-        "retained_extraction_against_source": "fail, max 20.0, which is the permutation B6 retires"
-      },
-      {
-        "cohort_file": "results/03b_h3_crispri/crispri_cohort.json",
-        "n_drugs": 812,
-        "report": "results/03c_h3_sensitivity/gate_cohort_2026-10-05T171323/reconstruction_gate.json",
-        "sha256": "cb155841b17410d4daeadbf7d544fce143f6badc6b6f6435824697132c4fa4ef",
-        "verdict": "failed",
-        "compound_rebuild_against_source": "pass, max 3.1192366982679687e-06 across 812 drugs",
-        "shrna": "did not run: refused because the gate took the cohort's 266 target symbols as the shRNA universe",
-        "retained_extraction_against_source": "fail, max 20.0"
-      }
-    ]
+  "state": "Gate v1 failed on both registered cohort invocations. Its production compound comparison passed on both cohorts; its shRNA comparison passed on the 795 cohort and was not evaluated on the 812 cohort, because the gate treated the compound-complete target universe as shRNA-complete; the retained legacy extraction failed the v1 equality predicate on both cohorts. Before freeze and before any R0-R7 statistic, Amendment 3 specifies corrected eligibility and legacy-custody predicates. No v1 failure is erased or relabeled.",
+  "supersedes_in_part": {
+    "file": "results/03d_h3_reference_discordance/implementation_manifest.json",
+    "sha256": "f73b1f9c42c9dc74bb96476f8e959c2ec6ebb3fc39d40c9582866a377646a6be",
+    "what": "its `inputs` entries naming lincs_subset.npz and lincs_shrna.npz as production inputs, and its `commands_in_order` steps 3 and 6, whose commands name an interface gate v2 does not accept"
   },
-  "code": {
-    "commit": "PENDING: the day's changes to 03d, 03e, 03f and the Modal wrapper are uncommitted",
-    "files": {
-      "experiments/03d_h3_reference_discordance.py": "d3e7a79a01023d06f2cae0887e417334df6e6a8353ac9d23377a774d7a6a1792",
-      "experiments/03e_reconstruction_gate.py": "9dc69bea8cf9e5635acad16084056a08c8d7fe2739f1ce329626d296dd8e24d1",
-      "experiments/03f_shrna_coverage_identity.py": "5d21698f2ad48f20f60a026c03ec918346a47d516f457ecb4f1f7ce18e592c4e",
-      "experiments/modal_h3_execute.py": "a3a246014bb9240288a69dedc493488316fcc0896f46fa4df17898564d8b8ab0",
-      "experiments/modal_h3_rebuild.py": "cb8eae0f29da0fce8d0304aff3d8f98752c062c7e57ca41c87c86302916ae6fc"
-    },
-    "no_asserts": "03d and 03e carry no ast.Assert node, so python -O cannot strip a contract; a test enforces this"
-  },
-  "corrected_commands": {
-    "why": "the superseded manifest's steps 3 and 6 predate --rebuilt and the second cohort",
-    "gate_795": "python experiments/03e_reconstruction_gate.py --rebuilt results/03c_h3_sensitivity/gctx_rebuild --extraction <dpg>/data --cohort results/03_phenotype_projection/phenotype_projection_results.json --gctx <gctx> --shrna-siginfo <s> --compound-siginfo <c> --gene-info <g> --output results/03c_h3_sensitivity",
-    "gate_812": "the same, with --cohort results/03b_h3_crispri/crispri_cohort.json",
-    "response": "the superseded step 6 command, plus --rebuilt results/03c_h3_sensitivity/gctx_rebuild, which the response stage now requires",
-    "run_on": "Modal, via experiments/modal_h3_execute.py"
-  },
-  "open_before_the_freeze": [
-    "Perplexity round 17: the shRNA universe of 258, and whether the retained-artifact half becomes a two-sided check or leaves the pass condition",
-    "a gate run that passes on both cohorts",
-    "results seal of the changed code, and results run of the gate",
-    "this file's own sha256 written into the freeze commit message"
-  ]
+  "what_this_binds": "the production identity Amendment 3's B8 requires. Generated from the files by experiments/03h_freeze_identities.py, never patched by hand."
 }

@@ -8,6 +8,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "experiments"))
 _mod = __import__("03e_reconstruction_gate")
+_cov = __import__("03f_shrna_coverage_identity")
+_reg = __import__("03g_build_cohort_manifests")
+_freeze = __import__("03h_freeze_identities")
 
 
 def _pair(n_drugs=6, n_cells=4, n_genes=20, shuffle_rows=False, shuffle_genes=False):
@@ -503,24 +506,86 @@ def test_a_declared_axis_the_values_do_not_follow_is_caught():
     assert result["n_signature_failures"] == 9
 
 
-def test_compare_both_records_a_structural_failure_instead_of_losing_it():
-    compound_left, compound_right = _pair(n_drugs=4)
-    shrna_left, shrna_right = _shrna_pair(n_targets=3, per_target=3)
-    cohort = sorted(compound_left[0])
+def test_one_predicate_failing_does_not_stop_the_others_being_evaluated():
+    # v1 wrapped every comparison in one `try`, so a structural failure in the shRNA
+    # half meant the compound half it had already computed was never recorded
+    order = []
 
-    passing = _mod.compare_both(compound_right, compound_left, shrna_right, shrna_left,
-                                cohort=cohort)
-    assert passing["all_within_tolerance"]
-    assert "structural_failure" not in passing
+    def ok(name):
+        def run():
+            order.append(name)
+            return {"all_within_tolerance": True}
+        return run
 
-    fewer = {k: v for k, v in shrna_right[1].items() if k != "TARGET2"}
-    failed = _mod.compare_both(compound_right, compound_left,
-                               (shrna_right[0], fewer, shrna_right[2]), shrna_left,
-                               cohort=cohort)
-    assert not failed["all_within_tolerance"]
-    assert "target sets differ" in failed["structural_failure"]
-    # the half that ran before the failure is still in the record
-    assert failed["compound_signatures"]["all_within_tolerance"]
+    def boom():
+        order.append("legacy_artifact_integrity")
+        _mod.require(False, "the map is not a total bijection")
+
+    result = _mod.evaluate({
+        "cohort_identity": ok("cohort_identity"),
+        "compound_source_reconstruction": ok("compound_source_reconstruction"),
+        "shrna_reconstruction_on_the_eligible_set": ok("shrna"),
+        "shrna_eligibility_partition": boom,
+        "legacy_artifact_integrity": ok("legacy_artifact_integrity"),
+    })
+
+    assert not result["release_authorized"]
+    assert result["structural_failures"] == {
+        "shrna_eligibility_partition": "GateError: the map is not a total bijection"}
+    # the predicate after the failure still ran, and the ones before are still recorded
+    assert "legacy_artifact_integrity" in order
+    assert result["predicate_held"]["compound_source_reconstruction"]
+    assert result["predicate_held"]["legacy_artifact_integrity"]
+    assert not result["predicate_held"]["shrna_eligibility_partition"]
+    # a production failure and a legacy failure are reported apart
+    assert result["production_authorized"] is False
+    assert result["legacy_custody_intact"] is True
+
+
+def test_a_predicate_raising_something_other_than_an_assertion_is_still_recorded():
+    # catching only AssertionError let a malformed report (KeyError) or bad JSON
+    # (JSONDecodeError) escape the wrapper, so the predicates after it never ran
+    ran = []
+
+    def ok(name):
+        def run():
+            ran.append(name)
+            return {"all_within_tolerance": True}
+        return run
+
+    for failure in (KeyError("inputs"), json.JSONDecodeError("bad", "{", 0),
+                    TypeError("expected str, bytes or os.PathLike, not NoneType")):
+        ran.clear()
+
+        def boom(failure=failure):
+            raise failure
+
+        result = _mod.evaluate({
+            "cohort_identity": boom,
+            "compound_source_reconstruction": ok("compound"),
+            "shrna_reconstruction_on_the_eligible_set": ok("shrna"),
+            "shrna_eligibility_partition": ok("partition"),
+            "legacy_artifact_integrity": ok("legacy"),
+        })
+        assert not result["release_authorized"]
+        assert type(failure).__name__ in result["structural_failures"]["cohort_identity"]
+        # every predicate after the one that raised still ran
+        assert len(ran) == 4
+
+
+def test_the_release_condition_cannot_be_narrowed_by_the_invocation():
+    # a gate whose scope depends on which arguments were passed lets a narrower run
+    # look like a passing one
+    fewer = {name: (lambda: {"all_within_tolerance": True})
+             for name in _mod.RELEASE_PREDICATES[:-1]}
+    with pytest.raises(AssertionError, match="frozen release condition"):
+        _mod.evaluate(fewer)
+
+    extra = {name: (lambda: {"all_within_tolerance": True})
+             for name in _mod.RELEASE_PREDICATES}
+    extra["something_else"] = lambda: {"all_within_tolerance": True}
+    with pytest.raises(AssertionError, match="frozen release condition"):
+        _mod.evaluate(extra)
 
 
 def _write_gctx(path, gene_order, signature_order, orientation="signatures_then_genes"):
@@ -632,18 +697,22 @@ def test_a_globally_permuted_canonical_artifact_fails_against_the_source(tmp_pat
 
 def test_an_empty_comparison_is_refused_rather_than_passing():
     # the gate's worst failure mode: nothing to compare, so nothing can fail
-    rng = np.random.default_rng()
     genes = [str(100 + i) for i in range(5)]
-    compound = ({"drugA": rng.standard_normal((2, 5))}, {"drugA": ["MCF7", "PC3"]}, list(genes))
     empty = ({}, {}, list(genes))
 
-    result = _mod.compare_both(compound, compound, empty, empty, cohort=["drugA"],
-                               stored=({}, genes), expected_targets=["TARGET0"])
-    assert not result["all_within_tolerance"]
-    assert "registered targets absent" in result["structural_failure"]
+    with pytest.raises(AssertionError, match="registered targets absent"):
+        _mod.compare_shrna(empty, empty, stored=({}, genes),
+                           expected_targets=["TARGET0"])
 
     with pytest.raises(AssertionError, match="holds no signatures"):
         _mod.compare_shrna(empty, empty)
+
+    # and the same for the compound side, where an empty cohort would compare nothing
+    rng = np.random.default_rng()
+    compound = ({"drugA": rng.standard_normal((2, 5))}, {"drugA": ["MCF7", "PC3"]},
+                list(genes))
+    with pytest.raises(AssertionError, match="cohort is empty"):
+        _mod.compare(compound, compound, cohort=set())
 
 
 def test_a_registered_target_missing_from_both_sides_is_refused():
@@ -757,8 +826,24 @@ def test_the_gate_contracts_survive_python_minus_o():
     assert "the cohort is empty" in finished.stderr
 
 
+def _only_report(output):
+    """The one report under a gate output directory, which is per run."""
+    reports = sorted(output.glob("gate_v*/reconstruction_gate.json"))
+    assert len(reports) == 1, f"expected one report, found {len(reports)}"
+    return reports[0]
+
+
 def _gate_fixture(tmp_path):
-    """Every input the registered gate takes, small but structurally complete."""
+    """Every input the registered gate takes, small but structurally complete.
+
+    Three drugs, because the shRNA eligibility boundary is part of the release condition:
+    two have shRNA data and one does not, so the paired cohort, the excluded records and
+    their partition are all exercised rather than being empty.
+
+    The retained extraction is written permuted against its declared axis, which is what
+    the deposited one is, so the legacy-integrity predicate has something to be right
+    about in both directions.
+    """
     import pandas as pd
 
     rng = np.random.default_rng()
@@ -767,7 +852,9 @@ def _gate_fixture(tmp_path):
     targets = {"TARGETA": [f"SHRNA_A{i}" for i in range(3)],
                "TARGETB": [f"SHRNA_B{i}" for i in range(3)]}
     drug_cells = {"drugone": {"MCF7": ["CPD_1_1", "CPD_1_2"], "PC3": ["CPD_1_3"]},
-                  "drugtwo": {"MCF7": ["CPD_2_1"], "A375": ["CPD_2_2"]}}
+                  "drugtwo": {"MCF7": ["CPD_2_1"], "A375": ["CPD_2_2"]},
+                  "drugthree": {"MCF7": ["CPD_3_1"], "PC3": ["CPD_3_2"]}}
+    drug_targets = {"drugone": "TARGETA", "drugtwo": "TARGETB", "drugthree": "TARGETC"}
     shrna_ids = [sig for ids in targets.values() for sig in ids]
     compound_ids = [sig for cells in drug_cells.values() for ids in cells.values()
                     for sig in ids]
@@ -777,7 +864,8 @@ def _gate_fixture(tmp_path):
     values = {sig: rng.standard_normal(n_genes) for sig in shrna_ids + compound_ids}
     rebuild = tmp_path / "rebuilt"
     extraction = tmp_path / "extraction"
-    rebuild.mkdir(), extraction.mkdir()
+    registry = tmp_path / "registry"
+    rebuild.mkdir(), extraction.mkdir(), registry.mkdir()
 
     gctx = tmp_path / "source.gctx"
     with h5py.File(gctx, "w") as handle:
@@ -821,7 +909,6 @@ def _gate_fixture(tmp_path):
     np.savez_compressed(rebuild / "shrna_consensus.npz", genes=np.array(list(targets)),
                         directions=np.vstack(directions), gene_ids=np.array(genes))
 
-    # the compound shards, and the retained extraction they are checked beside
     matrices, cells = {}, {}
     for drug, by_cell in drug_cells.items():
         matrices[drug] = np.vstack([np.vstack([values[s] for s in ids]).mean(axis=0)
@@ -829,9 +916,18 @@ def _gate_fixture(tmp_path):
         cells[drug] = list(by_cell)
     _write_shard(rebuild / "shard_000.npz", matrices, cells)
     (rebuild / "landmark_gene_ids.json").write_text(json.dumps(genes))
-    np.savez_compressed(extraction / "lincs_subset.npz", sig_ids=np.array(compound_ids),
-                        signatures=np.vstack([values[sig] for sig in compound_ids]),
-                        gene_ids=np.array(genes))
+    (rebuild / "rebuild_manifest.json").write_text(json.dumps(
+        {"n_drugs": len(drug_cells), "gene_axis": "frozen landmark order"}))
+
+    # the retained extraction: its columns follow `actual`, its declared axis says `genes`
+    actual = list(rng.permutation(genes))
+    while actual == genes:
+        actual = list(rng.permutation(genes))
+    np.savez_compressed(
+        extraction / "lincs_subset.npz", sig_ids=np.array(compound_ids),
+        signatures=np.vstack([[values[sig][genes.index(gene)] for gene in actual]
+                              for sig in compound_ids]),
+        gene_ids=np.array(genes))
     # deliberately NOT the same bytes as the hashed metadata: a copy beside the
     # extraction that disagrees must not be the one the gate groups by
     pd.DataFrame({"sig_id": compound_ids,
@@ -840,12 +936,61 @@ def _gate_fixture(tmp_path):
         extraction / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t", index=False,
         compression="gzip")
 
-    cohort = tmp_path / "cohort.json"
-    cohort.write_text(json.dumps([{"drug": "drugone", "target": "TARGETA"},
-                                  {"drug": "drugtwo", "target": "TARGETB"}]))
+    axis_map = tmp_path / "legacy_axis_map.json"
+    order = [genes.index(gene) for gene in actual]
+    axis_map.write_text(json.dumps(
+        {"name": "legacy_axis_map", "schema_version": 1,
+         "declared_index_of_each_actual_column": order,
+         "map_sha256": _mod.sha256_text(_mod.canonical(order)),
+         "legacy_sha256_observed": _mod.sha256_file(extraction / "lincs_subset.npz"),
+         # the stage that builds a real map refuses to write one unless this is 0.0
+         "recovered_from": {"n_cohort_signatures_confirmed": len(compound_ids),
+                            "max_abs_difference_under_the_map": 0.0}}))
+
+    # the cohort manifests, built by the registered builder rather than hand-written
+    paired_src = tmp_path / "paired_source.json"
+    compound_src = tmp_path / "compound_source.json"
+    paired_src.write_text(json.dumps(
+        [{"drug": d, "target": drug_targets[d]} for d in ("drugone", "drugtwo")]))
+    compound_src.write_text(json.dumps(
+        [{"drug": d, "target": drug_targets[d]} for d in drug_cells]))
+    (registry / "INDEX.json").write_text(json.dumps(
+        _reg.build(paired_src, compound_src, registry), indent=2, sort_keys=True))
+
+    # the coverage measurement, by the registered measurement rather than a stub
+    deposited = tmp_path / "deposited.json"
+    deposited.write_text(json.dumps(
+        [{"drug": "drugone", "target": "TARGETA", "proj_shrna": 1.0, "enrich_shrna": 0.1},
+         {"drug": "drugtwo", "target": "TARGETB", "proj_shrna": 2.0, "enrich_shrna": 0.2},
+         {"drug": "drugthree", "target": "TARGETC"}]))
+    coverage = tmp_path / "coverage.json"
+    _cov.main(["--deposited", str(deposited),
+               "--consensus", str(rebuild / "shrna_consensus.npz"),
+               "--eligible", str(registry / "shrna_eligible_targets.json"),
+               "--excluded", str(registry / "shrna_excluded_records.json"),
+               "--compound-cohort", str(registry / "cohort_812_compound.json"),
+               "--out", str(coverage)])
+
+    # the expected hashes, generated from the files and held outside them
+    frozen = tmp_path / "expected_identities.json"
+    _freeze.main(["--repo", str(Path(_mod.__file__).resolve().parents[1]),
+                  "--rebuilt", str(rebuild), "--registry", str(registry),
+                  "--coverage", str(coverage), "--axis-map", str(axis_map),
+                  "--deposited", str(deposited),
+                  "--legacy", str(extraction / "lincs_subset.npz"),
+                  "--frozen-out", str(frozen),
+                  "--manifest-out", str(tmp_path / "implementation_manifest.json")])
+
     output = tmp_path / "out"
     return ["--rebuilt", str(rebuild), "--extraction", str(extraction),
-            "--cohort", str(cohort), "--gctx", str(gctx),
+            "--cohort-manifest", str(registry / "cohort_812_compound.json"),
+            "--paired-manifest", str(registry / "cohort_795_shrna_paired.json"),
+            "--eligible-targets", str(registry / "shrna_eligible_targets.json"),
+            "--excluded-records", str(registry / "shrna_excluded_records.json"),
+            "--axis-map", str(axis_map), "--coverage-report", str(coverage),
+            "--deposited-records", str(deposited),
+            "--frozen-identities", str(frozen),
+            "--cohort-scope", "compound", "--gctx", str(gctx),
             "--shrna-siginfo", str(shrna_siginfo),
             "--compound-siginfo", str(compound_siginfo),
             "--gene-info", str(gene_info), "--output", str(output)], rebuild, output
@@ -856,17 +1001,28 @@ def test_the_whole_gate_passes_on_consistent_inputs_and_records_its_provenance(t
 
     result = _mod.main(argv)
     assert result["gate"] == "reconstruction"
-    assert set(result["halves_compared"]) == {"compound_signatures",
-                                              "retained_compound_extraction",
-                                              "shrna_signatures_and_consensuses"}
-    written = json.loads((output / "reconstruction_gate.json").read_text())
-    assert written["all_within_tolerance"]
+    assert list(result["predicates_evaluated"]) == list(_mod.RELEASE_PREDICATES)
+    assert all(result["predicate_held"].values())
+    written = json.loads(_only_report(output).read_text())
+    assert written["release_authorized"]
+    assert written["production_authorized"]
+    assert written["legacy_custody_intact"]
+    assert written["gate_version"] == _mod.GATE_VERSION
     # every input that decides membership, aggregation or coordinates is hashed
     assert set(written["input_sha256"]) == {
-        "cohort", "gctx", "shrna_siginfo", "compound_siginfo", "gene_info",
+        "compound_cohort_manifest", "shrna_paired_manifest", "eligible_targets_manifest",
+        "excluded_records_manifest", "axis_map", "coverage_report",
+        "deposited_records", "frozen_identities",
+        "gctx", "shrna_siginfo", "compound_siginfo", "gene_info",
         "landmark_gene_ids", "shrna_signatures.npz", "shrna_consensus.npz",
-        "shard_000.npz", "lincs_subset.npz"}
+        "rebuild_manifest.json", "shard_000.npz", "lincs_subset.npz"}
     assert written["gate_code_sha256"]
+    # the legacy artifact is right in both directions, which a bare disagreement is not
+    legacy = written["legacy_artifact_integrity"]
+    assert legacy["under_the_map"]["agrees_with_the_source"]
+    assert not legacy["under_the_declared_labels"]["agrees_with_the_source"]
+    assert legacy["map_is_a_total_bijection"]
+    assert legacy["map_round_trips_to_the_identity"]
 
 
 def test_the_whole_gate_fails_on_a_canonical_artifact_whose_columns_were_permuted(tmp_path):
@@ -886,12 +1042,111 @@ def test_the_whole_gate_fails_on_a_canonical_artifact_whose_columns_were_permute
     with pytest.raises(AssertionError, match="the gate failed"):
         _mod.main(argv)
 
-    written = json.loads((output / "reconstruction_gate.json").read_text())
+    written = json.loads(_only_report(output).read_text())
     assert written["gate"].startswith("failed")
-    assert not written["all_within_tolerance"]
-    shrna = written["shrna_signatures_and_consensuses"]
+    assert not written["release_authorized"]
+    shrna = written["shrna_reconstruction_on_the_eligible_set"]
     assert shrna["n_signature_failures"] == 6
-    assert written["compound_signatures"]["all_within_tolerance"]
+    # the predicates that do not depend on the corrupted artifact still ran and are recorded
+    assert written["predicate_held"]["compound_source_reconstruction"]
+    assert written["predicate_held"]["cohort_identity"]
+    assert written["predicate_held"]["legacy_artifact_integrity"]
+
+
+def test_a_legacy_artifact_that_agrees_under_its_declared_labels_fails_custody(tmp_path):
+    # bare disagreement is too weak a predicate, and so is bare agreement: a file that
+    # reads correctly under its declared axis is not the file the deposited numbers
+    # came from, so custody of the deposited analysis has been lost
+    argv, _, output = _gate_fixture(tmp_path)
+    extraction = Path(argv[argv.index("--extraction") + 1])
+    axis_map = Path(argv[argv.index("--axis-map") + 1])
+    mapping = json.loads(axis_map.read_text())
+    order = mapping["declared_index_of_each_actual_column"]
+
+    with np.load(extraction / "lincs_subset.npz", allow_pickle=True) as data:
+        contents = {key: data[key] for key in data.files}
+    inverse = np.empty(len(order), dtype=int)
+    for actual, declared in enumerate(order):
+        inverse[declared] = actual
+    contents["signatures"] = contents["signatures"][:, inverse]   # now honestly labeled
+    np.savez_compressed(extraction / "lincs_subset.npz", **contents)
+    # the relabeled file is registered as-is, so the byte check passes and the two-sided
+    # comparison is what decides: a separate test covers the bytes changing underneath
+    frozen_path = Path(argv[argv.index("--frozen-identities") + 1])
+    frozen = json.loads(frozen_path.read_text())
+    frozen["legacy_extraction_sha256"] = _mod.sha256_file(extraction / "lincs_subset.npz")
+    frozen_path.write_text(json.dumps(frozen))
+
+    with pytest.raises(AssertionError, match="the gate failed"):
+        _mod.main(argv)
+    written = json.loads(_only_report(output).read_text())
+    assert not written["legacy_custody_intact"]
+    assert written["production_authorized"]        # production is unaffected
+    legacy = written["legacy_artifact_integrity"]
+    assert legacy["under_the_declared_labels"]["agrees_with_the_source"]
+    assert "no longer carries exactly the recorded defect" in legacy["reading"]
+
+
+def test_a_legacy_map_that_is_not_a_bijection_is_refused(tmp_path):
+    argv, _, _ = _gate_fixture(tmp_path)
+    axis_map = Path(argv[argv.index("--axis-map") + 1])
+    mapping = json.loads(axis_map.read_text())
+    mapping["declared_index_of_each_actual_column"][1] = \
+        mapping["declared_index_of_each_actual_column"][0]
+    order = mapping["declared_index_of_each_actual_column"]
+    mapping["map_sha256"] = _mod.sha256_text(_mod.canonical(order))
+    mapping["pinned_map_sha256"] = mapping["map_sha256"]
+    axis_map.write_text(json.dumps(mapping))
+
+    with pytest.raises(AssertionError, match="the gate failed"):
+        _mod.main(argv)
+
+
+def test_a_map_recording_an_inexact_raw_reproduction_is_refused(tmp_path):
+    # exactness is true of raw signatures and false of aggregated means, so the gate
+    # checks the map artifact's own raw-level record rather than asserting exactness
+    # where even the production rebuild sits at 3.12e-06
+    argv, _, output = _gate_fixture(tmp_path)
+    axis_map = Path(argv[argv.index("--axis-map") + 1])
+    frozen_path = Path(argv[argv.index("--frozen-identities") + 1])
+    mapping = json.loads(axis_map.read_text())
+    mapping["recovered_from"]["max_abs_difference_under_the_map"] = 1e-9
+    axis_map.write_text(json.dumps(mapping))
+    frozen = json.loads(frozen_path.read_text())
+    frozen["axis_map_file_sha256"] = _mod.sha256_file(axis_map)
+    frozen_path.write_text(json.dumps(frozen))
+
+    with pytest.raises(AssertionError, match="the gate failed"):
+        _mod.main(argv)
+    written = json.loads(_only_report(output).read_text())
+    assert "exact raw-signature reproduction" in \
+        written["structural_failures"]["legacy_artifact_integrity"]
+    assert written["production_authorized"]
+
+
+def test_a_legacy_map_whose_hash_is_not_the_pinned_one_is_refused(tmp_path):
+    argv, _, _ = _gate_fixture(tmp_path)
+    axis_map = Path(argv[argv.index("--axis-map") + 1])
+    mapping = json.loads(axis_map.read_text())
+    mapping["pinned_map_sha256"] = "0" * 64
+    axis_map.write_text(json.dumps(mapping))
+
+    with pytest.raises(AssertionError, match="the gate failed"):
+        _mod.main(argv)
+
+
+def test_the_shrna_universe_is_the_pinned_set_and_not_the_cohort_targets(tmp_path):
+    # the v1 defect: the gate took the compound cohort's target symbols as the shRNA
+    # universe, so a drug whose target has no shRNA data refused the whole half
+    argv, _, output = _gate_fixture(tmp_path)
+    eligible = Path(argv[argv.index("--eligible-targets") + 1])
+    manifest = json.loads(eligible.read_text())
+
+    # TARGETC belongs to the excluded record and must not be required of the rebuild
+    assert "TARGETC" not in manifest["targets"]
+    result = _mod.main(argv)
+    assert result["predicate_held"]["shrna_reconstruction_on_the_eligible_set"]
+    assert result["shrna_reconstruction_on_the_eligible_set"]["n_targets"] == 2
 
 
 def _under_optimization(body):
@@ -997,3 +1252,105 @@ def test_the_retained_extraction_uses_the_metadata_the_gate_hashed(tmp_path):
     _, hashed_cells, _ = _mod.load_extraction(tmp_path, cohort=["drug"], siginfo_path=hashed)
     assert beside_cells["drug"] == ["MCF7"]
     assert sorted(hashed_cells["drug"]) == ["MCF7", "PC3"]
+
+
+def test_a_manifest_that_disagrees_with_its_own_declared_identity_is_refused(tmp_path):
+    # B8 promises the counts and the drug and target hashes, so the gate enforces them
+    # rather than carrying them as decoration
+    argv, _, _ = _gate_fixture(tmp_path)
+    manifest_path = Path(argv[argv.index("--cohort-manifest") + 1])
+    frozen_path = Path(argv[argv.index("--frozen-identities") + 1])
+
+    for field, value in (("n_records", 99), ("n_unique_drugs", 99),
+                         ("n_unique_targets", 99), ("drug_sha256", "0" * 64),
+                         ("target_sha256", "0" * 64), ("pair_sha256", "0" * 64)):
+        manifest = json.loads(manifest_path.read_text())
+        manifest[field] = value
+        manifest_path.write_text(json.dumps(manifest))
+        frozen = json.loads(frozen_path.read_text())
+        frozen["manifest_sha256"]["cohort_812_compound.json"] = \
+            _mod.sha256_file(manifest_path)
+        frozen_path.write_text(json.dumps(frozen))
+
+        with pytest.raises(AssertionError, match="cohort_812_compound"):
+            _mod.main(argv)
+
+
+def test_an_eligible_manifest_repeating_a_target_or_miscounting_is_refused(tmp_path):
+    argv, _, _ = _gate_fixture(tmp_path)
+    path = Path(argv[argv.index("--eligible-targets") + 1])
+    frozen_path = Path(argv[argv.index("--frozen-identities") + 1])
+    original = json.loads(path.read_text())
+
+    for mutate in (lambda m: m["targets"].append(m["targets"][0]),
+                   lambda m: m.update(n_targets=99)):
+        manifest = json.loads(json.dumps(original))
+        mutate(manifest)
+        path.write_text(json.dumps(manifest))
+        frozen = json.loads(frozen_path.read_text())
+        frozen["manifest_sha256"]["shrna_eligible_targets.json"] = _mod.sha256_file(path)
+        frozen_path.write_text(json.dumps(frozen))
+
+        with pytest.raises(AssertionError, match="shrna_eligible_targets"):
+            _mod.main(argv)
+
+
+def test_a_manifest_whose_file_hash_is_not_the_frozen_one_is_refused(tmp_path):
+    # the manifests are pinned outside themselves, so a regenerated manifest that is
+    # internally consistent still does not pass
+    argv, _, _ = _gate_fixture(tmp_path)
+    frozen_path = Path(argv[argv.index("--frozen-identities") + 1])
+    frozen = json.loads(frozen_path.read_text())
+    frozen["manifest_sha256"]["cohort_795_shrna_paired.json"] = "0" * 64
+    frozen_path.write_text(json.dumps(frozen))
+
+    with pytest.raises(AssertionError, match="cohort_795_shrna_paired.json: sha256"):
+        _mod.main(argv)
+
+
+def test_a_coverage_report_or_deposited_file_that_is_not_the_frozen_one_is_refused(tmp_path):
+    argv, _, output = _gate_fixture(tmp_path)
+    frozen_path = Path(argv[argv.index("--frozen-identities") + 1])
+
+    for field in ("coverage_report_sha256", "deposited_sha256"):
+        frozen = json.loads(frozen_path.read_text())
+        frozen[field] = "0" * 64
+        frozen_path.write_text(json.dumps(frozen))
+        with pytest.raises(AssertionError, match="the gate failed"):
+            _mod.main(argv)
+        written = sorted(output.glob("gate_v*/reconstruction_gate.json"))[-1]
+        assert not json.loads(written.read_text())[
+            "predicate_held"]["shrna_eligibility_partition"]
+
+
+def test_a_coverage_report_missing_a_registered_equality_is_refused(tmp_path):
+    argv, _, _ = _gate_fixture(tmp_path)
+    coverage = Path(argv[argv.index("--coverage-report") + 1])
+    frozen_path = Path(argv[argv.index("--frozen-identities") + 1])
+    report = json.loads(coverage.read_text())
+    del report["set_equalities"]["partition_is_exact"]
+    coverage.write_text(json.dumps(report))
+    frozen = json.loads(frozen_path.read_text())
+    frozen["coverage_report_sha256"] = _mod.sha256_file(coverage)
+    frozen_path.write_text(json.dumps(frozen))
+
+    with pytest.raises(AssertionError, match="the gate failed"):
+        _mod.main(argv)
+
+
+def test_two_runs_write_separate_directories_and_neither_overwrites_the_other(tmp_path):
+    # the report filename is fixed, so two scopes sharing a directory would leave only
+    # the second report and no trace that the first existed
+    argv, _, output = _gate_fixture(tmp_path)
+    first = _mod.main(argv)
+
+    scoped = list(argv)
+    scoped[scoped.index("--cohort-scope") + 1] = "shrna_paired"
+    second = _mod.main(scoped)
+
+    reports = sorted(output.glob("gate_v*/reconstruction_gate.json"))
+    assert len(reports) == 2
+    scopes = {json.loads(r.read_text())["cohort_scope"] for r in reports}
+    assert scopes == {"compound", "shrna_paired"}
+    assert first["cohort"]["n_drugs"] == 3 and second["cohort"]["n_drugs"] == 2
+    assert all(json.loads(r.read_text())["release_authorized"] for r in reports)

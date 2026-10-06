@@ -1,0 +1,27 @@
+{
+  "axis_map_content_sha256": "PENDING",
+  "axis_map_file_sha256": "PENDING",
+  "coverage_code_sha256": "f3ea6d69c8ef479e5b7fb3354d48626c36a63d7dc326c379151d16a35332ae9f",
+  "coverage_report_sha256": "697902abf1b05a38b559cb0025c130f60cef0cbde005feaf3bf82c794fba1330",
+  "deposited_sha256": "f00f8428071178bd2317139c5a1f534e458931684fb6da65c750f9f1e5456eb3",
+  "legacy_extraction_sha256": "2ad0f5d30ab826f9ec0cfe37f6b53b2829bfef1d73b7920c3441de6407adb4ec",
+  "manifest_sha256": {
+    "cohort_795_shrna_paired.json": "003647018237f44effb8f60152eac2c3c780363f0d8bbbb22f21065bdc6c5739",
+    "cohort_812_compound.json": "1cf72b86f0b6fa99afa924a129b3393abe6b943ad6c1d987b21c00a4cf7de7ca",
+    "shrna_eligible_targets.json": "a15cd86775b9c8a5e5ef934264c3352da39e4b9097f6c1fcc0d560dd16265f9e",
+    "shrna_excluded_records.json": "409ee2c64b09eb7840481bd2ee6f58c44fe30bd8ab90be6a245d91be38acc53e"
+  },
+  "name": "frozen_identities",
+  "rebuild_sha256": {
+    "landmark_gene_ids.json": "f3e8089ed9ac555700ba92e6d2ccd5dfedd11340a3cc2c30e09a2ba7a604da1e",
+    "rebuild_manifest.json": "b05bbad6aafc2064bfd949893ad2263b8d1f2a99c9da45bff21148e0d3c75c81",
+    "shard_000.npz": "2d7b572e86079859a27c2a62c20ab6495a9e5f937d357e4897c273a5cf6499b9",
+    "shard_001.npz": "71e06602d72308e3f88d7083ed03871c4db8cb06aaeb9e983be79d156e341744",
+    "shard_002.npz": "58fa8d288211f6d535d5cb89d3e5f522044d2cb0fce2eac36cea9a857bde1b3a",
+    "shard_003.npz": "90d3e2f1feb511c81e51436de76529d2ece4a86d2ee64ac2990042085974ffc1",
+    "shrna_consensus.npz": "df2863d599edfd4e45e40c6a174cbfb372fcf76a1596dd9d614ffd8ec9e04e4f",
+    "shrna_signatures.npz": "9a6412fca8bbb48413a06f4a1eda468b4a2a988a8ab509e39eaf1444e1624bc1"
+  },
+  "schema_version": 1,
+  "what_this_is": "the expected hashes the gate compares against, held outside every artifact they describe, because an artifact carrying its own expected hash attests to itself"
+}
