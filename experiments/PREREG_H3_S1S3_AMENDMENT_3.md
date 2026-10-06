@@ -1,7 +1,8 @@
 # Amendment 3: the compound source, and the arms that read it
 
 **Date:** 2026-10-05
-**Status:** DRAFT. Not frozen. No R0-R7 statistic has been computed.
+**Status:** FROZEN. No R0-R7 statistic has been computed.
+**Commit SHA:** filled in the commit that follows this freeze
 **Amends:** `experiments/PREREG_H3_S1S3_AMENDMENT_2.md` (frozen `fd1ae8d`), whose
 A2 this replaces, and the inputs `experiments/PREREG_H3_REFERENCE_DISCORDANCE.md`
 pins.
@@ -121,6 +122,28 @@ manifests rather than as results files, because
 `phenotype_projection_results.json` carries projected instability and on-target
 enrichment, and pinning it coupled cohort eligibility to derived values. The retired
 extractions are recorded as legacy artifacts, separately from production inputs.
+
+The values themselves are in `registry/frozen/expected_identities.json`, sha256
+`3de491d6234c9dc9f56072227b50e7a513fdc25720a9bc113ef56c0939e3b9b2`,
+and the record of what ran is
+`results/03d_h3_reference_discordance/implementation_manifest_amendment_3.json`,
+generated from the files by `experiments/03h_freeze_identities.py` and never patched
+by hand. The gate reads its expectations from the frozen identities and not from the
+artifacts they describe.
+
+The two passing gate reports, by sha256, are:
+
+| scope | drugs | report sha256 |
+|---|---|---|
+| compound | 812 | `add1f337fce02ca5d8e449de9f917f1f82ac96511347b9280d56d10f599628ed` |
+| shRNA-paired | 795 | `67d0489b8742a39847d9e22f3225c4bb902e471cf47b7fb8c682e7ff598a84c1` |
+
+Both hold all five predicates `RELEASE_PREDICATES` names, under gate code sha256
+`4eda8019f9298867c5404018fe6439995b792c3f8ddc65c34660ee6e9a7ee9d0`
+at rtol and atol 1e-05. The superseded gate v1 is
+kept at `experiments/superseded/03e_reconstruction_gate_v1.py`, sha256
+`9dc69bea8cf9e5635acad16084056a08c8d7fe2739f1ce329626d296dd8e24d1`, and its failed
+reports stay on record as failed.
 
 **B9. What the deposited records are a reproduction target for.** Raw direction
 instability and the shRNA quantities are invariant under the permutation both
