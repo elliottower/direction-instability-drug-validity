@@ -2,7 +2,7 @@
 
 **Date:** 2026-10-05
 **Status:** FROZEN. No R0-R7 statistic has been computed.
-**Commit SHA:** filled in the commit that follows this freeze
+**Commit SHA:** 03175d0
 **Amends:** `experiments/PREREG_H3_S1S3_AMENDMENT_2.md` (frozen `fd1ae8d`), whose
 A2 this replaces, and the inputs `experiments/PREREG_H3_REFERENCE_DISCORDANCE.md`
 pins.
