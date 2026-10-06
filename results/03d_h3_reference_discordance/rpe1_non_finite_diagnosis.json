@@ -1,0 +1,93 @@
+{
+  "what_this_is": "why R0.4 returned a NaN median for C1-RPE1, and what the NaN is made of. The registered rule in PREREG_H3_REFERENCE_DISCORDANCE.md fires when the median per-target cosine is below 0.99. A NaN median is not below 0.99; the implementation routed it into the same branch, so C1-RPE1 was labelled as describing the single-cell construction on undefined arithmetic rather than on disagreement.",
+  "r0_4_as_reported": {
+    "C1-K562": {
+      "n_targets": 2057,
+      "n_nan": 0,
+      "n_finite": 2057,
+      "finite_median": 0.9999999986457878,
+      "finite_min": 0.03967811296898979,
+      "finite_below_threshold": 116,
+      "reported_median": 0.9999999986457878,
+      "reported_describes": "C1"
+    },
+    "C1-RPE1": {
+      "n_targets": 2393,
+      "n_nan": 1943,
+      "n_finite": 450,
+      "finite_median": 1.0000000100052202,
+      "finite_min": 0.8097611585567198,
+      "finite_below_threshold": 2,
+      "reported_median": NaN,
+      "reported_describes": "the single-cell construction, not C1"
+    }
+  },
+  "single_cell_non_finite": {
+    "K562_essential": {
+      "non_finite_values": 0,
+      "cells_holding_one": 0,
+      "genes_holding_one": 0,
+      "targets_reached": 0,
+      "shape": [
+        310385,
+        8563
+      ]
+    },
+    "RPE1_essential": {
+      "non_finite_values": 7913,
+      "cells_holding_one": 7913,
+      "genes_holding_one": 2,
+      "targets_reached": 1944,
+      "shape": [
+        247914,
+        8749
+      ]
+    }
+  },
+  "bulk_non_finite": {
+    "rpe1_normalized_bulk_01.h5ad": {
+      "shape": [
+        2679,
+        8749
+      ],
+      "sha256": "a3c5bfd0f15d63938bc80c9b8874b9cd761e3a23caf5ffe7966bae4e887ec89d",
+      "non_finite_values": 253,
+      "rows_holding_one": 240,
+      "gene_columns": {
+        "ENSG00000162772": 111,
+        "ENSG00000108691": 142
+      },
+      "n_nan": 0,
+      "n_posinf": 253,
+      "n_neginf": 0
+    },
+    "K562_essential_normalized_bulk_01.h5ad": {
+      "shape": [
+        2285,
+        8563
+      ],
+      "sha256": "c1ca6456c9c9f1aa2b02c496eb64d1dc3e6a852edbd744d682b8d2c95fd36829",
+      "non_finite_values": 0,
+      "rows_holding_one": 0,
+      "gene_columns": {},
+      "n_nan": 0,
+      "n_posinf": 0,
+      "n_neginf": 0
+    }
+  },
+  "the_two_genes": {
+    "ENSG00000162772": {
+      "symbol": "ATF3",
+      "is_lincs_landmark": false,
+      "is_cohort_target": false
+    },
+    "ENSG00000108691": {
+      "symbol": "CCL2",
+      "is_lincs_landmark": true,
+      "is_cohort_target": true,
+      "landmark_gene_id": "6347"
+    }
+  },
+  "reading": "Two gene columns of the released RPE1 files carry +inf and nothing else does: ATF3 and CCL2, in both the single-cell release (7,913 cells, 1,944 of 2,393 targets reached) and the bulk release (253 values over 240 of 2,679 rows). The K562 release is clean and holds neither gene on its axis, which is why its median cosine is 0.9999999986 with no NaN. Where RPE1 can be compared, 450 targets, the median is 1.000000 and two targets fall below 0.99. CCL2 is one of the 978 LINCS landmarks and a cohort target, so the defect reaches the registered C1-RPE1 arm and not only this check.",
+  "decision_required": "The frozen plan registers no handling for non-finite input. Excluding the 7,913 affected cells is a sample exclusion that keeps the 978-landmark basis intact; excluding CCL2 changes the basis for one arm. Either is a deviation and neither is chosen here."
+}

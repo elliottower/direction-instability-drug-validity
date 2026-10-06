@@ -1,0 +1,158 @@
+{
+  "what_this_is": "why two genes of the published RPE1 normalized Perturb-seq files hold +inf, traced from the normalized files back to the raw counts and the per-group control standard deviation that divides them",
+  "source": {
+    "figshare_article": 20029387,
+    "doi": "10.25452/figshare.plus.20029387.v1",
+    "title": "Mapping information-rich genotype-phenotype landscapes with genome-scale Perturb-seq",
+    "corresponding_authors": [
+      "normantm@mskcc.org",
+      "weissman@wi.mit.edu"
+    ]
+  },
+  "the_raw_files_are_clean": {
+    "rpe1_raw_bulk_01.h5ad": {
+      "shape": [
+        2679,
+        8749
+      ],
+      "non_finite_total": 0,
+      "checksum": {
+        "md5": "74765fa87635467a869ea972356ae0e7",
+        "published": "74765fa87635467a869ea972356ae0e7",
+        "matches": true
+      },
+      "the_two_genes": {
+        "ATF3": {
+          "ensembl": "ENSG00000162772",
+          "present": true,
+          "nan": 0,
+          "posinf": 0,
+          "neginf": 0,
+          "min": 0.0,
+          "max": 8.15384578704834
+        },
+        "CCL2": {
+          "ensembl": "ENSG00000108691",
+          "present": true,
+          "nan": 0,
+          "posinf": 0,
+          "neginf": 0,
+          "min": 0.0,
+          "max": 2.444444417953491
+        }
+      }
+    },
+    "rpe1_raw_singlecell_01.h5ad": {
+      "shape": [
+        247914,
+        8749
+      ],
+      "non_finite_total": 0,
+      "checksum": {
+        "md5": "6a2a9d0d2bf4ec147f4d1104043b268c",
+        "published": null,
+        "note": "Figshare publishes no md5 for this file"
+      },
+      "the_two_genes": {
+        "ATF3": {
+          "ensembl": "ENSG00000162772",
+          "present": true,
+          "nan": 0,
+          "posinf": 0,
+          "neginf": 0,
+          "min": 0.0,
+          "max": 279.0
+        },
+        "CCL2": {
+          "ensembl": "ENSG00000108691",
+          "present": true,
+          "nan": 0,
+          "posinf": 0,
+          "neginf": 0,
+          "min": 0.0,
+          "max": 93.0
+        }
+      }
+    },
+    "K562_essential_raw_bulk_01.h5ad": {
+      "shape": [
+        2285,
+        8563
+      ],
+      "non_finite_total": 0,
+      "checksum": {
+        "md5": "8321d5d3ffc99db2a5c71edca4189735",
+        "published": "8321d5d3ffc99db2a5c71edca4189735",
+        "matches": true
+      },
+      "the_two_genes": {
+        "ATF3": {
+          "ensembl": "ENSG00000162772",
+          "present": false
+        },
+        "CCL2": {
+          "ensembl": "ENSG00000108691",
+          "present": false
+        }
+      }
+    }
+  },
+  "mechanism": {
+    "n_control_cells": 11485,
+    "control_label": [
+      "non-targeting"
+    ],
+    "n_gem_groups": 56,
+    "per_gene": {
+      "ATF3": {
+        "ensembl": "ENSG00000162772",
+        "group_that_went_non_finite": "46",
+        "groups_whose_controls_are_constant": [
+          "46"
+        ],
+        "sets_agree": true,
+        "affected_group_controls": {
+          "n_control_cells": 158,
+          "control_sd": 0.0,
+          "control_mean": 0.0,
+          "control_all_equal": true,
+          "control_unique_values": [
+            0.0
+          ]
+        },
+        "other_groups_control_sd": {
+          "min": 0.06622597523512294,
+          "max": 16.129996394093503
+        }
+      },
+      "CCL2": {
+        "ensembl": "ENSG00000108691",
+        "group_that_went_non_finite": "9",
+        "groups_whose_controls_are_constant": [
+          "9"
+        ],
+        "sets_agree": true,
+        "affected_group_controls": {
+          "n_control_cells": 180,
+          "control_sd": 0.0,
+          "control_mean": 0.0,
+          "control_all_equal": true,
+          "control_unique_values": [
+            0.0
+          ]
+        },
+        "other_groups_control_sd": {
+          "min": 0.09128386967395141,
+          "max": 2.789191968426464
+        }
+      }
+    }
+  },
+  "non_finite_cells": {
+    "ATF3_group_46": 3364,
+    "CCL2_group_9": 4549,
+    "total": 7913
+  },
+  "a_hypothesis_that_failed": "the first mechanism tested was zero variance across all cells of a gem group. No gem group has constant raw counts for either gene, so that was refuted. The divisor is the control standard deviation, not the all-cell one.",
+  "reading": "The raw RPE1 files hold no non-finite value: ATF3 ranges 0 to 279 and CCL2 0 to 93 as counts over 247,914 cells. The infinities are introduced by the published per-gem-group Z-normalization, whose divisor is the standard deviation of that group's non-targeting control cells. For ATF3 in gem group 46 all 158 controls have count 0, and for CCL2 in gem group 9 all 180 controls have count 0, so the divisor is exactly 0.0 in those two cases and nowhere else: every other group has a control standard deviation of at least 0.066 for ATF3 and 0.091 for CCL2. Two of 56 groups times 8,749 genes, accounting for all 7,913 affected cells and, through them, 1,943 undefined per-target verification cosines."
+}

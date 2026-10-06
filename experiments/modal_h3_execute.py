@@ -2122,3 +2122,43 @@ def stage_gate_v2_on_scope(scope: str):
     reports = sorted(Path("/out/03c_h3_sensitivity").glob(
         f"gate_v2_{scope}_*/reconstruction_gate.json"))
     return reports[-1].read_text()[:3000] if reports else "no report was written"
+
+
+@app.function(**COMMON)
+def stage_r0_to_r7():
+    """R0 to R7 and the R5 response, in one invocation of the registered driver.
+
+    The driver runs once, as its registration requires, so no module is computed
+    twice under different invocation states. Amendment 3 is frozen at 03175d0 and
+    gate v2 holds all five predicates on both scopes, which is what B5 requires
+    before this runs.
+
+    Paths are copied from the stages that already run. `_repo_at_its_absolute_path`
+    is what makes the driver's absolute CRISPRI_RECORDS path resolve.
+    """
+    from pathlib import Path
+
+    _repo_at_its_absolute_path()
+    staged, rebuilt = _stage_inputs(), _stage_rebuild()
+    audit = Path("/app/results/03d_h3_reference_discordance/single_cell_audit.json")
+    if not audit.exists():
+        raise AssertionError(
+            "single_cell_audit.json is absent from the image, and R0.3, R0.4 and R0.6 are "
+            "registered analyses; R0.4 also decides how R0.6 and R7c may be read. Run "
+            "experiments/modal_03d_single_cell.py, fetch its result into "
+            "results/03d_h3_reference_discordance/, and redeploy.")
+
+    _run(["/app/experiments/03d_h3_reference_discordance.py",
+          "--r5-stage", "response",
+          "--data", str(staged),
+          "--rebuilt", str(rebuilt),
+          "--perturbseq", "/inputs/scperturb/ReplogleWeissman2022_K562_essential.h5ad",
+          "--replogle", "/inputs/replogle2022",
+          "--prism", "/inputs/prism_19q4",
+          "--single-cell", str(audit),
+          "--expected-mapping-sha256",
+          "152361cb3174a5fb7aae0229c3e3d049dc00d49d9e442925156a9fe0564b89d3",
+          "--output", "/out/03d_h3_reference_discordance"])
+    results.commit()
+    written = sorted(Path("/out/03d_h3_reference_discordance").glob("*.json"))
+    return [p.name for p in written]
