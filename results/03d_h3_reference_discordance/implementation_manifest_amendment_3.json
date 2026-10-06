@@ -14,8 +14,8 @@
     "experiments/03e_reconstruction_gate.py": "4eda8019f9298867c5404018fe6439995b792c3f8ddc65c34660ee6e9a7ee9d0",
     "experiments/03f_shrna_coverage_identity.py": "f3ea6d69c8ef479e5b7fb3354d48626c36a63d7dc326c379151d16a35332ae9f",
     "experiments/03g_build_cohort_manifests.py": "100888fc6b516233feced57520bd755e7f677a317378ce75dc8470e9f980699e",
-    "experiments/03h_freeze_identities.py": "1378bf7993eddaf8f2cf73f332c16da7bc7dcddb7cc63bf691828f7bcefd28d4",
-    "experiments/modal_h3_execute.py": "8a865fbf116bde8fe104c86233d39e4157b60b7e3058e78c69c924ed7826a3cf",
+    "experiments/03h_freeze_identities.py": "748e2f24924b0c7c60463f336f4b4d8397fed5bd0e0a896f206fd3c03c4c5a32",
+    "experiments/modal_h3_execute.py": "a613726430e2ddc76b12ad4c8a86dc4765b08535fa6e0dcc6ba9074388c11b1c",
     "experiments/modal_h3_rebuild.py": "cb8eae0f29da0fce8d0304aff3d8f98752c062c7e57ca41c87c86302916ae6fc",
     "geometry/direction_instability.py": "e827ea0a739b207f9a736063862689b23161def07b929bbab91f973154184064",
     "geometry/inference.py": "7b57e9b07bba2a0f6f0367b34aeaa9fb1620a3e5ee00b64bfe0890a6d826a60f",
@@ -124,18 +124,107 @@
   ],
   "frozen_identities": {
     "file": "registry/frozen/expected_identities.json",
-    "sha256": "928e9d2f075957c07e876fadf131a2c6e51d42629eec70132e74121721ee554f",
+    "sha256": "3de491d6234c9dc9f56072227b50e7a513fdc25720a9bc113ef56c0939e3b9b2",
     "why": "the gate's expectations live here and not inside the artifacts they describe"
   },
   "gate": {
     "axis_map": {
-      "content_sha256": "PENDING",
-      "file_sha256": "PENDING"
+      "content_sha256": "aa1bde95baded5a9684d318d5f1e33ab3dd0ee873bfbc66084f1cf04120bfb87",
+      "file_sha256": "5098498ae4ca225f6448a3332ddde3e47b52bfdc00bc2a243f0810483c2b7be7"
     },
     "code": "experiments/03e_reconstruction_gate.py",
     "code_sha256": "4eda8019f9298867c5404018fe6439995b792c3f8ddc65c34660ee6e9a7ee9d0",
     "output_layout": "one immutable directory per run, gate_v2_<scope>_<timestamp>/reconstruction_gate.json, because the report filename is fixed and two scopes sharing a directory would overwrite one another",
-    "passing_reports": "PENDING",
+    "passing_reports": {
+      "compound": {
+        "cohort_pair_sha256": "e09ff6244c71453696eae1035584dfa7d58ad1f09d2217f8c7b41383cedb0fc9",
+        "compound_max_abs_difference": 3.1192366982679687e-06,
+        "gate_code_sha256": "4eda8019f9298867c5404018fe6439995b792c3f8ddc65c34660ee6e9a7ee9d0",
+        "legacy": {
+          "raw_exact_over_n_signatures": {
+            "exact": true,
+            "level": "raw signatures, where the map was recovered and verified",
+            "max_abs_difference": 0.0,
+            "n_signatures": 42498
+          },
+          "under_the_declared_labels": {
+            "agrees_with_the_source": false,
+            "max_abs_difference": 20.0,
+            "n_drugs_outside_tolerance": 812
+          },
+          "under_the_map": {
+            "agrees_with_the_source": true,
+            "level": "per-drug, per-cell-line means, at the production tolerance",
+            "max_abs_difference": 0.0
+          }
+        },
+        "n_drugs": 812,
+        "predicate_held": {
+          "cohort_identity": true,
+          "compound_source_reconstruction": true,
+          "legacy_artifact_integrity": true,
+          "shrna_eligibility_partition": true,
+          "shrna_reconstruction_on_the_eligible_set": true
+        },
+        "report": "results/03c_h3_sensitivity/gate_v2_compound_20261006T150836_813118Z/reconstruction_gate.json",
+        "sha256": "add1f337fce02ca5d8e449de9f917f1f82ac96511347b9280d56d10f599628ed",
+        "shrna": {
+          "max_abs_consensus_difference": 8.143169782925952e-07,
+          "max_abs_signature_difference": 0.0,
+          "max_abs_stored_direction_difference": 0.0,
+          "n_signatures": 14656,
+          "n_targets": 258
+        },
+        "tolerances": {
+          "atol": 1e-05,
+          "rtol": 1e-05
+        }
+      },
+      "shrna_paired": {
+        "cohort_pair_sha256": "2016bb19ab70afb54fcdfbf692f491579f42dd17f7d49e53f0dd0c4337224e84",
+        "compound_max_abs_difference": 3.1192366982679687e-06,
+        "gate_code_sha256": "4eda8019f9298867c5404018fe6439995b792c3f8ddc65c34660ee6e9a7ee9d0",
+        "legacy": {
+          "raw_exact_over_n_signatures": {
+            "exact": true,
+            "level": "raw signatures, where the map was recovered and verified",
+            "max_abs_difference": 0.0,
+            "n_signatures": 42498
+          },
+          "under_the_declared_labels": {
+            "agrees_with_the_source": false,
+            "max_abs_difference": 20.0,
+            "n_drugs_outside_tolerance": 795
+          },
+          "under_the_map": {
+            "agrees_with_the_source": true,
+            "level": "per-drug, per-cell-line means, at the production tolerance",
+            "max_abs_difference": 0.0
+          }
+        },
+        "n_drugs": 795,
+        "predicate_held": {
+          "cohort_identity": true,
+          "compound_source_reconstruction": true,
+          "legacy_artifact_integrity": true,
+          "shrna_eligibility_partition": true,
+          "shrna_reconstruction_on_the_eligible_set": true
+        },
+        "report": "results/03c_h3_sensitivity/gate_v2_shrna_paired_20261006T150837_439700Z/reconstruction_gate.json",
+        "sha256": "67d0489b8742a39847d9e22f3225c4bb902e471cf47b7fb8c682e7ff598a84c1",
+        "shrna": {
+          "max_abs_consensus_difference": 8.143169782925952e-07,
+          "max_abs_signature_difference": 0.0,
+          "max_abs_stored_direction_difference": 1.1102230246251565e-16,
+          "n_signatures": 14656,
+          "n_targets": 258
+        },
+        "tolerances": {
+          "atol": 1e-05,
+          "rtol": 1e-05
+        }
+      }
+    },
     "release_predicates": [
       "cohort_identity",
       "compound_source_reconstruction",
@@ -147,12 +236,8 @@
     "v1_sha256": "9dc69bea8cf9e5635acad16084056a08c8d7fe2739f1ce329626d296dd8e24d1",
     "version": 2
   },
-  "generated_from_git": "3b824cf421b3e04409ce02b27959bea4e1604a4f+dirty",
+  "generated_from_git": "67ec7f79e009fe03b32d17a761d514df53582b31+dirty",
   "open_before_the_freeze": [
-    "build the legacy coordinate map on Modal",
-    "regenerate this manifest and the frozen identities once the map exists",
-    "run gate v2 on both cohort scopes, into separate directories",
-    "results seal of the code, and results run of both gate reports",
     "this file's own sha256 written into the freeze commit message"
   ],
   "retained_not_consumed": {

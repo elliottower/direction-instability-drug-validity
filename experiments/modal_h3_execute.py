@@ -44,7 +44,12 @@ def _with_code(built):
             .add_local_dir(f"{REPO}/results/03b_h3_crispri",
                            remote_path="/app/results/03b_h3_crispri")
             .add_local_dir(f"{REPO}/results/03d_h3_reference_discordance",
-                           remote_path="/app/results/03d_h3_reference_discordance"))
+                           remote_path="/app/results/03d_h3_reference_discordance")
+            # the pinned cohort manifests and the frozen identities gate v2 reads
+            .add_local_dir(f"{REPO}/registry", remote_path="/app/registry")
+            .add_local_dir(f"{REPO}/results/03c_h3_sensitivity",
+                           remote_path="/app/results/03c_h3_sensitivity",
+                           ignore=["gctx_rebuild/**", "gate_*/**", "*.npz"]))
 
 
 image = _with_code(base)
@@ -834,7 +839,7 @@ def stage_diagnose_compound():
     records = json.loads(Path("/app/results/03_phenotype_projection/"
                               "phenotype_projection_results.json").read_text())
     drugs = sorted({r["drug"] for r in records})
-    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+    siginfo = pd.read_csv(staged / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                           low_memory=False)
     siginfo = siginfo[siginfo.pert_iname.isin(set(drugs))]
 
@@ -920,7 +925,7 @@ def stage_compound_axis_recovery():
     records = json.loads(Path("/app/results/03_phenotype_projection/"
                               "phenotype_projection_results.json").read_text())
     drugs = sorted({r["drug"] for r in records})
-    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+    siginfo = pd.read_csv(staged / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                           low_memory=False)
     siginfo = siginfo[siginfo.pert_iname.isin(set(drugs))]
 
@@ -1013,7 +1018,7 @@ def stage_compound_row_test():
     records = json.loads(Path("/app/results/03_phenotype_projection/"
                               "phenotype_projection_results.json").read_text())
     drugs = sorted({r["drug"] for r in records})
-    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+    siginfo = pd.read_csv(staged / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                           low_memory=False)
     cohort_ids = sorted(set(siginfo[siginfo.pert_iname.isin(set(drugs))].sig_id.astype(str)))
 
@@ -1103,7 +1108,7 @@ def stage_compound_column_match():
     records = json.loads(Path("/app/results/03_phenotype_projection/"
                               "phenotype_projection_results.json").read_text())
     drugs = sorted({r["drug"] for r in records})
-    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+    siginfo = pd.read_csv(staged / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                           low_memory=False)
     cohort = sorted(set(siginfo[siginfo.pert_iname.isin(set(drugs))].sig_id.astype(str)))
 
@@ -1191,7 +1196,7 @@ def stage_scope_of_the_compound_defect():
     records = json.loads(Path("/app/results/03_phenotype_projection/"
                               "phenotype_projection_results.json").read_text())
     deposited = {r["drug"]: r for r in records}
-    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+    siginfo = pd.read_csv(staged / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                           low_memory=False)
     siginfo = siginfo[siginfo.pert_iname.isin(set(deposited))]
 
@@ -1300,7 +1305,7 @@ def stage_compare_the_two_permutations():
     records = json.loads(Path("/app/results/03_phenotype_projection/"
                               "phenotype_projection_results.json").read_text())
     drugs = sorted({r["drug"] for r in records})
-    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+    siginfo = pd.read_csv(staged / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                           low_memory=False)
     cohort = sorted(set(siginfo[siginfo.pert_iname.isin(set(drugs))].sig_id.astype(str)))
 
@@ -1391,7 +1396,7 @@ def stage_all_cohort_permutation_check():
     records = json.loads(Path("/app/results/03_phenotype_projection/"
                               "phenotype_projection_results.json").read_text())
     drugs = sorted({r["drug"] for r in records})
-    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+    siginfo = pd.read_csv(staged / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                           low_memory=False)
     cohort = sorted(set(siginfo[siginfo.pert_iname.isin(set(drugs))].sig_id.astype(str)))
 
@@ -1478,7 +1483,7 @@ def stage_core_gene_identities():
     hdac = sorted({entry["pert_iname"] for entry in labels["drugs"]
                    if "HDAC inhibitor" in str(entry.get("moa", ""))})
 
-    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+    siginfo = pd.read_csv(staged / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                           low_memory=False)
     siginfo = siginfo[siginfo.pert_iname.isin(set(hdac))]
     extraction = np.load(Path(staged) / "lincs_subset.npz", allow_pickle=True)
@@ -1596,7 +1601,7 @@ def stage_extend_rebuild():
     if not wanted:
         return "nothing to add"
 
-    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+    siginfo = pd.read_csv(staged / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                           low_memory=False)
     sub = siginfo[siginfo.pert_iname.isin(set(wanted)) & siginfo.pert_iname.notna()]
     gct = parse.parse(str(raw / GCTX), cid=sorted(set(sub.sig_id.astype(str))), rid=ids)
@@ -1708,7 +1713,7 @@ def stage_crispri_routes_checked():
     declared = [str(g) for g in extraction["gene_ids"]]
     stored = extraction["signatures"]
 
-    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+    siginfo = pd.read_csv(staged / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                           low_memory=False)
     labels = json.loads((Path(staged) / "frozen_drug_labels.json").read_text())
     targets = {e["pert_iname"]: str(e["target"]).split("|")[0].strip()
@@ -1958,7 +1963,7 @@ def main(stage: str):
 
 
 @app.function(**COMMON)
-def stage_pin_the_legacy_axis_map():
+def stage_pin_legacy_axis_map_r4():
     """Build the legacy coordinate map Amendment 3's B6 pins, direction verified here.
 
     The map says, for each column of the retained extraction, which index of its
@@ -1982,15 +1987,16 @@ def stage_pin_the_legacy_axis_map():
     import pandas as pd
 
     _repo_at_its_absolute_path()
-    raw = Path(_stage_inputs())
+    staged = Path(_stage_inputs())     # the extraction and its metadata
+    raw = Path("/rebuild/raw")         # the pinned GCTX, which is not in that directory
     spec = importlib.util.spec_from_file_location(
         "gate", "/app/experiments/03e_reconstruction_gate.py")
     gate = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(gate)
-    out = Path("/results/legacy_axis_map")
+    out = Path("/out/03c_h3_sensitivity/legacy_axis_map")
     out.mkdir(parents=True, exist_ok=True)
 
-    extraction_path = raw / "lincs_subset.npz"
+    extraction_path = staged / "lincs_subset.npz"
     extraction = np.load(extraction_path, allow_pickle=True)
     held = {str(s): i for i, s in enumerate(extraction["sig_ids"])}
     declared = [str(g) for g in extraction["gene_ids"]]
@@ -1998,7 +2004,7 @@ def stage_pin_the_legacy_axis_map():
     if len(set(declared)) != len(declared):
         raise AssertionError("the extraction's declared axis repeats an identifier")
 
-    siginfo = pd.read_csv(raw / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
+    siginfo = pd.read_csv(staged / "GSE92742_Broad_LINCS_sig_info.txt.gz", sep="\t",
                           usecols=["sig_id", "pert_iname"], low_memory=False)
     drugs = {r["drug"] for r in json.loads(
         Path("/app/registry/cohorts/cohort_812_compound.json").read_text())["records"]}
@@ -2051,7 +2057,7 @@ def stage_pin_the_legacy_axis_map():
             compared += 1
         json.dump({"compared": compared, "max_abs_difference": worst},
                   open(out / "progress.json", "w"))      # RULE ONE: inside the loop
-        VOLUME.commit()
+        results.commit()
     if worst != 0.0:
         raise AssertionError(f"the map does not reproduce the source exactly: {worst}")
 
@@ -2073,7 +2079,46 @@ def stage_pin_the_legacy_axis_map():
     # attests to itself. The expected values go into registry/frozen/, which Amendment 3
     # pins, and the gate reads them from there.
     (out / "legacy_axis_map.json").write_text(json.dumps(payload, indent=2) + "\n")
-    VOLUME.commit()
+    results.commit()
     print(json.dumps({k: v for k, v in payload.items()
                       if k != "declared_index_of_each_actual_column"}, indent=2))
     return payload["map_sha256"]
+
+
+@app.function(**COMMON)
+def stage_gate_v2_on_scope(scope: str):
+    """Gate v2 on one cohort scope, into its own immutable directory.
+
+    Amendment 3's B5 requires both scopes. The report filename is fixed, so each run
+    gets its own directory and neither overwrites the other; the gate names the
+    directory itself from the scope and the time it started.
+
+    Every path here is copied from `stage_gate_on_cohort`, which runs, rather than
+    written from what seemed reasonable.
+    """
+    from pathlib import Path
+
+    _repo_at_its_absolute_path()
+    staged, rebuilt = _stage_inputs(), _stage_rebuild()
+    _run(["/app/experiments/03e_reconstruction_gate.py",
+          "--rebuilt", str(rebuilt),
+          "--extraction", str(staged),
+          "--gctx", f"/rebuild/raw/{GCTX}",
+          "--shrna-siginfo", "/rebuild/raw/lincs_shrna_siginfo.csv.gz",
+          "--compound-siginfo", "/rebuild/raw/GSE92742_Broad_LINCS_sig_info.txt.gz",
+          "--gene-info", "/rebuild/raw/GSE92742_Broad_LINCS_gene_info.txt.gz",
+          "--cohort-manifest", "/app/registry/cohorts/cohort_812_compound.json",
+          "--paired-manifest", "/app/registry/cohorts/cohort_795_shrna_paired.json",
+          "--eligible-targets", "/app/registry/cohorts/shrna_eligible_targets.json",
+          "--excluded-records", "/app/registry/cohorts/shrna_excluded_records.json",
+          "--axis-map", "/app/registry/frozen/legacy_axis_map.json",
+          "--frozen-identities", "/app/registry/frozen/expected_identities.json",
+          "--coverage-report",
+          "/app/results/03c_h3_sensitivity/shrna_coverage_identity_v2.json",
+          "--deposited-records", "/app/results/03b_h3_crispri/h3_crispri_results.json",
+          "--cohort-scope", scope,
+          "--output", "/out/03c_h3_sensitivity"])
+    results.commit()
+    reports = sorted(Path("/out/03c_h3_sensitivity").glob(
+        f"gate_v2_{scope}_*/reconstruction_gate.json"))
+    return reports[-1].read_text()[:3000] if reports else "no report was written"

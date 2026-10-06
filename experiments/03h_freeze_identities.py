@@ -114,6 +114,47 @@ def frozen_identities(repo: Path, rebuilt: Path, coverage: Path, axis_map: Path,
     }
 
 
+def passing_reports(repo: Path) -> dict:
+    """Both gate v2 reports, with the predicate each one held and its own hash.
+
+    A report is recorded here only when its release condition held. A failed report
+    stays on disk and in the ledger as a failed report, and is not listed as passing.
+    """
+    found = {}
+    for directory in sorted((repo / "results/03c_h3_sensitivity").glob("gate_v2_*")):
+        report = directory / "reconstruction_gate.json"
+        if not report.exists():
+            continue
+        payload = json.loads(report.read_text())
+        if not payload.get("release_authorized"):
+            continue
+        found[payload["cohort_scope"]] = {
+            "report": _relative(report, repo),
+            "sha256": sha256_file(report),
+            "n_drugs": payload["cohort"]["n_drugs"],
+            "cohort_pair_sha256": payload["cohort"]["pair_sha256"],
+            "gate_code_sha256": payload["gate_code_sha256"],
+            "predicate_held": payload["predicate_held"],
+            "tolerances": {"rtol": payload["compound_source_reconstruction"]["rtol"],
+                           "atol": payload["compound_source_reconstruction"]["atol"]},
+            "compound_max_abs_difference":
+                payload["compound_source_reconstruction"]["max_abs_difference"],
+            "shrna": {k: payload["shrna_reconstruction_on_the_eligible_set"][k]
+                      for k in ("n_signatures", "n_targets",
+                                "max_abs_signature_difference",
+                                "max_abs_consensus_difference",
+                                "max_abs_stored_direction_difference")},
+            "legacy": {
+                "raw_exact_over_n_signatures":
+                    payload["legacy_artifact_integrity"]["raw_signature_reproduction"],
+                "under_the_map":
+                    payload["legacy_artifact_integrity"]["under_the_map"],
+                "under_the_declared_labels":
+                    payload["legacy_artifact_integrity"]["under_the_declared_labels"]},
+        }
+    return found
+
+
 def implementation_manifest(repo: Path, frozen: dict, registry: Path,
                             coverage: Path) -> dict:
     index = json.loads((registry / "INDEX.json").read_text())
@@ -186,7 +227,7 @@ def implementation_manifest(repo: Path, frozen: dict, registry: Path,
                                    "legacy_artifact_integrity"],
             "axis_map": {"file_sha256": frozen["axis_map_file_sha256"],
                          "content_sha256": frozen["axis_map_content_sha256"]},
-            "passing_reports": PENDING,
+            "passing_reports": passing_reports(repo) or PENDING,
             "output_layout": ("one immutable directory per run, "
                               "gate_v2_<scope>_<timestamp>/reconstruction_gate.json, "
                               "because the report filename is fixed and two scopes sharing "
@@ -246,12 +287,10 @@ def implementation_manifest(repo: Path, frozen: dict, registry: Path,
             "results/03c_h3_sensitivity/shrna_consensus.npz": (
                 "a partial copy without gene_ids; the authoritative consensus is the one "
                 "under gctx_rebuild/ that B1 names")},
-        "open_before_the_freeze": [
-            "build the legacy coordinate map on Modal",
-            "regenerate this manifest and the frozen identities once the map exists",
-            "run gate v2 on both cohort scopes, into separate directories",
-            "results seal of the code, and results run of both gate reports",
-            "this file's own sha256 written into the freeze commit message"],
+        "open_before_the_freeze": (
+            ["this file's own sha256 written into the freeze commit message"]
+            if len(passing_reports(repo)) == 2 else
+            ["a passing gate v2 report on each of the two cohort scopes"]),
     }
 
 
