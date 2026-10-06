@@ -107,3 +107,51 @@ Reviewed in Perplexity round 17, which asked for exact-set rather than cardinali
 semantics, record-level identity in the coverage measurement, a positive legacy
 identity, independent per-predicate evaluation, and pinned cohort manifests. 86 tests
 pass across the gate and discordance suites.
+
+## 2026-10-06 — a registration edited after its freeze, and why it is reverted
+
+`prereg check` reported `experiments/PREREGISTRATION_EXTENDED.md` as CHANGED against
+its pin `f4bc40b` (2026-07-08): 64 lines added, none removed.
+
+**What was added.** Commit `ccb6223` (2026-09-11), whose message describes a
+terminology scrub, also inserted a section headed "Experiment R3: HDAC-Removal
+Sensitivity and Drug Pair Search for H3" into that pinned file. The section carries
+`**Commit SHA:** f4bc40b` and `**Pre-registered:** 2026-07-08`, and `f4bc40b`'s tree
+does not contain it.
+
+**Where R3 is really registered.** `PREREG_ROBUSTNESS_CHECKS.md`, section "R3:
+HDAC-removal sensitivity for H3", whose content was fixed at `5bb6080` on 2026-07-08
+and has not changed since. `experiments/r3_hdac_sensitivity_and_drug_pair.py` was
+committed the same day in `7c0e8bf`, before any R3 output existed. So the plan and
+its script do predate the results; the September insertion is a restatement in the
+wrong file, not a registration created after the fact.
+
+**How the restatement differs from the registration.** The July file sets the
+criterion at rho > 0.20 for HDAC removal and for both top-20 removals. The inserted
+text sets 0.3, and names analyses A1 (full-set reproduction), A4 (1000-resample
+bootstrap interval) and A5 (a drug-pair search) that the July file does not state in
+that form. The tightened threshold is a stricter test, and the measured values clear
+both: rho_proj = 0.3756 on the full 795 drugs and 0.3759 after removing the 20 HDAC
+drugs (`results/r3_hdac_sensitivity/r3_results.json`).
+
+**What depends on it.** Nothing. No manuscript reports R3. In
+`paper/direction_instability_confound_audit_v1c.tex` the HDAC-removal paragraph is
+commented out, and the commented text cites the registered threshold as rho > 0.20.
+If R3 is ever restored to a manuscript, 0.20 is the registered criterion.
+
+**The correction.** `experiments/PREREGISTRATION_EXTENDED.md` is restored to its
+content at `f4bc40b`, which is a pure deletion of the inserted 64 lines and removes
+no terminology work: the insertion was additive, and its own text still uses the
+pre-scrub `projected_bracket` wording, so it reads as an older draft committed late.
+The file now matches its pin. No formal amendment is filed, because no reported
+quantity rests on the 0.3 criterion or on A1, A4 and A5, and the substance of all
+three is recorded here.
+
+**Why the guard did not catch it.** The `repro` mod refuses an edit to a frozen
+registration, but it intercepts tool calls, so it governs edits made through an agent
+and not a hand edit or another editor. A pre-commit hook refusing a commit that
+modifies any file carrying a `Commit SHA:` line, unless the same commit logs the
+change, would close that path.
+
+Whether A1, A4 and A5 are reported as confirmatory under the July freeze is Elliot's
+call and is not decided here.
