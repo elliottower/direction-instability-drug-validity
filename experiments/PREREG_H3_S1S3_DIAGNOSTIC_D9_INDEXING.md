@@ -1,8 +1,8 @@
 # Does the pre-fix shRNA consensus indexing explain the residual difference from the deposited values?
 
 **Date:** 2026-10-07
-**Status:** DRAFT
-**Commit SHA:** PENDING
+**Status:** FROZEN before the diagnostic ran
+**Commit SHA:** e684d16
 **Kind:** forensic diagnostic. No registered statistic is computed and no
 confirmatory claim rests on it. It asks how the deposited numbers were produced.
 **Relates to:** Deviation 9 in `DEVIATION_LOG.md`, which found the defect; Deviation
