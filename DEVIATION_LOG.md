@@ -648,3 +648,132 @@ every one of them with the pinned source at a maximum absolute difference of
 rather than on the block the permutation was recovered from. The multiset test
 covered 40 signatures and the direction-instability reproduction 20 drugs; both are
 now corollaries of the exact all-cohort agreement.
+
+## Deviation 13: released Replogle pseudobulk sources carry undefined matched-landmark coordinates, and R0.4 and R0.6 used the wrong gene space
+
+**Date:** 2026-10-06
+**Status:** found while running R0.4; R0.4 and R0.6 have run, R0.5 and R1-R7 have not
+**Applies to:** R0.2, R0.4, R0.5, R0.6, R0.8, R4, R6a, R7c, and every quantity built
+from C1-RPE1, C1-GW or C1-GW-phenotype-positive. Seven matched landmark coordinates
+are affected across two source files: one in the RPE1 release and six in the
+genome-wide release. The RPE1 mechanism is established below; the genome-wide
+coordinates are recorded as deposited `+inf` values with no mechanism attributed.
+
+### What was found in the RPE1 release
+
+`rpe1_normalized_bulk_01.h5ad` and `RPE1_essential_single_cell.h5ad` hold `+inf`
+in two gene columns and in no others: ATF3 (`ENSG00000162772`) and CCL2
+(`ENSG00000108691`), 253 values over 240 of 2,679 bulk rows and 7,913 values over
+7,913 cells. The K562-essential release is clean and holds neither gene on its
+axis.
+
+The mechanism is in the released normalization. Replogle et al. z-normalize each
+gene within each GEM group against that group's non-targeting control cells. In
+group 46 the 158 control cells all hold 0.0 for ATF3, and in group 9 the 180
+control cells all hold 0.0 for CCL2, so the divisor is zero. The raw counts are
+finite for every gene in every group; no gene has constant raw values. The
+reconstruction of the published procedure from the raw files does not reproduce
+the deposited matrix — 42 genes sampled, 10,404,475 values compared, maximum
+absolute difference 1824.3968881650242 on the finite positions, zero of 42 genes
+agreeing within 0.1 — while the non-finite positions agree exactly. No deposited
+value is therefore replaced.
+
+Of the two genes, ATF3 is not a LINCS landmark and never enters the analysis.
+CCL2 is landmark `6347` and a cohort target, so the defect reaches the registered
+C1-RPE1 arm. The RPE1 axis matches 813 of the 978 landmarks, which is a property
+of the deposit and not of this defect.
+
+### The first implementation defect: a NaN routed into a threshold branch
+
+The registered R0.4 rule fires when the median per-target cosine is below 0.99. For
+C1-RPE1 the median was `NaN`, over 2,393 targets of which 1,943 returned `NaN` and
+450 returned a finite cosine. A `NaN` median is not below 0.99, and
+`float(np.median(cosines)) >= 0.99` is false for it, so the implementation labeled
+C1-RPE1 as describing the single-cell construction rather than C1 on undefined
+arithmetic rather than on measured disagreement. The registration specifies no
+handling for non-finite input, and routing it into the failure branch is not what
+it registers.
+
+### The second implementation defect: the wrong gene space
+
+`experiments/modal_03d_single_cell.py:stage_targets` computes the single-cell mean
+and compares it with the released pseudobulk over the file's full gene axis, 8,749
+genes for RPE1 and 8,563 for K562, and estimates split-half reliability on that
+same full axis. The registration defines C1 on the matched landmarks: "The
+direction is restricted to landmarks present in the file, matched by symbol through
+the pinned gene-info file, and drug signatures are restricted to the same
+landmarks." R0.4 verifies a cosine against C1 and R0.6 estimates the reliability of
+the object R7c then qualifies, so both belong on each construction's analysis
+basis. On the full axis, R0.4 verified one vector space while R0.6 assessed
+another, and non-landmark ATF3 entered the verification at all only through this
+defect.
+
+### What had already been seen when the rule was written
+
+The 450 finite RPE1 targets gave a median cosine of 1.0000000100052202 with a
+minimum of 0.8097611585567198 and two targets below 0.99, and the 2,057 K562
+targets gave 0.9999999986457878 with no `NaN`. The finite-subset numbers were
+therefore in hand before any coordinate rule was frozen. They are recorded here and
+are not reported as R0.4: the median over the targets that happened to survive on
+the full gene axis is not an estimate of the median on a frozen landmark basis, and
+R0.4 is recomputed once under Amendment 4 rather than read off this subset.
+
+### What was found in the genome-wide release, as a separate defect
+
+Applying the rule to every construction that reads an official pseudobulk file,
+rather than to the gene the RPE1 diagnosis named, found a second affected source.
+The genome-wide release `K562_gwps_normalized_bulk_01.h5ad` leaves six of its 721
+matched landmarks undefined: ICAM1, MEST, PXN, SLC25A14, BAMBI and TCTN1, with 61
+to 146 `+inf` values each over 11,258 rows, all `+inf` and no `NaN`. C1-GW and
+C1-GW-phenotype-positive read that file, so both carried undefined coordinates into
+R0.5 and R4, and no check had looked. The K562-essential release leaves none of its
+728 matched landmarks undefined.
+
+**No mechanism is attributed to these six.** The control-variance diagnostic that
+settled the RPE1 case reads the raw single-cell file; the genome-wide single-cell
+release is 66 GB, which is why the registration does not estimate genome-wide
+reliability from it, and that diagnostic has not been run. They are recorded as
+deposited `+inf` coordinates and nothing further is claimed about why.
+
+| construction | source | matched | in basis | excluded |
+|---|---|---|---|---|
+| C1-K562 | `K562_essential_normalized_bulk_01.h5ad` | 728 | 728 | none |
+| C1-RPE1 | `rpe1_normalized_bulk_01.h5ad` | 813 | 812 | CCL2 |
+| C1-GW | `K562_gwps_normalized_bulk_01.h5ad` | 721 | 715 | ICAM1, MEST, PXN, SLC25A14, BAMBI, TCTN1 |
+| C1-GW-phenotype-positive | the same file | 721 | 715 | the same six |
+
+Each basis is above the registered 500-landmark floor. The counts, the positions,
+the per-coordinate value counts and a hash of each ordered basis are in
+`registry/frozen/analysis_bases.json`, measured by
+`experiments/03i_freeze_analysis_bases.py` from the copies on the volume the
+analyses read, and pinned from outside that file in
+`registry/frozen/analysis_bases_pin.json`.
+
+The registered comparisons run on the landmarks their two constructions share:
+R0.5's C0 against C1 on 728, C1 against C1-RPE1 on 688, C1 against C1-GW on 712,
+and R6a's C1 against C1-RPE1 on 688. CCL2 is not among the 728 landmarks the
+K562-essential release matches, so excluding it changes no registered comparison;
+the genome-wide exclusions cost six coordinates from C1 against C1-GW.
+
+### What is not changed
+
+No deposited value is altered, imputed, clipped or reconstructed. The affected
+cells are not excluded. The two reconstruction attempts are recorded in
+`results/03d_h3_reference_discordance/rpe1_reconstruction_not_justified.json` and
+neither licenses replacing a published finite value.
+
+The authors have been written to about the defect and asked for the exact
+normalization procedure. A corrected release or the exact code, if supplied, is
+analyzed as a separately identified sensitivity analysis and does not replace a
+frozen run.
+
+### Records
+
+- `results/03d_h3_reference_discordance/rpe1_non_finite_diagnosis.json` — where the
+  non-finite values are, and what R0.4 reported on them
+- `results/03d_h3_reference_discordance/rpe1_normalization_mechanism.json` — the
+  zero control standard deviation in the two affected groups
+- `results/03d_h3_reference_discordance/rpe1_reconstruction_not_justified.json` —
+  the two failed reconstructions
+- `experiments/PREREG_H3_S1S3_AMENDMENT_4.md` — the prospective finite-coordinate
+  rule written in response

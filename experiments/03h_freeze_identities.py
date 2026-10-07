@@ -32,11 +32,12 @@ CODE = ("experiments/03e_reconstruction_gate.py",
         "experiments/03f_shrna_coverage_identity.py",
         "experiments/03g_build_cohort_manifests.py",
         "experiments/03h_freeze_identities.py",
+        "experiments/03i_freeze_analysis_bases.py",
         "experiments/03d_h3_reference_discordance.py",
         "experiments/modal_h3_execute.py",
         "experiments/modal_h3_rebuild.py",
         "geometry/inference.py", "geometry/references.py",
-        "geometry/direction_instability.py")
+        "geometry/single_cell.py", "geometry/direction_instability.py")
 
 
 class FreezeError(AssertionError):
@@ -80,6 +81,58 @@ def git_head() -> str:
     dirty = subprocess.run(["git", "status", "--porcelain"], capture_output=True,
                            text=True).stdout.strip()
     return out.stdout.strip() + ("+dirty" if dirty else "")
+
+
+# the four constructions Amendment 4 freezes a basis for, and the fields of each
+# record that are pinned here rather than inside the artifact
+BASIS_CONSTRUCTIONS = ("C1-K562", "C1-RPE1", "C1-GW", "C1-GW-phenotype-positive")
+BASIS_PINNED_FIELDS = ("file", "file_sha256", "basis_sha256", "n_landmarks_matched",
+                       "n_landmarks_in_basis")
+
+
+def analysis_bases_pin(repo: Path, bases: Path) -> dict:
+    """Amendment 4's bases, pinned from outside the file that holds them.
+
+    The artifact already hashes each ordered basis, but a list edited together
+    with its own recomputed digest passes that check, so these values live apart
+    from it and Amendment 4's text pins this file's own sha256.
+
+    They are not added to `expected_identities.json`: Amendment 3 pins that file
+    by sha256 at `3de491d6234c9dc9f56072227b50e7a513fdc25720a9bc113ef56c0939e3b9b2`
+    and a frozen pin is not rewritten to carry a later amendment's values.
+    """
+    generator = repo / "experiments/03i_freeze_analysis_bases.py"
+    if not Path(bases).exists():
+        return {"file_sha256": PENDING, "generator_sha256": sha256_file(generator),
+                "schema_version": PENDING, "landmark_axis_sha256": PENDING,
+                "constructions": {name: PENDING for name in BASIS_CONSTRUCTIONS}}
+    document = json.loads(Path(bases).read_text())
+    require(sorted(document["constructions"]) == sorted(BASIS_CONSTRUCTIONS),
+            f"the bases artifact holds {sorted(document['constructions'])}, not "
+            f"{sorted(BASIS_CONSTRUCTIONS)}")
+    return {
+        "name": "analysis_bases_pin", "schema_version": SCHEMA_VERSION,
+        "what_this_is": ("the expected identity of Amendment 4's analysis bases, held "
+                         "outside the artifact it describes, because an artifact carrying "
+                         "its own expected hash attests to itself"),
+        "registered_by": "experiments/PREREG_H3_S1S3_AMENDMENT_4.md",
+        "file": _relative(bases, repo),
+        "file_sha256": sha256_file(bases),
+        "generator_sha256": sha256_file(generator),
+        "schema_version": document["schema_version"],
+        "landmark_axis_sha256": document["gene_info"]["landmark_axis_sha256"],
+        "landmark_axis_file_sha256": sha256_file(Path(bases).parent / "landmark_gene_ids.json"),
+        "constructions": {
+            name: {field: document["constructions"][name][field]
+                   for field in BASIS_PINNED_FIELDS}
+            for name in BASIS_CONSTRUCTIONS},
+        "pooled_construction": {
+            field: document["pooled_construction"][field]
+            for field in ("file", "file_sha256", "n_landmarks_declared",
+                          "n_landmarks_measured", "declared_sha256", "measured_sha256")},
+        "registered_comparisons": {key: row["n_shared"] for key, row
+                                   in document["registered_comparisons"].items()},
+    }
 
 
 def frozen_identities(repo: Path, rebuilt: Path, coverage: Path, axis_map: Path,
@@ -298,16 +351,42 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--repo", type=Path, default=Path.cwd())
-    parser.add_argument("--rebuilt", type=Path, required=True)
-    parser.add_argument("--registry", type=Path, required=True)
-    parser.add_argument("--coverage", type=Path, required=True)
-    parser.add_argument("--axis-map", type=Path, required=True)
-    parser.add_argument("--deposited", type=Path, required=True)
-    parser.add_argument("--legacy", type=Path, required=True)
-    parser.add_argument("--frozen-out", type=Path, required=True)
-    parser.add_argument("--manifest-out", type=Path, required=True)
+    parser.add_argument("--rebuilt", type=Path)
+    parser.add_argument("--registry", type=Path)
+    parser.add_argument("--coverage", type=Path)
+    parser.add_argument("--axis-map", type=Path)
+    parser.add_argument("--deposited", type=Path)
+    parser.add_argument("--legacy", type=Path)
+    parser.add_argument("--analysis-bases", type=Path,
+                        help="registry/frozen/analysis_bases.json, pinned from outside itself")
+    parser.add_argument("--bases-pin-out", type=Path,
+                        help="where to write that pin. It is a separate file because "
+                             "Amendment 3 pins expected_identities.json by sha256.")
+    parser.add_argument("--frozen-out", type=Path)
+    parser.add_argument("--manifest-out", type=Path)
     args = parser.parse_args(argv)
 
+    if args.frozen_out is None and args.bases_pin_out is None:
+        raise FreezeError("nothing to write: name --frozen-out, --bases-pin-out, or both")
+
+    # Amendment 4's pin is written on its own, so regenerating it cannot disturb
+    # expected_identities.json, which Amendment 3 pins by sha256
+    pin = None
+    if args.bases_pin_out is not None:
+        require(args.analysis_bases is not None, "--bases-pin-out needs --analysis-bases")
+        pin = analysis_bases_pin(args.repo, args.analysis_bases)
+        args.bases_pin_out.parent.mkdir(parents=True, exist_ok=True)
+        args.bases_pin_out.write_text(json.dumps(pin, indent=2, sort_keys=True) + "\n")
+        print(json.dumps({"analysis_bases_pin": str(args.bases_pin_out),
+                          "analysis_bases_pin_sha256": sha256_file(args.bases_pin_out),
+                          "pins_bases_file_sha256": pin["file_sha256"]}, indent=2))
+    if args.frozen_out is None:
+        return pin, None
+
+    for name in ("rebuilt", "registry", "coverage", "axis_map", "deposited", "legacy",
+                 "manifest_out"):
+        require(getattr(args, name) is not None,
+                f"--frozen-out regenerates the whole identity and needs --{name.replace('_', '-')}")
     frozen = frozen_identities(args.repo, args.rebuilt, args.coverage, args.axis_map,
                                args.deposited, args.legacy, args.registry)
     args.frozen_out.parent.mkdir(parents=True, exist_ok=True)

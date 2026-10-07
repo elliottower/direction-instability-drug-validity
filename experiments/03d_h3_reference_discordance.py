@@ -37,9 +37,10 @@ from geometry.inference import (cluster_bootstrap, comparison_reading, excludes_
                                 two_sided_permutation_p, unique_target_permutations)
 from geometry.single_cell import split_half_reliability_by_unit
 from geometry.references import (MIN_LANDMARKS, N_LANDMARK, Reference, alignment_matrix,
-                                 check_declared_axis, frozen_landmark_order,
-                                 landmark_symbols, load_replogle_bulk, pooled_crispri_reference,
-                                 projected_dispersion, shared_space, unit)
+                                 check_declared_axis, frozen_landmark_order, landmark_symbols,
+                                 load_replogle_bulk, pooled_crispri_reference,
+                                 projected_dispersion, shared_space, unit,
+                                 validated_analysis_bases)
 
 REPO = Path("/Users/elliottower/Documents/GitHub/direction-instability-drug-validity")
 CRISPRI_RECORDS = REPO / "results" / "03b_h3_crispri" / "h3_crispri_results.json"
@@ -507,11 +508,21 @@ def main():
                         help="mapping writes the frozen table and stops; response consumes it")
     parser.add_argument("--expected-mapping-sha256",
                         help="the hash the implementation manifest records for the frozen mapping")
+    parser.add_argument("--analysis-bases", type=Path,
+                        help="registry/frozen/analysis_bases.json: the basis Amendment 4 "
+                             "freezes for each construction built from a Replogle file")
     parser.add_argument("--single-cell", type=Path)
     parser.add_argument("--output", type=Path, default=OUT)
     args = parser.parse_args()
     run(args)
 
+
+# R0.5 registers three pairs, each keyed to the intersection the frozen bases record
+REGISTERED_R05_PAIRS = {
+    "C0_vs_C1": "R0.5: C0 against C1-K562",
+    "C1_vs_RPE1": "R0.5: C1-K562 against C1-RPE1",
+    "C1_vs_GW": "R0.5: C1-K562 against C1-GW",
+}
 
 # Amendment 3, B8: the CRISPRi arm's cohort is the registered 795 plus these
 # seventeen, named in Deviation 12 and in results/03c_h3_sensitivity/rebuild_extension.json
@@ -521,6 +532,18 @@ EXTENSION_DRUGS = frozenset({
     "ketoconazole", "oxibendazole", "parbendazole", "salubrinal", "tipifarnib",
     "vindesine",
 })
+
+
+def analysis_bases_pin() -> dict:
+    """Amendment 4's expected basis identity, from outside the artifact it describes.
+
+    An artifact carrying its own expected digest attests to itself, so the
+    expected values are read from here and never from the file under test. This is
+    a file of its own because Amendment 3 pins `expected_identities.json` by
+    sha256 and a frozen pin is not rewritten to carry a later amendment's values.
+    """
+    return json.loads(
+        (REPO / "registry" / "frozen" / "analysis_bases_pin.json").read_text())
 
 
 def check_cohort_identity(records, per_drug):
@@ -837,18 +860,38 @@ def run(args):
 
     shrna = build_shrna_reference_from_rebuild(args.rebuilt, gene_ids)
     c0 = pooled_crispri_reference(args.perturbseq, symbols, name="C0")
+    # Amendment 4: each construction reads the basis frozen for its source, so a
+    # coordinate its source leaves undefined is absent before any direction is
+    # built, and absent from that construction alone
+    require(args.analysis_bases is not None,
+            "Amendment 4 evaluates every C1 construction on a frozen analysis basis, and "
+            "--analysis-bases names the file holding it")
+    bases = validated_analysis_bases(
+        args.analysis_bases, gene_ids, analysis_bases_pin(),
+        generator=REPO / "experiments" / "03i_freeze_analysis_bases.py")
     c1 = load_replogle_bulk(args.replogle / "K562_essential_normalized_bulk_01.h5ad",
-                            symbols, "C1-K562")
-    c1_rpe1 = load_replogle_bulk(args.replogle / "rpe1_normalized_bulk_01.h5ad", symbols, "C1-RPE1")
-    c1_gw = load_replogle_bulk(args.replogle / "K562_gwps_normalized_bulk_01.h5ad", symbols, "C1-GW")
+                            symbols, "C1-K562", basis=bases["C1-K562"])
+    c1_rpe1 = load_replogle_bulk(args.replogle / "rpe1_normalized_bulk_01.h5ad", symbols,
+                                 "C1-RPE1", basis=bases["C1-RPE1"])
+    c1_gw = load_replogle_bulk(args.replogle / "K562_gwps_normalized_bulk_01.h5ad", symbols,
+                               "C1-GW", basis=bases["C1-GW"])
     c1_gw_positive = load_replogle_bulk(
         args.replogle / "K562_gwps_normalized_bulk_01.h5ad", symbols, "C1-GW-phenotype-positive",
-        qualifying_rows=lambda obs: obs["energy_test_p_value"] < ENERGY_P)
+        qualifying_rows=lambda obs: obs["energy_test_p_value"] < ENERGY_P,
+        basis=bases["C1-GW-phenotype-positive"])
 
     result["modules"]["R0.2_gene_space"] = {
         reference.name: {k: v for k, v in reference.audit.items()
                          if k not in ("rows_per_gene", "rows_used_per_gene", "cells_per_gene")}
         for reference in (c0, c1, c1_rpe1, c1_gw, c1_gw_positive)}
+    result["modules"]["R0.2_gene_space"]["analysis_bases"] = {
+        name: {"n_landmarks_matched": record["n_landmarks_matched"],
+               "n_landmarks_in_basis": record["n_landmarks_in_basis"],
+               "basis_sha256": record["basis_sha256"],
+               "source_sha256": record["file_sha256"],
+               "excluded_as_undefined": record["excluded_as_undefined"],
+               "meets_registered_floor": record["meets_registered_floor"]}
+        for name, record in bases.items()}
     require(len(c1.positions) >= MIN_LANDMARKS, f"C1 covers {len(c1.positions)} landmarks, below the registered floor of {MIN_LANDMARKS}")
     result["modules"]["R0.2_gene_space"]["landmark_floor"] = {
         "floor": MIN_LANDMARKS, "C1_landmarks": int(len(c1.positions)),
@@ -880,6 +923,8 @@ def run(args):
     # between gene spaces
     space = shared_space(c1, c1_rpe1)
     c1_shared, c1_rpe1_shared = c1.restricted_to(space), c1_rpe1.restricted_to(space)
+    space_gw = shared_space(c1, c1_gw)
+    c1_gw_left, c1_gw_right = c1.restricted_to(space_gw), c1_gw.restricted_to(space_gw)
     shrna_h = shrna.restricted_to(c1.positions)
     c0h = c0.restricted_to(c1.positions)
 
@@ -889,13 +934,32 @@ def run(args):
     # ---- R0.5 agreement between constructions, R0.8 concentration
     common = sorted(set(crispri_arm.targets) & set(shrna.directions))
     agreement = {}
-    for name, reference in (("C0_vs_C1", (c0h, c1)), ("C1_vs_RPE1", (c1_shared, c1_rpe1_shared))):
-        left, right = reference
-        cosines = {gene: float(abs(left.directions[gene] @ right.directions[gene]))
+    # the registration names three pairs: C0 and C1; C1 and C1-RPE1; C1 and C1-GW.
+    # The cosine is signed: the registration calls `E = cos^2` signless where it
+    # wants signlessness and `s = cos` signed where it wants a sign, and R0.5 asks
+    # for "the cosine". An absolute value would read two constructions that assign
+    # a target opposite directions as agreeing.
+    for name, pair in (("C0_vs_C1", (c0h, c1)),
+                       ("C1_vs_RPE1", (c1_shared, c1_rpe1_shared)),
+                       ("C1_vs_GW", (c1_gw_left, c1_gw_right))):
+        left, right = pair
+        cosines = {gene: float(left.directions[gene] @ right.directions[gene])
                    for gene in sorted(set(left.directions) & set(right.directions) & set(crispri_arm.targets))}
-        agreement[name] = {"median": float(np.median(list(cosines.values()))),
+        agreement[name] = {"n_shared_landmarks": int(len(left.positions)),
+                           "n_targets": len(cosines),
+                           "cosine_is_signed": True,
+                           "median": float(np.median(list(cosines.values()))),
                            "min": float(min(cosines.values())), "max": float(max(cosines.values())),
+                           "n_negative": int(sum(value < 0 for value in cosines.values())),
                            "per_target": cosines}
+    require(sorted(agreement) == sorted(REGISTERED_R05_PAIRS),
+            f"R0.5 registers {sorted(REGISTERED_R05_PAIRS)} and this run computed "
+            f"{sorted(agreement)}; a registered comparison is not dropped")
+    for name, expected in REGISTERED_R05_PAIRS.items():
+        observed = agreement[name]["n_shared_landmarks"]
+        require(observed == bases["registered_comparisons"][expected]["n_shared"],
+                f"R0.5 {name} ran on {observed} landmarks and the frozen bases record "
+                f"{bases['registered_comparisons'][expected]['n_shared']} for {expected}")
     result["modules"]["R0.5_agreement"] = agreement
 
     def leading_share(reference, genes):
@@ -1208,9 +1272,17 @@ def run(args):
         "per_target": shrna_reliabilities}
     if args.single_cell is not None:
         audit = json.loads(args.single_cell.read_text())
+        for name in ("C1-K562", "C1-RPE1"):
+            recorded = audit.get("R0.4_verification", {}).get(name, {}).get("basis_sha256")
+            require(recorded == bases[name]["basis_sha256"],
+                    f"the single-cell audit records {name} on basis {recorded} and this run "
+                    f"builds it on {bases[name]['basis_sha256']}; R0.4 and R0.6 were produced "
+                    "against a different analysis basis and are not consumed")
         audit.setdefault("R0.6_reliability", {})["shRNA"] = shrna_reliabilities
         result["modules"]["R0_single_cell"] = audit
-        r7["R7c_reliability"] = reliability_restricted(audit, crispri_arm, c1, shrna_arm, shrna)
+        r7["R7c_reliability"] = reliability_restricted(
+            audit, crispri_arm, c1, shrna_arm, shrna,
+            expected_basis_sha256=bases["C1-K562"]["basis_sha256"])
     else:
         r7["R7c_reliability"] = {"runnable": False,
                                  "reason": "no single-cell audit given, so CRISPRi reliability is unknown"}
@@ -1289,15 +1361,39 @@ def shrna_reliability(data_dir: Path, targets_wanted) -> dict:
     return out
 
 
-def reliability_restricted(single_cell, crispri_arm, c1, shrna_arm, shrna):
-    """R7c: the primary correlations on targets whose split-half reliability holds up."""
+def reliability_restricted(single_cell, crispri_arm, c1, shrna_arm, shrna,
+                           expected_basis_sha256=None):
+    """R7c: the primary correlations on targets whose split-half reliability holds up.
+
+    Amendment 4 lets R7c consume only a reliability estimate made on the same basis
+    as the reference it restricts. Otherwise R0.6 would describe one vector space and
+    R7c would qualify another with it.
+    """
     reliability = single_cell.get("R0.6_reliability", {})
+    verification = single_cell.get("R0.4_verification", {}).get("C1-K562", {})
     crispri_reliable = {t for t, v in reliability.get("C1-K562", {}).items()
                         if v >= R7C_MIN_RELIABILITY}
     shrna_reliable = {t for t, v in reliability.get("shRNA", {}).items()
                       if v >= R7C_MIN_RELIABILITY}
     out = {"threshold": R7C_MIN_RELIABILITY,
-           "n_crispri_targets": len(crispri_reliable), "n_shrna_targets": len(shrna_reliable)}
+           "n_crispri_targets": len(crispri_reliable), "n_shrna_targets": len(shrna_reliable),
+           "crispri_reliability_basis_sha256": verification.get("basis_sha256"),
+           "reference_basis_sha256": expected_basis_sha256,
+           "R0.4_status": verification.get("status"),
+           "R0.6_describes": verification.get("describes")}
+    if expected_basis_sha256 is not None and \
+            verification.get("basis_sha256") != expected_basis_sha256:
+        out["runnable"] = False
+        out["reason"] = (
+            "the CRISPRi reliability estimates were made on basis "
+            f"{verification.get('basis_sha256')} and C1-K562 is built on "
+            f"{expected_basis_sha256}, so they describe different vector spaces")
+        return out
+    if verification.get("status") == "refused":
+        out["runnable"] = False
+        out["reason"] = ("R0.4 is refused for C1-K562, so what the reliability estimates "
+                         "describe is not established")
+        return out
     if len(crispri_reliable) < R7C_MIN_CRISPRI_TARGETS or len(shrna_reliable) < R7C_MIN_SHRNA_TARGETS:
         out["runnable"] = False
         out["reason"] = "too few targets survive the reliability threshold"

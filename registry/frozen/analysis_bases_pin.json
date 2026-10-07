@@ -1,0 +1,55 @@
+{
+  "constructions": {
+    "C1-GW": {
+      "basis_sha256": "8b15d66f1e5ed51e93d26c2fc185760bbafe4f46c84d46e242ebacbe2e2b71b4",
+      "file": "K562_gwps_normalized_bulk_01.h5ad",
+      "file_sha256": "37e48c474d8b5dead4151f96ea8f5fe7bbe6beb10eeea48685b740c3f74490a2",
+      "n_landmarks_in_basis": 715,
+      "n_landmarks_matched": 721
+    },
+    "C1-GW-phenotype-positive": {
+      "basis_sha256": "8b15d66f1e5ed51e93d26c2fc185760bbafe4f46c84d46e242ebacbe2e2b71b4",
+      "file": "K562_gwps_normalized_bulk_01.h5ad",
+      "file_sha256": "37e48c474d8b5dead4151f96ea8f5fe7bbe6beb10eeea48685b740c3f74490a2",
+      "n_landmarks_in_basis": 715,
+      "n_landmarks_matched": 721
+    },
+    "C1-K562": {
+      "basis_sha256": "c5cc399e3e6c98c0a3090f26c8b4e7dde377486d5a950aaaeb6f6d6387fa4ccd",
+      "file": "K562_essential_normalized_bulk_01.h5ad",
+      "file_sha256": "c1ca6456c9c9f1aa2b02c496eb64d1dc3e6a852edbd744d682b8d2c95fd36829",
+      "n_landmarks_in_basis": 728,
+      "n_landmarks_matched": 728
+    },
+    "C1-RPE1": {
+      "basis_sha256": "9d2011c94aef228985b585c3df900e8452710e92317379b6d52915573b346ad6",
+      "file": "rpe1_normalized_bulk_01.h5ad",
+      "file_sha256": "a3c5bfd0f15d63938bc80c9b8874b9cd761e3a23caf5ffe7966bae4e887ec89d",
+      "n_landmarks_in_basis": 812,
+      "n_landmarks_matched": 813
+    }
+  },
+  "file": "registry/frozen/analysis_bases.json",
+  "file_sha256": "05a4fd397b389276fff247b3fa778a4cc2dbe7fef7572350aea9f99b9fa32b3f",
+  "generator_sha256": "d8569c14c60cd7faa73663a98098dafe217516c5922f971889764d59c200f759",
+  "landmark_axis_file_sha256": "b2765bf085dd906d8bbb20837d3fd9278f0cdbc6b5dc6bdbf72ae6aa05ef0436",
+  "landmark_axis_sha256": "490601145cef7eb7d8ec6ff37d2d506821a88382a6a614c3f16ad8800d540818",
+  "name": "analysis_bases_pin",
+  "pooled_construction": {
+    "declared_sha256": "490601145cef7eb7d8ec6ff37d2d506821a88382a6a614c3f16ad8800d540818",
+    "file": "ReplogleWeissman2022_K562_essential.h5ad",
+    "file_sha256": "412fd0df8c4ccea9f4db91cd88033c49200838b29d40945e48574be588b48789",
+    "measured_sha256": "c5cc399e3e6c98c0a3090f26c8b4e7dde377486d5a950aaaeb6f6d6387fa4ccd",
+    "n_landmarks_declared": 978,
+    "n_landmarks_measured": 728
+  },
+  "registered_by": "experiments/PREREG_H3_S1S3_AMENDMENT_4.md",
+  "registered_comparisons": {
+    "R0.5: C0 against C1-K562": 728,
+    "R0.5: C1-K562 against C1-GW": 712,
+    "R0.5: C1-K562 against C1-RPE1": 688,
+    "R6a: C1-K562 against C1-RPE1": 688
+  },
+  "schema_version": 1,
+  "what_this_is": "the expected identity of Amendment 4's analysis bases, held outside the artifact it describes, because an artifact carrying its own expected hash attests to itself"
+}

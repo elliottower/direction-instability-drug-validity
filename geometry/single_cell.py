@@ -8,6 +8,8 @@ import hashlib
 
 import numpy as np
 
+from .references import require_finite
+
 N_SPLITS = 50
 
 
@@ -45,7 +47,43 @@ def pseudobulk(matrix: np.ndarray, labels) -> dict:
             for target in np.unique(labels)}
 
 
+def gene_names(adata) -> np.ndarray:
+    """The symbols a released file carries, from `gene_name` where it has one."""
+    return (adata.var["gene_name"].astype(str).to_numpy() if "gene_name" in adata.var
+            else adata.var_names.astype(str).to_numpy())
+
+
+def basis_columns(names, symbols) -> np.ndarray:
+    """The columns of a released file holding each basis symbol, in basis order.
+
+    A symbol the file does not carry exactly once is not skipped: the basis was
+    frozen on this release, so a gap or a duplicate means the file is not the
+    file the basis describes.
+    """
+    names = np.asarray([str(name) for name in names])
+    position = {}
+    for index, name in enumerate(names):
+        position.setdefault(name, []).append(index)
+    columns, missing, duplicated = [], [], []
+    for symbol in symbols:
+        found = position.get(str(symbol), [])
+        if len(found) == 1:
+            columns.append(found[0])
+        elif found:
+            duplicated.append(symbol)
+        else:
+            missing.append(symbol)
+    if missing or duplicated:
+        raise AssertionError(
+            f"the frozen basis does not land on this file: {len(missing)} symbols absent "
+            f"{missing[:10]}, {len(duplicated)} carried more than once {duplicated[:10]}")
+    return np.asarray(columns, dtype=int)
+
+
 def cosine(a: np.ndarray, b: np.ndarray) -> float:
+    """The cosine of two finite vectors, refusing a non-finite operand."""
+    a = require_finite(a, "the first operand of a cosine")
+    b = require_finite(b, "the second operand of a cosine")
     denominator = np.linalg.norm(a) * np.linalg.norm(b)
     if denominator == 0:
         return float("nan")
@@ -134,3 +172,61 @@ def merge_batches(written: dict) -> dict:
             merged[target] = entry
             source[target] = batch
     return merged
+
+
+def verification_summary(name, merged: dict) -> dict:
+    """R0.4 for one construction: the counts, and a refusal where the median is undefined.
+
+    A median that is not a number is not below a threshold, so it decides nothing.
+    The registered rule fires when the median per-target cosine is below 0.99;
+    routing an undefined median into that branch labels the construction on
+    arithmetic rather than on disagreement, which is what Deviation 13 records.
+    Here an incomplete set of cosines is reported as refused, with the counts that
+    say how incomplete it is and a reason for every target that has none.
+    """
+    per_target = {target: entry["cosine_with_released_bulk"]
+                  for target, entry in merged.items()
+                  if "cosine_with_released_bulk" in entry}
+    reasons = {target: entry.get("cosine_reason", entry.get("reason"))
+               for target, entry in merged.items()
+               if "cosine_with_released_bulk" not in entry}
+    cosines = np.asarray(list(per_target.values()), dtype=np.float64)
+    finite = cosines[np.isfinite(cosines)]
+    complete = bool(cosines.size) and finite.size == cosines.size
+    median = float(np.median(finite)) if finite.size else None
+    # an undefined cosine is serialized as null beside the target it belongs to,
+    # so the reader sees a target with no value rather than a value that is not a
+    # number, and the file stays valid JSON for something other than Python
+    not_finite = sorted(target for target, value in per_target.items()
+                        if not np.isfinite(value))
+    per_target = {target: (float(value) if np.isfinite(value) else None)
+                  for target, value in per_target.items()}
+
+    def first(key):
+        return next((entry[key] for entry in merged.values() if key in entry), None)
+
+    return {
+        "construction": name,
+        "basis_sha256": first("basis_sha256"),
+        "n_landmarks": first("n_landmarks"),
+        "n_targets_in_release": len(merged),
+        "n_total": int(cosines.size),
+        "n_finite": int(finite.size),
+        "n_non_finite": int(cosines.size - finite.size),
+        "n_not_computed": len(reasons),
+        "reason_not_computed": reasons,
+        "threshold": 0.99,
+        "status": "computed" if complete else "refused",
+        "median_cosine": median if complete else None,
+        "min_cosine": float(np.min(finite)) if complete and finite.size else None,
+        "n_below_threshold": int((finite < 0.99).sum()) if complete else None,
+        "describes": None if not complete else
+                     ("C1" if median >= 0.99 else "the single-cell construction, not C1"),
+        "refusal": None if complete else
+                   (f"{int(cosines.size - finite.size)} of {int(cosines.size)} per-target "
+                    "cosines are not finite on the frozen basis and "
+                    f"{len(reasons)} targets have none, so no median is reported and R0.6 "
+                    "and R7c take no label from this module"),
+        "per_target_cosine": per_target,
+        "per_target_not_finite": not_finite,
+    }

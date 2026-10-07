@@ -21,6 +21,8 @@ image = (
     modal.Image.debian_slim(python_version="3.12")
     .pip_install("numpy==2.1.3", "pandas==2.2.3", "anndata==0.11.4", "h5py==3.12.1",
                  "scipy==1.14.1")
+    # the frozen analysis bases, which R0.4 and R0.6 are evaluated on
+    .add_local_dir("registry", remote_path="/app/registry")
     .add_local_dir("geometry", remote_path="/app/geometry")
 )
 
@@ -38,6 +40,13 @@ SEED_SPLIT = 20260924            # registered
 SEED_SAMPLE = 20260925           # registered
 SAMPLE_CELLS = 10_000
 CONTROLS = ("non-targeting", "control", "")
+# Amendment 4: R0.4 and R0.6 are evaluated on the construction each release
+# defines, not on the release's full gene axis
+CONSTRUCTION = {"K562_essential": "C1-K562", "RPE1_essential": "C1-RPE1"}
+BASES = "/app/registry/frozen/analysis_bases.json"
+BASES_PIN = "/app/registry/frozen/analysis_bases_pin.json"
+GENE_INFO = "/app/registry/frozen/landmark_gene_ids.json"
+GENERATOR = "/app/experiments/03i_freeze_analysis_bases.py"
 
 
 def _ts():
@@ -61,6 +70,49 @@ def _md5(path):
         for chunk in iter(lambda: handle.read(1 << 20), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _validated_bases():
+    """The bases, through the same validator the R0-R7 driver uses.
+
+    The single-cell stages produce R0.4 and R0.6 outside the driver, so a basis
+    trusted here and checked there is checked in one of the two places it is used.
+    """
+    import json
+    from pathlib import Path
+
+    _app_importable()
+    from geometry.references import validated_analysis_bases
+
+    gene_ids = json.loads(Path(GENE_INFO).read_text())
+    pin = json.loads(Path(BASES_PIN).read_text())
+    bases = validated_analysis_bases(BASES, gene_ids, pin, generator=GENERATOR)
+    return bases, {"analysis_bases_sha256": pin["file_sha256"],
+                   "analysis_bases_pin_sha256": _sha256(BASES_PIN),
+                   "generator_sha256": pin["generator_sha256"],
+                   "landmark_axis_sha256": pin["landmark_axis_sha256"]}
+
+
+def _shard_dir(results, release, basis):
+    """Where this basis's shards live, so a superseded run is never resumed into.
+
+    R0.4 and R0.6 ran once on each release's full gene axis, and those shards
+    exist. Keying the directory by the basis digest means the amended run starts
+    empty and the diagnostic run that exposed the defect stays where it is.
+    """
+    return results / release / f"basis_{basis['basis_sha256'][:16]}"
+
+
+def _or_none(value):
+    """A float, or null where it is not a number, so a shard stays valid JSON."""
+    import math
+    return None if value is None or not math.isfinite(value) else float(value)
+
+
+def _app_importable():
+    """Make `/app` importable, which is where the image carries the repository."""
+    import site
+    site.addsitedir("/app")
 
 
 def _gem_groups(adata):
@@ -98,7 +150,8 @@ def stage_fetch():
                 partial.replace(target)
                 vol.commit()
             got = _md5(target)
-            assert got == md5, f"{target.name}: md5 {got}, published {md5}"
+            if not (got == md5):
+                raise AssertionError(f"{target.name}: md5 {got}, published {md5}")
             recorded[target.name] = {"md5": got, "sha256": _sha256(target)}
     (raw / "checksums.json").write_text(json.dumps(recorded, indent=2))
     vol.commit()
@@ -146,27 +199,60 @@ def stage_audit():
 
 @app.function(**COMMON)
 def stage_targets():
-    """R0.4 verification and R0.6 reliability, one batch of targets at a time."""
+    """R0.4 verification and R0.6 reliability, one batch of targets at a time.
+
+    Both run on the construction's frozen analysis basis, which is what the
+    registration defines C1 on: "restricted to landmarks present in the file,
+    matched by symbol through the pinned gene-info file". Running them on the
+    release's full gene axis made R0.4 verify one vector space while R0.6
+    assessed another, and let a gene that is not a landmark into the check.
+    Deviation 13 records that; Amendment 4 fixes the basis it is repaired on.
+    """
     import json
-    import sys
     from pathlib import Path
 
     import anndata as ad
     import numpy as np
 
-    sys.path.insert(0, "/app")
-    from geometry.single_cell import (batches, cosine, split_half_reliability,
-                                      target_seed)
+    _app_importable()
+    from geometry.references import require_finite
+    from geometry.single_cell import (basis_columns, batches, cosine, gene_names,
+                                      split_half_reliability, target_seed)
+
+    bases, provenance = _validated_bases()
+    preflight = Path("/vol/results/basis_preflight.json")
+    if not preflight.exists():
+        raise AssertionError(
+            "basis_preflight.json is absent: Amendment 4 confirms every operand is finite on "
+            "the frozen basis before R0.4 and R0.6 run. Run --stage preflight first.")
+    confirmed = json.loads(preflight.read_text())
+    if not confirmed.get("every_operand_is_finite") or \
+            confirmed.get("analysis_bases_sha256") != provenance["analysis_bases_sha256"]:
+        raise AssertionError(
+            "the preflight did not pass on the bases this run uses: "
+            f"finite={confirmed.get('every_operand_is_finite')}, preflight bases "
+            f"{confirmed.get('analysis_bases_sha256')}, this run's "
+            f"{provenance['analysis_bases_sha256']}")
 
     results = Path("/vol/results")
     results.mkdir(parents=True, exist_ok=True)
     for release in RELEASES:
-        shard_dir = results / release
+        construction = CONSTRUCTION[release]
+        basis = bases[construction]
+        symbols = basis["landmark_symbols"]
+        shard_dir = _shard_dir(results, release, basis)
         shard_dir.mkdir(parents=True, exist_ok=True)
         single_cell = ad.read_h5ad(Path("/vol/raw") / f"{release}_single_cell.h5ad", backed="r")
         bulk = ad.read_h5ad(Path("/vol/raw") / f"{release}_bulk.h5ad")
         bulk_gene = {str(name).split("_")[1]: i for i, name in enumerate(bulk.obs_names)
                      if str(name).count("_") >= 2}
+
+        # the same ordered coordinates in both files, so the two routes are
+        # compared on one space rather than on two of the same length
+        cell_columns = basis_columns(gene_names(single_cell), symbols)
+        bulk_columns = basis_columns(gene_names(bulk), symbols)
+        print(f"[{_ts()}] {release}: {construction} on {len(symbols)} landmarks, "
+              f"basis {basis['basis_sha256'][:16]}")
 
         labels, _ = _targets(single_cell)
         groups, _ = _gem_groups(single_cell)
@@ -181,23 +267,38 @@ def stage_targets():
             for target in members:
                 rows = np.flatnonzero(labels == target)
                 if len(rows) < 2:
+                    batch[target] = {"n_cells": int(len(rows)), "status": "not computed",
+                                     "reason": "fewer than two cells in the release"}
                     continue
                 cells = single_cell[rows].to_memory().X
                 cells = cells.toarray() if hasattr(cells, "toarray") else np.asarray(cells)
+                # a non-finite value on a frozen basis coordinate stops the run; it
+                # is not a second automatic exclusion
+                cells = require_finite(
+                    cells[:, cell_columns],
+                    f"{construction}: {target}'s cells on the frozen basis")
                 entry = {"n_cells": int(len(rows)),
-                         "reliability": split_half_reliability(
-                             cells, groups[rows], target_seed(SEED_SPLIT, str(target)))}
-                if target in bulk_gene:
-                    released = np.asarray(bulk.X[bulk_gene[target]], dtype=np.float64).ravel()
+                         "n_landmarks": len(symbols),
+                         "basis_sha256": basis["basis_sha256"],
+                         "analysis_bases_sha256": provenance["analysis_bases_sha256"],
+                         "reliability": _or_none(split_half_reliability(
+                             cells, groups[rows], target_seed(SEED_SPLIT, str(target))))}
+                if target not in bulk_gene:
+                    entry["cosine_status"] = "not computed"
+                    entry["cosine_reason"] = ("the release holds no pseudobulk row for "
+                                              "this target")
+                else:
+                    released = require_finite(
+                        np.asarray(bulk.X[bulk_gene[target]]).ravel()[bulk_columns],
+                        f"{construction}: {target}'s released pseudobulk on the frozen basis")
                     mean = cells.mean(axis=0)
-                    if len(released) == len(mean):
-                        entry["cosine_with_released_bulk"] = cosine(mean, released)
-                        entry["max_abs_difference"] = float(np.abs(mean - released).max())
+                    entry["cosine_with_released_bulk"] = cosine(mean, released)
+                    entry["max_abs_difference"] = float(np.abs(mean - released).max())
                 batch[target] = entry
             # a shard is named only once it is complete, so an interrupted write
             # cannot be mistaken for a finished batch on resume
             partial = shard_dir / f"{name}.json.part"
-            partial.write_text(json.dumps(batch, indent=2, sort_keys=True))
+            partial.write_text(json.dumps(batch, indent=2, sort_keys=True, allow_nan=False))
             partial.replace(shard_dir / f"{name}.json")
             vol.commit()                      # checkpoint inside the unit
             print(f"[{_ts()}] {release}: {name} written, {len(batch)} targets")
@@ -215,46 +316,52 @@ def stage_merge():
     import numpy as np
 
     sys.path.insert(0, "/app")
-    from geometry.single_cell import merge_batches
+    from geometry.single_cell import merge_batches, verification_summary
 
+    bases, provenance = _validated_bases()
     results = Path("/vol/results")
     audit = json.loads((results / "audit.json").read_text())
     reliability, verification = {}, {}
     naming = {"K562_essential": "C1-K562", "RPE1_essential": "C1-RPE1"}
     for release, name in naming.items():
+        basis = bases[name]
+        shard_dir = _shard_dir(results, release, basis)
         merged = merge_batches({shard.stem: json.loads(shard.read_text())
-                                for shard in sorted((results / release).glob("*.json"))})
+                                for shard in sorted(shard_dir.glob("*.json"))})
+        stale = {target: entry.get("basis_sha256") for target, entry in merged.items()
+                 if "basis_sha256" in entry and entry["basis_sha256"] != basis["basis_sha256"]}
+        if stale:
+            raise AssertionError(
+                f"{release}: {len(stale)} shard entries were computed on another basis, first "
+                f"{sorted(stale.items())[:3]}; they are not merged into this one")
         reliability[name] = {target: entry["reliability"] for target, entry in merged.items()
-                             if entry.get("reliability") is not None}
-        cosines = [entry["cosine_with_released_bulk"] for entry in merged.values()
-                   if "cosine_with_released_bulk" in entry]
-        verification[name] = {
-            "n_targets_compared": len(cosines),
-            "median_cosine": float(np.median(cosines)) if cosines else None,
-            "min_cosine": float(np.min(cosines)) if cosines else None,
-            "threshold": 0.99,
-            "describes": ("C1" if cosines and float(np.median(cosines)) >= 0.99
-                          else "the single-cell construction, not C1"),
-            "per_target_cosine": {t: e["cosine_with_released_bulk"] for t, e in merged.items()
-                                  if "cosine_with_released_bulk" in e}}
+                             if entry.get("reliability") is not None
+                             and np.isfinite(entry["reliability"])}
+        verification[name] = verification_summary(name, merged)
     out = {"R0.1_representation": {r: audit[r]["representation"] for r in audit},
            "R0.3_design": {r: audit[r]["design"] for r in audit},
            "R0.4_verification": verification,
            "R0.6_reliability": reliability,
            "seeds": {"split_half": SEED_SPLIT, "representation_sample": SEED_SAMPLE},
-           "checksums": json.loads((Path("/vol/raw") / "checksums.json").read_text())}
-    (results / "single_cell_audit.json").write_text(json.dumps(out, indent=2))
+           "checksums": json.loads((Path("/vol/raw") / "checksums.json").read_text()),
+           "analysis_bases": {**provenance,
+                              "per_construction": {name: bases[name]["basis_sha256"]
+                                                   for name in naming.values()}},
+           "preflight": json.loads((results / "basis_preflight.json").read_text())}
+    (results / "single_cell_audit.json").write_text(json.dumps(out, indent=2, allow_nan=False))
     vol.commit()
     return {name: len(reliability[name]) for name in reliability}
 
 
 @app.local_entrypoint()
 def main(stage: str = "all"):
-    """stage: all | fetch | audit | targets | merge"""
+    """stage: all | fetch | audit | preflight | targets | merge"""
     if stage in ("all", "fetch"):
         print(stage_fetch.remote())
     if stage in ("all", "audit"):
         print(stage_audit.remote())
+    if stage in ("all", "preflight"):
+        print(stage_basis_preflight.remote())
     if stage in ("all", "targets"):
         print(stage_targets.remote())
     if stage in ("all", "merge"):
@@ -565,3 +672,315 @@ def stage_control_variance_in_the_two_groups():
         vol.commit()
     return {g: {k: v for k, v in d.items() if k != "per_group"}
             for g, d in found.items() if isinstance(d, dict) and "ensembl" in d}
+
+
+@app.function(**COMMON)
+def stage_can_the_normalization_be_reproduced():
+    """Does per-gem-group control Z-normalization reproduce the published RPE1 file?
+
+    Perplexity's round-19 hierarchy permits reconstructing the normalized source from
+    raw only if the published normalization can be reproduced and the reconstruction is
+    verified against all unaffected values, not merely the two defective genes. This is
+    that test, and it is the gate on whether the C1-RPE1 arm survives.
+
+    The candidate transformation, from the mechanism already established: for each gem
+    group, subtract the mean of that group's non-targeting control cells and divide by
+    their standard deviation, per gene. Agreement is measured on the finite positions
+    only, because the published file has no recoverable value where it holds +inf.
+
+    A sample of genes is used rather than all 8,749, because the question is whether the
+    transformation is the right one, and a wrong transformation disagrees everywhere.
+    The two defective genes are always included.
+    """
+    import json
+    from pathlib import Path
+
+    import anndata as ad
+    import numpy as np
+
+    raw_dir = Path("/vol/raw")
+    out = Path("/vol/results")
+    counts = ad.read_h5ad(raw_dir / "rpe1_raw_singlecell_01.h5ad", backed="r")
+    published = ad.read_h5ad(raw_dir / "RPE1_essential_single_cell.h5ad", backed="r")
+    names = [str(v) for v in counts.var_names]
+    if [str(v) for v in published.var_names] != names:
+        raise AssertionError("the raw and published files do not share a gene axis")
+
+    labels, _ = _targets(counts)
+    groups, _ = _gem_groups(counts)
+    labels, groups = np.asarray(labels), np.asarray(groups)
+    is_control = np.isin(labels, list(CONTROLS))
+
+    rng = np.random.default_rng(20261006)
+    sample = sorted(set(rng.choice(len(names), size=40, replace=False).tolist())
+                    | {names.index("ENSG00000162772"), names.index("ENSG00000108691")})
+
+    worst, compared, nonfinite_published, per_gene = 0.0, 0, 0, {}
+    for column in sample:
+        raw_values = np.empty(counts.n_obs, dtype=np.float64)
+        pub_values = np.empty(counts.n_obs, dtype=np.float64)
+        for start in range(0, counts.n_obs, 20000):
+            stop = min(start + 20000, counts.n_obs)
+            for source, into in ((counts, raw_values), (published, pub_values)):
+                block = source[start:stop].to_memory().X
+                block = block.toarray() if hasattr(block, "toarray") else np.asarray(block)
+                into[start:stop] = np.asarray(block[:, column], dtype=np.float64)
+
+        rebuilt = np.full(counts.n_obs, np.nan)
+        for group in np.unique(groups):
+            rows = groups == group
+            control = raw_values[rows & is_control]
+            if not control.size:
+                continue
+            sd = control.std()
+            rebuilt[rows] = ((raw_values[rows] - control.mean()) / sd if sd > 0
+                             else np.inf * np.sign(raw_values[rows] - control.mean()))
+
+        usable = np.isfinite(pub_values) & np.isfinite(rebuilt)
+        if usable.any():
+            error = float(np.abs(rebuilt[usable] - pub_values[usable]).max())
+            worst = max(worst, error)
+            compared += int(usable.sum())
+        else:
+            error = None
+        nonfinite_published += int((~np.isfinite(pub_values)).sum())
+        per_gene[names[column]] = {
+            "n_finite_in_both": int(usable.sum()),
+            "max_abs_difference": error,
+            "n_non_finite_published": int((~np.isfinite(pub_values)).sum()),
+            "n_non_finite_rebuilt": int((~np.isfinite(rebuilt)).sum()),
+        }
+        json.dump({"genes_done": len(per_gene), "of": len(sample),
+                   "worst_so_far": worst}, open(out / "repro_progress.json", "w"))
+        vol.commit()
+
+    result = {
+        "candidate": ("per gem group, subtract the mean of that group's non-targeting "
+                      "control cells and divide by their standard deviation, per gene"),
+        "n_genes_sampled": len(sample),
+        "n_values_compared": compared,
+        "max_abs_difference_on_finite_positions": worst,
+        "n_non_finite_in_published_sample": nonfinite_published,
+        "reproduces": worst < 1e-4,
+        "per_gene": per_gene,
+    }
+    result["reading"] = (
+        "the published normalization is reproduced from the raw counts by this "
+        f"transformation to {worst:.3e} on {compared} finite positions, so a "
+        "deterministic reconstruction is justifiable"
+        if result["reproduces"] else
+        f"this transformation does not reproduce the published file: {worst:.3e}. The "
+        "reconstruction route is not justified on it and the C1-RPE1 arm stays not "
+        "computable unless the exact published procedure is obtained.")
+    (out / "normalization_reproduction.json").write_text(json.dumps(result, indent=2))
+    vol.commit()
+    print(json.dumps({k: v for k, v in result.items() if k != "per_gene"}, indent=2))
+    return {k: v for k, v in result.items() if k != "per_gene"}
+
+
+@app.function(**COMMON)
+def probe_raw_obs_fields():
+    """What per-cell fields the raw RPE1 file carries, for the UMI-total step."""
+    import json
+    from pathlib import Path
+
+    import anndata as ad
+    import numpy as np
+
+    counts = ad.read_h5ad(Path("/vol/raw") / "rpe1_raw_singlecell_01.h5ad", backed="r")
+    found = {"shape": list(map(int, counts.shape)),
+             "obs_columns": {c: str(counts.obs[c].dtype) for c in counts.obs.columns},
+             "var_columns": {c: str(counts.var[c].dtype) for c in counts.var.columns},
+             "layers": list(counts.layers.keys()) if counts.layers else []}
+    for column in counts.obs.columns:
+        values = counts.obs[column]
+        if values.dtype.kind in "if":
+            found[f"obs::{column}"] = {"min": float(values.min()), "max": float(values.max()),
+                                       "median": float(values.median())}
+    # the total over the genes this file holds, for the first block of cells
+    block = counts[:2000].to_memory().X
+    block = block.toarray() if hasattr(block, "toarray") else np.asarray(block)
+    totals = np.asarray(block, dtype=np.float64).sum(axis=1)
+    found["summed_over_this_file_genes"] = {"min": float(totals.min()),
+                                            "max": float(totals.max()),
+                                            "median": float(np.median(totals))}
+    print(json.dumps(found, indent=2))
+    return found
+
+
+@app.function(**COMMON)
+def stage_reproduce_with_the_published_scale_factor():
+    """The paper's two documented steps, using the scale factor the raw file carries.
+
+    STAR Methods: "(i) UMI count normalization: We scale expression within all cells so
+    that their total UMI counts equal the median UMI count of core control cells within
+    the experiment. (ii) Relative z-normalization: Within each gemgroup, for each gene,
+    we compute the mean and standard deviation of expression within control cells and
+    use these to z-normalize expression."
+
+    The earlier attempt omitted step (i) and disagreed by 1.8e+03. The raw file carries
+    `core_scale_factor` per cell, which is step (i)'s factor as the authors computed it,
+    so neither the target nor the core-control set has to be inferred.
+    """
+    import json
+    from pathlib import Path
+
+    import anndata as ad
+    import numpy as np
+
+    raw_dir = Path("/vol/raw")
+    out = Path("/vol/results")
+    counts = ad.read_h5ad(raw_dir / "rpe1_raw_singlecell_01.h5ad", backed="r")
+    published = ad.read_h5ad(raw_dir / "RPE1_essential_single_cell.h5ad", backed="r")
+    names = [str(v) for v in counts.var_names]
+    if [str(v) for v in published.var_names] != names:
+        raise AssertionError("the raw and published files do not share a gene axis")
+
+    scale = np.asarray(counts.obs["core_scale_factor"], dtype=np.float64)
+    labels, _ = _targets(counts)
+    groups, _ = _gem_groups(counts)
+    labels, groups = np.asarray(labels), np.asarray(groups)
+    is_control = np.isin(labels, list(CONTROLS))
+
+    rng = np.random.default_rng(20261006)
+    sample = sorted(set(rng.choice(len(names), size=40, replace=False).tolist())
+                    | {names.index("ENSG00000162772"), names.index("ENSG00000108691")})
+
+    worst, compared, per_gene = 0.0, 0, {}
+    for column in sample:
+        raw_values = np.empty(counts.n_obs, dtype=np.float64)
+        pub_values = np.empty(counts.n_obs, dtype=np.float64)
+        for start in range(0, counts.n_obs, 20000):
+            stop = min(start + 20000, counts.n_obs)
+            for source, into in ((counts, raw_values), (published, pub_values)):
+                block = source[start:stop].to_memory().X
+                block = block.toarray() if hasattr(block, "toarray") else np.asarray(block)
+                into[start:stop] = np.asarray(block[:, column], dtype=np.float64)
+
+        scaled = raw_values * scale                       # step (i)
+        rebuilt = np.full(counts.n_obs, np.nan)
+        for group in np.unique(groups):                   # step (ii)
+            rows = groups == group
+            control = scaled[rows & is_control]
+            if not control.size:
+                continue
+            sd = control.std()
+            centered = scaled[rows] - control.mean()
+            rebuilt[rows] = centered / sd if sd > 0 else np.inf * np.sign(centered)
+
+        usable = np.isfinite(pub_values) & np.isfinite(rebuilt)
+        error = float(np.abs(rebuilt[usable] - pub_values[usable]).max()) if usable.any() else None
+        if error is not None:
+            worst = max(worst, error)
+            compared += int(usable.sum())
+        per_gene[names[column]] = {
+            "n_finite_in_both": int(usable.sum()), "max_abs_difference": error,
+            "n_non_finite_published": int((~np.isfinite(pub_values)).sum()),
+            "n_non_finite_rebuilt": int((~np.isfinite(rebuilt)).sum())}
+        json.dump({"genes_done": len(per_gene), "of": len(sample), "worst": worst},
+                  open(out / "repro2_progress.json", "w"))
+        vol.commit()
+
+    result = {
+        "procedure": ("raw counts times the file's own core_scale_factor, then per gem "
+                      "group a z against the non-targeting control cells of that group"),
+        "documented_in": "Replogle et al. 2022 Cell, STAR Methods, internal normalization",
+        "n_genes_sampled": len(sample), "n_values_compared": compared,
+        "max_abs_difference_on_finite_positions": worst,
+        "reproduces": worst < 1e-3,
+        "non_finite_positions_agree": all(
+            v["n_non_finite_published"] == v["n_non_finite_rebuilt"] for v in per_gene.values()),
+        "per_gene": per_gene,
+    }
+    result["reading"] = (
+        f"the published normalization reproduces from the raw counts to {worst:.3e} over "
+        f"{compared} finite positions, by the authors' two documented steps and their own "
+        "per-cell scale factor, so a deterministic reconstruction is justifiable"
+        if result["reproduces"] else
+        f"this does not reproduce the published file either: {worst:.3e}")
+    (out / "normalization_reproduction_v2.json").write_text(json.dumps(result, indent=2))
+    vol.commit()
+    print(json.dumps({k: v for k, v in result.items() if k != "per_gene"}, indent=2))
+    return {k: v for k, v in result.items() if k != "per_gene"}
+
+
+@app.function(**COMMON)
+def stage_basis_preflight():
+    """Is every value R0.4 and R0.6 will read finite on the frozen basis?
+
+    This computes no registered statistic. It confirms that each release lands the
+    frozen basis exactly once per symbol, and that the values on those coordinates
+    are finite in both the single-cell and the pseudobulk file, so a defect
+    surfaces before 2,393 targets of work rather than part way through it.
+
+    Amendment 4 excludes a coordinate only through the frozen basis, so anything
+    non-finite found here is a refusal and not a second exclusion.
+    """
+    import json
+    from pathlib import Path
+
+    import anndata as ad
+    import numpy as np
+
+    _app_importable()
+    from geometry.single_cell import basis_columns, gene_names
+
+    bases, provenance = _validated_bases()
+    report, clean = {}, True
+    for release in RELEASES:
+        construction = CONSTRUCTION[release]
+        basis = bases[construction]
+        symbols = basis["landmark_symbols"]
+        entry = {"construction": construction, "n_landmarks": len(symbols),
+                 "basis_sha256": basis["basis_sha256"],
+                 "n_landmarks_matched_before_the_finite_filter": basis["n_landmarks_matched"],
+                 "excluded_as_undefined": [gene["symbol"]
+                                           for gene in basis["excluded_as_undefined"]]}
+        for kind in ("single_cell", "bulk"):
+            path = Path("/vol/raw") / f"{release}_{kind}.h5ad"
+            adata = ad.read_h5ad(path, backed="r") if kind == "single_cell" \
+                else ad.read_h5ad(path)
+            columns = basis_columns(gene_names(adata), symbols)
+            n_rows = adata.shape[0]
+            non_finite, rows_affected, scanned = 0, 0, 0
+            for start in range(0, n_rows, 20_000):
+                block = adata[start:min(start + 20_000, n_rows)]
+                values = block.to_memory().X if kind == "single_cell" else block.X
+                values = values.toarray() if hasattr(values, "toarray") else np.asarray(values)
+                offending = ~np.isfinite(values[:, columns])
+                non_finite += int(offending.sum())
+                rows_affected += int(offending.any(axis=1).sum())
+                scanned += int(offending.size)
+                print(f"[{_ts()}] {release} {kind}: {start + len(values)}/{n_rows} rows, "
+                      f"{non_finite} non-finite so far", flush=True)
+            if kind == "single_cell":
+                adata.file.close()
+            entry[kind] = {"file": path.name, "shape": [int(n_rows), len(symbols)],
+                           "n_values_scanned": scanned,
+                           "n_non_finite_on_the_basis": non_finite,
+                           "n_rows_affected": rows_affected,
+                           "every_basis_value_is_finite": non_finite == 0}
+            clean = clean and non_finite == 0
+        report[release] = entry
+
+    report["computed_no_registered_statistic"] = True
+    report["every_operand_is_finite"] = clean
+    report.update(provenance)
+    report["reading"] = (
+        "every value R0.4 and R0.6 read on each construction's frozen basis is finite"
+        if clean else
+        "a non-finite value remains on a frozen basis coordinate; R0.4 and R0.6 refuse "
+        "rather than exclude it, and the basis is not widened or narrowed to suit")
+    out = Path("/vol/results")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "basis_preflight.json").write_text(json.dumps(report, indent=2, allow_nan=False))
+    vol.commit()
+    # the report is written and committed first, so a refusal leaves a record of
+    # what it refused rather than only a traceback
+    if not clean:
+        raise AssertionError(
+            "a frozen basis coordinate holds a non-finite value in a source R0.4 or R0.6 "
+            "reads. Amendment 4 refuses rather than excluding it a second time; see "
+            "basis_preflight.json for which release, which file and how many values.")
+    print(json.dumps(report, indent=2))
+    return f"every operand finite on {len(bases)} frozen bases"

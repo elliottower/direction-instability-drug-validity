@@ -581,8 +581,8 @@ def stage_verify_permutation():
     right = np.asarray(extraction_sigs[probe], dtype=np.float64)
     permutation = np.argsort(right)[np.argsort(np.argsort(left))]
 
-    assert sorted(permutation.tolist()) == list(range(len(rebuilt_genes))), (
-        "the recovered map is not a bijection, so it is not a permutation")
+    if not (sorted(permutation.tolist()) == list(range(len(rebuilt_genes)))):
+        raise AssertionError("the recovered map is not a bijection, so it is not a permutation")
 
     worst, failures = 0.0, []
     for sig_id in shared:
@@ -659,7 +659,8 @@ def stage_axis_uniqueness():
     shared = sorted(set(rebuilt_sigs) & set(extraction_sigs))
     genes = [str(g) for g in rebuilt_genes]
     matrix = np.vstack([np.asarray(rebuilt_sigs[s], dtype=np.float64) for s in shared])
-    assert matrix.shape == (len(shared), len(genes)), f"matrix is {matrix.shape}"
+    if not (matrix.shape == (len(shared), len(genes))):
+        raise AssertionError(f"matrix is {matrix.shape}")
 
     # two identical columns are the only way a second permutation can exist
     profiles = {}
@@ -704,16 +705,23 @@ def stage_axis_uniqueness():
 
 
 @app.function(**{**COMMON, "image": test_image})
-def stage_tests():
-    """The registered suite, in the image the analyses run in."""
+def stage_tests(selector: str = "/app/tests", optimized: bool = False):
+    """The registered suite, in the image the analyses run in.
+
+    `selector` narrows it to one or more files while a change is being worked on;
+    the release check runs it with the default, which is the whole suite.
+    `optimized` runs it under `python -O`, which strips `assert` statements: a
+    contract that only holds without that flag is not a contract.
+    """
     import subprocess
 
     _repo_at_its_absolute_path()
     from pathlib import Path
 
+    interpreter = ["python", "-O"] if optimized else ["python"]
     finished = subprocess.run(
-        ["python", "-m", "pytest", "/app/tests", "-v", "-rs", "--no-header",
-         "--ignore=/app/tests/test_combined_experiments.py"],
+        interpreter + ["-m", "pytest", *selector.split(), "-v", "-rs", "--no-header",
+                       "--ignore=/app/tests/test_combined_experiments.py"],
         cwd="/app", capture_output=True, text=True)
     print(finished.stdout[-8000:], flush=True)
     print(finished.stderr[-4000:], flush=True)
@@ -721,9 +729,15 @@ def stage_tests():
     # so they go to a file rather than only to a log that scrolls
     out = Path("/out/03c_h3_sensitivity")
     out.mkdir(parents=True, exist_ok=True)
-    (out / "test_output.txt").write_text(finished.stdout + finished.stderr)
+    suffix = "_optimized" if optimized else ""
+    name = f"test_output{suffix}.txt" if selector == "/app/tests" else \
+        f"test_output_{Path(selector.split()[0]).stem}{suffix}.txt"
+    (out / name).write_text(finished.stdout + finished.stderr)
     results.commit()
-    assert finished.returncode == 0, f"the suite failed with {finished.returncode}"
+    if finished.returncode != 0:
+        raise AssertionError(
+            f"the suite failed with {finished.returncode} under "
+            f"{' '.join(interpreter)}; see {name}")
     return finished.stdout[-2000:]
 
 
@@ -1414,7 +1428,8 @@ def stage_all_cohort_permutation_check():
     right = np.vstack([values[row_of[s]] for s in block]).astype(np.float32)
     profiles = {np.ascontiguousarray(right[:, i]).tobytes(): i for i in range(right.shape[1])}
     onto = [profiles.get(np.ascontiguousarray(left[:, i]).tobytes()) for i in range(len(declared))]
-    assert all(index is not None for index in onto), "the permutation did not recover"
+    if not (all(index is not None for index in onto)):
+        raise AssertionError("the permutation did not recover")
     onto = np.array(onto)
     genes_in_source_order = list(genes)
 
@@ -1423,7 +1438,8 @@ def stage_all_cohort_permutation_check():
         chunk = wanted[start:start + 2000]
         values, genes, signatures, _ = gate.read_gctx_slice(raw / GCTX, chunk,
                                                             genes_in_source_order)
-        assert genes == genes_in_source_order, "the source returned a different gene order"
+        if not (genes == genes_in_source_order):
+            raise AssertionError("the source returned a different gene order")
         row_of = {s: i for i, s in enumerate(signatures)}
         for sig_id in chunk:
             mine = np.asarray(stored[held[sig_id]], dtype=np.float64)
@@ -1590,7 +1606,8 @@ def stage_extend_rebuild():
                             low_memory=False)
     landmark = gene_info[gene_info.pr_is_lm == 1].sort_values("pr_gene_id")
     ids = [str(g) for g in landmark.pr_gene_id]
-    assert len(ids) == 978, f"{len(ids)} landmark genes"
+    if not (len(ids) == 978):
+        raise AssertionError(f"{len(ids)} landmark genes")
 
     existing = set()
     for shard in sorted(shards.glob("shard_*.npz")):
@@ -1605,13 +1622,17 @@ def stage_extend_rebuild():
                           low_memory=False)
     sub = siginfo[siginfo.pert_iname.isin(set(wanted)) & siginfo.pert_iname.notna()]
     gct = parse.parse(str(raw / GCTX), cid=sorted(set(sub.sig_id.astype(str))), rid=ids)
-    assert gct.data_df.shape[0] == 978, f"parsed {gct.data_df.shape[0]} rows"
-    assert gct.data_df.columns.is_unique, "parsed matrix has duplicate signature ids"
+    if not (gct.data_df.shape[0] == 978):
+        raise AssertionError(f"parsed {gct.data_df.shape[0]} rows")
+    if not (gct.data_df.columns.is_unique):
+        raise AssertionError("parsed matrix has duplicate signature ids")
     frame = gct.data_df
     frame.index = frame.index.astype(str)
     frame = frame.reindex(index=ids)               # rid= selects, it does not order
-    assert not frame.isna().any().any(), "a landmark gene is missing from the parse"
-    assert list(frame.index) == ids, "landmark order is not the frozen order"
+    if not (not frame.isna().any().any()):
+        raise AssertionError("a landmark gene is missing from the parse")
+    if not (list(frame.index) == ids):
+        raise AssertionError("landmark order is not the frozen order")
     mat = frame.T
 
     payload, cells_by_drug = {}, {}
@@ -1730,7 +1751,8 @@ def stage_crispri_routes_checked():
     profile = {np.ascontiguousarray(right[:, i]).tobytes(): i for i in range(right.shape[1])}
     truth = [source_genes[profile[np.ascontiguousarray(left[:, i]).tobytes()]]
              for i in range(len(declared))]
-    assert len(set(truth)) == len(truth), "the recovered axis repeats a gene"
+    if not (len(set(truth)) == len(truth)):
+        raise AssertionError("the recovered axis repeats a gene")
     # position in the declared axis of each true gene, for the control route
     declared_position = {gene: i for i, gene in enumerate(declared)}
     to_declared = np.array([declared_position[g] for g in truth])
@@ -1745,7 +1767,8 @@ def stage_crispri_routes_checked():
     adata = ad.read_h5ad("/extraction/ReplogleWeissman2022_K562_essential.h5ad")
     perturbseq_genes = list(adata.var_names)
     control = adata.obs["gene"] == "non-targeting"
-    assert control.sum() > 0, "no non-targeting cells"
+    if not (control.sum() > 0):
+        raise AssertionError("no non-targeting cells")
     control_mean = np.asarray(adata[control].X.mean(axis=0)).ravel()
 
     def crispri_reference(symbols):
@@ -1836,7 +1859,8 @@ def stage_crispri_routes_checked():
     # the rebuild sits in the frozen landmark order: the landmark ids ascending by
     # Entrez id, which is what modal_h3_rebuild.py parses against
     frozen = [str(g) for g in info[info.pr_is_lm == 1].sort_values("pr_gene_id").pr_gene_id]
-    assert len(frozen) == 978, f"{len(frozen)} landmark genes"
+    if not (len(frozen) == 978):
+        raise AssertionError(f"{len(frozen)} landmark genes")
     frozen_symbols = [symbol.get(g, g) for g in frozen]
 
     rng = np.random.default_rng()
@@ -1920,12 +1944,37 @@ def stage_preflight_checked():
         Path(staged) / "GSE92742_Broad_LINCS_gene_info.txt.gz")
     mod.require(gene_axis == frozen, "the rebuild's axis is not the frozen landmark order")
     shrna = mod.build_shrna_reference_from_rebuild(rebuilt, gene_axis)
+
+    # Amendment 4: the bases artifact, through the shared validator, and every
+    # construction actually built on it, so a basis that does not describe its
+    # source fails here rather than part way through the registered run
+    symbols = mod.landmark_symbols(
+        Path(staged) / "GSE92742_Broad_LINCS_gene_info.txt.gz", gene_axis)
+    bases = mod.validated_analysis_bases(
+        "/app/registry/frozen/analysis_bases.json", gene_axis, mod.analysis_bases_pin(),
+        generator="/app/experiments/03i_freeze_analysis_bases.py")
+    built = {}
+    for name, filename in (("C1-K562", "K562_essential_normalized_bulk_01.h5ad"),
+                           ("C1-RPE1", "rpe1_normalized_bulk_01.h5ad"),
+                           ("C1-GW", "K562_gwps_normalized_bulk_01.h5ad")):
+        reference = mod.load_replogle_bulk(
+            Path("/inputs/replogle2022") / filename, symbols, name, basis=bases[name])
+        built[name] = {"n_landmarks": int(len(reference.positions)),
+                       "n_directions": len(reference.directions),
+                       "basis_sha256": bases[name]["basis_sha256"],
+                       "source_sha256": bases[name]["file_sha256"]}
     records = json.loads(Path("/app/results/03b_h3_crispri/h3_crispri_results.json").read_text())
     cohort = mod.check_cohort_identity(records, per_drug)
 
     cells = sorted({cell for drug in per_drug.values() for cell in drug})
     summary = {
         "rebuild_sha256": rebuild_hashes,
+        "analysis_bases": {
+            "file_sha256": digest("/app/registry/frozen/analysis_bases.json"),
+            "constructions": built,
+            "registered_comparisons": json.loads(
+                Path("/app/registry/frozen/analysis_bases.json").read_text()
+            )["registered_comparisons"]},
         "cohort_identity": cohort,
         "n_drugs_loaded": len(per_drug),
         "n_cell_lines_seen": len(cells),
@@ -2140,6 +2189,12 @@ def stage_r0_to_r7():
 
     _repo_at_its_absolute_path()
     staged, rebuilt = _stage_inputs(), _stage_rebuild()
+    bases = Path("/app/registry/frozen/analysis_bases.json")
+    if not bases.exists():
+        raise AssertionError(
+            "registry/frozen/analysis_bases.json is absent from the image, and Amendment 4 "
+            "evaluates every C1 construction on a frozen basis. Run --stage bases, fetch the "
+            "result into registry/frozen/, commit it, and redeploy.")
     audit = Path("/app/results/03d_h3_reference_discordance/single_cell_audit.json")
     if not audit.exists():
         raise AssertionError(
@@ -2156,9 +2211,33 @@ def stage_r0_to_r7():
           "--replogle", "/inputs/replogle2022",
           "--prism", "/inputs/prism_19q4",
           "--single-cell", str(audit),
+          "--analysis-bases", "/app/registry/frozen/analysis_bases.json",
           "--expected-mapping-sha256",
           "152361cb3174a5fb7aae0229c3e3d049dc00d49d9e442925156a9fe0564b89d3",
           "--output", "/out/03d_h3_reference_discordance"])
     results.commit()
     written = sorted(Path("/out/03d_h3_reference_discordance").glob("*.json"))
     return [p.name for p in written]
+
+
+@app.function(**COMMON)
+def stage_freeze_analysis_bases():
+    """Measure each C1 construction's finite landmark basis, on the volume's own files.
+
+    Amendment 4's rule is measured rather than asserted, and it is measured on the
+    copies production reads: a coverage report computed against a different copy of
+    the same artifact is how Deviation 12's neighbourhood was found.
+    """
+    from pathlib import Path
+
+    _repo_at_its_absolute_path()
+    staged = _stage_inputs()
+    out = Path("/out/registry")
+    out.mkdir(parents=True, exist_ok=True)
+    _run(["/app/experiments/03i_freeze_analysis_bases.py",
+          "--replogle", "/inputs/replogle2022",
+          "--gene-info", str(staged / "GSE92742_Broad_LINCS_gene_info.txt.gz"),
+          "--perturbseq", "/inputs/scperturb/ReplogleWeissman2022_K562_essential.h5ad",
+          "--output", str(out / "analysis_bases.json")])
+    results.commit()
+    return (out / "analysis_bases.json").read_text()

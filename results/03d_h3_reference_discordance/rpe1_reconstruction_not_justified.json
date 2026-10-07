@@ -1,0 +1,23 @@
+{
+  "question": "can the published RPE1 normalization be reproduced from the raw counts, which is Perplexity round 19's condition for reconstructing the C1-RPE1 operand rather than holding the arm as not computable",
+  "answer": "no, on two attempts",
+  "attempt_1": {
+    "procedure": "per gem group, z against the group's non-targeting controls, on raw counts",
+    "max_abs_difference": 1824.3968881650242
+  },
+  "attempt_2": {
+    "procedure": "raw counts times the file's own core_scale_factor, then per gem group a z against the group's non-targeting controls",
+    "documented_in": "Replogle et al. 2022 Cell, STAR Methods",
+    "max_abs_difference": 1824.3968881650242,
+    "n_values_compared": 10404475,
+    "genes_agreeing_under_1e-1": 0,
+    "n_genes": 42,
+    "median_gene_error": 12.759834096333714
+  },
+  "what_is_nonetheless_confirmed": {
+    "non_finite_positions_agree": true,
+    "reading": "the rebuilt matrix goes non-finite in exactly the positions the published one does, 3364 for ATF3 and 4549 for CCL2, so the control set and the zero-control-standard-deviation mechanism are right even though the values are not. The discrepancy is in the per-cell scaling, not in the z step or the choice of control cells."
+  },
+  "what_was_not_tried": "further variations on the scaling. The round-19 ruling forbids inventing a transformation to make the numbers agree, and two documented attempts have failed, so the next step is the authors' own code rather than a third guess.",
+  "consequence": "the C1-RPE1 arm is held as not computable under Perplexity round 19's hierarchy. R0-R7 proceeds on C0, C1-K562, C1-GW and C1-GW-phenotype-positive, with C1-RPE1 reported as not computable and why."
+}
