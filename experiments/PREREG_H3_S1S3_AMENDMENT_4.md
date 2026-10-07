@@ -4,7 +4,7 @@
 **Status:** FROZEN. No amended statistic has been computed. R0.4 and R0.6 have run
 on the superseded full gene axis and are recomputed under this amendment; R0.5 and
 R1-R7 have not run.
-**Commit SHA:** PENDING
+**Commit SHA:** 8edf227
 **Amends:** `experiments/PREREG_H3_REFERENCE_DISCORDANCE.md` (frozen `7f57136`),
 whose R0.2, R0.4, R0.6 and R7c this narrows, and
 `experiments/PREREG_H3_S1S3_AMENDMENT_3.md` (frozen `03175d0`), which it leaves
