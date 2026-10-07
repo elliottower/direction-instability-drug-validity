@@ -1118,6 +1118,11 @@ def run(args):
     bases = validated_analysis_bases(
         args.analysis_bases, gene_ids, analysis_bases_pin(),
         generator=REPO / "experiments" / "03i_freeze_analysis_bases.py")
+    # `validated_analysis_bases` returns the constructions alone. The intersections
+    # R0.5 checks itself against are a sibling key of the same artifact, which that
+    # call has already verified whole against the external pin by file digest.
+    frozen_comparisons = json.loads(
+        Path(args.analysis_bases).read_text())["registered_comparisons"]
     c1 = load_replogle_bulk(args.replogle / "K562_essential_normalized_bulk_01.h5ad",
                             symbols, "C1-K562", basis=bases["C1-K562"])
     c1_rpe1 = load_replogle_bulk(args.replogle / "rpe1_normalized_bulk_01.h5ad", symbols,
@@ -1220,9 +1225,12 @@ def run(args):
             f"{sorted(agreement)}; a registered comparison is not dropped")
     for name, expected in REGISTERED_R05_PAIRS.items():
         observed = agreement[name]["n_shared_landmarks"]
-        require(observed == bases["registered_comparisons"][expected]["n_shared"],
+        require(expected in frozen_comparisons,
+                f"R0.5 {name} names the comparison {expected!r}, which the frozen bases "
+                f"artifact does not record; it holds {sorted(frozen_comparisons)}")
+        require(observed == frozen_comparisons[expected]["n_shared"],
                 f"R0.5 {name} ran on {observed} landmarks and the frozen bases record "
-                f"{bases['registered_comparisons'][expected]['n_shared']} for {expected}")
+                f"{frozen_comparisons[expected]['n_shared']} for {expected}")
     result["modules"]["R0.5_agreement"] = agreement
 
     def leading_share(reference, genes):
