@@ -818,13 +818,48 @@ values and every route that can be constructed today. Context membership is
 identical between routes for every drug examined, and among the nine drugs the
 localization diagnostic examined the difference is spread rather than concentrated
 in one context pair: 6 of levofloxacin's 21 pairs sit above half the maximum
-per-pair difference of 5.658e-07. Among those same nine, the two modern routes
-agreed more closely with each other than either agreed with the deposited value.
+per-pair difference of 5.658e-07.
 
 So the diagnostics found no localized context-pair discrepancy among the examined
 focus drugs and rejected the two tested dtype explanations; the remaining residual
-has not been explained. That is weaker than a statement about the cohort, and the
-nine-drug diagnostic cannot carry one.
+has not been explained.
+
+### A third candidate, tested and refuted, and what the test could establish
+
+Deviation 9's pre-fix shRNA consensus indexing was the one remaining named candidate,
+and the plan was frozen at `e684d16` before it ran so no variant of the indexing
+could be searched. H2 holds. Over all 795 drugs the pre-fix reference differs from the
+deposited records by up to 7.818 in `P_shrna` and 0.448 in `E_shrna`, against 9.755e-07
+and 9.843e-08 for the corrected reference, and not one drug is closer under it.
+
+The outcome was fixed by provenance rather than discovered. The records this gate
+compares against are the corrected artifact, recomputed with the corrected function at
+`f822fb1`, whose own commit title reads "the indexing defect was not the cause". A
+defect whose repair produced the comparison target cannot account for a residual
+measured against that target, and the 7.818 and 0.448 are the two figures this entry
+already reported for the corrected reconstruction against the superseded artifact,
+measured in the other direction. I proposed the candidate in the round-24 packet
+without reading that far back in this log, and the review agreed to test it on the
+strength of the description. The measurement is kept for what it does establish, that
+the deposited reference directions are the corrected consensus. No further candidate
+for the residual is named, and what remains unexplained is that a re-execution of the
+corrected route does not return the corrected records bit for bit.
+
+### Route to route, over the cohort rather than nine drugs
+
+The earlier claim that the two modern routes agree with each other five to ten times
+better than either agrees with the deposited values came from nine focus drugs and does
+not survive the cohort. Over all 795:
+
+| quantity | routes mutually closer | max ratio | median ratio |
+|---|---|---|---|
+| `P_shrna` | 568 of 795 | 2.5 | 2.5 |
+| `E_shrna` | 611 of 795 | 5.4 | 4.5 |
+| `D` | 778 of 795 | 31 | 38 |
+
+The defensible statement is about the cohort's maxima and medians, where the routes are
+mutually closer for every quantity. Per drug it is not universal, and the factor is 2.5
+rather than five to ten for projected dispersion.
 
 ### The defect is that one rule was carrying two comparisons
 
@@ -881,5 +916,10 @@ measured on rather than aggregate summaries alone.
 - `results/03d_h3_reference_discordance/reproduction_error_localized.json`
 - `results/03d_h3_reference_discordance/two_layer_gate_measurement.json`
 - `experiments/PREREG_H3_S1S3_AMENDMENT_5.md`
-- `experiments/PREREG_H3_S1S3_DIAGNOSTIC_D9_INDEXING.md`, the frozen plan for the one
-  remaining candidate cause
+- `experiments/PREREG_H3_S1S3_DIAGNOSTIC_D9_INDEXING.md`, frozen at `e684d16` before
+  the diagnostic ran
+- `results/03d_h3_reference_discordance/d9_indexing_diagnostic.json`
+- `results/03d_h3_reference_discordance/legacy_reproduction_audit.json`, with
+  `legacy_reproduction_per_drug.json` behind it and
+  `registry/frozen/reproduction_legacy_pin.json` holding its expected identity
+- `results/03d_h3_reference_discordance/route_to_route_all_drugs.json`

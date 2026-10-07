@@ -475,20 +475,29 @@ def test_a_crispri_field_without_its_pair_refuses(tmp_path, mod):
 # ---- the flat rule is strict, at the boundary and in the audit
 
 
-def test_the_flat_rule_is_strict_at_exactly_the_tolerance(tmp_path, mod):
+def test_the_flat_rule_is_strict_across_the_tolerance(tmp_path, mod):
     drugs, targets = ["a"], ["T1"]
     arm = an_arm(mod, drugs, targets)
     reference = a_reference(mod, targets)
     records, values = records_for(mod, arm, reference)
     legacy, pin = a_legacy_audit(tmp_path, mod)
     deposited = records[0]["proj_shrna"]
-    records[0]["proj_shrna"] = deposited + mod.RECON_TOL
 
-    report = mod.reproduction_gate(arm, values, None, records,
-                                   legacy_record=legacy, legacy_expected=pin)
-    row = next(r for r in report["per_drug"] if r["quantity"] == "P_shrna")
-    assert row["absolute_error"] == pytest.approx(mod.RECON_TOL, rel=1e-9)
-    assert not row["within_flat"]
+    # the boundary is crossed rather than landed on. An error of 1e-06 is admitted by
+    # the elementwise rule only where |b| >= 0.99, and at such a magnitude the float64
+    # grid is far coarser than any neighbourhood of 1e-06: adding RECON_TOL to the
+    # deposited value and subtracting it again does not return RECON_TOL. The
+    # exact-equality case is tested on the audit, where the reported maximum is one
+    # number compared with RECON_TOL directly.
+    for factor, within in ((0.5, True), (2.0, False)):
+        records[0]["proj_shrna"] = deposited + factor * mod.RECON_TOL
+        report = mod.reproduction_gate(arm, values, None, records,
+                                       legacy_record=legacy, legacy_expected=pin)
+        row = next(r for r in report["per_drug"] if r["quantity"] == "P_shrna")
+        assert row["within_flat"] is within, factor
+        assert (row["absolute_error"] < mod.RECON_TOL) is within, factor
+        # and the elementwise rule admits both, so the flat rule is what moved
+        assert row["within_elementwise"], factor
 
 
 def test_a_legacy_audit_at_exactly_the_tolerance_refuses(tmp_path, mod):
@@ -505,3 +514,74 @@ def test_a_legacy_audit_at_exactly_the_tolerance_refuses(tmp_path, mod):
     with pytest.raises(mod.DiscordanceError, match="is not below"):
         mod.reproduction_gate(arm, values, None, records,
                               legacy_record=legacy, legacy_expected=pin)
+
+
+# ---- the real artifacts against the real pin
+
+
+AUDIT = REPO / "results/03d_h3_reference_discordance/legacy_reproduction_audit.json"
+PER_DRUG = REPO / "results/03d_h3_reference_discordance/legacy_reproduction_per_drug.json"
+ROUTES = REPO / "results/03d_h3_reference_discordance/route_to_route_all_drugs.json"
+PIN = REPO / "registry/frozen/reproduction_legacy_pin.json"
+
+
+def test_the_sealed_audit_answers_to_its_external_pin(mod):
+    pin = json.loads(PIN.read_text())
+    assert mod.sha256_file(AUDIT) == pin["audit_sha256"]
+    assert mod.sha256_file(PER_DRUG) == pin["per_drug_sha256"]
+    # and the pin is a file of its own, so the audit cannot supply its own expected hash
+    assert "audit_sha256" not in json.loads(AUDIT.read_text())
+
+
+def test_the_sealed_audit_was_measured_on_the_registered_inputs(mod):
+    provenance = json.loads(AUDIT.read_text())["provenance"]
+    assert provenance["retired_extraction_sha256"] == mod.EXPECTED_LINCS_SUBSET_SHA256
+    assert provenance["retired_shrna_sha256"] == mod.EXPECTED_LINCS_SHRNA_SHA256
+    assert provenance["deposited_records_sha256"] == mod.EXPECTED_RECORDS_SHA256
+
+
+def test_the_sealed_audit_passes_the_gates_own_verification(mod):
+    audit = mod.verified_legacy_audit(AUDIT, json.loads(PIN.read_text()))
+    assert audit["n_drugs"] == 795
+    assert audit["per_drug_table"]["n_rows"] == 795 * 3
+    for quantity in ("P_shrna", "E_shrna", "D"):
+        layer = audit["layers"]["legacy_reproduction"][quantity]
+        assert layer["flat_1e-6_holds"] and layer["n_over_flat_1e-6"] == 0
+        assert layer["max_absolute_error"] < mod.RECON_TOL
+
+
+def test_one_altered_byte_of_the_real_audit_is_refused(tmp_path, mod):
+    copy = tmp_path / "legacy_reproduction_audit.json"
+    copy.write_text(AUDIT.read_text().replace('"n_drugs": 795', '"n_drugs": 796', 1))
+
+    with pytest.raises(mod.DiscordanceError, match="Amendment 5 pins"):
+        mod.verified_legacy_audit(copy, json.loads(PIN.read_text()))
+
+
+def test_the_complete_per_drug_table_is_behind_the_summaries():
+    table = json.loads(PER_DRUG.read_text())
+    rows = table["rows"]
+    assert table["n_rows"] == len(rows) == 795 * 3
+    assert {r["quantity"] for r in rows} == {"P_shrna", "E_shrna", "D"}
+    assert len({r["drug"] for r in rows}) == 795
+    # the summaries the gate reads are the maxima of these rows and nothing else
+    summaries = json.loads(AUDIT.read_text())["layers"]["legacy_reproduction"]
+    for quantity, summary in summaries.items():
+        group = [r for r in rows if r["quantity"] == quantity]
+        assert summary["max_absolute_error"] == pytest.approx(
+            max(r["absolute_error"] for r in group))
+        assert all(r["within_flat_1e-6"] for r in group)
+
+
+def test_the_routes_are_not_closer_to_each_other_for_every_drug():
+    # the nine-drug localization diagnostic suggested they were, and over the whole
+    # cohort they are not, so no wording may claim it
+    summary = json.loads(ROUTES.read_text())["summary"]
+    for quantity, row in summary.items():
+        assert row["n_drugs"] == 795
+        assert not row["holds_for_every_drug"], quantity
+        closer = row["n_drugs_where_routes_agree_more_closely_than_either_agrees_with_deposited"]
+        assert 0 < closer < 795, quantity
+        # what does hold is a statement about the cohort's maxima and medians
+        assert row["max_route_to_route"] < row["max_legacy_to_deposited"]
+        assert row["median_route_to_route"] < row["median_legacy_to_deposited"]

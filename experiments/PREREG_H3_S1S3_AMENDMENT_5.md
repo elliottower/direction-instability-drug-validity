@@ -1,9 +1,10 @@
 # Amendment 5: the two comparisons one tolerance was carrying
 
 **Date:** 2026-10-07
-**Status:** DRAFT. The R0-R7 execution of 2026-10-07 refused at this gate and is
+**Status:** FROZEN. The R0-R7 execution of 2026-10-07 refused at this gate and is
 void and preserved. No R1-R7 association, resampling result or criterion outcome
-has been computed under any construction.
+has been computed under any construction. 279 tests pass under `python` and under
+`python -O`; the logs are pinned below.
 **Commit SHA:** PENDING
 **Amends:** `experiments/PREREG_H3_REFERENCE_DISCORDANCE.md` (frozen `7f57136`),
 whose reproduction tolerance this splits, and
@@ -43,8 +44,32 @@ difference is spread rather than concentrated in one context pair, with 6 of
 levofloxacin's 21 pairs above half the maximum per-pair difference of 5.658e-07.
 **The diagnostics found no localized context-pair discrepancy among the examined
 focus drugs and rejected the two tested dtype explanations; the remaining residual
-has not been explained.** One candidate remains, and
-`experiments/PREREG_H3_S1S3_DIAGNOSTIC_D9_INDEXING.md` freezes the plan for it.
+has not been explained.**
+
+A third candidate was named and tested under a plan frozen before it ran,
+`experiments/PREREG_H3_S1S3_DIAGNOSTIC_D9_INDEXING.md`: the pre-fix shRNA consensus
+indexing of Deviation 9. H2 holds. Over all 795 drugs the pre-fix reference differs
+from the deposited records by up to 7.818 in `P_shrna` and 0.448 in `E_shrna`, against
+9.755e-07 and 9.843e-08 for the corrected reference, and no drug of the cohort is
+closer under it.
+
+That outcome was fixed by provenance rather than discovered by the measurement, and
+the registration says so plainly: the deposited records this gate compares against
+are the corrected artifact, recomputed with the corrected function at `f822fb1` on
+2026-09-15, so a defect whose fix produced them cannot account for a residual measured
+against them. The 7.818 and 0.448 are the same two figures Deviation 9 reports for the
+corrected reconstruction against the superseded artifact, measured in the other
+direction. The diagnostic is recorded for what it does establish, that the deposited
+reference directions are the corrected consensus, and no further candidate for the
+residual is named.
+
+**Route to route, over the whole cohort.** The two reconstructable routes are closer
+to each other than either is to the deposited values in the cohort's maxima and
+medians, by a factor of 2.5 for `P_shrna`, 4.5 to 5.4 for `E_shrna` and 31 to 38 for
+`D`. Per drug it does not hold universally: the routes are mutually closer for 568 of
+795 drugs on `P_shrna`, 611 on `E_shrna` and 778 on `D`. The nine-drug localization
+diagnostic had suggested five to ten times for every drug examined, and the cohort
+does not carry either part of that.
 
 ## The two comparisons
 
@@ -163,14 +188,32 @@ per-drug row and in the audit alike. The suite runs under `python` and `python -
 
 ## Pins
 
+The sealed legacy audit is pinned from outside itself, in
+`registry/frozen/reproduction_legacy_pin.json`, which the gate reads to authenticate
+it. Its digest is restated here for the record and is not read from this file.
+
 | artifact | sha256 |
 |---|---|
+| `results/03d_h3_reference_discordance/legacy_reproduction_audit.json` | `0810be5b88bbe429ca313c4d3d2b0e0072e05feaf5f90ef15a8654fd9562d693` |
+| `results/03d_h3_reference_discordance/legacy_reproduction_per_drug.json` | `4194f88c10291cc81500196b09bd2462922c31d6feaf14a7962f9afcd6529d0a` |
+| `results/03d_h3_reference_discordance/route_to_route_all_drugs.json` | `b3b97cc7ed9decb8e6bf9ec6b4073913edb504313690c3031226c3416526c226` |
 | `results/03d_h3_reference_discordance/two_layer_gate_measurement.json` | `27608a93e848f30c324f89d247ea4451c9b02eb4e71bb5b01207757124306bb5` |
 | `results/03d_h3_reference_discordance/reproduction_error_localized.json` | `c46878d529084526d2607a64519adcedddb205949a704be438e65651a46a5663` |
 | `results/03d_h3_reference_discordance/reproduction_tolerance_diagnosis.json` | `d0c4615e015e8ed5663b50821455d498dfd1a5a50ff3d8a27dbad166ff832105` |
 | `results/03d_h3_reference_discordance/reproduction_tolerance_power.json` | `e4867903ee43de6df2fce4e592837f14a8474c1d0f2a4ec948feff2c3b0cd883` |
-| `experiments/03d_h3_reference_discordance.py` | `ff3a3e40b3f6cc42d3b7ebea493d213b558d454fe33a91b14eb29bb5130de8bb` |
-| `tests/test_reproduction_gate_layers.py` | `27d523b560210ea9af5cdb63dc7bacd42546fbb0af94b7126286532a8bdc903c` |
+| `results/03d_h3_reference_discordance/d9_indexing_diagnostic.json` | `6e81efac52a00bc7edabf792ae797bc5fb9d28e6da9df0aee962e8eaaad513a1` |
+| `registry/frozen/reproduction_legacy_pin.json` | `d5a443fe76b8d1e03c00879a8358d2e2fe75885fad1d3f185f4b2820f7b30111` |
+| `experiments/03d_h3_reference_discordance.py` | `caf3a1da1e945d7a87dd6c1b0388ea149d7578e481d22f944536ab362bf9e7db` |
+| `experiments/modal_h3_execute.py` | `3bf0050c09f76cf77722164bf58015f49fde315f57455905e47e9f2bb68032e6` |
+| `tests/test_reproduction_gate_layers.py` | `9f722a31f20a15eab9ee231382940d0040954daddab9923098659f933494a8c8` |
+| `results/03d_h3_reference_discordance/test_log_at_amendment_5.txt` | `956357f53307375d16205bba343565eb7074995e719e10e7272f19a5e659f276` |
+| `results/03d_h3_reference_discordance/test_log_at_amendment_5_optimized.txt` | `37e68e721105fd1186d83f115f59dcdde7bb6862b110499f7fb1fbdffbd83750` |
+
+The audit records the identity of the code that measured it, and the pin carries that
+record: `analysis_code_sha256` is this version of `03d` and `measurement_code_sha256`
+the stage that ran. The gate compares the audit against the pin, not against whatever
+is on disk, so later work on the analysis code does not silently invalidate the
+quarantined evidence or quietly re-authorize it.
 
 ## Foreknowledge at the time of this amendment
 
@@ -194,6 +237,11 @@ to find.
 R0.4 and R0.6 have been computed, under Amendment 4 and on its frozen bases. No
 R0.5, R1 to R7 association, bootstrap, permutation or criterion outcome exists.
 
+The D9 diagnostic and the cohort route-to-route comparison were both run before this
+text was finalized, and both outcomes are reported above whether or not they
+supported what the draft said. The route-to-route claim in the earlier draft did not
+survive them.
+
 ## Maximum claim under this registration
 
 Confirmatorily, the paper may say: in a sealed and externally pinned legacy audit, the
@@ -204,16 +252,16 @@ comparisons for `P_shrna`, `E_shrna` and `D` satisfy Amendment 2's elementwise r
 `|a-b| <= 1e-8 + 1e-6|b|`, at maximum normalized residuals of 0.1953, 0.4211 and
 0.1288 respectively.
 
-A route-to-route statement waits on its measurement. The nine-drug localization
-diagnostic cannot establish one about the cohort, so until the paired comparison over
-all 795 drugs is recorded the paper may say only that among the nine drugs examined
-the two reconstructable routes agreed more closely with each other than either agreed
-with the deposited value.
+On the two routes: the paper may say that over the registered cohort the two
+reconstructable routes agree with each other more closely than either agrees with the
+deposited values, in the maximum and the median of every invariant quantity, by a
+factor of 2.5 for `P_shrna`, 4.5 to 5.4 for `E_shrna` and 31 to 38 for `D`. It may not
+say this holds for every drug, because it holds for 568, 611 and 778 of 795.
 
 It may not say that the authoritative route reproduces the deposited values to 1e-06
 absolute, because for one drug it does not. It may not say the residual difference
 between the deposited values and either modern route has been explained; it has been
 bounded, shown among the nine drugs examined not to concentrate in one context pair,
-and shown not to arise from the aggregation dtype, and no further account of it is
-offered. It may not say that the
+shown not to arise from the aggregation dtype, and shown not to arise from the
+pre-fix consensus indexing, and no further account of it is offered. It may not say that the
 `D` reproduction check establishes anything about signature amplitudes.
