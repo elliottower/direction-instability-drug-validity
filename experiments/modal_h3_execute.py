@@ -2246,3 +2246,294 @@ def stage_freeze_analysis_bases():
           "--output", str(out / "analysis_bases.json")])
     results.commit()
     return (out / "analysis_bases.json").read_text()
+
+
+@app.function(**COMMON)
+def stage_diagnose_reproduction_tolerance():
+    """Why P_shrna reproduces to 1.14e-06 against a flat 1e-06, per drug.
+
+    The driver's own gate refused and this asks what the refusal is made of. It
+    computes no registered statistic: the per-drug P, E and D it compares are the
+    ones the driver builds before its gate fires, and what is reported here is the
+    reproduction error against the deposited records, disaggregated from the
+    maximum the gate already took. No correlation, interval or reading is computed.
+
+    The question is whether the error is proportional to the magnitude of the
+    quantity, which is what a float32 round trip looks like, or scattered, which
+    is what a wrong value looks like.
+    """
+    import importlib.util
+    import json
+    import sys
+    from pathlib import Path
+
+    import numpy as np
+
+    _repo_at_its_absolute_path()
+    staged, rebuilt = _stage_inputs(), _stage_rebuild()
+    sys.path.insert(0, "/app")
+    spec = importlib.util.spec_from_file_location(
+        "discordance", "/app/experiments/03d_h3_reference_discordance.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    per_drug, gene_axis = mod.build_drug_signatures_from_rebuild(rebuilt)
+    shrna = mod.build_shrna_reference_from_rebuild(rebuilt, gene_axis)
+    targets, _, _ = mod.drug_targets(staged)
+    records = json.loads(Path(
+        "/app/results/03b_h3_crispri/h3_crispri_results.json").read_text())
+    arm = mod.assemble_arm("shRNA arm", per_drug, targets, shrna,
+                           drugs={r["drug"] for r in records if "proj_shrna" in r})
+    values = mod.quantities(arm, shrna)
+
+    by_drug = {r["drug"]: r for r in records}
+    rows = []
+    for i, drug in enumerate(arm.drugs):
+        record = by_drug[drug]
+        for quantity, computed, deposited in (
+                ("P_shrna", values["P"][i], record["proj_shrna"]),
+                ("E_shrna", values["E"][i], record["enrich_shrna"]),
+                ("D", values["D"][i], record["raw_instability"])):
+            error = abs(float(computed) - float(deposited))
+            rows.append({"drug": drug, "quantity": quantity,
+                         "computed": float(computed), "deposited": float(deposited),
+                         "absolute_error": error,
+                         "relative_error": error / abs(float(deposited))
+                         if float(deposited) != 0 else None,
+                         "float32_ulp_here": abs(float(deposited)) * 2.0 ** -24,
+                         "error_in_ulps": error / (abs(float(deposited)) * 2.0 ** -24)
+                         if float(deposited) != 0 else None})
+
+    summary = {}
+    for quantity in ("P_shrna", "E_shrna", "D"):
+        group = [r for r in rows if r["quantity"] == quantity]
+        errors = np.array([r["absolute_error"] for r in group])
+        magnitudes = np.array([abs(r["deposited"]) for r in group])
+        ulps = np.array([r["error_in_ulps"] for r in group if r["error_in_ulps"] is not None])
+        over = [r for r in group if r["absolute_error"] >= 1e-6]
+        finite = np.isfinite(errors) & np.isfinite(magnitudes) & (magnitudes > 0)
+        summary[quantity] = {
+            "n_drugs": len(group),
+            "max_absolute_error": float(errors.max()),
+            "max_relative_error": float((errors[finite] / magnitudes[finite]).max()),
+            "max_error_in_float32_ulps": float(ulps.max()) if ulps.size else None,
+            "median_error_in_float32_ulps": float(np.median(ulps)) if ulps.size else None,
+            "n_at_or_over_flat_1e-6": len(over),
+            "drugs_at_or_over_flat_1e-6": [
+                {"drug": r["drug"], "deposited": r["deposited"],
+                 "absolute_error": r["absolute_error"], "error_in_ulps": r["error_in_ulps"]}
+                for r in sorted(over, key=lambda r: -r["absolute_error"])[:20]],
+            "magnitude_range": [float(magnitudes.min()), float(magnitudes.max())],
+            # a float32 round trip gives an error that tracks magnitude; a wrong
+            # value does not, so the correlation is the discriminating measurement
+            "pearson_error_against_magnitude": float(
+                np.corrcoef(errors[finite], magnitudes[finite])[0, 1]),
+            "elementwise_float32_rule_holds": bool(np.all(
+                errors[finite] <= 1e-8 + 1e-6 * magnitudes[finite])),
+        }
+
+    out = {
+        "what_this_is": (
+            "why the driver's reproduction gate refused. RECON_TOL is a flat absolute "
+            "1e-06 and the registration states the deposited records reproduce 'to within "
+            "1e-6 for D, P and E'. P_shrna spans 0.7 to 17, and one float32 ULP at 17 is "
+            "1.01e-06, so a flat 1e-06 is below float32 resolution at the top of that "
+            "range. This measures whether the error tracks magnitude, as a float32 round "
+            "trip does, or is scattered, as a wrong value is."),
+        "computed_no_registered_statistic": True,
+        "flat_tolerance_in_code": 1e-6,
+        "summary": summary,
+        "per_drug": rows,
+    }
+    directory = Path("/out/03d_h3_reference_discordance")
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "reproduction_tolerance_diagnosis.json").write_text(
+        json.dumps(out, indent=2, allow_nan=False))
+    results.commit()
+    return json.dumps(summary, indent=2)
+
+
+@app.function(**COMMON)
+def stage_reproduction_tolerance_power():
+    """What size of real error each candidate tolerance would catch.
+
+    A tolerance that admits the observed float32 discrepancy is only defensible if
+    it still refuses a wrong value. This injects a systematic relative scaling
+    error into the drug signatures, the shape a unit or normalization mistake
+    takes, recomputes the reproduction errors, and reports the smallest injected
+    error each rule rejects.
+
+    No registered statistic is computed: the perturbed quantities are thrown away
+    and only the pass or fail of each rule is reported.
+    """
+    import importlib.util
+    import json
+    import sys
+    from pathlib import Path
+
+    import numpy as np
+
+    _repo_at_its_absolute_path()
+    staged, rebuilt = _stage_inputs(), _stage_rebuild()
+    sys.path.insert(0, "/app")
+    spec = importlib.util.spec_from_file_location(
+        "discordance", "/app/experiments/03d_h3_reference_discordance.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    per_drug, gene_axis = mod.build_drug_signatures_from_rebuild(rebuilt)
+    shrna = mod.build_shrna_reference_from_rebuild(rebuilt, gene_axis)
+    targets, _, _ = mod.drug_targets(staged)
+    records = json.loads(Path(
+        "/app/results/03b_h3_crispri/h3_crispri_results.json").read_text())
+    eligible = {r["drug"] for r in records if "proj_shrna" in r}
+    by_drug = {r["drug"]: r for r in records}
+
+    def worst_errors(scale):
+        scaled = {drug: {cell: value * scale for cell, value in cells.items()}
+                  for drug, cells in per_drug.items()}
+        arm = mod.assemble_arm("shRNA arm", scaled, targets, shrna, drugs=eligible)
+        values = mod.quantities(arm, shrna)
+        rows = []
+        for i, drug in enumerate(arm.drugs):
+            record = by_drug[drug]
+            for quantity, computed, deposited in (
+                    ("P_shrna", values["P"][i], record["proj_shrna"]),
+                    ("E_shrna", values["E"][i], record["enrich_shrna"]),
+                    ("D", values["D"][i], record["raw_instability"])):
+                rows.append((quantity, abs(float(computed) - float(deposited)),
+                             abs(float(deposited))))
+        out = {}
+        for quantity in ("P_shrna", "E_shrna", "D"):
+            errors = np.array([e for q, e, _ in rows if q == quantity])
+            magnitudes = np.array([m for q, _, m in rows if q == quantity])
+            out[quantity] = {
+                "max_absolute_error": float(errors.max()),
+                "flat_1e-6_holds": bool(errors.max() < 1e-6),
+                "elementwise_float32_holds": bool(
+                    np.all(errors <= 1e-8 + 1e-6 * magnitudes)),
+            }
+        return out
+
+    def worst_errors_one_context(epsilon):
+        """One context per drug scaled, which is not scale-invariant.
+
+        D and E are built from cosines and are unchanged by scaling every
+        signature of a drug by the same factor, so a uniform ladder cannot
+        exercise them. Perturbing a single context changes the pairwise cosines
+        and reaches all three quantities.
+        """
+        scaled = {}
+        for drug, cells in per_drug.items():
+            order = sorted(cells)
+            scaled[drug] = {cell: (value * (1.0 + epsilon) if cell == order[0] else value)
+                            for cell, value in cells.items()}
+        arm = mod.assemble_arm("shRNA arm", scaled, targets, shrna, drugs=eligible)
+        values = mod.quantities(arm, shrna)
+        rows = []
+        for i, drug in enumerate(arm.drugs):
+            record = by_drug[drug]
+            for quantity, computed, deposited in (
+                    ("P_shrna", values["P"][i], record["proj_shrna"]),
+                    ("E_shrna", values["E"][i], record["enrich_shrna"]),
+                    ("D", values["D"][i], record["raw_instability"])):
+                rows.append((quantity, abs(float(computed) - float(deposited)),
+                             abs(float(deposited))))
+        out = {}
+        for quantity in ("P_shrna", "E_shrna", "D"):
+            errors = np.array([e for q, e, _ in rows if q == quantity])
+            magnitudes = np.array([m for q, _, m in rows if q == quantity])
+            out[quantity] = {
+                "max_absolute_error": float(errors.max()),
+                "flat_1e-6_holds": bool(errors.max() < 1e-6),
+                "elementwise_float32_holds": bool(
+                    np.all(errors <= 1e-8 + 1e-6 * magnitudes)),
+            }
+        return out
+
+    def worst_errors_one_coordinate(epsilon):
+        """One gene coordinate of one context moved, which changes its direction.
+
+        A cosine is invariant to the scale of either argument, so D, the mean
+        pairwise cosine, is unchanged by any rescaling of a signature. Only a
+        perturbation that turns a signature reaches it.
+        """
+        scaled = {}
+        for drug, cells in per_drug.items():
+            order = sorted(cells)
+            scaled[drug] = {}
+            for cell, value in cells.items():
+                if cell == order[0]:
+                    moved = np.array(value, dtype=np.float64, copy=True)
+                    moved[0] = moved[0] * (1.0 + epsilon) + epsilon
+                    scaled[drug][cell] = moved
+                else:
+                    scaled[drug][cell] = value
+        arm = mod.assemble_arm("shRNA arm", scaled, targets, shrna, drugs=eligible)
+        values = mod.quantities(arm, shrna)
+        rows = []
+        for i, drug in enumerate(arm.drugs):
+            record = by_drug[drug]
+            for quantity, computed, deposited in (
+                    ("P_shrna", values["P"][i], record["proj_shrna"]),
+                    ("E_shrna", values["E"][i], record["enrich_shrna"]),
+                    ("D", values["D"][i], record["raw_instability"])):
+                rows.append((quantity, abs(float(computed) - float(deposited)),
+                             abs(float(deposited))))
+        out = {}
+        for quantity in ("P_shrna", "E_shrna", "D"):
+            errors = np.array([e for q, e, _ in rows if q == quantity])
+            magnitudes = np.array([m for q, _, m in rows if q == quantity])
+            out[quantity] = {
+                "max_absolute_error": float(errors.max()),
+                "flat_1e-6_holds": bool(errors.max() < 1e-6),
+                "elementwise_float32_holds": bool(
+                    np.all(errors <= 1e-8 + 1e-6 * magnitudes)),
+            }
+        return out
+
+    ladders = {}
+    for name, perturb in (("every_context_scaled", lambda e: worst_errors(1.0 + e)),
+                          ("one_context_scaled", worst_errors_one_context),
+                          ("one_coordinate_moved", worst_errors_one_coordinate)):
+        ladder = {}
+        for exponent in (0, 8, 7, 6, 5, 4, 3):
+            epsilon = 0.0 if exponent == 0 else 10.0 ** -exponent
+            label = "unperturbed" if epsilon == 0 else f"relative {epsilon:.0e}"
+            ladder[label] = {"injected_relative_error": epsilon,
+                             **_as_plain(perturb(epsilon))}
+            print(f"[{_ts()}] {name} {label}: "
+                  + ", ".join(f"{q} flat={v['flat_1e-6_holds']} elementwise="
+                              f"{v['elementwise_float32_holds']}"
+                              for q, v in ladder[label].items()
+                              if isinstance(v, dict)), flush=True)
+        ladders[name] = ladder
+
+    out = {
+        "what_this_is": (
+            "the smallest injected relative error in the drug signatures that each "
+            "candidate reproduction tolerance rejects. A rule that admits the observed "
+            "float32 discrepancy has to refuse a wrong value, or it is not a check."),
+        "computed_no_registered_statistic": True,
+        "rules": {"flat": "max |a-b| < 1e-6",
+                  "elementwise_float32": "|a-b| <= 1e-8 + 1e-6 |b| for every drug"},
+        "note_on_the_ladders": (
+            "a cosine does not change when either argument is rescaled, so D, the mean "
+            "pairwise cosine, is invariant to every rescaling and neither scaling ladder "
+            "can move it. E is a squared cosine against the mean signature, so scaling "
+            "one context of a drug does move it but scaling all of them does not. Only "
+            "the third ladder, which moves one gene coordinate and so turns a signature, "
+            "reaches all three quantities. A ladder that cannot move the quantity it "
+            "claims to test establishes nothing about the tolerance on it."),
+        "ladders": ladders,
+    }
+    directory = Path("/out/03d_h3_reference_discordance")
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "reproduction_tolerance_power.json").write_text(
+        json.dumps(out, indent=2, allow_nan=False))
+    results.commit()
+    return json.dumps(ladder, indent=2)
+
+
+def _as_plain(mapping):
+    return {key: dict(value) for key, value in mapping.items()}

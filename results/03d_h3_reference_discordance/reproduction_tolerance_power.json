@@ -1,0 +1,395 @@
+{
+  "what_this_is": "the smallest injected relative error in the drug signatures that each candidate reproduction tolerance rejects. A rule that admits the observed float32 discrepancy has to refuse a wrong value, or it is not a check.",
+  "computed_no_registered_statistic": true,
+  "rules": {
+    "flat": "max |a-b| < 1e-6",
+    "elementwise_float32": "|a-b| <= 1e-8 + 1e-6 |b| for every drug"
+  },
+  "note_on_the_ladders": "a cosine does not change when either argument is rescaled, so D, the mean pairwise cosine, is invariant to every rescaling and neither scaling ladder can move it. E is a squared cosine against the mean signature, so scaling one context of a drug does move it but scaling all of them does not. Only the third ladder, which moves one gene coordinate and so turns a signature, reaches all three quantities. A ladder that cannot move the quantity it claims to test establishes nothing about the tolerance on it.",
+  "ladders": {
+    "every_context_scaled": {
+      "unperturbed": {
+        "injected_relative_error": 0.0,
+        "P_shrna": {
+          "max_absolute_error": 1.138549816204204e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": true
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.364712427739619e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-08": {
+        "injected_relative_error": 1e-08,
+        "P_shrna": {
+          "max_absolute_error": 1.051975214494405e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": true
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.364712416637389e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-07": {
+        "injected_relative_error": 1e-07,
+        "P_shrna": {
+          "max_absolute_error": 1.9913906434965156e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": true
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.364712405535158e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-06": {
+        "injected_relative_error": 1e-06,
+        "P_shrna": {
+          "max_absolute_error": 1.6226821230702626e-05,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": false
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.364712416637389e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-05": {
+        "injected_relative_error": 1e-05,
+        "P_shrna": {
+          "max_absolute_error": 0.0001688185969541678,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": false
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.364712416637389e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-04": {
+        "injected_relative_error": 0.0001,
+        "P_shrna": {
+          "max_absolute_error": 0.0016947363541710558,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": false
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.364712416637389e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-03": {
+        "injected_relative_error": 0.001,
+        "P_shrna": {
+          "max_absolute_error": 0.016953913926311515,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": false
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.364712405535158e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      }
+    },
+    "one_context_scaled": {
+      "unperturbed": {
+        "injected_relative_error": 0.0,
+        "P_shrna": {
+          "max_absolute_error": 1.138549816204204e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": true
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.364712427739619e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-08": {
+        "injected_relative_error": 1e-08,
+        "P_shrna": {
+          "max_absolute_error": 1.0622579296182266e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": true
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.364201825068363e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-07": {
+        "injected_relative_error": 1e-07,
+        "P_shrna": {
+          "max_absolute_error": 1.5085238427303693e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": true
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.359606517600483e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-06": {
+        "injected_relative_error": 1e-06,
+        "P_shrna": {
+          "max_absolute_error": 1.0441734872301822e-05,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": false
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.313653603904015e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-05": {
+        "injected_relative_error": 1e-05,
+        "P_shrna": {
+          "max_absolute_error": 0.00011096773336660704,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": false
+        },
+        "E_shrna": {
+          "max_absolute_error": 5.665192460702073e-07,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": false
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-04": {
+        "injected_relative_error": 0.0001,
+        "P_shrna": {
+          "max_absolute_error": 0.0011162277182457103,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": false
+        },
+        "E_shrna": {
+          "max_absolute_error": 5.660300550602848e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": false
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-03": {
+        "injected_relative_error": 0.001,
+        "P_shrna": {
+          "max_absolute_error": 0.011168827567043849,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": false
+        },
+        "E_shrna": {
+          "max_absolute_error": 5.6586962499716176e-05,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": false
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      }
+    },
+    "one_coordinate_moved": {
+      "unperturbed": {
+        "injected_relative_error": 0.0,
+        "P_shrna": {
+          "max_absolute_error": 1.138549816204204e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": true
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.364712427739619e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.496284071262238e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-08": {
+        "injected_relative_error": 1e-08,
+        "P_shrna": {
+          "max_absolute_error": 1.1384818510151717e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": true
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.364708775105868e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.496228038306185e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-07": {
+        "injected_relative_error": 1e-07,
+        "P_shrna": {
+          "max_absolute_error": 1.1378701625375243e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": true
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.36467596801549e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.495723686190559e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-06": {
+        "injected_relative_error": 1e-06,
+        "P_shrna": {
+          "max_absolute_error": 1.13175328309012e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": true
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.364347830498332e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.490680165034291e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-05": {
+        "injected_relative_error": 1e-05,
+        "P_shrna": {
+          "max_absolute_error": 1.070584483287007e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": true
+        },
+        "E_shrna": {
+          "max_absolute_error": 9.361066560797937e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        },
+        "D": {
+          "max_absolute_error": 7.440244731427015e-08,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-04": {
+        "injected_relative_error": 0.0001,
+        "P_shrna": {
+          "max_absolute_error": 4.646987936673952e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": false
+        },
+        "E_shrna": {
+          "max_absolute_error": 2.354306563867592e-07,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": false
+        },
+        "D": {
+          "max_absolute_error": 1.5058994318195573e-07,
+          "flat_1e-6_holds": true,
+          "elementwise_float32_holds": true
+        }
+      },
+      "relative 1e-03": {
+        "injected_relative_error": 0.001,
+        "P_shrna": {
+          "max_absolute_error": 4.523942127798719e-05,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": false
+        },
+        "E_shrna": {
+          "max_absolute_error": 2.0833131041397834e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": false
+        },
+        "D": {
+          "max_absolute_error": 1.6057585352502457e-06,
+          "flat_1e-6_holds": false,
+          "elementwise_float32_holds": false
+        }
+      }
+    }
+  }
+}
