@@ -777,3 +777,109 @@ frozen run.
   the two failed reconstructions
 - `experiments/PREREG_H3_S1S3_AMENDMENT_4.md` — the prospective finite-coordinate
   rule written in response
+
+## Deviation 14: one reproduction tolerance was carrying two different comparisons
+
+**Date:** 2026-10-07
+**Status:** the R0-R7 execution of 2026-10-07 refused at this gate and is void and
+preserved. R0.4 and R0.6 have been computed under Amendment 4; no R0.5 or R1-R7
+association, resampling result or criterion outcome exists.
+**Applies to:** the reproduction gate of
+`experiments/03d_h3_reference_discordance.py`, and through it every R0-R7
+invocation.
+
+### What refused
+
+```
+P_shrna reproduces to 1.14e-06, tolerance 1e-06
+```
+
+One drug of 795 crossed the flat tolerance: levofloxacin, deposited `proj_shrna`
+8.6574612530, error 1.1385e-06, which is 2.21 float32 ULPs at that magnitude.
+`P_shrna` spans 0.6424 to 16.95 across the cohort and one float32 ULP at 16.95 is
+1.0106e-06. The maximum relative error is 1.96e-07 and the median error is 0.505
+ULP. `E_shrna` and `D` are both well inside the flat tolerance, at 9.365e-08 and
+7.496e-08.
+
+### Two explanations, both refuted by their own measurements
+
+The retired loader takes the mean of a float32 array and numpy accumulates that in
+float32, so the first candidate was the accumulator. The float32 and float64
+accumulations of the same signatures differ from each other by about 1e-9, and both
+sit about 1e-6 from the deposited values. Not the cause.
+
+The second was a float32 projection path, since the dot product and the mean over
+context pairs would round at the magnitude of `P` rather than of a signature value.
+No dtype route reproduces the deposited values below a 1e-7 relative floor. Not the
+cause either.
+
+What survives is a systematic relative offset of that order between the deposited
+values and every route that can be constructed today. Context membership is
+identical between routes for every drug examined, and among the nine drugs the
+localization diagnostic examined the difference is spread rather than concentrated
+in one context pair: 6 of levofloxacin's 21 pairs sit above half the maximum
+per-pair difference of 5.658e-07. Among those same nine, the two modern routes
+agreed more closely with each other than either agreed with the deposited value.
+
+So the diagnostics found no localized context-pair discrepancy among the examined
+focus drugs and rejected the two tested dtype explanations; the remaining residual
+has not been explained. That is weaker than a statement about the cohort, and the
+nine-drug diagnostic cannot carry one.
+
+### The defect is that one rule was carrying two comparisons
+
+The registration describes its flat absolute tolerance as holding between two
+float64 computations from one extraction. Amendment 3's B1 then made the verified
+GCTX rebuild the authoritative compound source, and the gate went on applying that
+one rule to a comparison the registration does not describe: a reconstruction
+against the deposited records.
+
+Measured over all 795 drugs and all three invariant quantities:
+
+| comparison | flat absolute 1e-06 | elementwise float32 | worst normalized residual |
+|---|---|---|---|
+| retired extraction against deposited | holds, 0 over | holds | 0.446 |
+| authoritative rebuild against deposited | fails, 1 over | holds | 0.421 |
+
+The frozen tolerance is correct for the comparison it was registered for and is
+kept. Amendment 5 adds the elementwise float32 rule Amendment 2 already registers,
+for the comparison Amendment 3 created.
+
+### What this does not change
+
+No registered hypothesis, statistic, criterion, interval, permutation, seed or
+reading changes. No drug receives a tolerance of its own, no drug leaves the cohort,
+and levofloxacin is not examined as a drug: it is neither the largest `P_shrna` in
+the cohort nor the largest error in ULPs, and there is no reading under which its
+identity matters.
+
+### An earlier overstatement, corrected
+
+The round-23 review packet said a flat absolute tolerance at the top of `P_shrna`'s
+range is "unsatisfiable". That is too strong: float64 quantities derived from
+identical float32 inputs can agree exactly. The defensible statement is narrower,
+and is the one Amendment 5 makes: the flat absolute tolerance is incompatible with
+the numerical equivalence expected between the deposited and the authoritative
+routes, and it rejected the unperturbed verified computation for one of 795 drugs.
+
+The same packet said no R0-R7 statistic exists, without qualification. R0.4 and R0.6
+were recomputed under Amendment 4. What holds is that no R0.5 or R1-R7 association,
+bootstrap, permutation or criterion outcome exists.
+
+Amendment 5's draft described the legacy measurement as pinned while the gate
+consuming it read whatever path it was handed, trusted three booleans, and computed
+the file's hash after parsing and only recorded it. A file supplying those three
+booleans would have satisfied the legacy layer, which is the defect Amendment 4's
+own external-pinning rule exists to prevent. The audit is now hashed and compared
+with a pin held outside it before it is parsed, and it carries the inputs it was
+measured on rather than aggregate summaries alone.
+
+### Records
+
+- `results/03d_h3_reference_discordance/reproduction_tolerance_diagnosis.json`
+- `results/03d_h3_reference_discordance/reproduction_tolerance_power.json`
+- `results/03d_h3_reference_discordance/reproduction_error_localized.json`
+- `results/03d_h3_reference_discordance/two_layer_gate_measurement.json`
+- `experiments/PREREG_H3_S1S3_AMENDMENT_5.md`
+- `experiments/PREREG_H3_S1S3_DIAGNOSTIC_D9_INDEXING.md`, the frozen plan for the one
+  remaining candidate cause

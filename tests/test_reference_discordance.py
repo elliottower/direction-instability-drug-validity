@@ -109,7 +109,42 @@ def test_own_target_percentile_is_one_when_directions_are_the_drug_means():
     assert q == pytest.approx(np.ones(len(arm)))
 
 
-def test_reproduction_gate_accepts_the_values_it_was_built_from_and_rejects_a_drift():
+def _legacy_record(tmp_path, holds=True):
+    """Amendment 5's sealed legacy audit and the external pin that authenticates it.
+
+    The pin is returned separately because the gate must not be able to read the
+    expected identity out of the artifact it is checking.
+    """
+    import json
+
+    table = tmp_path / "legacy_reproduction_per_drug.json"
+    table.write_text(json.dumps({"rows": [], "n_rows": 795 * 3}))
+    table_sha = _mod.sha256_file(table)
+    provenance = {"deposited_records_sha256": "d" * 64}
+    audit = {"schema": "legacy_reproduction_audit/1",
+             "flat_rule": "max |a-b| < 1e-6",
+             "flat_tolerance": 1e-6,
+             "quantities": ["P_shrna", "E_shrna", "D"],
+             "n_drugs": 795,
+             "layers": {"legacy_reproduction": {
+                 quantity: {"flat_1e-6_holds": holds,
+                            "n_over_flat_1e-6": 0 if holds else 3,
+                            "drugs_over_flat_1e-6": [] if holds else ["a", "b", "c"],
+                            "max_absolute_error": 9.7e-07 if holds else 2e-06,
+                            "max_normalized_residual": 0.122}
+                 for quantity in ("P_shrna", "E_shrna", "D")}},
+             "per_drug_table": {"file": table.name, "sha256": table_sha,
+                                "n_rows": 795 * 3},
+             "provenance": provenance}
+    path = tmp_path / "legacy_reproduction_audit.json"
+    path.write_text(json.dumps(audit, indent=2))
+    pin = {"audit_sha256": _mod.sha256_file(path),
+           "flat_rule": "max |a-b| < 1e-6", "n_drugs": 795,
+           "per_drug_sha256": table_sha, "provenance": provenance}
+    return path, pin
+
+
+def test_reproduction_gate_accepts_the_values_it_was_built_from_and_rejects_a_drift(tmp_path):
     arm = _arm()
     reference = _reference(arm)
     values = _mod.quantities(arm, reference)
@@ -118,19 +153,25 @@ def test_reproduction_gate_accepts_the_values_it_was_built_from_and_rejects_a_dr
                 "raw_instability": values["D"][i],
                 "proj_shrna": values["P"][i], "enrich_shrna": values["E"][i]}
                for i in range(len(arm))]
+    legacy, pin = _legacy_record(tmp_path)
 
-    worst = _mod.reproduction_gate(arm, values, None, records)
-    assert max(v for v in worst.values() if isinstance(v, float)) < 1e-12
-    assert worst["crispri_fields_are_a_correction_not_a_reproduction"] is True
+    report = _mod.reproduction_gate(arm, values, None, records,
+                                    legacy_record=legacy, legacy_expected=pin)
+    assert report["n_failures"] == 0
+    for quantity in ("P_shrna", "E_shrna", "D"):
+        assert report["production_equivalence"][quantity]["max_absolute_error"] < 1e-12
+    assert report["crispri_fields_are_a_correction_not_a_reproduction"] is True
 
     records[3]["proj_shrna"] += 1e-4
     with pytest.raises(AssertionError):
-        _mod.reproduction_gate(arm, values, None, records)
+        _mod.reproduction_gate(arm, values, None, records,
+                               legacy_record=legacy, legacy_expected=pin)
 
     records[3]["proj_shrna"] -= 1e-4
     records[5]["n_celllines"] += 1
     with pytest.raises(AssertionError):
-        _mod.reproduction_gate(arm, values, None, records)
+        _mod.reproduction_gate(arm, values, None, records,
+                               legacy_record=legacy, legacy_expected=pin)
 
 
 def test_association_reports_the_target_balanced_estimate_beside_the_drug_weighted_one():
@@ -499,7 +540,7 @@ def test_the_rebuild_loader_refuses_what_it_used_to_tolerate(tmp_path):
 
 
 
-def test_the_gate_measures_the_crispri_correction_rather_than_requiring_it_to_vanish():
+def test_the_gate_measures_the_crispri_correction_rather_than_requiring_it_to_vanish(tmp_path):
     # Amendment 3: the deposited C0 fields placed the reference by the extraction's
     # declared labels while the signatures followed another axis, so the corrected
     # run is deliberately different from them and must not be asserted equal
@@ -513,17 +554,23 @@ def test_the_gate_measures_the_crispri_correction_rather_than_requiring_it_to_va
                 "enrich_crispri": values["E"][i] + 0.5}
                for i in range(len(arm))]
 
-    worst = _mod.reproduction_gate(arm, None, values, records)
-    assert worst["P_crispri"] == pytest.approx(0.5, abs=1e-9)
-    assert worst["D"] < 1e-12
-    assert worst["crispri_fields_are_a_correction_not_a_reproduction"] is True
+    legacy, pin = _legacy_record(tmp_path)
+    report = _mod.reproduction_gate(arm, None, values, records,
+                                    legacy_record=legacy, legacy_expected=pin)
+    assert report["production_equivalence"]["P_crispri"]["max_absolute_error"] \
+        == pytest.approx(0.5, abs=1e-9)
+    assert report["production_equivalence"]["P_crispri"]["enforced"] is False
+    assert report["production_equivalence"]["D"]["max_absolute_error"] < 1e-12
+    assert report["n_failures"] == 0
+    assert report["crispri_fields_are_a_correction_not_a_reproduction"] is True
 
     # the legacy rerun of the deposited configuration still demands equality
-    with pytest.raises(AssertionError, match="P_crispri reproduces"):
-        _mod.reproduction_gate(arm, None, values, records, crispri_reproduces=True)
+    with pytest.raises(AssertionError, match="P_crispri"):
+        _mod.reproduction_gate(arm, None, values, records, crispri_reproduces=True,
+                               legacy_record=legacy, legacy_expected=pin)
 
 
-def test_the_invariant_quantities_are_still_required_to_reproduce():
+def test_the_invariant_quantities_are_still_required_to_reproduce(tmp_path):
     arm = _arm()
     reference = _reference(arm)
     values = _mod.quantities(arm, reference)
@@ -533,8 +580,12 @@ def test_the_invariant_quantities_are_still_required_to_reproduce():
                 "proj_shrna": values["P"][i], "enrich_shrna": values["E"][i]}
                for i in range(len(arm))]
 
-    with pytest.raises(AssertionError, match="invariant under the shared permutation"):
-        _mod.reproduction_gate(arm, values, None, records)
+    legacy, pin = _legacy_record(tmp_path)
+
+    # Amendment 5 moved these to the elementwise rule and kept them enforced
+    with pytest.raises(AssertionError, match="production equivalence fails"):
+        _mod.reproduction_gate(arm, values, None, records,
+                               legacy_record=legacy, legacy_expected=pin)
 
 
 def test_the_rebuild_pin_check_actually_compares_the_shards(tmp_path):

@@ -131,14 +131,23 @@ def _stage_rebuild():
 
 
 def _run(argv):
-    """Run one of the analysis scripts in-process, with the repo importable."""
-    import runpy
-    import sys
+    """Run one of the analysis scripts, with the repo importable.
 
-    sys.path.insert(0, "/app")
-    sys.argv = argv
+    A separate process rather than `runpy` in this one, so the script receives a
+    real argv instead of one assigned onto the interpreter, and so a refusal
+    arrives as an exit code this function raises on rather than as an exception
+    crossing a boundary it was not raised across.
+    """
+    import os
+    import subprocess
+
     print(f"[{_ts()}] {' '.join(argv)}", flush=True)
-    runpy.run_path(argv[0], run_name="__main__")
+    environment = {**os.environ, "PYTHONPATH": "/app"}
+    finished = subprocess.run(["python", *argv], cwd="/app", env=environment)
+    if finished.returncode != 0:
+        raise RuntimeError(
+            f"{argv[0]} exited {finished.returncode}; its output is above and the stage "
+            "does not continue past a script that refused")
 
 
 # the registration's pins, restated here so the gate run can be refused if an
@@ -266,11 +275,11 @@ def stage_gate_diagnostic():
     or a different normalization, and whether the compound half agrees.
     """
     import json
-    import sys
+    import site
 
     import numpy as np
 
-    sys.path.insert(0, "/app")
+    site.addsitedir("/app")
     _repo_at_its_absolute_path()
     staged, rebuilt_dir = _stage_inputs(), _stage_rebuild()
     gate = __import__("experiments.03e_reconstruction_gate", fromlist=["x"]) if False else None
@@ -345,11 +354,11 @@ def stage_permutation_test():
     are mislabeled, which is Deviation 9's shape one level deeper.
     """
     import json
-    import sys
+    import site
 
     import numpy as np
 
-    sys.path.insert(0, "/app")
+    site.addsitedir("/app")
     _repo_at_its_absolute_path()
     staged, rebuilt_dir = _stage_inputs(), _stage_rebuild()
     import importlib.util
@@ -416,11 +425,11 @@ def stage_axis_test():
     both sit in the same coordinate system, so this is measured, not assumed.
     """
     import json
-    import sys
+    import site
 
     import numpy as np
 
-    sys.path.insert(0, "/app")
+    site.addsitedir("/app")
     _repo_at_its_absolute_path()
     staged, rebuilt_dir = _stage_inputs(), _stage_rebuild()
     import importlib.util
@@ -483,11 +492,11 @@ def stage_recover_permutation():
     consistent permutation exists, they cannot.
     """
     import json
-    import sys
+    import site
 
     import numpy as np
 
-    sys.path.insert(0, "/app")
+    site.addsitedir("/app")
     _repo_at_its_absolute_path()
     staged, rebuilt_dir = _stage_inputs(), _stage_rebuild()
     import importlib.util
@@ -552,12 +561,12 @@ def stage_verify_permutation():
     landmark ids as strings, or the symbols alphabetically.
     """
     import json
-    import sys
+    import site
 
     import numpy as np
     import pandas as pd
 
-    sys.path.insert(0, "/app")
+    site.addsitedir("/app")
     _repo_at_its_absolute_path()
     staged, rebuilt_dir = _stage_inputs(), _stage_rebuild()
     import importlib.util
@@ -1911,12 +1920,12 @@ def stage_preflight_checked():
     import hashlib
     import importlib.util
     import json
-    import sys
+    import site
     from pathlib import Path
 
     _repo_at_its_absolute_path()
     staged, rebuilt = _stage_inputs(), _stage_rebuild()
-    sys.path.insert(0, "/app")          # 03d imports geometry, as `_run` arranges
+    site.addsitedir("/app")          # 03d imports geometry, as `_run` arranges
     spec = importlib.util.spec_from_file_location(
         "discordance", "/app/experiments/03d_h3_reference_discordance.py")
     mod = importlib.util.module_from_spec(spec)
@@ -2217,6 +2226,8 @@ def stage_r0_to_r7():
           "--prism", "/inputs/prism_19q4",
           "--single-cell", str(audit),
           "--analysis-bases", "/app/registry/frozen/analysis_bases.json",
+          "--legacy-reproduction",
+          "/app/results/03d_h3_reference_discordance/two_layer_gate_measurement.json",
           "--expected-mapping-sha256",
           "152361cb3174a5fb7aae0229c3e3d049dc00d49d9e442925156a9fe0564b89d3",
           "--output", "/out/03d_h3_reference_discordance"])
@@ -2264,14 +2275,14 @@ def stage_diagnose_reproduction_tolerance():
     """
     import importlib.util
     import json
-    import sys
+    import site
     from pathlib import Path
 
     import numpy as np
 
     _repo_at_its_absolute_path()
     staged, rebuilt = _stage_inputs(), _stage_rebuild()
-    sys.path.insert(0, "/app")
+    site.addsitedir("/app")
     spec = importlib.util.spec_from_file_location(
         "discordance", "/app/experiments/03d_h3_reference_discordance.py")
     mod = importlib.util.module_from_spec(spec)
@@ -2368,14 +2379,14 @@ def stage_reproduction_tolerance_power():
     """
     import importlib.util
     import json
-    import sys
+    import site
     from pathlib import Path
 
     import numpy as np
 
     _repo_at_its_absolute_path()
     staged, rebuilt = _stage_inputs(), _stage_rebuild()
-    sys.path.insert(0, "/app")
+    site.addsitedir("/app")
     spec = importlib.util.spec_from_file_location(
         "discordance", "/app/experiments/03d_h3_reference_discordance.py")
     mod = importlib.util.module_from_spec(spec)
@@ -2569,7 +2580,7 @@ def stage_localize_reproduction_error():
     """
     import importlib.util
     import json
-    import sys
+    import site
     from pathlib import Path
 
     import numpy as np
@@ -2577,7 +2588,7 @@ def stage_localize_reproduction_error():
 
     _repo_at_its_absolute_path()
     staged, rebuilt = _stage_inputs(), _stage_rebuild()
-    sys.path.insert(0, "/app")
+    site.addsitedir("/app")
     spec = importlib.util.spec_from_file_location(
         "discordance", "/app/experiments/03d_h3_reference_discordance.py")
     mod = importlib.util.module_from_spec(spec)
@@ -2736,14 +2747,14 @@ def stage_two_layer_gate_measurement():
     """
     import importlib.util
     import json
-    import sys
+    import site
     from pathlib import Path
 
     import numpy as np
 
     _repo_at_its_absolute_path()
     staged, rebuilt = _stage_inputs(), _stage_rebuild()
-    sys.path.insert(0, "/app")
+    site.addsitedir("/app")
     spec = importlib.util.spec_from_file_location(
         "discordance", "/app/experiments/03d_h3_reference_discordance.py")
     mod = importlib.util.module_from_spec(spec)
@@ -2848,3 +2859,385 @@ def stage_two_layer_gate_measurement():
         json.dumps(out, indent=2, allow_nan=False))
     results.commit()
     return json.dumps(layers, indent=2)
+
+
+def _discordance_module():
+    """03d, importable in a container, without putting `sys` in reach."""
+    import importlib.util
+    import site
+
+    site.addsitedir("/app")
+    spec = importlib.util.spec_from_file_location(
+        "discordance", "/app/experiments/03d_h3_reference_discordance.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _retired_drug_signatures(staged, numpy, pandas):
+    """The retired loader's aggregation, line for line, without the axis check.
+
+    `build_drug_signatures` refuses this extraction, because Amendment 3's B2 put a
+    frozen-axis check there so a known-bad declaration cannot reach production. That
+    check is right for production and wrong here: the deposited analysis consumed
+    this file with that declaration, and reproducing the deposited analysis means
+    consuming it the same way. This runs once, outside production, and production
+    consumes the sealed audit rather than this path.
+    """
+    from pathlib import Path
+
+    compounds = numpy.load(Path(staged) / "lincs_subset.npz", allow_pickle=True)
+    signatures = compounds["signatures"]
+    position = {str(sig_id): i for i, sig_id in enumerate(compounds["sig_ids"])}
+    siginfo = pandas.read_csv(Path(staged) / "GSE92742_Broad_LINCS_sig_info.txt.gz",
+                              sep="\t", low_memory=False)
+    siginfo = siginfo[siginfo.sig_id.astype(str).isin(position)
+                      & siginfo.pert_iname.notna()].copy()
+    siginfo["_row"] = siginfo.sig_id.astype(str).map(position)
+    per_drug = {}
+    for (drug, cell), group in siginfo.groupby(["pert_iname", "cell_id"]):
+        per_drug.setdefault(drug, {})[cell] = signatures[group._row.values].mean(axis=0)
+    return per_drug
+
+
+@app.function(**COMMON)
+def stage_legacy_reproduction_audit():
+    """The sealed legacy audit production consumes, with what it was measured on.
+
+    Round 24 found the gate trusting three booleans from whatever file it was
+    handed: the record was described as pinned and the hash was computed after
+    parsing and only reported. A record that attests to itself establishes nothing,
+    so this writes an audit that carries its schema, its rule, the inputs it was
+    measured on, and the hash of a complete per-drug table, and `verified_legacy_audit`
+    authenticates it against an external pin before parsing it.
+
+    The route-to-route comparison is computed here over all 795 drugs, because the
+    claim that the two reconstructable routes agree with each other more closely
+    than either agrees with the deposited values was drawn from nine focus drugs.
+    """
+    import json
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+
+    _repo_at_its_absolute_path()
+    staged, rebuilt = _stage_inputs(), _stage_rebuild()
+    mod = _discordance_module()
+
+    records = json.loads(Path(
+        "/app/results/03b_h3_crispri/h3_crispri_results.json").read_text())
+    eligible = {r["drug"] for r in records if "proj_shrna" in r}
+    by_drug = {r["drug"]: r for r in records}
+    targets, _, _ = mod.drug_targets(staged)
+
+    legacy_per_drug = _retired_drug_signatures(staged, np, pd)
+    legacy_reference = mod.build_shrna_reference(staged)
+    rebuild_per_drug, rebuild_axis = mod.build_drug_signatures_from_rebuild(rebuilt)
+    rebuild_reference = mod.build_shrna_reference_from_rebuild(rebuilt, rebuild_axis)
+
+    computed = {}
+    for route, per_drug, reference in (
+            ("legacy", legacy_per_drug, legacy_reference),
+            ("authoritative", rebuild_per_drug, rebuild_reference)):
+        arm = mod.assemble_arm(route, per_drug, targets, reference, drugs=eligible)
+        values = mod.quantities(arm, reference)
+        computed[route] = {"drugs": [str(d) for d in arm.drugs], "values": values}
+
+    drugs = computed["legacy"]["drugs"]
+    if drugs != computed["authoritative"]["drugs"]:
+        raise RuntimeError(
+            "the two routes do not hold the same drugs, so a paired comparison "
+            f"between them is not defined: {len(drugs)} against "
+            f"{len(computed['authoritative']['drugs'])}")
+
+    quantities = (("P_shrna", "P", "proj_shrna"), ("E_shrna", "E", "enrich_shrna"),
+                  ("D", "D", "raw_instability"))
+    rows, paired = [], []
+    for i, drug in enumerate(drugs):
+        record = by_drug[drug]
+        for name, key, field in quantities:
+            deposited = float(record[field])
+            allowed = 1e-8 + 1e-6 * abs(deposited)
+            for route in ("legacy", "authoritative"):
+                value = float(computed[route]["values"][key][i])
+                error = abs(value - deposited)
+                rows.append({"drug": drug, "quantity": name, "route": route,
+                             "computed": value, "deposited": deposited,
+                             "absolute_error": error,
+                             "allowed_elementwise": allowed,
+                             "normalized_residual": error / allowed,
+                             "within_flat_1e-6": error < 1e-6})
+            a = float(computed["legacy"]["values"][key][i])
+            b = float(computed["authoritative"]["values"][key][i])
+            paired.append({"drug": drug, "quantity": name,
+                           "legacy": a, "authoritative": b, "deposited": deposited,
+                           "route_to_route": abs(a - b),
+                           "legacy_to_deposited": abs(a - deposited),
+                           "authoritative_to_deposited": abs(b - deposited)})
+
+    directory = Path("/out/03d_h3_reference_discordance")
+    directory.mkdir(parents=True, exist_ok=True)
+
+    # the complete table is written and hashed first, because the audit carries its
+    # digest and aggregate summaries are not accepted without it
+    legacy_rows = [r for r in rows if r["route"] == "legacy"]
+    table_path = directory / "legacy_reproduction_per_drug.json"
+    table_path.write_text(json.dumps(
+        {"what_this_is": "every legacy-route comparison behind the sealed audit's summaries",
+         "rule": "max |a-b| < 1e-6", "n_rows": len(legacy_rows), "rows": legacy_rows},
+        indent=2, allow_nan=False))
+    table_sha = mod.sha256_file(table_path)
+
+    layer = {}
+    for name, _, _ in quantities:
+        group = [r for r in legacy_rows if r["quantity"] == name]
+        errors = np.array([r["absolute_error"] for r in group])
+        residuals = np.array([r["normalized_residual"] for r in group])
+        over = [r for r in group if r["absolute_error"] >= 1e-6]
+        layer[name] = {
+            "max_absolute_error": float(errors.max()),
+            "max_normalized_residual": float(residuals.max()),
+            "worst_drug_by_residual": group[int(residuals.argmax())]["drug"],
+            "worst_drug_by_absolute": group[int(errors.argmax())]["drug"],
+            "flat_1e-6_holds": bool(errors.max() < 1e-6),
+            "n_over_flat_1e-6": len(over),
+            "drugs_over_flat_1e-6": sorted(r["drug"] for r in over)}
+
+    provenance = {
+        "retired_extraction_sha256": mod.sha256_file(Path(staged) / "lincs_subset.npz"),
+        "retired_shrna_sha256": mod.sha256_file(Path(staged) / "lincs_shrna.npz"),
+        "retired_shrna_siginfo_sha256": mod.sha256_file(
+            Path(staged) / "lincs_shrna_siginfo.csv.gz"),
+        "compound_siginfo_sha256": mod.sha256_file(
+            Path(staged) / "GSE92742_Broad_LINCS_sig_info.txt.gz"),
+        "deposited_records_sha256": mod.sha256_file(
+            Path("/app/results/03b_h3_crispri/h3_crispri_results.json")),
+        "analysis_code_sha256": mod.sha256_file(
+            Path("/app/experiments/03d_h3_reference_discordance.py")),
+        "measurement_code_sha256": mod.sha256_file(Path("/root/modal_h3_execute.py")),
+        "numpy_version": np.__version__,
+        "pandas_version": pd.__version__,
+    }
+
+    audit = {
+        "schema": "legacy_reproduction_audit/1",
+        "what_this_is": (
+            "the quarantined legacy route, executed once outside production and sealed. "
+            "Production never reads the retired extraction; it verifies this audit "
+            "against its external pin and consumes it."),
+        "computed_no_registered_statistic": True,
+        "flat_rule": "max |a-b| < 1e-6",
+        "flat_tolerance": 1e-6,
+        "quantities": [name for name, _, _ in quantities],
+        "n_drugs": len(drugs),
+        "layers": {"legacy_reproduction": layer},
+        "per_drug_table": {"file": table_path.name, "sha256": table_sha,
+                           "n_rows": len(legacy_rows)},
+        "provenance": provenance,
+    }
+    audit_path = directory / "legacy_reproduction_audit.json"
+    audit_path.write_text(json.dumps(audit, indent=2, allow_nan=False))
+
+    # the route-to-route comparison, over the whole cohort rather than nine drugs
+    route_summary = {}
+    for name, _, _ in quantities:
+        group = [p for p in paired if p["quantity"] == name]
+        between = np.array([p["route_to_route"] for p in group])
+        to_legacy = np.array([p["legacy_to_deposited"] for p in group])
+        to_auth = np.array([p["authoritative_to_deposited"] for p in group])
+        closer = int(sum(p["route_to_route"] < min(p["legacy_to_deposited"],
+                                                   p["authoritative_to_deposited"])
+                         for p in group))
+        route_summary[name] = {
+            "n_drugs": len(group),
+            "max_route_to_route": float(between.max()),
+            "median_route_to_route": float(np.median(between)),
+            "max_legacy_to_deposited": float(to_legacy.max()),
+            "max_authoritative_to_deposited": float(to_auth.max()),
+            "median_legacy_to_deposited": float(np.median(to_legacy)),
+            "median_authoritative_to_deposited": float(np.median(to_auth)),
+            "n_drugs_where_routes_agree_more_closely_than_either_agrees_with_deposited":
+                closer,
+            "holds_for_every_drug": closer == len(group)}
+
+    (directory / "route_to_route_all_drugs.json").write_text(json.dumps(
+        {"what_this_is": (
+            "the paired legacy-against-authoritative comparison over every drug of the "
+            "registered cohort. The nine-drug localization diagnostic could not "
+            "establish a statement about the cohort."),
+         "n_drugs": len(drugs), "summary": route_summary, "rows": paired},
+        indent=2, allow_nan=False))
+    results.commit()
+
+    print(f"[{_ts()}] audit sha256       {mod.sha256_file(audit_path)}", flush=True)
+    print(f"[{_ts()}] per-drug sha256    {table_sha}", flush=True)
+    for name, _, _ in quantities:
+        print(f"[{_ts()}] {name}: legacy flat holds={layer[name]['flat_1e-6_holds']} "
+              f"max={layer[name]['max_absolute_error']:.4g}; routes agree more closely "
+              f"for {route_summary[name]['n_drugs_where_routes_agree_more_closely_than_either_agrees_with_deposited']}"
+              f"/{route_summary[name]['n_drugs']}", flush=True)
+    return json.dumps({"audit_sha256": mod.sha256_file(audit_path),
+                       "per_drug_sha256": table_sha,
+                       "provenance": provenance,
+                       "n_drugs": len(drugs),
+                       "route_to_route": route_summary}, indent=2)
+
+
+@app.function(**COMMON)
+def stage_d9_indexing_diagnostic():
+    """Does the pre-fix shRNA consensus indexing explain the residual?
+
+    The plan is frozen in `experiments/PREREG_H3_S1S3_DIAGNOSTIC_D9_INDEXING.md`.
+    One reconstruction of the defect Deviation 9 names, no variants, no tuning, and
+    `D` excluded because it does not depend on the reference direction at all.
+
+    This is quarantined forensic work. The defective indexing is not a production
+    route under any outcome, and Amendment 5's gate rule does not change on it.
+    """
+    import json
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+
+    _repo_at_its_absolute_path()
+    staged, rebuilt = _stage_inputs(), _stage_rebuild()
+    mod = _discordance_module()
+
+    records = json.loads(Path(
+        "/app/results/03b_h3_crispri/h3_crispri_results.json").read_text())
+    eligible = {r["drug"] for r in records if "proj_shrna" in r}
+    by_drug = {r["drug"]: r for r in records}
+    targets, _, _ = mod.drug_targets(staged)
+
+    # the defect, reconstructed exactly: each signature id mapped to its row
+    # position in the metadata file, and that number used to index the matrix
+    shrna = np.load(Path(staged) / "lincs_shrna.npz", allow_pickle=True)
+    signatures = shrna["signatures"]
+    matrix_position = {str(s): i for i, s in enumerate(shrna["sig_ids"])}
+    siginfo = pd.read_csv(Path(staged) / "lincs_shrna_siginfo.csv.gz")
+    metadata_position = {str(s): i for i, s in enumerate(siginfo.sig_id.astype(str))}
+    n_before = len(siginfo)
+    siginfo = siginfo[siginfo.sig_id.astype(str).isin(matrix_position)].copy()
+    if len(siginfo) != n_before:
+        raise RuntimeError(
+            f"the metadata filter drops {n_before - len(siginfo)} rows, so a row "
+            "position in the file and a position after filtering are not the same "
+            "number and the reconstruction would be ambiguous")
+
+    directions, counts = {}, {}
+    for gene, group in siginfo.groupby("pert_iname"):
+        ids = sorted(set(group.sig_id.astype(str)))
+        if len(ids) < mod.MIN_SIGNATURES:
+            continue
+        consensus = signatures[[metadata_position[i] for i in ids]].mean(axis=0)
+        if np.linalg.norm(consensus) == 0:
+            continue
+        directions[gene] = mod.unit(consensus)
+        counts[gene] = len(ids)
+    prefix_reference = mod.Reference("shRNA pre-fix indexing", directions,
+                                     np.arange(mod.N_LANDMARK),
+                                     {"n_targets": len(directions),
+                                      "indexing": "metadata row position, the Deviation 9 defect"})
+
+    legacy_per_drug = _retired_drug_signatures(staged, np, pd)
+    corrected_reference = mod.build_shrna_reference(staged)
+    rebuild_per_drug, rebuild_axis = mod.build_drug_signatures_from_rebuild(rebuilt)
+    rebuild_reference = mod.build_shrna_reference_from_rebuild(rebuilt, rebuild_axis)
+
+    arms = {}
+    for label, per_drug, reference in (
+            ("prefix_indexing", legacy_per_drug, prefix_reference),
+            ("corrected_legacy", legacy_per_drug, corrected_reference),
+            ("authoritative", rebuild_per_drug, rebuild_reference)):
+        arm = mod.assemble_arm(label, per_drug, targets, reference, drugs=eligible)
+        arms[label] = (arm, mod.quantities(arm, reference))
+        print(f"[{_ts()}] {label}: {len(arm.drugs)} drugs, "
+              f"{len(reference.directions)} directions", flush=True)
+
+    shared = sorted(set.intersection(*[{str(d) for d in arm.drugs}
+                                       for arm, _ in arms.values()]))
+    index = {label: {str(d): i for i, d in enumerate(arm.drugs)}
+             for label, (arm, _) in arms.items()}
+
+    rows = []
+    for drug in shared:
+        record = by_drug[drug]
+        for name, key, field in (("P_shrna", "P", "proj_shrna"),
+                                 ("E_shrna", "E", "enrich_shrna")):
+            deposited = float(record[field])
+            value = {label: float(arms[label][1][key][index[label][drug]])
+                     for label in arms}
+            rows.append({
+                "drug": drug, "quantity": name, "deposited": deposited,
+                **{f"{label}": value[label] for label in arms},
+                "prefix_to_deposited": abs(value["prefix_indexing"] - deposited),
+                "corrected_to_deposited": abs(value["corrected_legacy"] - deposited),
+                "authoritative_to_deposited": abs(value["authoritative"] - deposited)})
+
+    summary, verdicts = {}, {}
+    for name in ("P_shrna", "E_shrna"):
+        group = [r for r in rows if r["quantity"] == name]
+        prefix = np.array([r["prefix_to_deposited"] for r in group])
+        corrected = np.array([r["corrected_to_deposited"] for r in group])
+        summary[name] = {
+            "n_drugs": len(group),
+            "max_prefix_to_deposited": float(prefix.max()),
+            "max_corrected_to_deposited": float(corrected.max()),
+            "median_prefix_to_deposited": float(np.median(prefix)),
+            "median_corrected_to_deposited": float(np.median(corrected)),
+            "max_improvement_factor": float(corrected.max() / prefix.max())
+            if prefix.max() > 0 else None,
+            "median_improvement_factor": float(np.median(corrected) / np.median(prefix))
+            if np.median(prefix) > 0 else None,
+            "n_drugs_prefix_closer": int(sum(prefix < corrected)),
+            "reaches_1e-8": bool(prefix.max() < 1e-8)}
+        # the criterion the frozen plan states, applied as written
+        verdicts[name] = {
+            "H1": bool(summary[name]["reaches_1e-8"]
+                       and summary[name]["median_improvement_factor"] is not None
+                       and summary[name]["median_improvement_factor"] >= 10),
+            "improved_tenfold_at_the_maximum": bool(
+                summary[name]["max_improvement_factor"] is not None
+                and summary[name]["max_improvement_factor"] >= 10),
+            "H2": bool(summary[name]["max_improvement_factor"] is not None
+                       and summary[name]["max_improvement_factor"] < 2)}
+
+    holds = all(verdicts[name]["H1"] for name in ("P_shrna", "E_shrna"))
+    rejected = all(verdicts[name]["H2"] for name in ("P_shrna", "E_shrna"))
+    reading = ("H1 holds: the pre-fix indexing accounts for the residual on both "
+               "reference-dependent quantities across the cohort" if holds else
+               "H2 holds: the pre-fix indexing does not account for the residual"
+               if rejected else
+               "neither H1 nor H2 as the plan states them; the partial outcome is "
+               "reported and the residual is not described as explained")
+
+    out = {
+        "registered_by": "experiments/PREREG_H3_S1S3_DIAGNOSTIC_D9_INDEXING.md",
+        "question": ("does the exact historical indexing defect explain the residual "
+                     "across the complete cohort and both reference-dependent quantities?"),
+        "what_this_is": (
+            "quarantined forensic work. The defective indexing is reconstructed once to "
+            "ask how the deposited numbers were produced, and is not a production route."),
+        "computed_no_registered_statistic": True,
+        "D_excluded_because": (
+            "D is one minus the mean pairwise cosine of a drug's own signatures and does "
+            "not depend on the reference direction, so it cannot move under any change of "
+            "reference"),
+        "n_drugs": len(shared),
+        "summary": summary,
+        "verdicts": verdicts,
+        "H1_holds": holds,
+        "H2_holds": rejected,
+        "reading": reading,
+        "rows": rows,
+    }
+    directory = Path("/out/03d_h3_reference_discordance")
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "d9_indexing_diagnostic.json").write_text(
+        json.dumps(out, indent=2, allow_nan=False))
+    results.commit()
+    print(f"[{_ts()}] {reading}", flush=True)
+    return json.dumps({"summary": summary, "verdicts": verdicts, "reading": reading},
+                      indent=2)

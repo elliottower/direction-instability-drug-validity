@@ -78,7 +78,12 @@ EXPECTED_BULK_SHA256 = {
 
 MIN_CELL_LINES = 5
 MIN_SIGNATURES = 3        # distinct signature ids, as the corrected artifact counts them
+# the frozen flat absolute tolerance, kept for the comparison it was registered
+# for: the retired extraction against the deposited records. Amendment 5.
 RECON_TOL = 1e-6
+# the elementwise float32 rule Amendment 2 registers, which Amendment 5 applies to
+# the authoritative route against the deposited records
+RECON_ATOL, RECON_RTOL = 1e-8, 1e-6
 N_BOOT = 10_000
 N_PERM = 10_000
 SEED_BOOT = 20260922
@@ -508,6 +513,11 @@ def main():
                         help="mapping writes the frozen table and stops; response consumes it")
     parser.add_argument("--expected-mapping-sha256",
                         help="the hash the implementation manifest records for the frozen mapping")
+    parser.add_argument("--legacy-reproduction", type=Path,
+                        help="the pinned measurement establishing that the retired route "
+                             "reproduces the deposited records under the frozen flat "
+                             "tolerance. Amendment 5 pins it; the gate consumes it rather "
+                             "than re-reading the retired extraction in a production run.")
     parser.add_argument("--analysis-bases", type=Path,
                         help="registry/frozen/analysis_bases.json: the basis Amendment 4 "
                              "freezes for each construction built from a Replogle file")
@@ -632,13 +642,138 @@ def verify_rebuild(rebuilt_dir):
     return recorded
 
 
+def elementwise_allowance(deposited) -> float:
+    """The elementwise float32 allowance Amendment 2 registers: atol + rtol|b|."""
+    return RECON_ATOL + RECON_RTOL * abs(float(deposited))
+
+
+LEGACY_PIN = REPO / "registry" / "frozen" / "reproduction_legacy_pin.json"
+LEGACY_SCHEMA = "legacy_reproduction_audit/1"
+LEGACY_QUANTITIES = ("P_shrna", "E_shrna", "D")
+
+
+def legacy_reproduction_pin() -> dict:
+    """Amendment 5's expected identity for the legacy audit, from outside it.
+
+    The rule Amendment 4 applies to the analysis bases applies here for the same
+    reason: an artifact carrying its own expected digest attests to itself, so the
+    expected sha256 is read from this file and never from the audit under test.
+    """
+    require(LEGACY_PIN.exists(),
+            f"{LEGACY_PIN} does not exist, and the sealed legacy audit is consumed only "
+            "at the identity Amendment 5 pins. Run stage_legacy_reproduction_audit and "
+            "write the pin from what it measured.")
+    return json.loads(LEGACY_PIN.read_text())
+
+
+def verified_legacy_audit(path, expected) -> dict:
+    """The sealed legacy audit, authenticated before it is parsed, then checked.
+
+    The retired route is quarantined. It runs once, outside production, and
+    production consumes this record rather than re-reading the retired extraction,
+    which Amendment 3's B2 put a check in the loader to keep out. That makes the
+    record a trust boundary: a file supplying three true booleans would otherwise
+    satisfy the legacy layer. So the bytes are hashed and compared with the
+    external pin before `json.loads` sees them, the record must declare the rule
+    the pin names rather than one of its own, and the predicate is accepted only
+    with the provenance saying which inputs it was measured on.
+    """
+    require(path is not None,
+            "Amendment 5 establishes legacy reproduction in a sealed audit and the gate "
+            "consumes it rather than re-reading the retired extraction. Pass the audit "
+            "named in Amendment 5's pin table.")
+    require(expected is not None,
+            "the legacy audit is authenticated against an external pin, and no pin was "
+            "supplied. A record that attests to itself establishes nothing.")
+
+    digest = sha256_file(path)
+    require(digest == expected["audit_sha256"],
+            f"the legacy audit at {path} hashes to {digest} and Amendment 5 pins "
+            f"{expected['audit_sha256']}. The quarantined route's evidence is consumed "
+            "only at the identity it was frozen at.")
+    audit = json.loads(Path(path).read_text())
+
+    require(audit.get("schema") == LEGACY_SCHEMA,
+            f"the legacy audit declares schema {audit.get('schema')!r}, not {LEGACY_SCHEMA!r}")
+    require(audit.get("flat_rule") == expected["flat_rule"],
+            f"the legacy audit declares the rule {audit.get('flat_rule')!r} and the pin "
+            f"names {expected['flat_rule']!r}; a record does not get to restate its own rule")
+    require(audit.get("flat_tolerance") == RECON_TOL,
+            f"the legacy audit was measured at a flat tolerance of "
+            f"{audit.get('flat_tolerance')} and this code enforces {RECON_TOL}")
+    require(tuple(audit.get("quantities", ())) == LEGACY_QUANTITIES,
+            f"the legacy audit covers {tuple(audit.get('quantities', ()))} and the "
+            f"registered invariant quantities are {LEGACY_QUANTITIES}")
+    require(audit.get("n_drugs") == expected["n_drugs"],
+            f"the legacy audit covers {audit.get('n_drugs')} drugs and the pin names "
+            f"{expected['n_drugs']}")
+
+    # the audit must have been measured against the same deposited records this run
+    # is comparing against, or it is evidence about a different cohort
+    provenance = audit.get("provenance", {})
+    for name, pinned in expected["provenance"].items():
+        require(provenance.get(name) == pinned,
+                f"the legacy audit was measured on {name} = {provenance.get(name)} and the "
+                f"pin names {pinned}, so it is not evidence about this cohort")
+
+    table = audit.get("per_drug_table", {})
+    require(table.get("sha256") == expected["per_drug_sha256"],
+            f"the legacy audit names a per-drug table hashing to {table.get('sha256')} and "
+            f"the pin names {expected['per_drug_sha256']}; the aggregate summaries are not "
+            "accepted without the complete comparison behind them")
+    require(table.get("n_rows") == expected["n_drugs"] * len(LEGACY_QUANTITIES),
+            f"the per-drug table holds {table.get('n_rows')} rows against the "
+            f"{expected['n_drugs'] * len(LEGACY_QUANTITIES)} the cohort and quantities require")
+
+    for quantity in LEGACY_QUANTITIES:
+        layer = audit["layers"]["legacy_reproduction"][quantity]
+        require(layer["flat_1e-6_holds"] is True,
+                f"legacy reproduction does not hold for {quantity} under the frozen flat "
+                f"tolerance: {layer['n_over_flat_1e-6']} drugs over. The retired route "
+                "failing its own frozen tolerance is a finding and is not amended away.")
+        # the boolean, the count and the list are three statements of one fact, and a
+        # record that contradicts itself is not evidence whichever of them is read
+        require(layer["n_over_flat_1e-6"] == 0,
+                f"the legacy audit reports {quantity} holding while counting "
+                f"{layer['n_over_flat_1e-6']} drugs over the flat tolerance")
+        require(layer["drugs_over_flat_1e-6"] == [],
+                f"the legacy audit reports {quantity} holding while naming "
+                f"{listing(layer['drugs_over_flat_1e-6'])} over the flat tolerance")
+        for field in ("max_absolute_error", "max_normalized_residual"):
+            value = layer[field]
+            require(np.isfinite(value) and value >= 0,
+                    f"the legacy audit reports {quantity} {field} = {value}")
+        require(layer["max_absolute_error"] < RECON_TOL,
+                f"the legacy audit reports {quantity} holding while its maximum absolute "
+                f"error {layer['max_absolute_error']:.3g} is not below {RECON_TOL}")
+
+    return audit
+
+
 def reproduction_gate(arm: Arm, shrna_values, crispri_values, records,
-                      crispri_reproduces=False):
+                      crispri_reproduces=False, legacy_record=None,
+                      legacy_expected=None, expected_drugs=None):
     """What the deposited records can and cannot be a reproduction target for.
 
-    Raw instability and the shRNA quantities are invariant under a permutation
-    applied to both operands, which Deviation 12 establishes both extractions
-    carried, so they must still reproduce the deposited values and are asserted.
+    Amendment 5 splits one comparison into two, because the registration's flat
+    absolute tolerance describes two float64 computations from one extraction and
+    Amendment 3 made a different artifact authoritative.
+
+    **Legacy reproduction** is the retired extraction and the retired loader
+    against the deposited records under the frozen flat absolute `RECON_TOL`. It
+    holds on all 795 drugs and all three invariant quantities and is established
+    once, in a sealed audit pinned by Amendment 5, rather than re-run here:
+    reading the retired artifact inside a production run would reintroduce the
+    known-bad axis declaration that Amendment 3's B2 put a check in the loader to
+    keep out. `verified_legacy_audit` authenticates that audit against an external
+    pin before parsing it.
+
+    **Production equivalence** is the authoritative route against the deposited
+    records under Amendment 2's elementwise numerical-equivalence rule,
+    `|a-b| <= atol + rtol|b|`, for every drug and every invariant quantity. The
+    statistics are float64; the rule supplies the error model for values derived
+    from float32 source data. No aggregate passes for an element, no drug is
+    excepted, and no drug leaves the cohort.
 
     The C0 quantities are not a reproduction target under Amendment 3. The
     deposited values placed the reference by the extraction's declared labels while
@@ -647,33 +782,147 @@ def reproduction_gate(arm: Arm, shrna_values, crispri_values, records,
     measured and reported rather than required to vanish. `crispri_reproduces`
     restores the old behavior for a legacy rerun of the deposited configuration.
     """
-    by_drug = {r["drug"]: r for r in records}
-    worst = {"D": 0.0, "P_shrna": 0.0, "E_shrna": 0.0, "P_crispri": 0.0, "E_crispri": 0.0}
-    for i, drug in enumerate(arm.drugs):
+    # the legacy layer first: a run whose quarantined evidence cannot be
+    # authenticated has nothing to compare against and stops before computing
+    audit = verified_legacy_audit(legacy_record, legacy_expected)
+    legacy_layer = audit["layers"]["legacy_reproduction"]
+    legacy = {"required": True, "file": str(legacy_record),
+              "audit_sha256": sha256_file(legacy_record),
+              "verified_against_pin": True,
+              "schema": audit["schema"],
+              "rule": audit["flat_rule"],
+              "n_drugs": audit["n_drugs"],
+              "per_drug_table": audit["per_drug_table"],
+              "provenance": audit["provenance"],
+              "flat_tolerance_holds_on_every_quantity": True,
+              "max_absolute_error": {q: legacy_layer[q]["max_absolute_error"]
+                                     for q in LEGACY_QUANTITIES},
+              "max_normalized_residual": {q: legacy_layer[q]["max_normalized_residual"]
+                                          for q in LEGACY_QUANTITIES}}
+
+    # cohort identity: a dict keyed by drug silently keeps the last of a duplicate
+    # pair, and a deposited record nobody compared is not a reproduction
+    deposited_ids = [str(r["drug"]) for r in records]
+    duplicated = sorted({d for d in deposited_ids if deposited_ids.count(d) > 1})
+    require(not duplicated,
+            f"the deposited records carry {len(duplicated)} duplicated drug identifiers, "
+            f"and keying by drug would keep only the last of each: {listing(duplicated)}")
+    by_drug = {str(r["drug"]): r for r in records}
+
+    arm_ids = [str(drug) for drug in arm.drugs]
+    arm_duplicated = sorted({d for d in arm_ids if arm_ids.count(d) > 1})
+    require(not arm_duplicated,
+            f"the arm carries {len(arm_duplicated)} duplicated drugs: {listing(arm_duplicated)}")
+    absent = sorted(set(arm_ids) - set(by_drug))
+    require(not absent,
+            f"{len(absent)} drugs of the arm have no deposited record: {listing(absent)}")
+    if expected_drugs is not None:
+        expected_set = {str(drug) for drug in expected_drugs}
+        require(set(arm_ids) == expected_set,
+                f"the arm compares {len(arm_ids)} drugs and the registered cohort for this "
+                f"comparison holds {len(expected_set)}; "
+                f"{len(expected_set - set(arm_ids))} deposited records would go uncompared "
+                f"and {len(set(arm_ids) - expected_set)} are not in the cohort: "
+                + listing(sorted(expected_set.symmetric_difference(arm_ids))))
+        legacy["cohort_checked_against"] = len(expected_set)
+
+    rows, failures = [], []
+    for i, drug in enumerate(arm_ids):
         record = by_drug[drug]
-        require(record["target"] == arm.targets[i], f"{drug}: target differs")
-        require(int(record["n_celllines"]) == len(arm.cell_lines[i]), f"{drug}: n_celllines differs")
+        require(str(record["target"]) == str(arm.targets[i]), f"{drug}: target differs")
+        require(int(record["n_celllines"]) == len(arm.cell_lines[i]),
+                f"{drug}: n_celllines differs")
         reference_D = (shrna_values or crispri_values)["D"]
-        worst["D"] = max(worst["D"], abs(reference_D[i] - record["raw_instability"]))
-        if "proj_shrna" in record and shrna_values is not None:
-            worst["P_shrna"] = max(worst["P_shrna"], abs(shrna_values["P"][i] - record["proj_shrna"]))
-            worst["E_shrna"] = max(worst["E_shrna"], abs(shrna_values["E"][i] - record["enrich_shrna"]))
-        if "proj_crispri" in record and crispri_values is not None:
-            worst["P_crispri"] = max(worst["P_crispri"],
-                                     abs(crispri_values["P"][i] - record["proj_crispri"]))
-            worst["E_crispri"] = max(worst["E_crispri"],
-                                     abs(crispri_values["E"][i] - record["enrich_crispri"]))
-    invariant = {k: v for k, v in worst.items() if not k.endswith("_crispri")}
-    for quantity, error in invariant.items():
-        require(error < RECON_TOL,
-                f"{quantity} reproduces to {error:.3g}, tolerance {RECON_TOL}. These "
-                "quantities are invariant under the shared permutation and must agree "
-                "with the deposited records")
-    if crispri_reproduces:
-        for quantity in ("P_crispri", "E_crispri"):
-            require(worst[quantity] < RECON_TOL,
-                    f"{quantity} reproduces to {worst[quantity]:.3g}")
-    return {**{k: float(v) for k, v in worst.items()},
+        comparisons = [("D", reference_D[i], record["raw_instability"], True)]
+        if shrna_values is not None:
+            # the cohort is defined by carrying both shRNA fields, so a record
+            # missing one is a cohort defect and not a quantity to skip
+            for field in ("proj_shrna", "enrich_shrna"):
+                require(field in record,
+                        f"{drug}: the deposited record carries no {field}, and every drug "
+                        "of this cohort is registered as carrying both shRNA fields")
+            comparisons += [("P_shrna", shrna_values["P"][i], record["proj_shrna"], True),
+                            ("E_shrna", shrna_values["E"][i], record["enrich_shrna"], True)]
+        if crispri_values is not None:
+            # both fields or neither: a record carrying enrichment without
+            # projection was previously skipped without a word, and the opposite
+            # case raised an incidental key error rather than a stated refusal
+            for field in ("proj_crispri", "enrich_crispri"):
+                require(field in record,
+                        f"{drug}: the deposited record carries no {field}, and every drug "
+                        "of this cohort is registered as carrying both CRISPRi fields. A "
+                        "measured difference does not disappear because one field of a "
+                        "pair was serialized")
+            comparisons += [
+                ("P_crispri", crispri_values["P"][i], record["proj_crispri"],
+                 crispri_reproduces),
+                ("E_crispri", crispri_values["E"][i], record["enrich_crispri"],
+                 crispri_reproduces)]
+
+        for quantity, computed, deposited, enforced in comparisons:
+            computed, deposited = float(computed), float(deposited)
+            # a non-finite value must never reach max(), where it would either
+            # dominate silently or be skipped depending on the order of arguments
+            require(np.isfinite(computed),
+                    f"{drug}: the computed {quantity} is not finite")
+            require(np.isfinite(deposited),
+                    f"{drug}: the deposited {quantity} is not finite")
+            error = abs(computed - deposited)
+            allowed = elementwise_allowance(deposited)
+            row = {"drug": drug, "quantity": quantity, "computed": computed,
+                   "deposited": deposited, "absolute_error": error,
+                   "relative_error": error / abs(deposited) if deposited != 0 else None,
+                   "allowed_elementwise": allowed,
+                   "normalized_residual": error / allowed,
+                   "flat_tolerance": RECON_TOL,
+                   "within_elementwise": error <= allowed,
+                   "within_flat": error < RECON_TOL,
+                   "enforced": enforced}
+            rows.append(row)
+            if enforced and not row["within_elementwise"]:
+                failures.append(row)
+
+    summary = {}
+    for quantity in sorted({r["quantity"] for r in rows}):
+        group = [r for r in rows if r["quantity"] == quantity]
+        residuals = np.array([r["normalized_residual"] for r in group])
+        errors = np.array([r["absolute_error"] for r in group])
+        relatives = np.array([r["relative_error"] for r in group
+                              if r["relative_error"] is not None])
+        worst = group[int(residuals.argmax())]
+        summary[quantity] = {
+            "n_drugs": len(group),
+            "enforced": group[0]["enforced"],
+            "max_absolute_error": float(errors.max()),
+            "max_relative_error": float(relatives.max()) if relatives.size else None,
+            "max_normalized_residual": float(residuals.max()),
+            "worst_drug": worst["drug"],
+            "worst_drug_deposited": worst["deposited"],
+            "worst_drug_absolute_error": worst["absolute_error"],
+            "n_over_elementwise": int(sum(not r["within_elementwise"] for r in group)),
+            "n_over_flat": int(sum(not r["within_flat"] for r in group)),
+            "drugs_over_elementwise": sorted(r["drug"] for r in group
+                                             if not r["within_elementwise"]),
+            "drugs_over_flat": sorted(r["drug"] for r in group if not r["within_flat"]),
+        }
+
+    require(not failures,
+            f"production equivalence fails for {len(failures)} drug-quantity pairs under "
+            f"Amendment 2's elementwise rule atol={RECON_ATOL} rtol={RECON_RTOL}: "
+            + listing([f"{r['drug']} {r['quantity']} "
+                       f"{r['absolute_error']:.3g} against {r['allowed_elementwise']:.3g}"
+                       for r in failures]))
+
+    return {"rule": {"production_equivalence": f"|a-b| <= {RECON_ATOL} + {RECON_RTOL}|b|, "
+                                               "elementwise, every drug and quantity",
+                     "legacy_reproduction": f"max |a-b| < {RECON_TOL}, from the sealed "
+                                            "audit, authenticated against its external pin",
+                     "registered_by": "experiments/PREREG_H3_S1S3_AMENDMENT_5.md"},
+            "legacy_reproduction": legacy,
+            "production_equivalence": summary,
+            "n_failures": len(failures),
+            "failures": failures,
+            "per_drug": rows,
             "crispri_fields_are_a_correction_not_a_reproduction": not crispri_reproduces}
 
 
@@ -911,11 +1160,25 @@ def run(args):
     # the drug also carries a shRNA direction
     crispri_with_shrna = crispri_arm.subset(
         [i for i, t in enumerate(crispri_arm.targets) if t in shrna.directions])
+    legacy = args.legacy_reproduction
+    pin = legacy_reproduction_pin()
+    # the cohort each comparison is registered over, stated here rather than taken
+    # from whatever the arm happens to hold, so a deposited record that silently
+    # went uncompared is a refusal
+    shrna_cohort = {r["drug"] for r in records if "proj_shrna" in r}
+    crispri_shrna_cohort = {d for d, t in zip(crispri_arm.drugs, crispri_arm.targets)
+                            if t in shrna.directions}
     result["gate"] = {
-        "shrna": reproduction_gate(shrna_arm, shrna_values, None, records),
-        "crispri": reproduction_gate(crispri_arm, None, c0_values, records),
+        "shrna": reproduction_gate(shrna_arm, shrna_values, None, records,
+                                   legacy_record=legacy, legacy_expected=pin,
+                                   expected_drugs=shrna_cohort),
+        "crispri": reproduction_gate(crispri_arm, None, c0_values, records,
+                                     legacy_record=legacy, legacy_expected=pin,
+                                     expected_drugs=crispri_drugs),
         "crispri_shrna_fields": reproduction_gate(
-            crispri_with_shrna, quantities(crispri_with_shrna, shrna), None, records)}
+            crispri_with_shrna, quantities(crispri_with_shrna, shrna), None, records,
+            legacy_record=legacy, legacy_expected=pin,
+            expected_drugs=crispri_shrna_cohort)}
     log(f"reproduction holds; {len(shrna_arm)} shRNA drugs, {len(crispri_arm)} CRISPRi drugs")
 
     # the harmonized comparators: the shRNA quantities and raw instability on C1's
