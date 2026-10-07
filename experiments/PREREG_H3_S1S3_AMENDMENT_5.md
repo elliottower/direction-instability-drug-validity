@@ -5,7 +5,7 @@
 void and preserved. No R1-R7 association, resampling result or criterion outcome
 has been computed under any construction. 279 tests pass under `python` and under
 `python -O`; the logs are pinned below.
-**Commit SHA:** PENDING
+**Commit SHA:** 04fba74
 **Amends:** `experiments/PREREG_H3_REFERENCE_DISCORDANCE.md` (frozen `7f57136`),
 whose reproduction tolerance this splits, and
 `experiments/PREREG_H3_S1S3_AMENDMENT_3.md` (frozen `03175d0`), whose B9 it
