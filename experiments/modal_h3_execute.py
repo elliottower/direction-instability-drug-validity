@@ -3241,3 +3241,162 @@ def stage_d9_indexing_diagnostic():
     print(f"[{_ts()}] {reading}", flush=True)
     return json.dumps({"summary": summary, "verdicts": verdicts, "reading": reading},
                       indent=2)
+
+
+# The library versions `uv.lock` resolves at f822fb1, the commit that produced the
+# deposited records by running 03b locally. cmapPy is absent on purpose: it is
+# imported only by the GCTX rebuild stages in this file, never by the geometry
+# chain the legacy route loads, and pinning it here would constrain numpy for a
+# reason unrelated to the hypothesis.
+matched_env = (
+    modal.Image.debian_slim(python_version="3.12")
+    .pip_install("numpy==2.4.6", "scipy==1.18.0", "pandas==2.3.3", "anndata==0.12.19")
+)
+MATCHED = dict(COMMON, image=_with_code(matched_env))
+
+
+@app.function(**MATCHED)
+def stage_environment_diagnostic():
+    """Does the library-version difference account for the residual?
+
+    The plan is frozen in `experiments/PREREG_H3_S1S3_DIAGNOSTIC_ENVIRONMENT.md`.
+    One image, pinned to the versions `uv.lock` resolves at `f822fb1`, which is the
+    commit that produced the deposited records by running 03b locally. The legacy
+    route and its inputs are the sealed audit's; only the libraries move.
+
+    No second version combination is tried. If the residual survives, that is the
+    answer: fitting an environment to an observed difference is what the frozen plan
+    forbids.
+    """
+    import json
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+
+    _repo_at_its_absolute_path()
+    staged = _stage_inputs()
+    mod = _discordance_module()
+
+    print(f"[{_ts()}] numpy {np.__version__}, pandas {pd.__version__}", flush=True)
+    audit = json.loads(Path(
+        "/app/results/03d_h3_reference_discordance/legacy_reproduction_audit.json").read_text())
+    # the inputs must be the ones the audit was measured on, or this is a comparison
+    # between two different things rather than between two environments
+    for field, path in (("retired_extraction_sha256", Path(staged) / "lincs_subset.npz"),
+                        ("retired_shrna_sha256", Path(staged) / "lincs_shrna.npz"),
+                        ("deposited_records_sha256",
+                         Path("/app/results/03b_h3_crispri/h3_crispri_results.json"))):
+        digest = mod.sha256_file(path)
+        if digest != audit["provenance"][field]:
+            raise RuntimeError(
+                f"{field}: this run reads {digest} and the audit was measured on "
+                f"{audit['provenance'][field]}, so a difference between the two would "
+                "not be a difference between environments")
+
+    records = json.loads(Path(
+        "/app/results/03b_h3_crispri/h3_crispri_results.json").read_text())
+    eligible = {r["drug"] for r in records if "proj_shrna" in r}
+    by_drug = {r["drug"]: r for r in records}
+    targets, _, _ = mod.drug_targets(staged)
+
+    per_drug = _retired_drug_signatures(staged, np, pd)
+    reference = mod.build_shrna_reference(staged)
+    arm = mod.assemble_arm("legacy under matched libraries", per_drug, targets,
+                           reference, drugs=eligible)
+    values = mod.quantities(arm, reference)
+
+    rows = []
+    for i, drug in enumerate(arm.drugs):
+        record = by_drug[drug]
+        for name, key, field in (("P_shrna", "P", "proj_shrna"),
+                                 ("E_shrna", "E", "enrich_shrna"),
+                                 ("D", "D", "raw_instability")):
+            computed, deposited = float(values[key][i]), float(record[field])
+            rows.append({"drug": str(drug), "quantity": name, "computed": computed,
+                         "deposited": deposited,
+                         "absolute_error": abs(computed - deposited)})
+
+    # the criteria the frozen plan states, applied by the code rather than by eye
+    summary, verdicts = {}, {}
+    for name in ("P_shrna", "E_shrna", "D"):
+        group = [r for r in rows if r["quantity"] == name]
+        errors = np.array([r["absolute_error"] for r in group])
+        was = audit["layers"]["legacy_reproduction"][name]["max_absolute_error"]
+        now = float(errors.max())
+        summary[name] = {
+            "n_drugs": len(group),
+            "max_absolute_error_under_matched_libraries": now,
+            "max_absolute_error_in_the_sealed_audit": was,
+            "improvement_factor": (was / now) if now > 0 else None,
+            "median_absolute_error": float(np.median(errors)),
+            "reaches_1e-8": bool(now < 1e-8),
+            "n_drugs_exact": int((errors == 0.0).sum()),
+        }
+        verdicts[name] = {
+            "reaches_1e-8": summary[name]["reaches_1e-8"],
+            "fell_tenfold": bool(now > 0 and was / now >= 10),
+            "fell_twofold": bool(now > 0 and was / now >= 2),
+        }
+
+    holds = all(verdicts[q]["reaches_1e-8"] for q in verdicts)
+    partly = (not holds) and any(verdicts[q]["fell_tenfold"] for q in verdicts)
+    rejected = not any(verdicts[q]["fell_twofold"] for q in verdicts)
+    reading = ("H1 holds: under the recorded library versions the legacy route "
+               "reproduces the deposited records below 1e-08 on every quantity"
+               if holds else
+               "H1 holds in part: at least one quantity fell tenfold without reaching "
+               "1e-08, and the residual is not described as a library-version effect"
+               if partly else
+               "H2 holds: no quantity's maximum absolute error fell by as much as a "
+               "factor of two, so the residual is not a library-version effect"
+               if rejected else
+               "neither H1 nor H2 as the plan states them; the partial outcome is "
+               "reported and the residual is not described as explained")
+
+    out = {
+        "registered_by": "experiments/PREREG_H3_S1S3_DIAGNOSTIC_ENVIRONMENT.md",
+        "question": ("does running the legacy route under the library versions that "
+                     "produced the deposited records remove the residual?"),
+        "what_this_is": (
+            "one image, pinned to the versions uv.lock resolves at f822fb1. No second "
+            "version combination is tried: fitting an environment to an observed "
+            "difference is what the frozen plan forbids."),
+        "computed_no_registered_statistic": True,
+        "environment": {
+            "numpy": np.__version__, "pandas": pd.__version__,
+            "pinned_from": "uv.lock at f822fb1",
+            "interpreter_not_recoverable": (
+                "uv.lock records requires-python >= 3.10 and pins no interpreter, and "
+                "nothing records which Python ran on 2026-09-15. The interpreter is held "
+                "at the audit's, so only the libraries move."),
+            "platform_differs": (
+                "the deposited records were produced on an Intel Mac and this runs in a "
+                "Debian container, so the BLAS a wheel carries is not reconstructed"),
+        },
+        "inputs_match_the_sealed_audit": True,
+        "audit_compared_against":
+            "results/03d_h3_reference_discordance/legacy_reproduction_audit.json",
+        "n_drugs": len(arm.drugs),
+        "summary": summary,
+        "verdicts": verdicts,
+        "H1_holds": holds,
+        "H1_holds_in_part": partly,
+        "H2_holds": rejected,
+        "reading": reading,
+        "rows": rows,
+    }
+    directory = Path("/out/03d_h3_reference_discordance")
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "environment_diagnostic.json").write_text(
+        json.dumps(out, indent=2, allow_nan=False))
+    results.commit()
+    for name in ("P_shrna", "E_shrna", "D"):
+        s = summary[name]
+        print(f"[{_ts()}] {name}: audit {s['max_absolute_error_in_the_sealed_audit']:.4g} "
+              f"-> matched {s['max_absolute_error_under_matched_libraries']:.4g} "
+              f"(factor {s['improvement_factor']:.3g}), exact for {s['n_drugs_exact']}"
+              f"/{s['n_drugs']}", flush=True)
+    print(f"[{_ts()}] {reading}", flush=True)
+    return json.dumps({"summary": summary, "verdicts": verdicts, "reading": reading},
+                      indent=2)

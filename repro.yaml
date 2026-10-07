@@ -1,0 +1,142 @@
+# The evidence manifest for direction-instability-drug-validity, read by `repro verify`.
+#
+# `artifacts` pins files by sha256. An edited file is reported as a broken pin until the
+# digest recorded here is replaced with the output of `shasum -a 256 <path>`.
+#
+# `claims` says what the manuscript states and where a pinned artifact holds it. To add a
+# claim, copy an entry under `claims`, give it a new id, and point its evidence at the id of
+# an artifact. A `metric` reads a number at an RFC 6901 JSON Pointer in a JSON or YAML file;
+# `reported` is the number as the manuscript prints it, in quotes. A `quote` finds a passage
+# in a text source. Claims whose id begins `example-` were written by `repro manifest init` to
+# show the shape, and are there to be edited or removed.
+#
+# Check it:
+#
+#     repro verify
+#
+schema_version: repro/1
+project: direction-instability-drug-validity
+provenance:
+  repository: https://github.com/elliottower/direction-instability-drug-validity.git
+  commit: d7ac12c2d7d57b8c425dc6513b25cd07019bd00e
+  dirty: true
+  generated_by: repro manifest init
+artifacts:
+- id: legacy-reproduction-audit
+  path: results/03d_h3_reference_discordance/legacy_reproduction_audit.json
+  media_type: application/json
+  digest:
+    algorithm: sha256
+    value: 0810be5b88bbe429ca313c4d3d2b0e0072e05feaf5f90ef15a8654fd9562d693
+- id: legacy-reproduction-per-drug
+  path: results/03d_h3_reference_discordance/legacy_reproduction_per_drug.json
+  media_type: application/json
+  digest:
+    algorithm: sha256
+    value: 4194f88c10291cc81500196b09bd2462922c31d6feaf14a7962f9afcd6529d0a
+- id: route-to-route-all-drugs
+  path: results/03d_h3_reference_discordance/route_to_route_all_drugs.json
+  media_type: application/json
+  digest:
+    algorithm: sha256
+    value: b3b97cc7ed9decb8e6bf9ec6b4073913edb504313690c3031226c3416526c226
+- id: d9-indexing-diagnostic
+  path: results/03d_h3_reference_discordance/d9_indexing_diagnostic.json
+  media_type: application/json
+  digest:
+    algorithm: sha256
+    value: 6e81efac52a00bc7edabf792ae797bc5fb9d28e6da9df0aee962e8eaaad513a1
+- id: two-layer-gate-measurement
+  path: results/03d_h3_reference_discordance/two_layer_gate_measurement.json
+  media_type: application/json
+  digest:
+    algorithm: sha256
+    value: 27608a93e848f30c324f89d247ea4451c9b02eb4e71bb5b01207757124306bb5
+- id: reproduction-legacy-pin
+  path: registry/frozen/reproduction_legacy_pin.json
+  media_type: application/json
+  digest:
+    algorithm: sha256
+    value: d5a443fe76b8d1e03c00879a8358d2e2fe75885fad1d3f185f4b2820f7b30111
+- id: analysis-bases
+  path: registry/frozen/analysis_bases.json
+  media_type: application/json
+  digest:
+    algorithm: sha256
+    value: 05a4fd397b389276fff247b3fa778a4cc2dbe7fef7572350aea9f99b9fa32b3f
+- id: analysis-bases-pin
+  path: registry/frozen/analysis_bases_pin.json
+  media_type: application/json
+  digest:
+    algorithm: sha256
+    value: 12cf6bf3576331f0cd06f2a15e056198dda51cf9d5322e1374339f90846a2915
+- id: h3-crispri-results
+  path: results/03b_h3_crispri/h3_crispri_results.json
+  media_type: application/json
+  digest:
+    algorithm: sha256
+    value: f00f8428071178bd2317139c5a1f534e458931684fb6da65c750f9f1e5456eb3
+- id: direction-instability-confound-audit-v1c
+  path: paper/direction_instability_confound_audit_v1c.tex
+  media_type: application/x-tex
+  digest:
+    algorithm: sha256
+    value: 85598dfe9cb79f781c6b746a722c317351951c59f569c77d6735b28f97905e69
+claims:
+# The figures Amendment 5's "Maximum claim under this registration" licenses, each bound to
+# the artifact that holds it. No validity manuscript states them yet: when the prose exists,
+# each `text` becomes the sentence as printed and `repro verify` checks the two together.
+- id: legacy-reproduces-under-the-frozen-flat-tolerance
+  text: The deposited shRNA quantities reproduce from the retired extraction and the retired
+    aggregation with absolute error below 1e-06 for every drug and every invariant quantity.
+  evidence:
+  - kind: metric
+    artifact: legacy-reproduction-audit
+    name: max absolute error, projected dispersion, legacy route
+    reported: "9.755e-07"
+    pointer: /layers/legacy_reproduction/P_shrna/max_absolute_error
+  - kind: metric
+    artifact: legacy-reproduction-audit
+    name: drugs in the registered cohort
+    reported: "795"
+    pointer: /n_drugs
+- id: production-satisfies-the-elementwise-rule
+  text: Under the authoritative source-derived route, all 795 drug-level comparisons satisfy
+    Amendment 2's elementwise rule, at maximum normalized residuals of 0.1953 for projected
+    dispersion, 0.4211 for signless alignment and 0.1288 for direction instability.
+  evidence:
+  - kind: metric
+    artifact: two-layer-gate-measurement
+    name: max normalized residual, projected dispersion
+    reported: "0.1953"
+    pointer: /layers/production_equivalence/P_shrna/max_normalized_residual
+  - kind: metric
+    artifact: two-layer-gate-measurement
+    name: max normalized residual, signless alignment
+    reported: "0.4211"
+    pointer: /layers/production_equivalence/E_shrna/max_normalized_residual
+  - kind: metric
+    artifact: two-layer-gate-measurement
+    name: max normalized residual, direction instability
+    reported: "0.1288"
+    pointer: /layers/production_equivalence/D/max_normalized_residual
+- id: routes-are-not-mutually-closer-for-every-drug
+  text: The two reconstructable routes agree more closely with each other than either agrees
+    with the deposited values for 568 of 795 drugs on projected dispersion, so no claim may
+    say this holds for every drug.
+  evidence:
+  - kind: metric
+    artifact: route-to-route-all-drugs
+    name: drugs where the routes are mutually closer, projected dispersion
+    reported: "568"
+    pointer: /summary/P_shrna/n_drugs_where_routes_agree_more_closely_than_either_agrees_with_deposited
+- id: the-pre-fix-indexing-does-not-explain-the-residual
+  text: The pre-fix shRNA consensus indexing differs from the deposited records by up to 7.818
+    in projected dispersion, against 9.755e-07 for the corrected reference, so it does not
+    account for the residual.
+  evidence:
+  - kind: metric
+    artifact: d9-indexing-diagnostic
+    name: max absolute error against deposited, pre-fix indexing
+    reported: "7.818"
+    pointer: /summary/P_shrna/max_prefix_to_deposited

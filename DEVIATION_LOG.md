@@ -923,3 +923,7 @@ measured on rather than aggregate summaries alone.
   `legacy_reproduction_per_drug.json` behind it and
   `registry/frozen/reproduction_legacy_pin.json` holding its expected identity
 - `results/03d_h3_reference_discordance/route_to_route_all_drugs.json`
+- `experiments/PREREG_H3_S1S3_DIAGNOSTIC_ENVIRONMENT.md`, the frozen plan for the
+  library-version candidate. Its stage was added to `experiments/modal_h3_execute.py`
+  after Amendment 5 pinned that file, so that pinned digest describes the file at the
+  freeze and not afterwards; the reason is stated in the plan.
