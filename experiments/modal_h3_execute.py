@@ -2537,3 +2537,314 @@ def stage_reproduction_tolerance_power():
 
 def _as_plain(mapping):
     return {key: dict(value) for key, value in mapping.items()}
+
+
+@app.function(**COMMON)
+def stage_localize_reproduction_error():
+    """Where the reproduction difference comes from, before any tolerance is amended.
+
+    Perplexity's round 23 ruling blocks an amendment behind this: a refusal that
+    hides a localized implementation discrepancy is not a tolerance problem. The
+    question is whether the difference between the deposited values and the
+    authoritative rebuild is a property of the aggregation arithmetic or of the
+    data.
+
+    Three routes are computed for the same drugs:
+
+      legacy float32   the retired loader as it stands, `signatures[rows].mean(0)`
+                       on a float32 array, which numpy accumulates in float32
+      legacy float64   the same signatures and the same membership, accumulated in
+                       float64
+      rebuild          the authoritative per-drug per-cell means from the shards
+
+    If the deposited values match the legacy float32 route and the rebuild matches
+    the legacy float64 route, the difference is the float32 accumulator in the
+    retired aggregation and the deposited value is the less exact of the two. If
+    the membership or the per-pair structure differs instead, that is an
+    implementation discrepancy and no tolerance should be amended.
+
+    No registered statistic is computed: the per-pair projections reported here are
+    intermediates of a reproduction check, and no correlation, interval or reading
+    is produced.
+    """
+    import importlib.util
+    import json
+    import sys
+    from pathlib import Path
+
+    import numpy as np
+    import pandas as pd
+
+    _repo_at_its_absolute_path()
+    staged, rebuilt = _stage_inputs(), _stage_rebuild()
+    sys.path.insert(0, "/app")
+    spec = importlib.util.spec_from_file_location(
+        "discordance", "/app/experiments/03d_h3_reference_discordance.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    FOCUS = ["BMS-387032", "JNJ-38877605", "KU-60019", "amonafide",
+             "hexamethylenebisacetamide", "latanoprost", "levofloxacin",
+             "pefloxacin", "targinine"]
+
+    records = json.loads(Path(
+        "/app/results/03b_h3_crispri/h3_crispri_results.json").read_text())
+    by_drug = {r["drug"]: r for r in records}
+
+    # the retired route, and the same route with a float64 accumulator
+    compounds = np.load(Path(staged) / "lincs_subset.npz", allow_pickle=True)
+    raw = compounds["signatures"]
+    stored_dtype = str(raw.dtype)
+    position = {str(sig_id): i for i, sig_id in enumerate(compounds["sig_ids"])}
+    siginfo = pd.read_csv(Path(staged) / "GSE92742_Broad_LINCS_sig_info.txt.gz",
+                          sep="\t", low_memory=False)
+    siginfo = siginfo[siginfo.sig_id.astype(str).isin(position)
+                      & siginfo.pert_iname.notna()].copy()
+    siginfo["_row"] = siginfo.sig_id.astype(str).map(position)
+
+    legacy32, legacy64, membership = {}, {}, {}
+    for (drug, cell), group in siginfo.groupby(["pert_iname", "cell_id"]):
+        rows = group._row.values
+        legacy32.setdefault(drug, {})[cell] = raw[rows].mean(axis=0)
+        legacy64.setdefault(drug, {})[cell] = raw[rows].astype(np.float64).mean(axis=0)
+        membership.setdefault(drug, {})[cell] = sorted(
+            str(s) for s in group.sig_id.astype(str))
+
+    shrna_legacy = mod.build_shrna_reference(staged)
+    rebuild, gene_axis = mod.build_drug_signatures_from_rebuild(rebuilt)
+    shrna_rebuild = mod.build_shrna_reference_from_rebuild(rebuilt, gene_axis)
+    targets, _, _ = mod.drug_targets(staged)
+
+    def projection_pairs(cells, reference, target, dtype=np.float64):
+        """|(s_i - s_j) . u| per ordered context pair, keyed by the two cell names.
+
+        `dtype` carries the whole projection: the difference, the matrix product
+        and the mean. A float32 path is what the deposited pipeline would have
+        taken on a float32 extraction, and its rounding lands at the magnitude of
+        P rather than of a signature value.
+        """
+        names = sorted(cells)
+        matrix = np.vstack([np.asarray(cells[name], dtype=dtype) for name in names])
+        direction = reference.directions[target][reference.positions] \
+            if len(reference.positions) != matrix.shape[1] else reference.directions[target]
+        direction = np.asarray(direction, dtype=dtype)
+        upper = np.triu_indices(len(names), k=1)
+        differences = matrix[upper[0]] - matrix[upper[1]]
+        values = np.abs(differences @ direction)
+        return {f"{names[a]}|{names[b]}": float(v)
+                for a, b, v in zip(upper[0], upper[1], values)}, float(values.mean(dtype=dtype))
+
+    findings = {}
+    for drug in FOCUS:
+        target = targets.get(drug)
+        if target is None or drug not in rebuild or drug not in legacy32:
+            findings[drug] = {"skipped": "absent from a route or carries no target"}
+            continue
+        entry = {"target": target, "deposited_P": float(by_drug[drug]["proj_shrna"])}
+        legacy_cells = set(legacy32[drug])
+        rebuild_cells = set(rebuild[drug])
+        entry["membership"] = {
+            "n_cells_legacy": len(legacy_cells), "n_cells_rebuild": len(rebuild_cells),
+            "cell_sets_identical": legacy_cells == rebuild_cells,
+            "only_in_legacy": sorted(legacy_cells - rebuild_cells),
+            "only_in_rebuild": sorted(rebuild_cells - legacy_cells),
+            "signatures_per_cell": {c: len(v) for c, v in membership[drug].items()},
+        }
+        if legacy_cells != rebuild_cells:
+            findings[drug] = entry
+            continue
+
+        routes = (("legacy_float32", legacy32[drug], shrna_legacy, np.float64),
+                  ("legacy_float64", legacy64[drug], shrna_legacy, np.float64),
+                  ("rebuild", rebuild[drug], shrna_rebuild, np.float64),
+                  # the projection itself in float32, which is what a float32
+                  # extraction carried end to end
+                  ("legacy_float32_projection", legacy32[drug], shrna_legacy, np.float32),
+                  ("rebuild_float32_projection", rebuild[drug], shrna_rebuild, np.float32))
+        for label, cells, reference, dtype in routes:
+            pairs, mean = projection_pairs(cells, reference, target, dtype=dtype)
+            entry[label] = {"P": mean, "n_pairs": len(pairs), "projection_dtype": str(dtype.__name__)}
+            entry.setdefault("_pairs", {})[label] = pairs
+
+        pairs = entry.pop("_pairs")
+        entry["differences_from_deposited"] = {
+            label: abs(entry[label]["P"] - entry["deposited_P"])
+            for label, _, _, _ in routes}
+        entry["rebuild_against_legacy_float64"] = abs(
+            entry["rebuild"]["P"] - entry["legacy_float64"]["P"])
+        entry["rebuild_against_legacy_float32"] = abs(
+            entry["rebuild"]["P"] - entry["legacy_float32"]["P"])
+        shared = sorted(set(pairs["rebuild"]) & set(pairs["legacy_float32"]))
+        per_pair = np.array([abs(pairs["rebuild"][k] - pairs["legacy_float32"][k])
+                             for k in shared])
+        entry["per_pair_against_legacy_float32"] = {
+            "n_pairs": len(shared),
+            "max": float(per_pair.max()), "mean": float(per_pair.mean()),
+            "worst_pair": shared[int(per_pair.argmax())],
+            # one pair carrying the whole difference is a localized discrepancy;
+            # a difference spread over every pair is accumulation
+            "n_pairs_above_half_the_max": int((per_pair > per_pair.max() / 2).sum()),
+        }
+        findings[drug] = entry
+        differences = entry["differences_from_deposited"]
+        print(f"[{_ts()}] {drug}: deposited {entry['deposited_P']:.10f} | "
+              f"f64 routes: legacy {differences['legacy_float32']:.3g} "
+              f"rebuild {differences['rebuild']:.3g} | f32 projection: legacy "
+              f"{differences['legacy_float32_projection']:.3g} rebuild "
+              f"{differences['rebuild_float32_projection']:.3g}", flush=True)
+
+    out = {
+        "what_this_is": (
+            "where the reproduction difference comes from, measured before any tolerance "
+            "is amended. The retired loader takes the mean of a float32 array, which "
+            "numpy accumulates in float32; the rebuild's shards carry a mean computed "
+            "elsewhere. This asks whether the deposited values track the float32 "
+            "accumulation and the rebuild tracks the float64 one, or whether the "
+            "membership or per-pair structure differs, which would be an implementation "
+            "discrepancy rather than arithmetic."),
+        "computed_no_registered_statistic": True,
+        "lincs_subset_signatures_dtype": stored_dtype,
+        "focus_drugs": FOCUS,
+        "why_these_drugs": ("the drug that crossed the flat tolerance, and the five "
+                            "largest by absolute error, by relative error and by error "
+                            "in float32 ULPs"),
+        "findings": findings,
+    }
+    directory = Path("/out/03d_h3_reference_discordance")
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "reproduction_error_localized.json").write_text(
+        json.dumps(out, indent=2, allow_nan=False))
+    results.commit()
+    return json.dumps({d: v.get("differences_from_deposited") for d, v in findings.items()},
+                      indent=2)
+
+
+@app.function(**COMMON)
+def stage_two_layer_gate_measurement():
+    """Does the two-layer gate round 23 proposes actually hold, on all 795 drugs?
+
+    Layer one, legacy reproduction: the retired extraction and the retired loader
+    against the deposited records, under the frozen flat absolute 1e-06. If the
+    legacy route cannot reproduce the deposited analysis to its own registered
+    tolerance, that is a finding and no amendment should paper over it.
+
+    Layer two, production equivalence: the authoritative rebuild against the
+    deposited records under the elementwise float32 rule Amendment 2 registers.
+
+    Both layers are measured here and neither is enforced. No registered statistic
+    is computed; these are the reproduction errors a gate would compare.
+    """
+    import importlib.util
+    import json
+    import sys
+    from pathlib import Path
+
+    import numpy as np
+
+    _repo_at_its_absolute_path()
+    staged, rebuilt = _stage_inputs(), _stage_rebuild()
+    sys.path.insert(0, "/app")
+    spec = importlib.util.spec_from_file_location(
+        "discordance", "/app/experiments/03d_h3_reference_discordance.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    records = json.loads(Path(
+        "/app/results/03b_h3_crispri/h3_crispri_results.json").read_text())
+    eligible = {r["drug"] for r in records if "proj_shrna" in r}
+    by_drug = {r["drug"]: r for r in records}
+    targets, _, _ = mod.drug_targets(staged)
+
+    def errors_for(per_drug, reference, label):
+        arm = mod.assemble_arm(label, per_drug, targets, reference, drugs=eligible)
+        values = mod.quantities(arm, reference)
+        rows = []
+        for i, drug in enumerate(arm.drugs):
+            record = by_drug[drug]
+            for quantity, computed, deposited in (
+                    ("P_shrna", values["P"][i], record["proj_shrna"]),
+                    ("E_shrna", values["E"][i], record["enrich_shrna"]),
+                    ("D", values["D"][i], record["raw_instability"])):
+                error = abs(float(computed) - float(deposited))
+                allowed = 1e-8 + 1e-6 * abs(float(deposited))
+                rows.append({"drug": drug, "quantity": quantity,
+                             "computed": float(computed), "deposited": float(deposited),
+                             "absolute_error": error, "allowed_elementwise": allowed,
+                             "normalized_residual": error / allowed})
+        return arm, rows
+
+    # The legacy layer reads the retired extraction on its own declared terms.
+    # `build_drug_signatures` refuses it, because Amendment 3's B2 put a
+    # frozen-axis check there so a known-bad declaration cannot reach production.
+    # That check is exactly right for production and exactly wrong here: the
+    # deposited analysis consumed this file with that declaration, and reproducing
+    # the deposited analysis means consuming it the same way. The aggregation
+    # below is the retired loader's, line for line, without that check.
+    import pandas as pd
+
+    compounds = np.load(Path(staged) / "lincs_subset.npz", allow_pickle=True)
+    signatures = compounds["signatures"]
+    position = {str(sig_id): i for i, sig_id in enumerate(compounds["sig_ids"])}
+    siginfo = pd.read_csv(Path(staged) / "GSE92742_Broad_LINCS_sig_info.txt.gz",
+                          sep="\t", low_memory=False)
+    siginfo = siginfo[siginfo.sig_id.astype(str).isin(position)
+                      & siginfo.pert_iname.notna()].copy()
+    siginfo["_row"] = siginfo.sig_id.astype(str).map(position)
+    legacy_per_drug = {}
+    for (drug, cell), group in siginfo.groupby(["pert_iname", "cell_id"]):
+        legacy_per_drug.setdefault(drug, {})[cell] = \
+            signatures[group._row.values].mean(axis=0)
+    legacy_axis = [str(g) for g in compounds["gene_ids"]]
+    legacy_reference = mod.build_shrna_reference(staged)
+    rebuild_per_drug, rebuild_axis = mod.build_drug_signatures_from_rebuild(rebuilt)
+    rebuild_reference = mod.build_shrna_reference_from_rebuild(rebuilt, rebuild_axis)
+
+    layers = {}
+    for name, per_drug, reference in (("legacy_reproduction", legacy_per_drug, legacy_reference),
+                                      ("production_equivalence", rebuild_per_drug,
+                                       rebuild_reference)):
+        arm, rows = errors_for(per_drug, reference, name)
+        summary = {"n_drugs": len(arm.drugs)}
+        for quantity in ("P_shrna", "E_shrna", "D"):
+            group = [r for r in rows if r["quantity"] == quantity]
+            errors = np.array([r["absolute_error"] for r in group])
+            residuals = np.array([r["normalized_residual"] for r in group])
+            over_flat = [r for r in group if r["absolute_error"] >= 1e-6]
+            over_elementwise = [r for r in group if r["normalized_residual"] > 1.0]
+            summary[quantity] = {
+                "max_absolute_error": float(errors.max()),
+                "max_normalized_residual": float(residuals.max()),
+                "worst_drug_by_residual": group[int(residuals.argmax())]["drug"],
+                "worst_drug_by_absolute": group[int(errors.argmax())]["drug"],
+                "flat_1e-6_holds": bool(errors.max() < 1e-6),
+                "n_over_flat_1e-6": len(over_flat),
+                "drugs_over_flat_1e-6": sorted(r["drug"] for r in over_flat),
+                "elementwise_float32_holds": len(over_elementwise) == 0,
+                "n_over_elementwise": len(over_elementwise),
+                "drugs_over_elementwise": sorted(r["drug"] for r in over_elementwise),
+            }
+        layers[name] = summary
+        print(f"[{_ts()}] {name}: " + ", ".join(
+            f"{q} flat={summary[q]['flat_1e-6_holds']}({summary[q]['n_over_flat_1e-6']}) "
+            f"elementwise={summary[q]['elementwise_float32_holds']} "
+            f"maxres={summary[q]['max_normalized_residual']:.3f}"
+            for q in ("P_shrna", "E_shrna", "D")), flush=True)
+
+    out = {
+        "what_this_is": (
+            "both layers of the gate round 23 proposes, measured and not enforced. Layer "
+            "one asks whether the retired route reproduces the deposited analysis to the "
+            "frozen flat absolute 1e-06. Layer two asks whether the authoritative rebuild "
+            "satisfies the elementwise float32 rule Amendment 2 registers. A legacy layer "
+            "that fails its own frozen tolerance is a finding, not something to amend."),
+        "computed_no_registered_statistic": True,
+        "rules": {"flat": "max |a-b| < 1e-6",
+                  "elementwise_float32": "|a-b| <= 1e-8 + 1e-6|b| for every drug"},
+        "layers": layers,
+    }
+    directory = Path("/out/03d_h3_reference_discordance")
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "two_layer_gate_measurement.json").write_text(
+        json.dumps(out, indent=2, allow_nan=False))
+    results.commit()
+    return json.dumps(layers, indent=2)

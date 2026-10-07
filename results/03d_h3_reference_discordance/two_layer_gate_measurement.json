@@ -1,0 +1,90 @@
+{
+  "what_this_is": "both layers of the gate round 23 proposes, measured and not enforced. Layer one asks whether the retired route reproduces the deposited analysis to the frozen flat absolute 1e-06. Layer two asks whether the authoritative rebuild satisfies the elementwise float32 rule Amendment 2 registers. A legacy layer that fails its own frozen tolerance is a finding, not something to amend.",
+  "computed_no_registered_statistic": true,
+  "rules": {
+    "flat": "max |a-b| < 1e-6",
+    "elementwise_float32": "|a-b| <= 1e-8 + 1e-6|b| for every drug"
+  },
+  "layers": {
+    "legacy_reproduction": {
+      "n_drugs": 795,
+      "P_shrna": {
+        "max_absolute_error": 9.75479318654493e-07,
+        "max_normalized_residual": 0.12173908883902743,
+        "worst_drug_by_residual": "pefloxacin",
+        "worst_drug_by_absolute": "levofloxacin",
+        "flat_1e-6_holds": true,
+        "n_over_flat_1e-6": 0,
+        "drugs_over_flat_1e-6": [],
+        "elementwise_float32_holds": true,
+        "n_over_elementwise": 0,
+        "drugs_over_elementwise": []
+      },
+      "E_shrna": {
+        "max_absolute_error": 9.843258652608711e-08,
+        "max_normalized_residual": 0.4463427382684837,
+        "worst_drug_by_residual": "lupanine",
+        "worst_drug_by_absolute": "PI-103",
+        "flat_1e-6_holds": true,
+        "n_over_flat_1e-6": 0,
+        "drugs_over_flat_1e-6": [],
+        "elementwise_float32_holds": true,
+        "n_over_elementwise": 0,
+        "drugs_over_elementwise": []
+      },
+      "D": {
+        "max_absolute_error": 7.297945991968646e-08,
+        "max_normalized_residual": 0.12777526427237665,
+        "worst_drug_by_residual": "doxorubicin",
+        "worst_drug_by_absolute": "etoposide",
+        "flat_1e-6_holds": true,
+        "n_over_flat_1e-6": 0,
+        "drugs_over_flat_1e-6": [],
+        "elementwise_float32_holds": true,
+        "n_over_elementwise": 0,
+        "drugs_over_elementwise": []
+      }
+    },
+    "production_equivalence": {
+      "n_drugs": 795,
+      "P_shrna": {
+        "max_absolute_error": 1.138549816204204e-06,
+        "max_normalized_residual": 0.19527015501516315,
+        "worst_drug_by_residual": "pefloxacin",
+        "worst_drug_by_absolute": "levofloxacin",
+        "flat_1e-6_holds": false,
+        "n_over_flat_1e-6": 1,
+        "drugs_over_flat_1e-6": [
+          "levofloxacin"
+        ],
+        "elementwise_float32_holds": true,
+        "n_over_elementwise": 0,
+        "drugs_over_elementwise": []
+      },
+      "E_shrna": {
+        "max_absolute_error": 9.364712388881813e-08,
+        "max_normalized_residual": 0.4210760832873934,
+        "worst_drug_by_residual": "lupanine",
+        "worst_drug_by_absolute": "PI-103",
+        "flat_1e-6_holds": true,
+        "n_over_flat_1e-6": 0,
+        "drugs_over_flat_1e-6": [],
+        "elementwise_float32_holds": true,
+        "n_over_elementwise": 0,
+        "drugs_over_elementwise": []
+      },
+      "D": {
+        "max_absolute_error": 7.496284071262238e-08,
+        "max_normalized_residual": 0.12875045845028188,
+        "worst_drug_by_residual": "doxorubicin",
+        "worst_drug_by_absolute": "etoposide",
+        "flat_1e-6_holds": true,
+        "n_over_flat_1e-6": 0,
+        "drugs_over_flat_1e-6": [],
+        "elementwise_float32_holds": true,
+        "n_over_elementwise": 0,
+        "drugs_over_elementwise": []
+      }
+    }
+  }
+}

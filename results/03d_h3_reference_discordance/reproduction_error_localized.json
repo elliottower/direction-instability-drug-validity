@@ -1,0 +1,577 @@
+{
+  "what_this_is": "where the reproduction difference comes from, measured before any tolerance is amended. The retired loader takes the mean of a float32 array, which numpy accumulates in float32; the rebuild's shards carry a mean computed elsewhere. This asks whether the deposited values track the float32 accumulation and the rebuild tracks the float64 one, or whether the membership or per-pair structure differs, which would be an implementation discrepancy rather than arithmetic.",
+  "computed_no_registered_statistic": true,
+  "lincs_subset_signatures_dtype": "float32",
+  "focus_drugs": [
+    "BMS-387032",
+    "JNJ-38877605",
+    "KU-60019",
+    "amonafide",
+    "hexamethylenebisacetamide",
+    "latanoprost",
+    "levofloxacin",
+    "pefloxacin",
+    "targinine"
+  ],
+  "why_these_drugs": "the drug that crossed the flat tolerance, and the five largest by absolute error, by relative error and by error in float32 ULPs",
+  "findings": {
+    "BMS-387032": {
+      "target": "CDK2",
+      "deposited_P": 2.3856276909510297,
+      "membership": {
+        "n_cells_legacy": 6,
+        "n_cells_rebuild": 6,
+        "cell_sets_identical": true,
+        "only_in_legacy": [],
+        "only_in_rebuild": [],
+        "signatures_per_cell": {
+          "BT20": 8,
+          "HS578T": 7,
+          "MCF10A": 8,
+          "MCF7": 7,
+          "MDAMB231": 8,
+          "SKBR3": 5
+        }
+      },
+      "legacy_float32": {
+        "P": 2.3856276271562367,
+        "n_pairs": 15,
+        "projection_dtype": "float64"
+      },
+      "legacy_float64": {
+        "P": 2.3856276232291074,
+        "n_pairs": 15,
+        "projection_dtype": "float64"
+      },
+      "rebuild": {
+        "P": 2.385627416702676,
+        "n_pairs": 15,
+        "projection_dtype": "float64"
+      },
+      "legacy_float32_projection": {
+        "P": 2.385627508163452,
+        "n_pairs": 15,
+        "projection_dtype": "float32"
+      },
+      "rebuild_float32_projection": {
+        "P": 2.385627508163452,
+        "n_pairs": 15,
+        "projection_dtype": "float32"
+      },
+      "differences_from_deposited": {
+        "legacy_float32": 6.379479300377966e-08,
+        "legacy_float64": 6.772192229220764e-08,
+        "rebuild": 2.7424835380429613e-07,
+        "legacy_float32_projection": 1.8278757751843955e-07,
+        "rebuild_float32_projection": 1.8278757751843955e-07
+      },
+      "rebuild_against_legacy_float64": 2.065264315120885e-07,
+      "rebuild_against_legacy_float32": 2.1045356080051647e-07,
+      "per_pair_against_legacy_float32": {
+        "n_pairs": 15,
+        "max": 6.754116766982676e-07,
+        "mean": 2.671066990802181e-07,
+        "worst_pair": "MDAMB231|SKBR3",
+        "n_pairs_above_half_the_max": 5
+      }
+    },
+    "JNJ-38877605": {
+      "target": "MET",
+      "deposited_P": 1.9761922107293055,
+      "membership": {
+        "n_cells_legacy": 13,
+        "n_cells_rebuild": 13,
+        "cell_sets_identical": true,
+        "only_in_legacy": [],
+        "only_in_rebuild": [],
+        "signatures_per_cell": {
+          "A375": 1,
+          "A549": 1,
+          "BT20": 8,
+          "HA1E": 1,
+          "HCC515": 1,
+          "HS578T": 8,
+          "HT29": 1,
+          "MCF10A": 8,
+          "MCF7": 10,
+          "MDAMB231": 8,
+          "PC3": 2,
+          "SKBR3": 8,
+          "VCAP": 2
+        }
+      },
+      "legacy_float32": {
+        "P": 1.9761922744613452,
+        "n_pairs": 78,
+        "projection_dtype": "float64"
+      },
+      "legacy_float64": {
+        "P": 1.9761922785119583,
+        "n_pairs": 78,
+        "projection_dtype": "float64"
+      },
+      "rebuild": {
+        "P": 1.976192450888895,
+        "n_pairs": 78,
+        "projection_dtype": "float64"
+      },
+      "legacy_float32_projection": {
+        "P": 1.9761923551559448,
+        "n_pairs": 78,
+        "projection_dtype": "float32"
+      },
+      "rebuild_float32_projection": {
+        "P": 1.9761923551559448,
+        "n_pairs": 78,
+        "projection_dtype": "float32"
+      },
+      "differences_from_deposited": {
+        "legacy_float32": 6.373203964571417e-08,
+        "legacy_float64": 6.778265282392226e-08,
+        "rebuild": 2.4015958954848315e-07,
+        "legacy_float32_projection": 1.4442663931468758e-07,
+        "rebuild_float32_projection": 1.4442663931468758e-07
+      },
+      "rebuild_against_legacy_float64": 1.723769367245609e-07,
+      "rebuild_against_legacy_float32": 1.76427549902769e-07,
+      "per_pair_against_legacy_float32": {
+        "n_pairs": 78,
+        "max": 5.768486603940914e-07,
+        "mean": 2.1377457048918786e-07,
+        "worst_pair": "A375|HCC515",
+        "n_pairs_above_half_the_max": 22
+      }
+    },
+    "KU-60019": {
+      "target": "ATM",
+      "deposited_P": 0.6424308290084203,
+      "membership": {
+        "n_cells_legacy": 6,
+        "n_cells_rebuild": 6,
+        "cell_sets_identical": true,
+        "only_in_legacy": [],
+        "only_in_rebuild": [],
+        "signatures_per_cell": {
+          "BT20": 8,
+          "HS578T": 8,
+          "MCF10A": 8,
+          "MCF7": 8,
+          "MDAMB231": 8,
+          "SKBR3": 8
+        }
+      },
+      "legacy_float32": {
+        "P": 0.6424308497668217,
+        "n_pairs": 15,
+        "projection_dtype": "float64"
+      },
+      "legacy_float64": {
+        "P": 0.6424308600623498,
+        "n_pairs": 15,
+        "projection_dtype": "float64"
+      },
+      "rebuild": {
+        "P": 0.642430916873974,
+        "n_pairs": 15,
+        "projection_dtype": "float64"
+      },
+      "legacy_float32_projection": {
+        "P": 0.6424309015274048,
+        "n_pairs": 15,
+        "projection_dtype": "float32"
+      },
+      "rebuild_float32_projection": {
+        "P": 0.6424309611320496,
+        "n_pairs": 15,
+        "projection_dtype": "float32"
+      },
+      "differences_from_deposited": {
+        "legacy_float32": 2.0758401442222407e-08,
+        "legacy_float64": 3.105392953894892e-08,
+        "rebuild": 8.786555372175542e-08,
+        "legacy_float32_projection": 7.251898448412675e-08,
+        "rebuild_float32_projection": 1.3212362925951737e-07
+      },
+      "rebuild_against_legacy_float64": 5.68116241828065e-08,
+      "rebuild_against_legacy_float32": 6.710715227953301e-08,
+      "per_pair_against_legacy_float32": {
+        "n_pairs": 15,
+        "max": 1.4306186502111018e-07,
+        "mean": 7.142172947643966e-08,
+        "worst_pair": "MCF10A|MCF7",
+        "n_pairs_above_half_the_max": 7
+      }
+    },
+    "amonafide": {
+      "target": "TOP2A",
+      "deposited_P": 10.586163380380833,
+      "membership": {
+        "n_cells_legacy": 12,
+        "n_cells_rebuild": 12,
+        "cell_sets_identical": true,
+        "only_in_legacy": [],
+        "only_in_rebuild": [],
+        "signatures_per_cell": {
+          "A375": 1,
+          "A549": 1,
+          "ASC": 1,
+          "HA1E": 1,
+          "HCC515": 1,
+          "HEPG2": 1,
+          "HT29": 1,
+          "MCF7": 2,
+          "NPC": 1,
+          "PC3": 2,
+          "SKB": 1,
+          "VCAP": 2
+        }
+      },
+      "legacy_float32": {
+        "P": 10.586162475299288,
+        "n_pairs": 66,
+        "projection_dtype": "float64"
+      },
+      "legacy_float64": {
+        "P": 10.586162476208099,
+        "n_pairs": 66,
+        "projection_dtype": "float64"
+      },
+      "rebuild": {
+        "P": 10.5861624685807,
+        "n_pairs": 66,
+        "projection_dtype": "float64"
+      },
+      "legacy_float32_projection": {
+        "P": 10.586162567138672,
+        "n_pairs": 66,
+        "projection_dtype": "float32"
+      },
+      "rebuild_float32_projection": {
+        "P": 10.586163520812988,
+        "n_pairs": 66,
+        "projection_dtype": "float32"
+      },
+      "differences_from_deposited": {
+        "legacy_float32": 9.05081545710118e-07,
+        "legacy_float64": 9.041727349057282e-07,
+        "rebuild": 9.11800134062446e-07,
+        "legacy_float32_projection": 8.13242161612493e-07,
+        "rebuild_float32_projection": 1.4043215479375704e-07
+      },
+      "rebuild_against_legacy_float64": 7.627399156717729e-09,
+      "rebuild_against_legacy_float32": 6.71858835232797e-09,
+      "per_pair_against_legacy_float32": {
+        "n_pairs": 66,
+        "max": 7.010024283271576e-07,
+        "mean": 2.480578642529926e-07,
+        "worst_pair": "ASC|NPC",
+        "n_pairs_above_half_the_max": 16
+      }
+    },
+    "hexamethylenebisacetamide": {
+      "target": "AKT1",
+      "deposited_P": 16.954642474651337,
+      "membership": {
+        "n_cells_legacy": 7,
+        "n_cells_rebuild": 7,
+        "cell_sets_identical": true,
+        "only_in_legacy": [],
+        "only_in_rebuild": [],
+        "signatures_per_cell": {
+          "A375": 1,
+          "A549": 2,
+          "HA1E": 1,
+          "HT29": 1,
+          "MCF7": 2,
+          "PC3": 2,
+          "VCAP": 2
+        }
+      },
+      "legacy_float32": {
+        "P": 16.95464213471086,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "legacy_float64": {
+        "P": 16.954642140454016,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "rebuild": {
+        "P": 16.954641746830823,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "legacy_float32_projection": {
+        "P": 16.95464324951172,
+        "n_pairs": 21,
+        "projection_dtype": "float32"
+      },
+      "rebuild_float32_projection": {
+        "P": 16.954641342163086,
+        "n_pairs": 21,
+        "projection_dtype": "float32"
+      },
+      "differences_from_deposited": {
+        "legacy_float32": 3.399404775450421e-07,
+        "legacy_float64": 3.3419732048400874e-07,
+        "rebuild": 7.278205131910909e-07,
+        "legacy_float32_projection": 7.748603820800781e-07,
+        "rebuild_float32_projection": 1.1324882507324219e-06
+      },
+      "rebuild_against_legacy_float64": 3.936231927070821e-07,
+      "rebuild_against_legacy_float32": 3.878800356460488e-07,
+      "per_pair_against_legacy_float32": {
+        "n_pairs": 21,
+        "max": 1.1658979701678618e-06,
+        "mean": 4.001424634070801e-07,
+        "worst_pair": "A375|HA1E",
+        "n_pairs_above_half_the_max": 6
+      }
+    },
+    "latanoprost": {
+      "target": "PTGFR",
+      "deposited_P": 13.386800008160728,
+      "membership": {
+        "n_cells_legacy": 7,
+        "n_cells_rebuild": 7,
+        "cell_sets_identical": true,
+        "only_in_legacy": [],
+        "only_in_rebuild": [],
+        "signatures_per_cell": {
+          "A375": 1,
+          "A549": 2,
+          "HA1E": 1,
+          "HT29": 1,
+          "MCF7": 2,
+          "PC3": 2,
+          "VCAP": 2
+        }
+      },
+      "legacy_float32": {
+        "P": 13.386800594840869,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "legacy_float64": {
+        "P": 13.386800600362346,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "rebuild": {
+        "P": 13.386800660871302,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "legacy_float32_projection": {
+        "P": 13.386799812316895,
+        "n_pairs": 21,
+        "projection_dtype": "float32"
+      },
+      "rebuild_float32_projection": {
+        "P": 13.386799812316895,
+        "n_pairs": 21,
+        "projection_dtype": "float32"
+      },
+      "differences_from_deposited": {
+        "legacy_float32": 5.866801409126765e-07,
+        "legacy_float64": 5.922016175219369e-07,
+        "rebuild": 6.527105735898431e-07,
+        "legacy_float32_projection": 1.9584383359472213e-07,
+        "rebuild_float32_projection": 1.9584383359472213e-07
+      },
+      "rebuild_against_legacy_float64": 6.050895606790618e-08,
+      "rebuild_against_legacy_float32": 6.603043267716657e-08,
+      "per_pair_against_legacy_float32": {
+        "n_pairs": 21,
+        "max": 3.246011566204743e-07,
+        "mean": 1.3854920335811182e-07,
+        "worst_pair": "A375|A549",
+        "n_pairs_above_half_the_max": 7
+      }
+    },
+    "levofloxacin": {
+      "target": "TOP2A",
+      "deposited_P": 8.657461252950487,
+      "membership": {
+        "n_cells_legacy": 7,
+        "n_cells_rebuild": 7,
+        "cell_sets_identical": true,
+        "only_in_legacy": [],
+        "only_in_rebuild": [],
+        "signatures_per_cell": {
+          "A375": 1,
+          "A549": 2,
+          "HA1E": 1,
+          "HT29": 1,
+          "MCF7": 2,
+          "PC3": 2,
+          "VCAP": 2
+        }
+      },
+      "legacy_float32": {
+        "P": 8.657460277471168,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "legacy_float64": {
+        "P": 8.657460276408102,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "rebuild": {
+        "P": 8.65746011440067,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "legacy_float32_projection": {
+        "P": 8.65746021270752,
+        "n_pairs": 21,
+        "projection_dtype": "float32"
+      },
+      "rebuild_float32_projection": {
+        "P": 8.65746021270752,
+        "n_pairs": 21,
+        "projection_dtype": "float32"
+      },
+      "differences_from_deposited": {
+        "legacy_float32": 9.75479318654493e-07,
+        "legacy_float64": 9.765423847341026e-07,
+        "rebuild": 1.138549816204204e-06,
+        "legacy_float32_projection": 1.040242967320637e-06,
+        "rebuild_float32_projection": 1.040242967320637e-06
+      },
+      "rebuild_against_legacy_float64": 1.6200743147010144e-07,
+      "rebuild_against_legacy_float32": 1.6307049754971104e-07,
+      "per_pair_against_legacy_float32": {
+        "n_pairs": 21,
+        "max": 5.658092803173531e-07,
+        "mean": 2.0770882683263103e-07,
+        "worst_pair": "A375|HT29",
+        "n_pairs_above_half_the_max": 6
+      }
+    },
+    "pefloxacin": {
+      "target": "TOP2A",
+      "deposited_P": 2.132237807625816,
+      "membership": {
+        "n_cells_legacy": 7,
+        "n_cells_rebuild": 7,
+        "cell_sets_identical": true,
+        "only_in_legacy": [],
+        "only_in_rebuild": [],
+        "signatures_per_cell": {
+          "A375": 1,
+          "A549": 2,
+          "HA1E": 1,
+          "HT29": 1,
+          "MCF7": 4,
+          "PC3": 4,
+          "VCAP": 2
+        }
+      },
+      "legacy_float32": {
+        "P": 2.132237546831737,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "legacy_float64": {
+        "P": 2.132237537631311,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "rebuild": {
+        "P": 2.132237389310707,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "legacy_float32_projection": {
+        "P": 2.132237672805786,
+        "n_pairs": 21,
+        "projection_dtype": "float32"
+      },
+      "rebuild_float32_projection": {
+        "P": 2.132237434387207,
+        "n_pairs": 21,
+        "projection_dtype": "float32"
+      },
+      "differences_from_deposited": {
+        "legacy_float32": 2.6079407877688254e-07,
+        "legacy_float64": 2.69994504975557e-07,
+        "rebuild": 4.1831510877443634e-07,
+        "legacy_float32_projection": 1.3482002980680363e-07,
+        "rebuild_float32_projection": 3.7323860890836613e-07
+      },
+      "rebuild_against_legacy_float64": 1.4832060379887935e-07,
+      "rebuild_against_legacy_float32": 1.575210299975538e-07,
+      "per_pair_against_legacy_float32": {
+        "n_pairs": 21,
+        "max": 5.376593206207758e-07,
+        "mean": 1.9573925236215928e-07,
+        "worst_pair": "A375|VCAP",
+        "n_pairs_above_half_the_max": 6
+      }
+    },
+    "targinine": {
+      "target": "NOS3",
+      "deposited_P": 11.049820627485003,
+      "membership": {
+        "n_cells_legacy": 7,
+        "n_cells_rebuild": 7,
+        "cell_sets_identical": true,
+        "only_in_legacy": [],
+        "only_in_rebuild": [],
+        "signatures_per_cell": {
+          "A375": 1,
+          "A549": 2,
+          "HA1E": 1,
+          "HT29": 1,
+          "MCF7": 2,
+          "PC3": 2,
+          "VCAP": 2
+        }
+      },
+      "legacy_float32": {
+        "P": 11.049820089090575,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "legacy_float64": {
+        "P": 11.049820087422384,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "rebuild": {
+        "P": 11.04981993464387,
+        "n_pairs": 21,
+        "projection_dtype": "float64"
+      },
+      "legacy_float32_projection": {
+        "P": 11.049819946289062,
+        "n_pairs": 21,
+        "projection_dtype": "float32"
+      },
+      "rebuild_float32_projection": {
+        "P": 11.049818992614746,
+        "n_pairs": 21,
+        "projection_dtype": "float32"
+      },
+      "differences_from_deposited": {
+        "legacy_float32": 5.383944277070896e-07,
+        "legacy_float64": 5.40062618625825e-07,
+        "rebuild": 6.928411337980833e-07,
+        "legacy_float32_projection": 6.811959405439438e-07,
+        "rebuild_float32_projection": 1.6348702569501938e-06
+      },
+      "rebuild_against_legacy_float64": 1.5277851517225827e-07,
+      "rebuild_against_legacy_float32": 1.5444670609099376e-07,
+      "per_pair_against_legacy_float32": {
+        "n_pairs": 21,
+        "max": 4.3757651013720533e-07,
+        "mean": 1.9702973126050389e-07,
+        "worst_pair": "HA1E|HT29",
+        "n_pairs_above_half_the_max": 9
+      }
+    }
+  }
+}
