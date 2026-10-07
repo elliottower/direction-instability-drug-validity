@@ -130,6 +130,14 @@ def _stage_rebuild():
     return staged
 
 
+def _sha256_of(path):
+    """The digest of one file, for the stages that check a frozen artifact."""
+    import hashlib
+    from pathlib import Path
+
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
 def _run(argv):
     """Run one of the analysis scripts, with the repo importable.
 
@@ -2217,6 +2225,27 @@ def stage_r0_to_r7():
             "--stage targets and --stage merge, fetch the result into "
             "results/03d_h3_reference_discordance/ under that name, and redeploy.")
 
+    # Amendment 1's A4 splits R5 in two: stage one freezes the drug-to-treatment
+    # mapping before any response value is read, and the response stage consumes that
+    # table rather than building one. The reviewed table is committed in the
+    # repository, so it is placed where the response stage looks and is never rebuilt
+    # here: rebuilding it inside the run is the thing A4 exists to prevent.
+    frozen_mapping = Path("/app/results/03d_h3_reference_discordance/r5_prism_mapping.json")
+    if not frozen_mapping.exists():
+        raise AssertionError(
+            "r5_prism_mapping.json is absent from the image. Run --r5-stage mapping, "
+            "review the table, commit it to results/03d_h3_reference_discordance/, and "
+            "redeploy. The response stage does not build a mapping.")
+    digest = _sha256_of(frozen_mapping)
+    if digest != MAPPING_SHA256:
+        raise AssertionError(
+            f"the committed R5 mapping hashes to {digest} and the registered table is "
+            f"{MAPPING_SHA256}; the response stage reads the frozen table or none")
+    out_dir = Path("/out/03d_h3_reference_discordance")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "r5_prism_mapping.json").write_bytes(frozen_mapping.read_bytes())
+    print(f"[{_ts()}] R5 mapping placed, sha256 {digest}", flush=True)
+
     _run(["/app/experiments/03d_h3_reference_discordance.py",
           "--r5-stage", "response",
           "--data", str(staged),
@@ -2231,8 +2260,7 @@ def stage_r0_to_r7():
           # provenance and no per-drug table, so the gate refuses it by design.
           "--legacy-reproduction",
           "/app/results/03d_h3_reference_discordance/legacy_reproduction_audit.json",
-          "--expected-mapping-sha256",
-          "152361cb3174a5fb7aae0229c3e3d049dc00d49d9e442925156a9fe0564b89d3",
+          "--expected-mapping-sha256", MAPPING_SHA256,
           "--output", "/out/03d_h3_reference_discordance"])
     results.commit()
     written = sorted(Path("/out/03d_h3_reference_discordance").glob("*.json"))
