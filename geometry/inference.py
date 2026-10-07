@@ -37,9 +37,10 @@ def rank_partial_correlation(y: np.ndarray, x: np.ndarray, covars) -> float:
     # noise. Refuse rather than report it.
     for name, resid_vec, orig in (("y", a, ry), ("x", b, rx)):
         scale = np.linalg.norm(orig - orig.mean())
-        assert np.linalg.norm(resid_vec) > 1e-8 * max(scale, 1.0), (
-            f"{name} is collinear with the covariates; the partial correlation "
-            "would be computed from residual noise")
+        if not (np.linalg.norm(resid_vec) > 1e-8 * max(scale, 1.0)):
+            raise AssertionError(
+                f"{name} is collinear with the covariates; the partial correlation "
+                "would be computed from residual noise")
     return float(a @ b / (np.linalg.norm(a) * np.linalg.norm(b)))
 
 
@@ -76,7 +77,8 @@ def own_target_percentile(alignment: np.ndarray, own: np.ndarray) -> np.ndarray:
         counting ties as half. 0.5 under no target identity.
     """
     n_drugs, n_targets = alignment.shape
-    assert n_targets > 1, "an own-target percentile needs at least two candidate targets"
+    if not (n_targets > 1):
+        raise AssertionError("an own-target percentile needs at least two candidate targets")
     own_value = alignment[np.arange(n_drugs), own][:, None]
     below = (alignment < own_value).sum(axis=1)
     ties = (alignment == own_value).sum(axis=1) - 1      # the own column ties itself
@@ -91,7 +93,8 @@ def percentile_table(alignment: np.ndarray) -> np.ndarray:
     which is what makes 10,000 permutations affordable.
     """
     n_drugs, n_targets = alignment.shape
-    assert n_targets > 1, "an own-target percentile needs at least two candidate targets"
+    if not (n_targets > 1):
+        raise AssertionError("an own-target percentile needs at least two candidate targets")
     order = np.argsort(alignment, axis=1, kind="stable")
     ranks = np.empty_like(order)
     rows = np.arange(n_drugs)[:, None]
@@ -123,7 +126,8 @@ def cluster_bootstrap(targets: np.ndarray, statistic, n_replicates: int, seed: i
         idx = np.concatenate([members[t] for t in drawn])
         draws.append(np.atleast_1d(np.asarray(statistic(idx), dtype=float)))
     out = np.vstack(draws)
-    assert np.isfinite(out).all(), "nonfinite bootstrap replicate"
+    if not (np.isfinite(out).all()):
+        raise AssertionError("nonfinite bootstrap replicate")
     return out
 
 

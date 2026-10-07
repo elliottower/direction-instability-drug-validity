@@ -280,10 +280,13 @@ def run_section_a(df: pd.DataFrame) -> dict:
     log(f"  Constitutive machinery (negative control): n={n_mach}")
     log(f"  Narrow machinery (robustness): n={n_narrow}")
 
-    assert n_nhr == 125, f"Expected 125 NHR, got {n_nhr}"
-    assert n_mach == 59, f"Expected 59 constitutive machinery, got {n_mach}"
+    if not (n_nhr == 125):
+        raise AssertionError(f"Expected 125 NHR, got {n_nhr}")
+    if not (n_mach == 59):
+        raise AssertionError(f"Expected 59 constitutive machinery, got {n_mach}")
     overlap = nhr_mask & mach_mask
-    assert overlap.sum() == 0, f"NHR/machinery overlap: {overlap.sum()}"
+    if not (overlap.sum() == 0):
+        raise AssertionError(f"NHR/machinery overlap: {overlap.sum()}")
 
     # --- Primary test: bootstrap CI on mean difference ---
     log("\n--- Primary test: bootstrap CI on mean(DI_NHR) - mean(DI_machinery) ---")

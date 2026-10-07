@@ -133,10 +133,11 @@ def build_shrna_consensus(shrna_sigs, shrna_sig_ids, shrna_siginfo):
     signatures: the two files carry the same 154,993 ids and agree at 115
     positions. See Deviation 9.
     """
-    assert len(shrna_sigs) == len(shrna_sig_ids), (
-        f"{len(shrna_sigs)} signature rows against {len(shrna_sig_ids)} ids")
+    if not (len(shrna_sigs) == len(shrna_sig_ids)):
+        raise AssertionError(f"{len(shrna_sigs)} signature rows against {len(shrna_sig_ids)} ids")
     sig_id_to_idx = {str(s): i for i, s in enumerate(shrna_sig_ids)}
-    assert len(sig_id_to_idx) == len(shrna_sig_ids), "Duplicate sig_ids in shRNA data"
+    if not (len(sig_id_to_idx) == len(shrna_sig_ids)):
+        raise AssertionError("Duplicate sig_ids in shRNA data")
 
     filtered = (shrna_siginfo.assign(sig_id=shrna_siginfo["sig_id"].astype(str))
                 .drop_duplicates("sig_id"))
@@ -281,10 +282,10 @@ def run_real(data_dir: Path, perturbseq_path: Path, output_dir: Path):
     log(f"  Drugs with target annotation and >= 5 cell lines: {n_drugs_with_target}")
     log(f"  Drugs with CRISPRi ground truth available: {n_crispri_eligible}")
     log(f"  Drugs with shRNA ground truth available:   {n_shrna_eligible}")
-    assert n_crispri_eligible >= 10, (
-        f"Only {n_crispri_eligible} drugs have CRISPRi ground truth — too few for correlation. "
-        f"Check gene-name mapping (shared genes: {len([g for g in landmark_symbols if not g.isdigit()])})"
-    )
+    if not (n_crispri_eligible >= 10):
+        raise AssertionError(
+            f"Only {n_crispri_eligible} drugs have CRISPRi ground truth — too few for correlation. "
+            f"Check gene-name mapping (shared genes: {len([g for g in landmark_symbols if not g.isdigit()])})")
 
     log("Computing phenotype-projected instabilitys with both ground truths...")
     results = []

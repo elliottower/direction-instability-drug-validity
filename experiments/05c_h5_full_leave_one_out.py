@@ -44,7 +44,8 @@ def build_drug_cell_matrix(signatures, sig_ids, siginfo):
     """Build {drug: {cell: mean_signature}} mapping via vectorized groupby."""
     sig_id_set = set(sig_ids)
     sig_id_to_idx = {sid: i for i, sid in enumerate(sig_ids)}
-    assert len(sig_id_set) == len(sig_ids), "Duplicate sig_ids in compound data"
+    if not (len(sig_id_set) == len(sig_ids)):
+        raise AssertionError("Duplicate sig_ids in compound data")
 
     filtered = siginfo[siginfo["sig_id"].isin(sig_id_set) & siginfo["pert_iname"].notna()].copy()
     filtered["_idx"] = filtered["sig_id"].map(sig_id_to_idx)

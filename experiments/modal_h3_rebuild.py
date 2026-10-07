@@ -80,7 +80,8 @@ def _landmark_order(raw):
     g = pd.read_csv(raw / "GSE92742_Broad_LINCS_gene_info.txt.gz", sep="\t", low_memory=False)
     lm = g[g.pr_is_lm == 1].sort_values("pr_gene_id")
     ids = [str(i) for i in lm.pr_gene_id]
-    assert len(ids) == N_LANDMARK, f"{len(ids)} landmark genes, expected {N_LANDMARK}"
+    if not (len(ids) == N_LANDMARK):
+        raise AssertionError(f"{len(ids)} landmark genes, expected {N_LANDMARK}")
     return ids, _sha256_text("\n".join(ids))
 
 
@@ -130,35 +131,38 @@ def stage_fetch():
         part.replace(gctx)
         vol.commit()
     with open(gctx, "rb") as fh:
-        assert fh.read(8) == b"\x89HDF\r\n\x1a\n", "decompressed GCTX is not HDF5"
+        if not (fh.read(8) == b"\x89HDF\r\n\x1a\n"):
+            raise AssertionError("decompressed GCTX is not HDF5")
 
     digest = _sha256(gctx)
     stamp = raw / "gctx.sha256"
     if stamp.exists():
-        assert stamp.read_text().strip() == digest, (
-            f"GCTX checksum moved: {digest} against recorded {stamp.read_text().strip()}")
+        if not (stamp.read_text().strip() == digest):
+            raise AssertionError(f"GCTX checksum moved: {digest} against recorded {stamp.read_text().strip()}")
     else:
         stamp.write_text(digest)
 
     missing = [n for n in PINS if not (raw / n).exists()]
-    assert not missing, f"upload these inputs to /vol/raw first: {missing}"
+    if not (not missing):
+        raise AssertionError(f"upload these inputs to /vol/raw first: {missing}")
     recorded = {}
     for name, want in PINS.items():
         got = _sha256(raw / name)
         if want is not None:
-            assert got == want, f"{name} sha256 {got}, pinned {want}"
+            if not (got == want):
+                raise AssertionError(f"{name} sha256 {got}, pinned {want}")
             continue
         # not available locally at freeze: stamped on first retrieval, then required
         stamp_i = raw / f"{name}.sha256"
         if stamp_i.exists():
-            assert stamp_i.read_text().strip() == got, (
-                f"{name} sha256 moved: {got} against stamped {stamp_i.read_text().strip()}")
+            if not (stamp_i.read_text().strip() == got):
+                raise AssertionError(f"{name} sha256 moved: {got} against stamped {stamp_i.read_text().strip()}")
         else:
             stamp_i.write_text(got)
         recorded[name] = got
 
-    assert _sha256("/app/lincs_loader.py") == EXPECTED_LOADER_SHA256, (
-        "the loader in the image is not the one pinned at 1dc20a2")
+    if not (_sha256("/app/lincs_loader.py") == EXPECTED_LOADER_SHA256):
+        raise AssertionError("the loader in the image is not the one pinned at 1dc20a2")
 
     ids, order_hash = _landmark_order(raw)
     parts, fp = _fingerprint(raw)
@@ -211,13 +215,17 @@ def stage_extract():
         sub = siginfo[siginfo.pert_iname.isin(names) & siginfo.pert_iname.notna()]
         cells_by_drug = {}
         gct = parse.parse(str(raw / GCTX), cid=sorted(set(sub.sig_id.astype(str))), rid=ids)
-        assert gct.data_df.shape[0] == N_LANDMARK, f"parsed {gct.data_df.shape[0]} rows"
-        assert gct.data_df.columns.is_unique, "parsed matrix has duplicate signature ids"
+        if not (gct.data_df.shape[0] == N_LANDMARK):
+            raise AssertionError(f"parsed {gct.data_df.shape[0]} rows")
+        if not (gct.data_df.columns.is_unique):
+            raise AssertionError("parsed matrix has duplicate signature ids")
         df = gct.data_df
         df.index = df.index.astype(str)
         df = df.reindex(index=ids)                 # rid= selects, it does not order
-        assert not df.isna().any().any(), "a landmark gene is missing from the parse"
-        assert list(df.index) == ids, "landmark order is not the frozen order"
+        if not (not df.isna().any().any()):
+            raise AssertionError("a landmark gene is missing from the parse")
+        if not (list(df.index) == ids):
+            raise AssertionError("landmark order is not the frozen order")
         mat = df.T
         payload = {}
         # The deposited artifact averages every signature for a drug-cell pair
@@ -269,15 +277,19 @@ def stage_shrna():
 
     all_sids = sorted(set(info["sig_id"].astype(str)))
     gct = parse.parse(str(raw / GCTX), cid=all_sids, rid=ids)
-    assert gct.data_df.shape[0] == N_LANDMARK, f"parsed {gct.data_df.shape[0]} rows"
+    if not (gct.data_df.shape[0] == N_LANDMARK):
+        raise AssertionError(f"parsed {gct.data_df.shape[0]} rows")
     df = gct.data_df
     df.index = df.index.astype(str)
     df = df.reindex(index=ids)                     # identical ordering to the drug parse
-    assert not df.isna().any().any(), "a landmark gene is missing from the parse"
-    assert list(df.index) == ids, "landmark order is not the frozen order"
+    if not (not df.isna().any().any()):
+        raise AssertionError("a landmark gene is missing from the parse")
+    if not (list(df.index) == ids):
+        raise AssertionError("landmark order is not the frozen order")
     mat = df.T
 
-    assert mat.index.is_unique, "parsed shRNA matrix has duplicate signature ids"
+    if not (mat.index.is_unique):
+        raise AssertionError("parsed shRNA matrix has duplicate signature ids")
     names, dirs, hairpins = [], [], {}
     for gene in usable:
         # eligibility above counted distinct ids, so the mean must too: a
@@ -289,7 +301,8 @@ def stage_shrna():
         rows = [mat.loc[s].to_numpy(np.float64) for s in used]
         v = np.vstack(rows).mean(axis=0)
         norm = np.linalg.norm(v)
-        assert np.isfinite(v).all() and norm > 0, f"{gene}: degenerate consensus"
+        if not (np.isfinite(v).all() and norm > 0):
+            raise AssertionError(f"{gene}: degenerate consensus")
         names.append(gene); dirs.append(v / norm)
         hairpins[gene] = {"n": len(used), "sig_ids": used}
 
@@ -347,28 +360,33 @@ def stage_bundle():
     n_shards = (len(deposited) + SHARD - 1) // SHARD
     expected = {shards / f"shard_{s:03d}.npz" for s in range(n_shards)}
     observed = set(shards.glob("shard_*.npz"))
-    assert observed == expected, {
-        "missing": sorted(p.name for p in expected - observed),
-        "unexpected": sorted(p.name for p in observed - expected)}
+    if not (observed == expected):
+        raise AssertionError(
+            {
+"missing": sorted(p.name for p in expected - observed),
+"unexpected": sorted(p.name for p in observed - expected)})
 
     sigs, cells = {}, {}
     for f in sorted(expected):
         with np.load(f, allow_pickle=True) as z:
-            assert str(z["fingerprint"]) == fp, f"{f.name} was built under a different fingerprint"
+            if not (str(z["fingerprint"]) == fp):
+                raise AssertionError(f"{f.name} was built under a different fingerprint")
             keys = {k for k in z.files if k not in ("fingerprint", "__cells__")}
             overlap = set(sigs) & keys
-            assert not overlap, f"drug identifiers appear in more than one shard: {sorted(overlap)}"
+            if not (not overlap):
+                raise AssertionError(f"drug identifiers appear in more than one shard: {sorted(overlap)}")
             sigs.update({k: z[k] for k in keys})
             shard_cells = json.loads(str(z["__cells__"]))
-            assert set(shard_cells) == keys, (
-                f"{f.name}: {len(keys)} drugs but cell lines for {len(shard_cells)}")
+            if not (set(shard_cells) == keys):
+                raise AssertionError(f"{f.name}: {len(keys)} drugs but cell lines for {len(shard_cells)}")
             cells.update({drug: [str(c) for c in ids] for drug, ids in shard_cells.items()})
     for drug, matrix in sigs.items():
-        assert matrix.shape[0] == len(cells[drug]), (
-            f"{drug}: {matrix.shape[0]} rows against {len(cells[drug])} cell lines")
+        if not (matrix.shape[0] == len(cells[drug])):
+            raise AssertionError(f"{drug}: {matrix.shape[0]} rows against {len(cells[drug])} cell lines")
 
     with np.load(out / "shrna_consensus.npz", allow_pickle=True) as z:
-        assert str(z["fingerprint"]) == fp, "the shRNA consensus predates the current fingerprint"
+        if not (str(z["fingerprint"]) == fp):
+            raise AssertionError("the shRNA consensus predates the current fingerprint")
         consensus = {str(g): d for g, d in zip(z["genes"], z["directions"])}
     drugs, targets, mats, dirs = [], [], [], []
     dropped = {"no_signatures": [], "no_consensus": []}
@@ -381,17 +399,25 @@ def stage_bundle():
         drugs.append(d); targets.append(t)
         mats.append(np.asarray(sigs[d], dtype=np.float64)); dirs.append(consensus[t])
 
-    assert len(drugs) == len(set(drugs)), "drug identifiers are not unique"
-    assert len(drugs) == len(targets) == len(mats) == len(dirs), "ragged bundle"
-    assert len(drugs) >= MIN_COMMON_RECORDS, (
-        f"{len(drugs)} common records, registration requires {MIN_COMMON_RECORDS}")
+    if not (len(drugs) == len(set(drugs))):
+        raise AssertionError("drug identifiers are not unique")
+    if not (len(drugs) == len(targets) == len(mats) == len(dirs)):
+        raise AssertionError("ragged bundle")
+    if not (len(drugs) >= MIN_COMMON_RECORDS):
+        raise AssertionError(f"{len(drugs)} common records, registration requires {MIN_COMMON_RECORDS}")
     for d, m, u in zip(drugs, mats, dirs):
-        assert m.ndim == 2 and m.shape[1] == N_LANDMARK, f"{d}: signatures are {m.shape}"
-        assert m.shape[0] >= 5, f"{d}: {m.shape[0]} contexts"
-        assert np.isfinite(m).all() and np.isfinite(u).all(), f"{d}: nonfinite"
-        assert u.shape == (N_LANDMARK,), f"{d}: direction is {u.shape}"
-        assert np.isclose(np.linalg.norm(u), 1.0, atol=1e-10), f"{d}: direction is not unit"
-        assert np.all(np.linalg.norm(m, axis=1) > 0), f"{d}: zero-norm signature"
+        if not (m.ndim == 2 and m.shape[1] == N_LANDMARK):
+            raise AssertionError(f"{d}: signatures are {m.shape}")
+        if not (m.shape[0] >= 5):
+            raise AssertionError(f"{d}: {m.shape[0]} contexts")
+        if not (np.isfinite(m).all() and np.isfinite(u).all()):
+            raise AssertionError(f"{d}: nonfinite")
+        if not (u.shape == (N_LANDMARK,)):
+            raise AssertionError(f"{d}: direction is {u.shape}")
+        if not (np.isclose(np.linalg.norm(u), 1.0, atol=1e-10)):
+            raise AssertionError(f"{d}: direction is not unit")
+        if not (np.all(np.linalg.norm(m, axis=1) > 0)):
+            raise AssertionError(f"{d}: zero-norm signature")
 
     np.savez_compressed(out / "cohort_bundle.npz", drugs=np.array(drugs),
                         targets=np.array(targets),

@@ -31,8 +31,9 @@ R6_BINS = [(5, 6), (7, 8), (9, 10)]
 
 def main():
     wm = pd.read_parquet(CACHE / "well_metadata.parquet")
-    assert {"row_ok", "Metadata_Plate", "Metadata_Source",
-            "Metadata_JCP2022"} <= set(wm.columns)
+    if not ({"row_ok", "Metadata_Plate", "Metadata_Source",
+             "Metadata_JCP2022"} <= set(wm.columns)):
+        raise AssertionError('{"row_ok", "Metadata_Plate", "Metadata_Source", "Metadata_JCP2022"} <= set(wm.columns)')
     ok = wm.row_ok.to_numpy()
     elig = wm[ok]
     n_plates = int(elig.Metadata_Plate.nunique())

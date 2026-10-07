@@ -89,9 +89,10 @@ def partial_spearman(y, x, covars):
     # from noise. Refuse rather than report it.
     for name, resid_vec, orig in (("y", a, ry), ("x", b, rx)):
         scale = np.linalg.norm(orig - orig.mean())
-        assert np.linalg.norm(resid_vec) > 1e-8 * max(scale, 1.0), (
-            f"{name} is collinear with the covariates; the partial correlation "
-            "would be computed from residual noise")
+        if not (np.linalg.norm(resid_vec) > 1e-8 * max(scale, 1.0)):
+            raise AssertionError(
+                f"{name} is collinear with the covariates; the partial correlation "
+                "would be computed from residual noise")
     denom = np.linalg.norm(a) * np.linalg.norm(b)
     return float(a @ b / denom)
 
@@ -127,8 +128,8 @@ def target_representatives(targets, dirs):
     unique, first_row = np.unique(targets, return_index=True)
     for target, row in zip(unique, first_row):
         rows = np.flatnonzero(targets == target)
-        assert np.allclose(dirs[rows], dirs[row], atol=1e-12), (
-            f"drugs annotated to {target} do not share one direction")
+        if not (np.allclose(dirs[rows], dirs[row], atol=1e-12)):
+            raise AssertionError(f"drugs annotated to {target} do not share one direction")
     return unique, first_row
 
 
@@ -141,10 +142,12 @@ def load_bundle(path):
     targets = [str(t) for t in z["targets"]]
     sigs = list(z["signatures"])          # one (K_c, 978) array per drug
     dirs = np.asarray(z["directions"], dtype=np.float64)
-    assert len(drugs) == len(targets) == len(sigs) == len(dirs), (
-        f"ragged bundle: {len(drugs)} drugs, {len(targets)} targets, "
-        f"{len(sigs)} matrices, {len(dirs)} directions")
-    assert dirs.shape == (len(drugs), N_LANDMARK), f"directions are {dirs.shape}"
+    if not (len(drugs) == len(targets) == len(sigs) == len(dirs)):
+        raise AssertionError(
+            f"ragged bundle: {len(drugs)} drugs, {len(targets)} targets, "
+            f"{len(sigs)} matrices, {len(dirs)} directions")
+    if not (dirs.shape == (len(drugs), N_LANDMARK)):
+        raise AssertionError(f"directions are {dirs.shape}")
     return drugs, targets, sigs, dirs
 
 
@@ -157,41 +160,47 @@ def main(bundle_path, manifest_path):
     bundle_path = Path(bundle_path)
     manifest = json.loads(Path(manifest_path).read_text())
     missing = [k for k in REQUIRED_MANIFEST_KEYS if k not in manifest]
-    assert not missing, f"rebuild manifest is missing {missing}"
-    assert manifest["bundle_sha256"] == sha256_file(bundle_path), (
-        "the manifest does not describe this bundle")
-    assert manifest["n_deposited"] == DEPOSITED_RECORDS, (
-        f"manifest records {manifest['n_deposited']} deposited, expected {DEPOSITED_RECORDS}")
+    if not (not missing):
+        raise AssertionError(f"rebuild manifest is missing {missing}")
+    if not (manifest["bundle_sha256"] == sha256_file(bundle_path)):
+        raise AssertionError("the manifest does not describe this bundle")
+    if not (manifest["n_deposited"] == DEPOSITED_RECORDS):
+        raise AssertionError(f"manifest records {manifest['n_deposited']} deposited, expected {DEPOSITED_RECORDS}")
     # the fingerprint must be the hash of the parts it claims to summarize,
     # and those parts must be the registered ones
     parts = manifest["fingerprint_parts"]
     recomputed_fp = hashlib.sha256(json.dumps(parts, sort_keys=True).encode()).hexdigest()
-    assert manifest["stage_fingerprint"] == recomputed_fp, (
-        "the manifest fingerprint is not the hash of its own component hashes")
-    assert parts["deposited_sha256"] == EXPECTED_REFERENCE_SHA256, (
-        "the manifest pins an artifact other than the corrected one")
-    assert parts["lincs_subset_sha256"] == EXPECTED_LINCS_SUBSET_SHA256, (
-        "the manifest pins a different compound extraction")
-    assert parts["lincs_shrna_sha256"] == EXPECTED_LINCS_SHRNA_SHA256, (
-        "the manifest pins a different shRNA extraction")
-    assert sha256_file(DEPOSITED) == EXPECTED_REFERENCE_SHA256, (
-        "the reference artifact is not the corrected one pinned in the amendment")
+    if not (manifest["stage_fingerprint"] == recomputed_fp):
+        raise AssertionError("the manifest fingerprint is not the hash of its own component hashes")
+    if not (parts["deposited_sha256"] == EXPECTED_REFERENCE_SHA256):
+        raise AssertionError("the manifest pins an artifact other than the corrected one")
+    if not (parts["lincs_subset_sha256"] == EXPECTED_LINCS_SUBSET_SHA256):
+        raise AssertionError("the manifest pins a different compound extraction")
+    if not (parts["lincs_shrna_sha256"] == EXPECTED_LINCS_SHRNA_SHA256):
+        raise AssertionError("the manifest pins a different shRNA extraction")
+    if not (sha256_file(DEPOSITED) == EXPECTED_REFERENCE_SHA256):
+        raise AssertionError("the reference artifact is not the corrected one pinned in the amendment")
     drugs, targets, sigs, dirs = load_bundle(bundle_path)
     n = len(drugs)
 
     # --- the cohort is fixed here, once, before any statistic is computed
-    assert n == len(set(drugs)), "drug identifiers are not unique; the sampling unit is the drug"
+    if not (n == len(set(drugs))):
+        raise AssertionError("drug identifiers are not unique; the sampling unit is the drug")
     _dep_records = json.loads(DEPOSITED.read_text())
-    assert len(_dep_records) == DEPOSITED_RECORDS, f"deposited holds {len(_dep_records)} records"
+    if not (len(_dep_records) == DEPOSITED_RECORDS):
+        raise AssertionError(f"deposited holds {len(_dep_records)} records")
     deposited = {r["drug"]: r for r in _dep_records}
-    assert len(deposited) == DEPOSITED_RECORDS, "deposited drug identifiers are not unique"
-    assert not (set(drugs) - set(deposited)), "rebuilt identifiers absent from the deposited artifact"
-    assert n >= MIN_COMMON_RECORDS, f"{n} common records, registration requires {MIN_COMMON_RECORDS}"
-    assert manifest["n_bundled"] == n, (
-        f"manifest says {manifest['n_bundled']} bundled, the bundle holds {n}")
+    if not (len(deposited) == DEPOSITED_RECORDS):
+        raise AssertionError("deposited drug identifiers are not unique")
+    if not (not (set(drugs) - set(deposited))):
+        raise AssertionError("rebuilt identifiers absent from the deposited artifact")
+    if not (n >= MIN_COMMON_RECORDS):
+        raise AssertionError(f"{n} common records, registration requires {MIN_COMMON_RECORDS}")
+    if not (manifest["n_bundled"] == n):
+        raise AssertionError(f"manifest says {manifest['n_bundled']} bundled, the bundle holds {n}")
     cohort_hash = hashlib.sha256("\n".join(sorted(drugs)).encode()).hexdigest()
-    assert manifest["cohort_identifier_sha256"] == cohort_hash, (
-        "the manifest cohort hash does not match the bundle")
+    if not (manifest["cohort_identifier_sha256"] == cohort_hash):
+        raise AssertionError("the manifest cohort hash does not match the bundle")
 
     # --- per-drug quantities, and the per-drug reproduction check
     pair_diffs = []
@@ -200,11 +209,16 @@ def main(bundle_path, manifest_path):
     worst = {"D": 0.0, "P": 0.0, "E": 0.0}
     for i, (drug, S, u) in enumerate(zip(drugs, sigs, dirs)):
         S = np.asarray(S, dtype=np.float64)
-        assert S.ndim == 2 and S.shape[1] == N_LANDMARK, f"{drug}: signatures are {S.shape}"
-        assert S.shape[0] >= 5, f"{drug}: {S.shape[0]} contexts, cohort requires >= 5"
-        assert np.isfinite(S).all() and np.isfinite(u).all(), f"{drug}: nonfinite input"
-        assert np.isclose(np.linalg.norm(u), 1.0, atol=1e-10), f"{drug}: direction is not unit"
-        assert np.all(np.linalg.norm(S, axis=1) > 0), f"{drug}: zero-norm signature"
+        if not (S.ndim == 2 and S.shape[1] == N_LANDMARK):
+            raise AssertionError(f"{drug}: signatures are {S.shape}")
+        if not (S.shape[0] >= 5):
+            raise AssertionError(f"{drug}: {S.shape[0]} contexts, cohort requires >= 5")
+        if not (np.isfinite(S).all() and np.isfinite(u).all()):
+            raise AssertionError(f"{drug}: nonfinite input")
+        if not (np.isclose(np.linalg.norm(u), 1.0, atol=1e-10)):
+            raise AssertionError(f"{drug}: direction is not unit")
+        if not (np.all(np.linalg.norm(S, axis=1) > 0)):
+            raise AssertionError(f"{drug}: zero-norm signature")
         iu = np.triu_indices(S.shape[0], k=1)
         diffs = S[iu[0]] - S[iu[1]]
         pair_diffs.append(diffs)
@@ -217,18 +231,23 @@ def main(bundle_path, manifest_path):
         D[i] = 1.0 - float(cos[iu].mean())
         mean_sig = S.mean(axis=0)
         E[i] = float((mean_sig @ u / (np.linalg.norm(mean_sig) * np.linalg.norm(u))) ** 2)
-        assert np.isfinite([P[i], E[i], D[i], M_delta[i]]).all(), f"{drug}: nonfinite statistic"
+        if not (np.isfinite([P[i], E[i], D[i], M_delta[i]]).all()):
+            raise AssertionError(f"{drug}: nonfinite statistic")
         dep = deposited[drug]
-        assert np.isfinite([dep["raw_instability"], dep["projected_instability"],
-                            dep["on_target_enrichment"]]).all(), f"{drug}: nonfinite deposited value"
-        assert dep["target"] == targets[i], f"target assignment differs for {drug}"
-        assert int(dep["n_celllines"]) == S.shape[0], f"n_celllines differs for {drug}"
+        if not (np.isfinite([dep["raw_instability"], dep["projected_instability"],
+                             dep["on_target_enrichment"]]).all()):
+            raise AssertionError(f"{drug}: nonfinite deposited value")
+        if not (dep["target"] == targets[i]):
+            raise AssertionError(f"target assignment differs for {drug}")
+        if not (int(dep["n_celllines"]) == S.shape[0]):
+            raise AssertionError(f"n_celllines differs for {drug}")
         for key, got, want in (("D", D[i], dep["raw_instability"]),
                                ("P", P[i], dep["projected_instability"]),
                                ("E", E[i], dep["on_target_enrichment"])):
             worst[key] = max(worst[key], abs(got - want))
     for key, w in worst.items():
-        assert w < RECON_TOL, f"{key} reproduces to {w:.3g}, tolerance {RECON_TOL}"
+        if not (w < RECON_TOL):
+            raise AssertionError(f"{key} reproduces to {w:.3g}, tolerance {RECON_TOL}")
 
     covars = (M_delta, K)
     rho_obs = partial_spearman(P, E, covars)
@@ -254,15 +273,18 @@ def main(bundle_path, manifest_path):
     _, P_ident, E_ident = permuted_statistic(G, row_drug, counts, E_all, covars, ident)
     dP = float(np.abs(P_ident - P).max())
     dE = float(np.abs(E_ident - E).max())
-    assert dP < 1e-10, f"lookup P departs from direct P by {dP:.3g}"
-    assert dE < 1e-12, f"lookup E departs from direct E by {dE:.3g}"
+    if not (dP < 1e-10):
+        raise AssertionError(f"lookup P departs from direct P by {dP:.3g}")
+    if not (dE < 1e-12):
+        raise AssertionError(f"lookup E departs from direct E by {dE:.3g}")
     identity = stat_under(ident)
-    assert abs(identity - rho_obs) < 1e-9, (
-        f"identity permutation gives {identity:.12f}, observed {rho_obs:.12f}")
+    if not (abs(identity - rho_obs) < 1e-9):
+        raise AssertionError(f"identity permutation gives {identity:.12f}, observed {rho_obs:.12f}")
 
     rng_perm = np.random.default_rng(SEED_PERM)
     null = np.array([stat_under(rng_perm.permutation(n)) for _ in range(N_PERM)])
-    assert np.isfinite(null).all(), "nonfinite permutation replicate"
+    if not (np.isfinite(null).all()):
+        raise AssertionError("nonfinite permutation replicate")
     p_perm = (1 + int((null >= rho_obs).sum())) / (N_PERM + 1)
 
     # --- S2-T. The same statistic under a permutation of unique targets: every
@@ -274,15 +296,17 @@ def main(bundle_path, manifest_path):
     null_target = np.array([
         stat_under(representative[assigned])
         for assigned in unique_target_permutations(targets_array, N_PERM, SEED_PERM_TARGET)])
-    assert np.isfinite(null_target).all(), "nonfinite unique-target permutation replicate"
+    if not (np.isfinite(null_target).all()):
+        raise AssertionError("nonfinite unique-target permutation replicate")
     p_perm_target = (1 + int((null_target >= rho_obs).sum())) / (N_PERM + 1)
     # M_delta is the mean pairwise difference norm and K the number of cell lines;
     # neither uses the target direction, which is why the permutation holds them
     # fixed. Assert it rather than trust it: a covariate that did depend on u would
     # have to be recomputed inside the loop.
-    assert (M_delta.tobytes(), K.tobytes()) == covariate_fingerprint, (
-        "a covariate changed while directions were reassigned; it depends on the "
-        "target direction and cannot be held fixed under permutation")
+    if not ((M_delta.tobytes(), K.tobytes()) == covariate_fingerprint):
+        raise AssertionError(
+            "a covariate changed while directions were reassigned; it depends on the "
+            "target direction and cannot be held fixed under permutation")
 
     # --- S1 and S3. Percentile bootstrap; ranks and both regressions refit inside.
     rng_boot = np.random.default_rng(SEED_BOOT)
@@ -292,7 +316,8 @@ def main(bundle_path, manifest_path):
         idx = rng_boot.integers(0, n, n)
         boot_p[b] = partial_spearman(P[idx], E[idx], (M_delta[idx], K[idx]))
         boot_raw[b] = partial_spearman(D[idx], E[idx], (M_delta[idx], K[idx]))
-    assert np.isfinite(boot_p).all() and np.isfinite(boot_raw).all(), "nonfinite bootstrap replicate"
+    if not (np.isfinite(boot_p).all() and np.isfinite(boot_raw).all()):
+        raise AssertionError("nonfinite bootstrap replicate")
 
     # --- S1-T and S3-T. The same two statistics, resampling targets rather than
     # drugs, so that drugs sharing a reference direction travel together.

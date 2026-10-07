@@ -76,7 +76,8 @@ def one_to_one(df, a, b):
 
 def jump_cohort():
     wm = pd.read_parquet(CACHE / "well_metadata.parquet")
-    assert "row_ok" in wm.columns, "well metadata lacks row_ok"
+    if not ("row_ok" in wm.columns):
+        raise AssertionError("well metadata lacks row_ok")
     elig = wm[wm.row_ok]
     n_plates = elig.Metadata_Plate.nunique()
     ppc = elig.groupby("Metadata_JCP2022").Metadata_Plate.nunique()
@@ -88,16 +89,19 @@ def jump_cohort():
 
 def main():
     for p in (JUMP_CPD, PRISM_LFC, CACHE / "well_metadata.parquet"):
-        assert p.exists(), f"missing input: {p}"
-    assert SAMPLES.exists(), (
-        f"missing {SAMPLES}\nDownload once from {SAMPLES_URL}. It is the only "
-        "public broad_id <-> InChIKey bridge; PRISM ships no structure key.")
+        if not (p.exists()):
+            raise AssertionError(f"missing input: {p}")
+    if not (SAMPLES.exists()):
+        raise AssertionError(
+            f"missing {SAMPLES}\nDownload once from {SAMPLES_URL}. It is the only "
+            "public broad_id <-> InChIKey bridge; PRISM ships no structure key.")
 
     cohort, n_controls = jump_cohort()
 
     # ---- JUMP side: one JCP <-> one InChIKey, both directions
     cpd = pd.read_csv(JUMP_CPD)
-    assert {"Metadata_JCP2022", "Metadata_InChIKey"} <= set(cpd.columns)
+    if not ({"Metadata_JCP2022", "Metadata_InChIKey"} <= set(cpd.columns)):
+        raise AssertionError('{"Metadata_JCP2022", "Metadata_InChIKey"} <= set(cpd.columns)')
     jp = cpd[cpd.Metadata_JCP2022.isin(cohort)][
         ["Metadata_JCP2022", "Metadata_InChIKey"]].dropna().drop_duplicates()
     keys_per_jcp = jp.groupby("Metadata_JCP2022").Metadata_InChIKey.nunique()
@@ -111,8 +115,8 @@ def main():
     # the shipped header is "InChIKey"; normalize by stripping separators so a
     # future release spelling it "inchi_key" still resolves
     sc = {c.lower().replace("_", "").replace("-", ""): c for c in samples.columns}
-    assert "broadid" in sc and "inchikey" in sc, \
-        f"samples file lacks broad_id/InChIKey; has {list(samples.columns)}"
+    if not ("broadid" in sc and "inchikey" in sc):
+        raise AssertionError(f"samples file lacks broad_id/InChIKey; has {list(samples.columns)}")
     bridge = samples[[sc["broadid"], sc["inchikey"]]].dropna()
     bridge.columns = ["broad_id", "inchi_key"]
     bridge["stem"] = bridge.broad_id.str.extract(BRD_STEM)[0]
@@ -197,7 +201,8 @@ def main():
     }
     blob = json.dumps(out)
     for token in ("JCP2022_", "BRD-"):
-        assert token not in blob, f"identity leaked into output: {token}"
+        if not (token not in blob):
+            raise AssertionError(f"identity leaked into output: {token}")
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "prism_overlap.json").write_text(json.dumps(out, indent=2))
     print(json.dumps(out, indent=2))

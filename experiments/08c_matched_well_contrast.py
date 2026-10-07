@@ -103,7 +103,8 @@ def stamp_fingerprint(path, fp):
     Stamping ahead of the computation leaves a stamp with no data behind it when
     a run dies mid-stage, and the next run reads that as a valid configuration.
     """
-    assert path.exists(), f"refusing to stamp {path.name}: artifact absent"
+    if not (path.exists()):
+        raise AssertionError(f"refusing to stamp {path.name}: artifact absent")
     path.with_suffix(path.suffix + ".fingerprint").write_text(fp)
 
 
@@ -123,14 +124,18 @@ def load_cohort():
     f = pq.ParquetFile(s3.open_input_file(S3_PATH))
     feat = [n for n in f.schema_arrow.names if n.startswith(FEATURE_PREFIXES)]
 
-    assert f.metadata.num_rows == EXPECTED_ROWS, "row count differs from the pinned release"
-    assert len(feat) == EXPECTED_FEATURES, f"{len(feat)} features, expected {EXPECTED_FEATURES}"
+    if not (f.metadata.num_rows == EXPECTED_ROWS):
+        raise AssertionError("row count differs from the pinned release")
+    if not (len(feat) == EXPECTED_FEATURES):
+        raise AssertionError(f"{len(feat)} features, expected {EXPECTED_FEATURES}")
     wm = CACHE / "well_metadata.parquet"
-    assert wm.exists(), "run the main script's --eligible stage first"
+    if not (wm.exists()):
+        raise AssertionError("run the main script's --eligible stage first")
     meta = pd.read_parquet(wm)          # already carries Metadata_PlateType; do not re-join
     required = {"Metadata_Source", "Metadata_Plate", "Metadata_JCP2022", "Metadata_PlateType"}
     missing = required - set(meta.columns)
-    assert not missing, f"cached metadata missing columns: {missing}"
+    if not (not missing):
+        raise AssertionError(f"cached metadata missing columns: {missing}")
     ok = (meta.Metadata_PlateType.eq(KEEP_PLATE_TYPE)
           & meta.Metadata_JCP2022.notna()
           & meta.Metadata_JCP2022.ne(DMSO_JCP))
@@ -164,11 +169,13 @@ def load_cohort():
         arr = np.column_stack([c.to_numpy(zero_copy_only=False).astype(np.float32,
                                                                       copy=False)
                                for c in tbl.columns])
-        assert np.isfinite(arr).all(), f"nonfinite values in block {b}"
+        if not (np.isfinite(arr).all()):
+            raise AssertionError(f"nonfinite values in block {b}")
         XV[:, lo:hi] = arr
         del tbl, arr
         log(f"streamed block {b+1}/{n_blocks}")
-    assert len(keys) == n_rows
+    if not (len(keys) == n_rows):
+        raise AssertionError('len(keys) == n_rows')
     return keys, XV, feat
 
 
@@ -221,13 +228,14 @@ def main():
             rep = order[np.searchsorted(pl_codes, np.arange(len(pl_uniq)),
                                         sorter=order)]
             pl_src = src_codes[rep]
-            assert (src_codes == pl_src[pl_codes]).all(), \
-                "a plate maps to more than one source"
+            if not ((src_codes == pl_src[pl_codes]).all()):
+                raise AssertionError("a plate maps to more than one source")
             P = np.argsort(perm_rng.random((N_PERM, len(pl_uniq))), axis=1)
             sp = pl_src[P][:, pl_codes]                      # (N_PERM, n_wells)
             m = sp[:, iu[0]] == sp[:, iu[1]]                 # (N_PERM, n_pairs)
             ns = m.sum(axis=1)
-            assert ((ns > 0) & (ns < m.shape[1])).all(), "degenerate permutation split"
+            if not (((ns > 0) & (ns < m.shape[1])).all()):
+                raise AssertionError("degenerate permutation split")
             tot = d.sum(); npair = len(d)
             s_sum = (m * d).sum(axis=1)
             perm_rows.append(((tot - s_sum) / (npair - ns) - s_sum / ns).astype(np.float32))
@@ -261,10 +269,12 @@ def main():
     # ---- test 3: ablation on the replicated cohort
     frozen = (OUT_DIR / "ablated_features.txt").read_text().split()
     missing = sorted(set(frozen) - set(feat))
-    assert not missing, f"frozen ablation features absent from schema: {missing[:5]}"
+    if not (not missing):
+        raise AssertionError(f"frozen ablation features absent from schema: {missing[:5]}")
     ab = set(frozen)
     keep_mask = np.fromiter((c not in ab for c in feat), bool, len(feat))
-    assert int((~keep_mask).sum()) == len(frozen)
+    if not (int((~keep_mask).sum()) == len(frozen)):
+        raise AssertionError('int((~keep_mask).sum()) == len(frozen)')
     # Per-compound source medians in numpy. pd.DataFrame(XV).groupby().median()
     # over 3,180 columns promotes the result to float64 and allocates far more
     # than the result itself; this holds one (n_sources, 3180) block per compound.
@@ -274,7 +284,8 @@ def main():
         by_cmpd.setdefault(jcp, []).append(np.median(XV[rows], axis=0))
     arrs = [np.vstack(v) for v in by_cmpd.values()
             if len(v) >= MIN_REPLICATED_SOURCES]
-    assert all(a.dtype == np.float32 and a.shape[1] == len(feat) for a in arrs)
+    if not (all(a.dtype == np.float32 and a.shape[1] == len(feat) for a in arrs)):
+        raise AssertionError('all(a.dtype == np.float32 and a.shape[1] == len(feat) for a in arrs)')
 
     def rank_scores(mask=None):
         out = np.empty(len(arrs))

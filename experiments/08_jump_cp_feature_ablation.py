@@ -145,13 +145,13 @@ def _open(attempts=5):
             import json as _json, urllib.request as _u
             with _u.urlopen(MANIFEST) as r:
                 entry = next(e for e in _json.load(r) if e["subset"] == SUBSET)
-            assert entry["etag"] == EXPECTED_ETAG, (
-                f"manifest ETag moved: {entry['etag']} != {EXPECTED_ETAG}")
+            if not (entry["etag"] == EXPECTED_ETAG):
+                raise AssertionError(f"manifest ETag moved: {entry['etag']} != {EXPECTED_ETAG}")
             req = _u.Request("https://cellpainting-gallery.s3.amazonaws.com/"
                              + S3_PATH.split("/", 1)[1], method="HEAD")
             live = _u.urlopen(req).headers.get("ETag", "").strip('"')
-            assert live == EXPECTED_ETAG, (
-                f"object ETag {live} != pinned {EXPECTED_ETAG}")
+            if not (live == EXPECTED_ETAG):
+                raise AssertionError(f"object ETag {live} != pinned {EXPECTED_ETAG}")
             f = pq.ParquetFile(s3.open_input_file(S3_PATH))
             break
         except OSError as e:                       # noqa: PERF203 - transient network
@@ -160,9 +160,10 @@ def _open(attempts=5):
             time.sleep(5 * (a + 1))
     else:
         raise last
-    assert f.metadata.num_rows == EXPECTED_ROWS, (
-        f"row count changed: {f.metadata.num_rows} != {EXPECTED_ROWS}; the pinned "
-        "release moved, so re-pin deliberately rather than proceeding")
+    if not (f.metadata.num_rows == EXPECTED_ROWS):
+        raise AssertionError(
+            f"row count changed: {f.metadata.num_rows} != {EXPECTED_ROWS}; the pinned "
+            "release moved, so re-pin deliberately rather than proceeding")
     return f
 
 
@@ -171,7 +172,8 @@ def eligible():
     import pandas as pd
     f = _open()
     feat = [n for n in f.schema_arrow.names if n.startswith(FEATURE_PREFIXES)]
-    assert len(feat) == EXPECTED_FEATURES, f"{len(feat)} features, expected {EXPECTED_FEATURES}"
+    if not (len(feat) == EXPECTED_FEATURES):
+        raise AssertionError(f"{len(feat)} features, expected {EXPECTED_FEATURES}")
 
     well_meta = f.read(columns=["Metadata_Source", "Metadata_Plate",
                                "Metadata_JCP2022"]).to_pandas()
@@ -179,8 +181,10 @@ def eligible():
     well_meta = well_meta.merge(
         plate[["Metadata_Source", "Metadata_Plate", "Metadata_PlateType"]],
         on=["Metadata_Source", "Metadata_Plate"], how="left", validate="many_to_one")
-    assert well_meta.Metadata_PlateType.notna().all(), "unmatched plate rows in the join"
-    assert len(well_meta) == EXPECTED_ROWS, "merge changed row count"
+    if not (well_meta.Metadata_PlateType.notna().all()):
+        raise AssertionError("unmatched plate rows in the join")
+    if not (len(well_meta) == EXPECTED_ROWS):
+        raise AssertionError("merge changed row count")
 
     # row-level restriction, applied before eligibility and before any median
     well_meta["row_ok"] = (well_meta.Metadata_PlateType.eq(KEEP_PLATE_TYPE)
@@ -222,7 +226,8 @@ def consensus():
     """Stage 2. Stream feature columns in blocks; median per compound-source."""
     import pandas as pd
     elig_path = CACHE / "eligible_compounds.json"
-    assert elig_path.exists(), "run --eligible first"
+    if not (elig_path.exists()):
+        raise AssertionError("run --eligible first")
     keep = set(json.loads(elig_path.read_text())["eligible"])
 
     f = _open()
@@ -246,7 +251,8 @@ def consensus():
             print(f"[{ts()}] block {b+1}/{n_blocks}: cached"); continue
         cols = feat[b * BLOCK:(b + 1) * BLOCK]
         vals = f.read(columns=cols).to_pandas().loc[mask].reset_index(drop=True)
-        assert np.isfinite(vals.to_numpy()).all(), f'nonfinite values in block {b}'
+        if not (np.isfinite(vals.to_numpy()).all()):
+            raise AssertionError(f'nonfinite values in block {b}')
         block = pd.concat([keys, vals], axis=1)
         med = block.groupby(META_COLS, sort=True)[cols].median().astype("float32")
         if b == 0:
@@ -285,9 +291,10 @@ def _positive_controls():
     ppc = elig.groupby("Metadata_JCP2022").Metadata_Plate.nunique()
     frac = ppc / elig.Metadata_Plate.nunique()
     recomputed = tuple(sorted(frac[frac >= CONTROL_PLATE_FRACTION].index))
-    assert recomputed == POSITIVE_CONTROLS, (
-        f"control list drifted from the frozen one:\n  recomputed {recomputed}\n"
-        f"  frozen     {POSITIVE_CONTROLS}")
+    if not (recomputed == POSITIVE_CONTROLS):
+        raise AssertionError(
+            f"control list drifted from the frozen one:\n  recomputed {recomputed}\n"
+            f"  frozen     {POSITIVE_CONTROLS}")
     return set(POSITIVE_CONTROLS)
 
 
@@ -297,7 +304,8 @@ def analyze():
 
     BLOCKS = CACHE / "consensus_blocks"
     files = sorted(BLOCKS.glob("block_*.parquet"))
-    assert files, "run --consensus first"
+    if not (files):
+        raise AssertionError("run --consensus first")
     cons = pd.concat([pd.read_parquet(f).set_index(META_COLS) for f in files],
                      axis=1).reset_index()
     feature_cols = [c for c in cons.columns if c.startswith(FEATURE_PREFIXES)]
@@ -306,9 +314,12 @@ def analyze():
     # wells were restricted to KEEP_PLATE_TYPE before aggregation in eligible()/consensus();
     # an aggregate-level filter here could not undo a contaminated median.
     expected_blocks = (EXPECTED_FEATURES + BLOCK - 1) // BLOCK
-    assert len(files) == expected_blocks, f"{len(files)} blocks, expected {expected_blocks}"
-    assert len(feature_cols) == EXPECTED_FEATURES, f"{len(feature_cols)} features"
-    assert len(feature_cols) == len(set(feature_cols)), "duplicate feature columns"
+    if not (len(files) == expected_blocks):
+        raise AssertionError(f"{len(files)} blocks, expected {expected_blocks}")
+    if not (len(feature_cols) == EXPECTED_FEATURES):
+        raise AssertionError(f"{len(feature_cols)} features")
+    if not (len(feature_cols) == len(set(feature_cols))):
+        raise AssertionError("duplicate feature columns")
     print(f"[{ts()}] {cons.Metadata_JCP2022.nunique():,} compounds, "
           f"{len(cons):,} compound-source consensuses (wells were filtered before aggregation)")
 
@@ -319,30 +330,36 @@ def analyze():
     n_before = cons.Metadata_JCP2022.nunique()
     cons = cons[~cons.Metadata_JCP2022.isin(controls)]
     n_dropped = n_before - cons.Metadata_JCP2022.nunique()
-    assert n_dropped == len(POSITIVE_CONTROLS), (
-        f"expected to drop {len(POSITIVE_CONTROLS)} controls, dropped {n_dropped}")
+    if not (n_dropped == len(POSITIVE_CONTROLS)):
+        raise AssertionError(f"expected to drop {len(POSITIVE_CONTROLS)} controls, dropped {n_dropped}")
     print(f"[{ts()}] excluded {n_dropped} plate-level positive controls")
 
     n_src = cons.groupby("Metadata_JCP2022").size()
     cons = cons[cons.Metadata_JCP2022.isin(n_src[n_src >= MIN_SOURCES].index)]
     n_after_source_filter = int(cons.Metadata_JCP2022.nunique())
-    assert n_after_source_filter == EXPECTED_CONTROL_EXCLUDED_COHORT, (
-        f"cohort is {n_after_source_filter:,}, expected "
-        f"{EXPECTED_CONTROL_EXCLUDED_COHORT:,}")
+    if not (n_after_source_filter == EXPECTED_CONTROL_EXCLUDED_COHORT):
+        raise AssertionError(
+            f"cohort is {n_after_source_filter:,}, expected "
+            f"{EXPECTED_CONTROL_EXCLUDED_COHORT:,}")
 
     # --- ablation block, frozen to a committed file before any outcome is computed
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     frozen = OUT_DIR / "ablated_features.txt"
     pat = re.compile("|".join(ABLATION_FAMILIES))
     resolved = sorted(c for c in feature_cols if pat.match(c))
-    assert frozen.exists(), ("frozen ablation list missing; refusing to create it "
-                             "during an outcome run")
+    if not (frozen.exists()):
+        raise AssertionError(
+            "frozen ablation list missing; refusing to create it "
+            "during an outcome run")
     committed = frozen.read_text().split()
-    assert committed == resolved, ("the schema no longer resolves to the committed "
-                                   "ablation list; re-freeze deliberately")
+    if not (committed == resolved):
+        raise AssertionError(
+            "the schema no longer resolves to the committed "
+            "ablation list; re-freeze deliberately")
     ablated = committed
     fhash = hashlib.sha256("\n".join(ablated).encode()).hexdigest()
-    assert ablated and len(ablated) < len(feature_cols)
+    if not (ablated and len(ablated) < len(feature_cols)):
+        raise AssertionError('ablated and len(ablated) < len(feature_cols)')
 
     ablated_set = set(ablated)
     keep_mask = np.fromiter((c not in ablated_set for c in feature_cols),
@@ -364,9 +381,10 @@ def analyze():
         groups.append((jcp, list(grp.Metadata_Source), X))
     del cons
     print(f"[{ts()}] {len(groups):,} compounds retained; dropped {dropped}")
-    assert not any(dropped.values()), dropped
-    assert len(groups) == EXPECTED_CONTROL_EXCLUDED_COHORT, (
-        f"scored {len(groups):,}, expected {EXPECTED_CONTROL_EXCLUDED_COHORT:,}")
+    if not (not any(dropped.values())):
+        raise AssertionError(dropped)
+    if not (len(groups) == EXPECTED_CONTROL_EXCLUDED_COHORT):
+        raise AssertionError(f"scored {len(groups):,}, expected {EXPECTED_CONTROL_EXCLUDED_COHORT:,}")
 
     def score(mask=None):
         out = np.empty(len(groups))
@@ -411,9 +429,10 @@ def analyze():
             a_[k] = direction_instability(V)
         loo[s] = {"n": len(keep_i), "rho": round(_spearman(r_, a_), 4),
                   "note": "fixed cohort; >= MIN_SOURCES-1 remaining sources"}
-        assert len(keep_i) == EXPECTED_CONTROL_EXCLUDED_COHORT, (
-            f"LOO fold {s} holds {len(keep_i):,}, expected "
-            f"{EXPECTED_CONTROL_EXCLUDED_COHORT:,}")
+        if not (len(keep_i) == EXPECTED_CONTROL_EXCLUDED_COHORT):
+            raise AssertionError(
+                f"LOO fold {s} holds {len(keep_i):,}, expected "
+                f"{EXPECTED_CONTROL_EXCLUDED_COHORT:,}")
         print(f"[{ts()}] LOO {s}: n={len(keep_i):,} rho={loo[s]['rho']}")
 
     pr_raw = pd.Series(raw).rank(pct=True)

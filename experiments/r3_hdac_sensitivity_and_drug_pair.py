@@ -166,10 +166,10 @@ def main():
 
     # HDAC filter validation (pre-registered requirement)
     log(f"  HDAC filter: removed {len(hdac_drugs)} drugs")
-    assert 10 <= len(hdac_drugs) <= 40, (
-        f"HDAC filter removed {len(hdac_drugs)} drugs — outside expected [10, 40] range. "
-        f"Filter may be silently under- or over-selecting. Investigate before proceeding."
-    )
+    if not (10 <= len(hdac_drugs) <= 40):
+        raise AssertionError(
+            f"HDAC filter removed {len(hdac_drugs)} drugs — outside expected [10, 40] range. "
+            f"Filter may be silently under- or over-selecting. Investigate before proceeding.")
     log(f"  Removed HDAC drugs (name → target):")
     for d in sorted(hdac_drugs, key=lambda x: x["drug"]):
         log(f"    {d['drug']}: target={d['target']}, raw={d['raw_instability']:.3f}, proj={d['projected_instability']:.3f}")

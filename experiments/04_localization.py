@@ -51,10 +51,11 @@ def build_shrna_consensus(shrna_sigs, shrna_sig_ids, shrna_siginfo):
     signatures: the two files carry the same 154,993 ids and agree at 115
     positions. See Deviation 9.
     """
-    assert len(shrna_sigs) == len(shrna_sig_ids), (
-        f"{len(shrna_sigs)} signature rows against {len(shrna_sig_ids)} ids")
+    if not (len(shrna_sigs) == len(shrna_sig_ids)):
+        raise AssertionError(f"{len(shrna_sigs)} signature rows against {len(shrna_sig_ids)} ids")
     sig_id_to_idx = {str(s): i for i, s in enumerate(shrna_sig_ids)}
-    assert len(sig_id_to_idx) == len(shrna_sig_ids), "Duplicate sig_ids in shRNA data"
+    if not (len(sig_id_to_idx) == len(shrna_sig_ids)):
+        raise AssertionError("Duplicate sig_ids in shRNA data")
 
     filtered = (shrna_siginfo.assign(sig_id=shrna_siginfo["sig_id"].astype(str))
                 .drop_duplicates("sig_id"))
@@ -182,7 +183,8 @@ def run_real(data_dir: Path, output_dir: Path):
                         frozen_landmark_order(data_dir / "GSE92742_Broad_LINCS_gene_info.txt.gz"),
                         sigs_path.name)
     n_genes = compound_sigs.shape[1]
-    assert len(set(compound_sig_ids)) == len(compound_sig_ids), "Duplicate sig_ids in compound data"
+    if not (len(set(compound_sig_ids)) == len(compound_sig_ids)):
+        raise AssertionError("Duplicate sig_ids in compound data")
     log(f"  {compound_sigs.shape[0]:,} signatures x {n_genes} genes")
 
     log("Loading shRNA signatures...")
@@ -191,10 +193,10 @@ def run_real(data_dir: Path, output_dir: Path):
     shrna_gene_ids = list(shrna_data["gene_ids"])
     log(f"  {shrna_sigs.shape[0]:,} shRNA signatures")
 
-    assert compound_gene_ids == shrna_gene_ids, (
-        f"Gene-axis mismatch: compound has {len(compound_gene_ids)} genes, "
-        f"shRNA has {len(shrna_gene_ids)} genes"
-    )
+    if not (compound_gene_ids == shrna_gene_ids):
+        raise AssertionError(
+            f"Gene-axis mismatch: compound has {len(compound_gene_ids)} genes, "
+            f"shRNA has {len(shrna_gene_ids)} genes")
     log("  Gene-axis alignment verified: compound and shRNA use identical gene ordering")
 
     log("Loading shRNA sig info...")

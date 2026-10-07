@@ -31,7 +31,8 @@ def rho(records, x, y):
 
 
 def main():
-    assert sha256_file(RECORDS) == EXPECTED_RECORDS_SHA256, "records are not the corrected artifact"
+    if not (sha256_file(RECORDS) == EXPECTED_RECORDS_SHA256):
+        raise AssertionError("records are not the corrected artifact")
     records = json.loads(RECORDS.read_text())
     shrna = [r for r in records if "proj_shrna" in r]
     crispri = [r for r in records if "proj_crispri" in r]

@@ -73,7 +73,8 @@ def main():
     plate = pd.read_csv(PLATE_META)
     meta = meta.merge(plate[["Metadata_Source", "Metadata_Plate", "Metadata_PlateType"]],
                       on=["Metadata_Source", "Metadata_Plate"], how="left")
-    assert meta.Metadata_PlateType.notna().all(), "unmatched plate rows in the join"
+    if not (meta.Metadata_PlateType.notna().all()):
+        raise AssertionError("unmatched plate rows in the join")
     ok = (meta.Metadata_PlateType.eq(KEEP_PLATE_TYPE)
           & meta.Metadata_JCP2022.notna()
           & meta.Metadata_JCP2022.ne(DMSO_JCP))
@@ -95,7 +96,8 @@ def main():
         print(f"[{ts()}] streamed block {b+1}/{n_blocks}")
     X = pd.concat(parts, axis=1)
     del parts
-    assert np.isfinite(X.to_numpy()).all(), "nonfinite values in well-level profiles"
+    if not (np.isfinite(X.to_numpy()).all()):
+        raise AssertionError("nonfinite values in well-level profiles")
 
     within, across, n_src = [], [], []
     for jcp, idx in keys.groupby("Metadata_JCP2022").groups.items():

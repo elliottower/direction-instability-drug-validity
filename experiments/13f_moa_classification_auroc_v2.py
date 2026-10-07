@@ -261,24 +261,24 @@ def main():
     n_recv = (annotated["broad_class"] == "receptor").sum()
     n_excl = (annotated["broad_class"] == "excluded").sum()
 
-    assert n_mach + n_kin + n_recv + n_excl == len(annotated), \
-        f"Classes don't sum: {n_mach}+{n_kin}+{n_recv}+{n_excl} != {len(annotated)}"
-    assert len(annotated) == df["moa"].notna().sum(), \
-        "Annotated count mismatch"
+    if not (n_mach + n_kin + n_recv + n_excl == len(annotated)):
+        raise AssertionError(f"Classes don't sum: {n_mach}+{n_kin}+{n_recv}+{n_excl} != {len(annotated)}")
+    if not (len(annotated) == df["moa"].notna().sum()):
+        raise AssertionError("Annotated count mismatch")
 
     binary_df = annotated[annotated["broad_class"].isin(["machinery", "receptor"])].copy()
-    assert len(binary_df) == n_mach + n_recv, \
-        f"Binary set should be {n_mach}+{n_recv}, got {len(binary_df)}"
-    assert not binary_df["broad_class"].isin(["kinase", "excluded"]).any(), \
-        "Kinase or excluded drugs leaked into binary set"
+    if not (len(binary_df) == n_mach + n_recv):
+        raise AssertionError(f"Binary set should be {n_mach}+{n_recv}, got {len(binary_df)}")
+    if not (not binary_df["broad_class"].isin(["kinase", "excluded"]).any()):
+        raise AssertionError("Kinase or excluded drugs leaked into binary set")
 
     n_nhr_total = df["is_nuclear_receptor"].sum()
     n_nhr_excluded = ((annotated["broad_class"] == "excluded") & annotated["is_nuclear_receptor"]).sum()
-    assert n_nhr_excluded == n_nhr_total, \
-        f"NHR contamination: {n_nhr_total - n_nhr_excluded} NHR drugs not in excluded"
+    if not (n_nhr_excluded == n_nhr_total):
+        raise AssertionError(f"NHR contamination: {n_nhr_total - n_nhr_excluded} NHR drugs not in excluded")
     nhr_in_binary = binary_df[binary_df["is_nuclear_receptor"]]
-    assert len(nhr_in_binary) == 0, \
-        f"NHR drugs in binary set: {nhr_in_binary['drug_name'].tolist()}"
+    if not (len(nhr_in_binary) == 0):
+        raise AssertionError(f"NHR drugs in binary set: {nhr_in_binary['drug_name'].tolist()}")
 
     log(f"\n  NHR drugs: all {n_nhr_excluded} in excluded (deterministic, NHR checked first)")
     log(f"  Assertions passed: classes disjoint, zero NHR in binary set, "
