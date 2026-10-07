@@ -927,3 +927,44 @@ measured on rather than aggregate summaries alone.
   library-version candidate. Its stage was added to `experiments/modal_h3_execute.py`
   after Amendment 5 pinned that file, so that pinned digest describes the file at the
   freeze and not afterwards; the reason is stated in the plan.
+
+---
+
+## Deviation 15: R4 did not compute the registered essential-minus-other difference
+
+**Pre-registered:** "Split the genome-wide arm into essential-screen targets
+(perturbed in the K562-essential file) and other targets. For each subset, compute
+rho(P, E) and rho(D, E) under C1-GW with TCB intervals. **Estimate the difference
+essential - other with a TCB that resamples targets within each subset
+independently.**" (`PREREG_H3_REFERENCE_DISCORDANCE.md`, frozen `7f57136`, R4.)
+
+**Actual:** the first complete R0-R7 execution, 2026-10-07, computed both subsets
+with their intervals and no difference. There is no difference estimate anywhere in
+`R4_essential_composition`.
+
+**Why it matters:** both R4 rows of the interpretation grid turn on that comparison.
+"R4: raw association depends on essential composition" reads as "the raw association
+is specific to essential-screen targets", and "R4: H3 pattern outside the essential
+set" reads as "H3's pattern replicates against a CRISPRi reference outside the
+essential-gene set". Neither can be evaluated from two subset intervals read side by
+side, which is the error an interval on the difference exists to prevent. Without it,
+two registered readings go unreported.
+
+**How it was identified:** reading the completed run's modules against the
+registration, module by module, after the execution finished.
+
+**What was done:** `independent_comparison` computes it as the registration specifies.
+The subsets share no drug and no target, so `paired_comparison`, which resamples one
+cohort and carries both estimates through the same replicate, does not apply. Each
+subset is resampled over its own targets in its own stream and replicate `i` of one is
+differenced against replicate `i` of the other. The difference is reported with the
+registered sign, essential minus other. The reading follows the frozen comparison rule
+with the essential subset as the reference, because the registered question is whether
+the association survives outside the essential set.
+
+**Why this is not an extension of the registration:** the quantity was registered at
+`7f57136`, before any outcome existed. Computing it now executes the plan. Nothing was
+added to the interpretation grid and no criterion was written after seeing a result;
+Perplexity round 25 ruled against adding any, and this adds none.
+
+**When:** after the first complete execution, before any R4 reading was reported.

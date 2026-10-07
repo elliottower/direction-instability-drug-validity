@@ -388,6 +388,44 @@ def association(x, y, targets, label):
             "target_balanced_rho": target_balanced_spearman(x, y, targets)}, draws
 
 
+def independent_comparison(reference_rho, alternative_rho, reference_targets,
+                           alternative_targets, reference_statistic, alternative_statistic,
+                           label):
+    """Compare two estimates on subsets that share no drug and no target.
+
+    `paired_comparison` resamples one cohort and carries both estimates through the
+    same replicate, which is right when two references are applied to the same drugs.
+    R4 splits the genome-wide arm into disjoint subsets, so there is no shared cluster
+    to resample and the registration fixes the alternative: "a TCB that resamples
+    targets within each subset independently". Each subset gets its own stream, and
+    replicate `i` of one is differenced against replicate `i` of the other, which is
+    an independent two-sample bootstrap of the difference rather than a paired one.
+
+    The reading follows the frozen comparison rule, with the essential subset as the
+    reference, because the registered question is whether the association survives
+    outside the essential set. The difference is reported as the registration names
+    it, essential minus other, so the sign in the artifact is the registered sign and
+    not the reading convention's.
+    """
+    reference_draws = cluster_bootstrap(reference_targets, reference_statistic,
+                                        N_BOOT, SEED_BOOT)[:, 0]
+    alternative_draws = cluster_bootstrap(alternative_targets, alternative_statistic,
+                                          N_BOOT, SEED_BOOT + 1)[:, 0]
+    # the registered difference is essential - other, and the reference is essential
+    registered_difference = reference_draws - alternative_draws
+    reading = comparison_reading(reference_rho, alternative_rho,
+                                 alternative_draws - reference_draws, alternative_draws)
+    return {"label": label,
+            "rho_essential": reference_rho, "rho_other": alternative_rho,
+            "difference_essential_minus_other": reference_rho - alternative_rho,
+            "difference_ci95": list(percentile_interval(registered_difference, 95.0)),
+            "difference_excludes_zero": excludes_zero(
+                percentile_interval(registered_difference, 95.0)),
+            "other_ci95": list(percentile_interval(alternative_draws, 95.0)),
+            "resampling": "targets resampled within each subset independently",
+            "reading": reading}, registered_difference
+
+
 def paired_comparison(reference_rho, alternative_rho, targets, statistic_pair, label):
     """Compare two estimates of one association on the same drugs, as the rule fixes."""
     draws = cluster_bootstrap(targets, statistic_pair, N_BOOT, SEED_BOOT)
@@ -1363,6 +1401,23 @@ def run(args):
                 summary, _ = association(values[quantity][mask], values["E"][mask],
                                          arm.targets[mask], f"{label}/{subset_name}: rho({quantity}, E)")
                 subsets[f"{subset_name}_{quantity}_E"] = summary
+        # the registered difference, which the first implementation never computed:
+        # both R4 readings in the interpretation grid turn on it
+        for quantity in ("P", "D"):
+            if f"essential_{quantity}_E" not in subsets or f"other_{quantity}_E" not in subsets:
+                continue
+            ess, oth = is_essential, ~is_essential
+            x, y, tg = values[quantity], values["E"], arm.targets
+            comparison, diff_draws = independent_comparison(
+                subsets[f"essential_{quantity}_E"]["rho"],
+                subsets[f"other_{quantity}_E"]["rho"],
+                tg[ess], tg[oth],
+                lambda idx, a=x[ess], b=y[ess]: spearmanr(a[idx], b[idx]).statistic,
+                lambda idx, a=x[oth], b=y[oth]: spearmanr(a[idx], b[idx]).statistic,
+                f"{label}: rho({quantity}, E), essential against other")
+            subsets[f"difference_{quantity}_E"] = comparison
+            draws.keep(f"R4_{label}_{quantity}_E_difference", diff_draws)
+
         other_mask = ~is_essential
         gate_met = bool(other_mask.sum() >= R4_MIN_DRUGS and
                         len(set(arm.targets[other_mask])) >= R4_MIN_TARGETS)
