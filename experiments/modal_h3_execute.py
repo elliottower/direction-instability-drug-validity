@@ -2226,8 +2226,11 @@ def stage_r0_to_r7():
           "--prism", "/inputs/prism_19q4",
           "--single-cell", str(audit),
           "--analysis-bases", "/app/registry/frozen/analysis_bases.json",
+          # the sealed audit, authenticated against registry/frozen/reproduction_legacy_pin.json
+          # before it is parsed. The two-layer measurement that preceded it carries no
+          # provenance and no per-drug table, so the gate refuses it by design.
           "--legacy-reproduction",
-          "/app/results/03d_h3_reference_discordance/two_layer_gate_measurement.json",
+          "/app/results/03d_h3_reference_discordance/legacy_reproduction_audit.json",
           "--expected-mapping-sha256",
           "152361cb3174a5fb7aae0229c3e3d049dc00d49d9e442925156a9fe0564b89d3",
           "--output", "/out/03d_h3_reference_discordance"])
