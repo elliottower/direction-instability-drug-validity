@@ -21,8 +21,11 @@ image = (
     modal.Image.debian_slim(python_version="3.12")
     .pip_install("numpy==2.1.3", "pandas==2.2.3", "anndata==0.11.4", "h5py==3.12.1",
                  "scipy==1.14.1")
-    # the frozen analysis bases, which R0.4 and R0.6 are evaluated on
+    # the frozen analysis bases, which R0.4 and R0.6 are evaluated on, and the
+    # generator whose digest the shared validator checks against the pin
     .add_local_dir("registry", remote_path="/app/registry")
+    .add_local_dir("experiments", remote_path="/app/experiments",
+                   ignore=["__pycache__/**", "superseded/**"])
     .add_local_dir("geometry", remote_path="/app/geometry")
 )
 

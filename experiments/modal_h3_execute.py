@@ -2195,13 +2195,18 @@ def stage_r0_to_r7():
             "registry/frozen/analysis_bases.json is absent from the image, and Amendment 4 "
             "evaluates every C1 construction on a frozen basis. Run --stage bases, fetch the "
             "result into registry/frozen/, commit it, and redeploy.")
-    audit = Path("/app/results/03d_h3_reference_discordance/single_cell_audit.json")
+    # Amendment 4's recomputation, under its own name: the full-axis audit it
+    # supersedes is pinned by sha256 in the amendment's foreknowledge section and
+    # stays where that section names it
+    audit = Path("/app/results/03d_h3_reference_discordance/"
+                 "single_cell_audit_amendment_4.json")
     if not audit.exists():
         raise AssertionError(
-            "single_cell_audit.json is absent from the image, and R0.3, R0.4 and R0.6 are "
-            "registered analyses; R0.4 also decides how R0.6 and R7c may be read. Run "
-            "experiments/modal_03d_single_cell.py, fetch its result into "
-            "results/03d_h3_reference_discordance/, and redeploy.")
+            "single_cell_audit_amendment_4.json is absent from the image, and R0.3, R0.4 "
+            "and R0.6 are registered analyses; R0.4 also decides how R0.6 and R7c may be "
+            "read. Run experiments/modal_03d_single_cell.py --stage preflight, then "
+            "--stage targets and --stage merge, fetch the result into "
+            "results/03d_h3_reference_discordance/ under that name, and redeploy.")
 
     _run(["/app/experiments/03d_h3_reference_discordance.py",
           "--r5-stage", "response",

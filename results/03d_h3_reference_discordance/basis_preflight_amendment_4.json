@@ -1,0 +1,69 @@
+{
+  "K562_essential": {
+    "construction": "C1-K562",
+    "n_landmarks": 728,
+    "basis_sha256": "c5cc399e3e6c98c0a3090f26c8b4e7dde377486d5a950aaaeb6f6d6387fa4ccd",
+    "n_landmarks_matched_before_the_finite_filter": 728,
+    "excluded_as_undefined": [],
+    "single_cell": {
+      "file": "K562_essential_single_cell.h5ad",
+      "shape": [
+        310385,
+        728
+      ],
+      "n_values_scanned": 225960280,
+      "n_non_finite_on_the_basis": 0,
+      "n_rows_affected": 0,
+      "every_basis_value_is_finite": true
+    },
+    "bulk": {
+      "file": "K562_essential_bulk.h5ad",
+      "shape": [
+        2285,
+        728
+      ],
+      "n_values_scanned": 1663480,
+      "n_non_finite_on_the_basis": 0,
+      "n_rows_affected": 0,
+      "every_basis_value_is_finite": true
+    }
+  },
+  "RPE1_essential": {
+    "construction": "C1-RPE1",
+    "n_landmarks": 812,
+    "basis_sha256": "9d2011c94aef228985b585c3df900e8452710e92317379b6d52915573b346ad6",
+    "n_landmarks_matched_before_the_finite_filter": 813,
+    "excluded_as_undefined": [
+      "CCL2"
+    ],
+    "single_cell": {
+      "file": "RPE1_essential_single_cell.h5ad",
+      "shape": [
+        247914,
+        812
+      ],
+      "n_values_scanned": 201306168,
+      "n_non_finite_on_the_basis": 0,
+      "n_rows_affected": 0,
+      "every_basis_value_is_finite": true
+    },
+    "bulk": {
+      "file": "RPE1_essential_bulk.h5ad",
+      "shape": [
+        2679,
+        812
+      ],
+      "n_values_scanned": 2175348,
+      "n_non_finite_on_the_basis": 0,
+      "n_rows_affected": 0,
+      "every_basis_value_is_finite": true
+    }
+  },
+  "computed_no_registered_statistic": true,
+  "every_operand_is_finite": true,
+  "analysis_bases_sha256": "05a4fd397b389276fff247b3fa778a4cc2dbe7fef7572350aea9f99b9fa32b3f",
+  "analysis_bases_pin_sha256": "12cf6bf3576331f0cd06f2a15e056198dda51cf9d5322e1374339f90846a2915",
+  "generator_sha256": "d8569c14c60cd7faa73663a98098dafe217516c5922f971889764d59c200f759",
+  "landmark_axis_sha256": "490601145cef7eb7d8ec6ff37d2d506821a88382a6a614c3f16ad8800d540818",
+  "reading": "every value R0.4 and R0.6 read on each construction's frozen basis is finite"
+}
