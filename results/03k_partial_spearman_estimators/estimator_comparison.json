@@ -1,0 +1,65 @@
+{
+  "question": "whether the registered rank-then-residualize estimator is biased under conditional independence, or whether the test that reported the bias omitted an intercept",
+  "status": "software diagnostic of a test's comparator; no data are analyzed and no registered statistic is recomputed",
+  "generating_model": {
+    "source": "direction-instability-atlas tests/test_partial_spearman.py, test_rank_then_residualize_is_biased",
+    "n": 5000,
+    "n_replicates": 200,
+    "n_covariates": 2,
+    "covariate_scale": 0.3,
+    "description": "Z standard normal; x and y each a linear function of Z plus independent standard normal noise, so x and y are conditionally independent given Z and the true partial correlation is zero",
+    "seed": 20261008
+  },
+  "atlas_assertions_under_test": {
+    "correct_method_abs_mean_below": 0.02,
+    "buggy_method_mean_above": 0.05
+  },
+  "estimators": {
+    "rank_residualize_with_intercept": {
+      "mean": -0.0029096200356821056,
+      "median": -0.002157685471644681,
+      "sd": 0.014671267978129687,
+      "min": -0.03580361461373577,
+      "max": 0.036864083532755186,
+      "passes_atlas_unbiased_band": true,
+      "clears_atlas_biased_floor": false
+    },
+    "rank_residualize_no_intercept": {
+      "mean": 0.26459458577433753,
+      "median": 0.257104435061803,
+      "sd": 0.11075149349590734,
+      "min": 0.02844574280094025,
+      "max": 0.56329005017221,
+      "passes_atlas_unbiased_band": false,
+      "clears_atlas_biased_floor": true
+    },
+    "pearson_residualize_no_intercept": {
+      "mean": -0.0021971796614871863,
+      "median": -0.0008195459367818373,
+      "sd": 0.014089040906932105,
+      "min": -0.035146361437854455,
+      "max": 0.03850213046808522,
+      "passes_atlas_unbiased_band": true,
+      "clears_atlas_biased_floor": false
+    },
+    "pearson_residualize_with_intercept": {
+      "mean": -0.0021967581240303247,
+      "median": -0.0008176364007054559,
+      "sd": 0.01408943170116147,
+      "min": -0.0351399625575985,
+      "max": 0.038498207523928296,
+      "passes_atlas_unbiased_band": true,
+      "clears_atlas_biased_floor": false
+    }
+  },
+  "rank_residual_mean_without_intercept": {
+    "description": "the mean of each residual vector under the no-intercept rank fit; a fit through the origin on strictly positive ranks of mean 2500.5 cannot remove the level, and the common offset that survives is what correlates",
+    "x_residual_mean": 356.904204380364,
+    "y_residual_mean": 349.6469048386573
+  },
+  "environment": {
+    "numpy": "2.1.3",
+    "scipy": "1.14.1",
+    "python": "3.13.12"
+  }
+}

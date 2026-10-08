@@ -155,3 +155,76 @@ change, would close that path.
 
 Whether A1, A4 and A5 are reported as confirmatory under the July freeze is Elliot's
 call and is not decided here.
+
+## 2026-10-08 — the rank-residualization bias was a missing intercept
+
+**What was measured.** Four partial-correlation estimators on the generating model
+of `direction-instability-atlas`, `tests/test_partial_spearman.py`,
+`test_rank_then_residualize_is_biased`: Z standard normal, two outcomes each a
+linear function of Z plus independent noise, so the true partial correlation is
+zero. 200 replicates at n = 5000, seed 20261008,
+`results/03k_partial_spearman_estimators/estimator_comparison.json`, run
+`partial_spearman_estimators_2026_10_08`.
+
+| estimator | mean | sd |
+|---|---|---|
+| rank residualization with an intercept, registered at f288507 | -0.0029 | 0.0147 |
+| rank residualization without an intercept, the atlas comparator | +0.2646 | 0.1108 |
+| Pearson residualization without an intercept, `power_analysis.partial_spearman` | -0.0022 | 0.0141 |
+| Pearson residualization with an intercept | -0.0022 | 0.0141 |
+
+**The mechanism.** The atlas comparator regresses rank vectors on ranked
+covariates with no intercept column. Ranks are strictly positive with mean
+(n+1)/2, so the fit is forced through the origin and cannot represent the level:
+the residual vectors it returns have means of 357 and 350 where the ranks average
+2500.5, and that surviving common offset is what correlates. The atlas reference
+arm omits the intercept as well, and is unaffected only because the simulated raw
+variables are already centered. The test therefore compares a no-intercept fit on
+uncentered data against a no-intercept fit on centered data, which is not a
+comparison between the two procedures.
+
+**What it settles here.** Two things. The estimator registered for the H3
+sensitivity analyses is unbiased under conditional independence, so the floor of
+0.3671 under the unique-target permutation and 0.3910 under the drug-record
+permutation is not an artifact of the estimator. It is a property of the
+construction: `P` and `E` are built from the same axis, and that coupling
+survives reassignment. And the cross-paper contradiction recorded earlier the
+same day does not exist.
+
+**What it leaves open.** Whether the estimator is centered on this cohort's own
+covariate structure at n = 795 rather than on the test's model at n = 5000. That
+is H2 of `experiments/PREREG_H3_S2T_POWER_ENVELOPE_v1a_DRAFT.md` and it is a
+narrower question than the one H2 was first written for.
+
+**What depends on it elsewhere.** `direction-instability-atlas` states the bias
+claim in `paper/atlas_paper_v7_plosone.tex` Methods at lines 411-416, again at
+line 1430, and in `PREREGISTRATION.md` at lines 125-130. No atlas result moves:
+the atlas uses Pearson residualization throughout and its own missing intercept
+is harmless on centered variables. The categorical claim that
+rank-then-residualize is biased, and that Pearson-then-rank is the correct
+method, is what needs correcting. The correction itself is Elliot's call and is
+not decided here.
+
+**How it was found.** A code review of the draft diagnostic registration read
+the atlas test's comparator and observed the missing intercept. The numbers above
+were measured afterwards rather than taken from the review.
+
+### Addendum, same day: the atlas audit, done rather than inferred
+
+The entry above asserted that no atlas result moves. That was an inference from a
+simulation on centered variables and did not establish it, so the code paths were
+audited. Two implementations of `partial_spearman` exist in that repository.
+`experiments/utils.py` line 97 forms `Z_int = column_stack([ones, Z])` and is the
+one imported by all six experiments that report a partial correlation, 05, 07,
+09, 10, 11 and 14, so every reported value uses the intercept and the
+manuscript's methods description is accurate for its results.
+`power_analysis.py` line 18 omits the intercept and is reached only by its own
+`simulate_power_ci`, whose generator draws standard normal covariates and
+mean-zero outcomes, and by the regression test. The manuscript's single power
+sentence, 80% power for true effects at or above 0.35 at n = 76, comes from that
+simulation, where the measurement above gives -0.0022 for Pearson residualization
+with and without the intercept, so it is unaffected.
+
+So the claim holds, now on an audit of every path rather than on analogy. What
+remains wrong is the categorical methods claim, and that the function certified
+by the test is not the function that produced the results.

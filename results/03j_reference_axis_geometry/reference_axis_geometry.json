@@ -1,0 +1,67 @@
+{
+  "question": "whether reassigning a target direction to another target changes the axis a drug is scored against, which bounds what S2-T could have detected",
+  "status": "descriptive diagnostic of the reference, computed after the registered verdicts were recorded; no criterion and no null",
+  "reference": "shRNA consensus knockdown directions, one per unique target",
+  "pins": {
+    "bundle_sha256": "bfa02ff0b991c99efc40310dca28e03978a93f1913664982f04fc5c3d657e8f6",
+    "results_sha256": "6f60f1ad82de2c24a020eac8d30f807420590591ada2c959e1fa5e584ec4538f",
+    "draws_sha256": "e3b26398e2f423e96539f7e365ebe44f36b6e28a4035a2a232b0c856e638febf"
+  },
+  "cohort": {
+    "n_drugs": 795,
+    "n_unique_targets": 258,
+    "drugs_per_target": {
+      "min": 1,
+      "median": 1.0,
+      "max": 37
+    }
+  },
+  "direction_geometry": {
+    "n_directions": 258,
+    "n_pairs": 33153,
+    "abs_cosine": {
+      "mean": 0.24227875134009885,
+      "median": 0.23945056279124138,
+      "p25": 0.15255212154139858,
+      "p75": 0.32623427929810106,
+      "p90": 0.4022296093689326,
+      "p99": 0.5376929582988587,
+      "max": 0.7621634346749085,
+      "fraction_above_0.3": 0.31858353693481734,
+      "fraction_above_0.5": 0.019877537477754652,
+      "fraction_above_0.7": 9.04895484571532e-05
+    },
+    "expected_abs_cosine_for_isotropic_directions": 0.025513534889221826,
+    "effective_rank_participation_ratio": 12.966854476617552,
+    "n_components_for_90pct_of_trace": 140,
+    "n_components_for_50pct_of_trace": 15,
+    "leading_eigenvalue_share": 0.2603639230694199
+  },
+  "detection_threshold": {
+    "S2T_unique_target": {
+      "n_permutations": 10000,
+      "null_median": 0.36711689048130913,
+      "null_sd": 0.04049699800712428,
+      "threshold_at_p_lt_0.01": 0.4599405401520363,
+      "minimum_detectable_contribution": 0.09282364967072715,
+      "observed": 0.3721909618253966,
+      "observed_minus_threshold": -0.08774957832663965,
+      "observed_percentile_in_null": 0.548
+    },
+    "S2_drug_record": {
+      "n_permutations": 10000,
+      "null_median": 0.3910225736606944,
+      "null_sd": 0.026857979677920314,
+      "threshold_at_p_lt_0.01": 0.4508198429643229,
+      "minimum_detectable_contribution": 0.05979726930362855,
+      "observed": 0.3721909618253966,
+      "observed_minus_threshold": -0.0786288811389263,
+      "observed_percentile_in_null": 0.2502
+    }
+  },
+  "environment": {
+    "numpy": "2.1.3",
+    "scipy": "1.14.1",
+    "python": "3.13.12"
+  }
+}

@@ -1112,3 +1112,69 @@ registered for float32-derived values.
 value was matched against the two-layer measurement table in Amendment 5.
 
 **When:** 2026-10-08, before any S1-T, S2-T or S3-T statistic existed.
+
+## Deviation 19: the covariate-invariance assertion in the S1-S3 script cannot fail
+
+**Pre-registered:** the amendment holds `M_delta` and `K` fixed under the
+permutation, on the grounds that neither uses the target direction: "the
+covariates are held fixed; rerank the permuted `P` and `E` before residualizing,
+and recompute the adjusted partial correlation."
+
+**Actual:** `experiments/03c_h3_sensitivity.py` asserts that property at runtime.
+It snapshots `M_delta.tobytes()` and `K.tobytes()` before the unique-target
+permutation loop and compares the same two arrays against the snapshot after it,
+under a comment reading "Assert it rather than trust it." Nothing inside the loop
+writes to either array, so the comparison is of each array with itself and no
+input could make it fail.
+
+**Why it matters:** the assertion reads as evidence that the covariates are
+axis-free and supplies none. The property is definitional rather than empirical:
+`M_delta` is the mean Euclidean norm of the pairwise signature differences and
+`K` the number of contexts, and neither computation takes the target direction as
+an argument. That is established by reading the two definitions. A check that
+cannot fail is not a check, and a comment claiming otherwise is worse than no
+check, because it invites a reader to stop there.
+
+**What was done:** the assertion stays in the script as run. Those bytes are the
+record of what produced the sealed result, hash 6290281e, and a sealed artifact
+is not edited after the fact. It is recorded here as carrying no evidential
+weight; it is not cited in the manuscript, and the axis-independence of the
+covariates is stated in the methods as what it is, a property of their
+definitions. A successor script does not carry it.
+
+**How it was identified:** a code review of the implementation, which read the
+loop and observed that no path inside it reaches either array.
+
+**When:** 2026-10-08, after the S1-T, S2-T and S3-T verdicts were recorded.
+
+
+## Deviation 20: the input seal named a bundle the run never opened
+
+**Pre-registered:** inputs are sealed before a run whose output a paper will
+report, so the ledger names the bytes the run read.
+
+**Actual:** the input seal at ledger sequence 90 named
+`results/03c_h3_sensitivity/cohort_bundle.npz` at `87f75267`. The registered run
+read `results/03c_h3_sensitivity/gctx_rebuild/cohort_bundle.npz` at `bfa02ff0`,
+which is the only bundle built from the corrected deposited artifact `fd69e26f`
+and the one the result file records under `provenance.bundle_sha256`. The sealed
+path and the path the run opened are different files.
+
+**Why it matters:** the chain would verify. Both files exist at their sealed
+hashes, so `results verify --files` reports nothing, while the ledger names an
+input the analysis never opened. Deviation 17 retired the extraction whose
+product the superseded bundle is; the seal still pointed at that product. A
+verifying chain that names the wrong file is a worse failure than a broken one,
+because nothing signals it.
+
+**What was done:** the bundle the run read is sealed under its own path at
+sequence 96, together with the result and draws files the diagnostics read. The
+seal at sequence 90 is left exactly as written: a sealed record is appended to,
+never rewritten. The correct hash was already inside the result file and inside
+the rebuild manifest, so the bytes were identifiable from the artifact before
+this entry; what was missing was the ledger naming them.
+
+**How it was identified:** checking which bundle the diagnostic should pin, by
+hashing both local copies against `provenance.bundle_sha256`.
+
+**When:** 2026-10-08.
