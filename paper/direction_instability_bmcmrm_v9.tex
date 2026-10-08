@@ -51,18 +51,20 @@ confound correction on Grassmannian subspaces.
 \textbf{Results:}
 Domain-specific validity conditions preserved global rankings in all
 three domains (LINCS: $\rho > 0.99$; Perturb-seq: $\rho = 0.91$;
-JUMP-CP: $\rho = 0.99$) while upgrading inferential warrant at the
-item level. Phenotype-projected scores correlated with on-target
-genetic perturbation connectivity ($\rho = 0.38$, $p < 10^{-27}$)
-while raw scores did not ($\rho = -0.04$). Transport-stable scores
-outpredicted raw scores for held-out cell-line effects in all 66
-valid leave-one-out folds (Wilcoxon $p = 8.2 \times 10^{-13}$;
-mean $\Delta\rho = +1.10$, 95\% CI $[1.00, 1.19]$). Essential-gene
+JUMP-CP: $\rho = 0.998$) while upgrading inferential warrant at the
+item level. Phenotype-projected scores correlated with alignment to a
+genetic loss-of-function reference axis ($\rho = 0.317$,
+$p = 4.8 \times 10^{-20}$) while raw scores did not ($\rho = -0.058$), and
+the association replicated in direction against three corrected CRISPRi
+constructions. Transport-stable scores won all 66 leave-one-out folds on
+signed correlation, but raw scores are negative in every fold and carry the
+larger magnitude in 56 of 66, so H5 is not confirmed. Essential-gene
 correction revealed that universal-essential knockdowns
 \emph{diverge} rather than converge across cell types ($d = 0.60$,
 $p_{\text{perm}} < 10^{-4}$), inverting the predicted confound.
-Of 5 drug hypotheses, 2 survived multiplicity correction, 1 was
-refuted, and 2 were informative nulls.
+Of 5 drug hypotheses, 1 survived multiplicity correction, 1 was
+refuted, 1 was not confirmed, 1 did not survive multiplicity, and 1 was
+an informative null.
 
 \textbf{Conclusions:}
 Validity conditions do not change geometric perturbation scores;
@@ -802,20 +804,23 @@ rather than shared platform noise.
 % set is $[0.315, 0.433]$, excluding zero. The H3 correlation is broad-based,
 % not driven by HDAC inhibitors or a small number of extreme drugs.
 
-\subsection{Experiment 5: Transport-stable bracket outpredicts raw bracket in held-out cell lines}
+\subsection{Experiment 5: Transport-stable and raw bracket in held-out cell lines}
 \label{sec:exp5}
 
-Transport-stable bracket outpredicts raw bracket in all 66 valid
-leave-one-out folds. Both co-primary criteria are satisfied:
-TS wins 66/66 folds (100\%, criterion $\geq 80\%$) and Wilcoxon
-signed-rank on per-fold $\Delta\rho$ yields $p = 8.2 \times 10^{-13}$
-(criterion $p < 0.05$).
+Both co-primary criteria are met on the registered statistic: transport-stable
+bracket wins 66/66 folds on signed Spearman correlation (criterion
+$\geq 80\%$), and Wilcoxon signed-rank on per-fold $\Delta\rho$ yields
+$p = 8.2 \times 10^{-13}$ (criterion $p < 0.05$).
 
-Across 66 folds, mean raw $\rho = -0.60$ (anti-predictive in every
-fold; range $[-0.78, -0.22]$) while mean TS $\rho = +0.50$ (positively
-predictive). Mean $\Delta\rho = +1.10$ (95\% bootstrap CI
-$[1.00, 1.19]$; all 66 values positive, range $[0.17, 1.57]$). Five
-cell lines were excluded for having $< 20$ eligible drugs.
+The sweep follows from orientation rather than from accuracy. Mean raw
+$\rho = -0.60$, negative in every one of the 66 folds (range
+$[-0.78, -0.22]$), against mean TS $\rho = +0.50$. A signed comparison
+between a quantity negative in every fold and one positive in every fold is
+settled by sign before any difference in predictive strength enters it.
+Compared on magnitude, raw bracket is the stronger predictor in 56 of the 66
+folds and TS in 10. H5 is not confirmed. Mean $\Delta\rho = +1.10$ (95\%
+bootstrap CI $[1.00, 1.19]$; all 66 values positive, range $[0.17, 1.57]$).
+Five cell lines were excluded for having $< 20$ eligible drugs.
 Figure~\ref{fig:delta_rho} shows the $\Delta\rho$ distribution and the
 frequency gradient; Table~\ref{tab:transport} shows representative folds
 illustrating the rare/common regime distinction.
@@ -824,10 +829,12 @@ illustrating the rare/common regime distinction.
 \centering
 \includegraphics[width=\linewidth]{figures/fig_h5_full_delta_rho.pdf}
 \caption{%
-\textbf{Full 66-fold leave-one-out: TS advantage is universal.}
+\textbf{Full 66-fold leave-one-out, signed correlation.}
 \textbf{Left:}~Distribution of per-fold $\Delta\rho$ (TS $-$ raw Spearman
 correlation with held-out cosine). All 66 values are positive; the mean
-(red line) is $+1.10$. \textbf{Right:}~Rarer cell lines (fewer drugs per
+(red line) is $+1.10$. Raw correlation is negative in every fold, so the
+signed difference is governed by orientation; on magnitude raw leads in 56
+of the 66 folds. \textbf{Right:}~Rarer cell lines (fewer drugs per
 fold) show larger TS advantages (Spearman $\rho = -0.32$, $p = 0.009$),
 confirming that the rare/common regime distinction from the preliminary
 5-fold analysis generalizes across all cell lines.}
@@ -837,8 +844,8 @@ confirming that the rare/common regime distinction from the preliminary
 \begin{table}[t]
 \centering
 \caption{Leave-one-cell-line-out cross-validation (selected folds from
-the full 66-fold analysis). Transport-stable (TS) bracket outpredicts
-raw bracket in all folds. In common folds (8{,}000+ drugs), both metrics
+the full 66-fold analysis). Transport-stable (TS) bracket leads raw
+bracket on signed correlation in all folds. In common folds (8{,}000+ drugs), both metrics
 are anti-predictive but TS is less so. In rarer folds, TS reverses the
 sign entirely. Full 66-fold results: mean $\Delta\rho = +1.10$,
 Wilcoxon $p = 8.2 \times 10^{-13}$.}
@@ -925,8 +932,8 @@ The H5 result is robust to penalty weight choice across a 20-fold range.
 \includegraphics[width=\linewidth]{figures/fig_lambda_sensitivity.pdf}
 \caption{%
 \textbf{Lambda sensitivity analysis for transport-stable bracket.}
-\textbf{Left:}~Number of folds (out of 66) where TS outpredicts
-raw bracket, by $\lambda$. The dashed line marks the pre-registered
+\textbf{Left:}~Number of folds (out of 66) where TS leads raw bracket on
+signed correlation, by $\lambda$. The dashed line marks the pre-registered
 80\% threshold (52.8 folds). At $\lambda = 0$ (sanity check), TS
 $\equiv$ raw and wins 0 folds. All eight non-zero $\lambda$ values
 pass the criterion. \textbf{Right:}~Mean per-fold $\Delta\rho$
@@ -1340,11 +1347,10 @@ decisions based on those claims.
 The procedure tested here---threat identification, correction
 specification, pre-registered prediction, empirical test---is applicable
 to any geometric score measuring perturbation-response consistency across
-contexts. Phenotype projection separates on-target from off-target
-consistency ($\rho = 0.38$ vs.\ $-0.04$); variance correction
-outpredicts the raw score in all 66 leave-one-out folds
-($p_{\text{Wilcoxon}} = 8.2 \times 10^{-13}$, mean
-$\Delta\rho = +1.10$); localization helps for intracellular enzyme
+contexts. Phenotype projection tracks alignment to a stated genetic
+loss-of-function reference axis where the raw score does not
+($\rho = 0.317$ vs.\ $-0.058$); variance correction changes the sign of the
+held-out association rather than improving its magnitude; localization helps for intracellular enzyme
 targets but not receptor-mediated drugs, constraining where specific
 rungs apply. The domain-specific failure modes differ, but the pattern
 is the same: correction preserves population rankings while identifying

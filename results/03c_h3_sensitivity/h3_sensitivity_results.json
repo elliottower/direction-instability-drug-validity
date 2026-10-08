@@ -1,0 +1,181 @@
+{
+  "registration": {
+    "file": "experiments/PREREG_H3_MAGNITUDE_AND_SHARED_AXIS.md",
+    "frozen_at": "f288507"
+  },
+  "cohort": {
+    "n": 795,
+    "deposited": 795,
+    "restricted_to_rebuilt_subset": false,
+    "missing_from_rebuild": [],
+    "identifier_hash": "e3b9907551c1deac3ec9959c6972d43e2596f4e50f741c82be239459423d1bf0",
+    "max_abs_reproduction_error": {
+      "D": 7.496284071262238e-08,
+      "P": 1.138549816204204e-06,
+      "E": 9.364712427739619e-08
+    },
+    "reproduction_rule": {
+      "enforced": "|a-b| <= 1e-08 + 1e-06|b|, elementwise, Amendment 5 D2, the authoritative GCTX route",
+      "flat_tolerance_reported_not_enforced": 1e-06,
+      "max_normalized_residual": {
+        "D": 0.12875045845028188,
+        "P": 0.19527015501516315,
+        "E": 0.4210760832873934
+      },
+      "worst_drug": {
+        "D": "doxorubicin",
+        "P": "pefloxacin",
+        "E": "lupanine"
+      },
+      "n_over_flat_tolerance": {
+        "D": 0,
+        "P": 1,
+        "E": 0
+      }
+    }
+  },
+  "S1_magnitude_and_coverage": {
+    "partial_rho": 0.3721909618253966,
+    "ci95_percentile": [
+      0.3099411633848256,
+      0.432957191399745
+    ],
+    "display": "0.3722 [0.3099, 0.4330]",
+    "min_effect": 0.2,
+    "holds": true,
+    "unit": "drug, as registered at f288507"
+  },
+  "S2_shared_axis_permutation": {
+    "rho_observed": 0.3721909618253966,
+    "p_perm": 0.7498250174982501,
+    "null_pct": {
+      "p2.5": 0.3369303337485924,
+      "p50": 0.3910225736606944,
+      "p97.5": 0.44291226805938066
+    },
+    "n_permutations": 10000,
+    "holds": false,
+    "unit": "drug record, as registered at f288507"
+  },
+  "S3_raw_equivalence": {
+    "partial_rho": -0.05783117803190831,
+    "ci90_percentile": [
+      -0.11543880473020306,
+      0.0002561834902782022
+    ],
+    "display": "-0.0578 [-0.1154, 0.0003]",
+    "equivalence_bound": 0.15,
+    "holds": true,
+    "unit": "drug, as registered at f288507"
+  },
+  "S1T_magnitude_and_coverage": {
+    "partial_rho": 0.3721909618253966,
+    "ci95_percentile": [
+      0.2879843810477694,
+      0.45047892657954264
+    ],
+    "display": "0.3722 [0.2880, 0.4505]",
+    "min_effect": 0.2,
+    "holds": true,
+    "unit": "target cluster"
+  },
+  "S2T_unique_target_permutation": {
+    "rho_observed": 0.3721909618253966,
+    "p_perm": 0.4520547945205479,
+    "null_pct": {
+      "p2.5": 0.2874277546617137,
+      "p50": 0.36711689048130913,
+      "p97.5": 0.4468328945458078
+    },
+    "attenuation_vs_null_median": 0.005074071344087494,
+    "n_permutations": 10000,
+    "n_unique_targets": 258,
+    "holds": false,
+    "unit": "unique target"
+  },
+  "S3T_raw_equivalence": {
+    "partial_rho": -0.05783117803190831,
+    "ci90_percentile": [
+      -0.1402881161509289,
+      0.02591813234869247
+    ],
+    "display": "-0.0578 [-0.1403, 0.0259]",
+    "equivalence_bound": 0.15,
+    "holds": true,
+    "unit": "target cluster"
+  },
+  "identity_check": {
+    "max_abs_P": 2.042810365310288e-14,
+    "max_abs_E": 4.996003610813204e-16,
+    "abs_partial_rho": 0.0
+  },
+  "gate": {
+    "all_three_required": true,
+    "governing_unit": "target",
+    "h3_interpretation_survives": false,
+    "drug_level_verdict": false,
+    "units_agree": true
+  },
+  "secondary_no_criterion": {
+    "partial_rho_given_mean_signature_norm": 0.365610086525034,
+    "P_over_M_delta": {
+      "n": 795,
+      "n_missing_M_delta_zero": 0,
+      "mean": 0.09455383039046997,
+      "median": 0.08929678004337142,
+      "min": 0.02026528390421336,
+      "max": 0.2635352743487186,
+      "spearman_with_E": 0.39229107373281025
+    }
+  },
+  "provenance": {
+    "rebuild_manifest": {
+      "runtime_packages": {
+        "numpy": "2.1.3",
+        "pandas": "2.2.3",
+        "scipy": "1.14.1",
+        "cmapPy": "4.0.1",
+        "h5py": "3.12.1"
+      },
+      "stage_fingerprint": "0459309d55eab76f142951abe77e0d5ffd7801531fc5fb4b256d56115be1c3da",
+      "fingerprint_parts": {
+        "gctx": "b293f3fb7c2298a60526de727e5400d8400af4b77a23c4ed2116f86199fb45e8",
+        "sig_info": "19da29c0ee12ddf27f9698cd0da40beaff58657dcde9d382aae068737e831299",
+        "shrna_sig_info": "bd396fa0e1a2f00c1b5f2c8d2b35f9a056f5e5353382475655869038037ec014",
+        "deposited": "fd69e26fc9a3917323065b631688baeab8b283f735c8bf5b16210ba67bd21425",
+        "landmark_order": "490601145cef7eb7d8ec6ff37d2d506821a88382a6a614c3f16ad8800d540818",
+        "loader": "b7ec2cd46be4a800dc546594e82491f785fdf504d4bd8bc783be293b343a1611",
+        "extract_code": "cb8eae0f29da0fce8d0304aff3d8f98752c062c7e57ca41c87c86302916ae6fc",
+        "shard_size": 250,
+        "min_hairpins": 3
+      },
+      "n_bundled": 795,
+      "n_deposited": 795,
+      "dropped_counts": {
+        "no_signatures": 0,
+        "no_consensus": 0
+      },
+      "dropped_identifiers": {
+        "no_signatures": [],
+        "no_consensus": []
+      },
+      "cohort_identifier_sha256": "e3b9907551c1deac3ec9959c6972d43e2596f4e50f741c82be239459423d1bf0",
+      "bundle_sha256": "bfa02ff0b991c99efc40310dca28e03978a93f1913664982f04fc5c3d657e8f6",
+      "shrna_consensus_sha256": "df2863d599edfd4e45e40c6a174cbfb372fcf76a1596dd9d614ffd8ec9e04e4f",
+      "shrna_hairpins_sha256": "1dc307ea58fbe2b6211c2833ab72babde4f7b703f95a00880d7817e2cb6e0522"
+    },
+    "bundle_sha256": "bfa02ff0b991c99efc40310dca28e03978a93f1913664982f04fc5c3d657e8f6",
+    "deposited_artifact_sha256": "fd69e26fc9a3917323065b631688baeab8b283f735c8bf5b16210ba67bd21425",
+    "script_sha256": "6290281e44505da3372ef33bceb23cb3fe650d1321dc631577370a2297e4d6fd",
+    "seeds": {
+      "bootstrap": 20260913,
+      "permutation": 20260914,
+      "bootstrap_target": 20260926,
+      "permutation_target": 20260927
+    },
+    "numpy": "2.1.3",
+    "scipy": "1.14.1",
+    "python": "3.12.10",
+    "draws_sha256": "e3b26398e2f423e96539f7e365ebe44f36b6e28a4035a2a232b0c856e638febf"
+  }
+}
