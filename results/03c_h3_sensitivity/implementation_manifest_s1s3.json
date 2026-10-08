@@ -9,10 +9,10 @@
     "governing_unit": "target; where a drug-level verdict and its target-level counterpart disagree the target-level verdict governs, and if S2-T fails the drug-target matching claim is withdrawn whatever S1-T shows"
   },
   "code": {
-    "commit": "067778f0916f972ce8d8bbe6f06adc443cad4698",
-    "short": "067778f",
+    "commit": "9a5bcc17bb025385b3bf7e403af30903369d90cb",
+    "short": "9a5bcc1",
     "files": {
-      "experiments/03c_h3_sensitivity.py": "5d5faa4e1c1b6215edf59d0e96d3918e129f8ec8cd5c18c85584ef30e24f2d4a",
+      "experiments/03c_h3_sensitivity.py": "937baa517ccd90954ee6055643197bd06038d2b0d390b4c7de5c840cb73d09b7",
       "geometry/inference.py": "622119626b7149274d7207c6841ddbaea2c8ec40ec563a1b618f11fd9b96ab68",
       "experiments/modal_h3_execute.py": "73788872b7da0c0aed129d5442dc1f4dbff95d001ae0788fd31332e5f7475b5c"
     },
@@ -27,7 +27,8 @@
         "the gate requires all three target-level versions and records the governing unit"
       ],
       "defects_found_and_fixed": [
-        "stage_s1s3 ran the script but left its outputs in the image layer, since the script writes beside its own source and the results volume is mounted at /out; the stage now carries the three outputs onto the volume and refuses to commit a partial run"
+        "stage_s1s3 ran the script but left its outputs in the image layer, since the script writes beside its own source and the results volume is mounted at /out; the stage now carries the three outputs onto the volume and refuses to commit a partial run",
+        "the gate required manifest keys naming lincs_subset.npz and lincs_shrna.npz, products of the extraction retired under Deviation 12 that the current rebuild never opens; it now pins the sources the rebuild reads, with the GCTX named as trust on first use. Deviation 17."
       ],
       "noted_not_fixed": [
         "geometry.target_members documents first-appearance order while numpy.unique returns sorted order; both callers use the same convention so no statistic is affected",
@@ -46,5 +47,21 @@
     "permutation": 20260914
   },
   "n_permutations": 10000,
-  "n_bootstrap": 10000
+  "n_bootstrap": 10000,
+  "provenance_contract": {
+    "pinned_in_advance": {
+      "deposited": "fd69e26fc9a3917323065b631688baeab8b283f735c8bf5b16210ba67bd21425",
+      "sig_info": "19da29c0ee12ddf27f9698cd0da40beaff58657dcde9d382aae068737e831299",
+      "shrna_sig_info": "bd396fa0e1a2f00c1b5f2c8d2b35f9a056f5e5353382475655869038037ec014"
+    },
+    "trust_on_first_use": {
+      "gctx": "b293f3fb7c2298a60526de727e5400d8400af4b77a23c4ed2116f86199fb45e8",
+      "why": "stamped on first retrieval, per results/03c_h3_sensitivity/input_pin_check.json; not registered in advance"
+    },
+    "required_present": [
+      "landmark_order",
+      "loader",
+      "extract_code"
+    ]
+  }
 }

@@ -46,8 +46,17 @@ DEPOSITED_RECORDS = 795
 RECON_TOL = 1e-6
 # the corrected artifact, which replaces the superseded 65e5d10e2720... of f288507
 EXPECTED_REFERENCE_SHA256 = "fd69e26fc9a3917323065b631688baeab8b283f735c8bf5b16210ba67bd21425"
-EXPECTED_LINCS_SUBSET_SHA256 = "2ad0f5d30ab826f9ec0cfe37f6b53b2829bfef1d73b7920c3441de6407adb4ec"
-EXPECTED_LINCS_SHRNA_SHA256 = "4a990e5072a43f59fdda60a2ff040f355f06be947c14bcfa87056c66332b58e7"
+# The amendment's input table pins lincs_subset.npz and lincs_shrna.npz, which the
+# extraction retired under Deviation 12 produced. The rebuild that builds this
+# bundle reads GSE92742 directly and never opens either file, so pinning them here
+# would assert a dependency the run does not have. The sources it does read are
+# pinned instead. Deviation 17.
+EXPECTED_SIG_INFO_SHA256 = "19da29c0ee12ddf27f9698cd0da40beaff58657dcde9d382aae068737e831299"
+EXPECTED_SHRNA_SIG_INFO_SHA256 = "bd396fa0e1a2f00c1b5f2c8d2b35f9a056f5e5353382475655869038037ec014"
+# Stamped on first retrieval rather than registered in advance, as
+# results/03c_h3_sensitivity/input_pin_check.json records. It is trust on first
+# use and is named as such rather than presented as a registered pin.
+EXPECTED_GCTX_SHA256 = "b293f3fb7c2298a60526de727e5400d8400af4b77a23c4ed2116f86199fb45e8"
 S1_MIN_EFFECT = 0.20
 S3_EQUIV_BOUND = 0.15
 N_LANDMARK = 978
@@ -152,8 +161,9 @@ def load_bundle(path):
 
 
 REQUIRED_MANIFEST_KEYS = ("stage_fingerprint", "fingerprint_parts", "n_bundled",
-                          "n_deposited", "cohort_identifier_sha256", "bundle_sha256",
-                          "lincs_subset_sha256", "lincs_shrna_sha256", "deposited_sha256")
+                          "n_deposited", "cohort_identifier_sha256", "bundle_sha256")
+REQUIRED_FINGERPRINT_PARTS = ("gctx", "sig_info", "shrna_sig_info", "deposited",
+                              "landmark_order", "loader", "extract_code")
 
 
 def main(bundle_path, manifest_path):
@@ -172,12 +182,17 @@ def main(bundle_path, manifest_path):
     recomputed_fp = hashlib.sha256(json.dumps(parts, sort_keys=True).encode()).hexdigest()
     if not (manifest["stage_fingerprint"] == recomputed_fp):
         raise AssertionError("the manifest fingerprint is not the hash of its own component hashes")
-    if not (parts["deposited_sha256"] == EXPECTED_REFERENCE_SHA256):
+    absent = [k for k in REQUIRED_FINGERPRINT_PARTS if k not in parts]
+    if not (not absent):
+        raise AssertionError(f"the manifest fingerprint does not name {absent}")
+    if not (parts["deposited"] == EXPECTED_REFERENCE_SHA256):
         raise AssertionError("the manifest pins an artifact other than the corrected one")
-    if not (parts["lincs_subset_sha256"] == EXPECTED_LINCS_SUBSET_SHA256):
-        raise AssertionError("the manifest pins a different compound extraction")
-    if not (parts["lincs_shrna_sha256"] == EXPECTED_LINCS_SHRNA_SHA256):
-        raise AssertionError("the manifest pins a different shRNA extraction")
+    if not (parts["sig_info"] == EXPECTED_SIG_INFO_SHA256):
+        raise AssertionError("the manifest pins different compound signature metadata")
+    if not (parts["shrna_sig_info"] == EXPECTED_SHRNA_SIG_INFO_SHA256):
+        raise AssertionError("the manifest pins different shRNA signature metadata")
+    if not (parts["gctx"] == EXPECTED_GCTX_SHA256):
+        raise AssertionError("the manifest pins a different GSE92742 release")
     if not (sha256_file(DEPOSITED) == EXPECTED_REFERENCE_SHA256):
         raise AssertionError("the reference artifact is not the corrected one pinned in the amendment")
     drugs, targets, sigs, dirs = load_bundle(bundle_path)

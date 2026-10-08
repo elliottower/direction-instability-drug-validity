@@ -1017,3 +1017,55 @@ outcome of the analysis and is reported as one.
 
 **When:** 2026-10-07, after the second complete execution, before any reading was
 written into a manuscript.
+
+## Deviation 17: the S1-S3 gate pinned two artifacts of a retired extraction
+
+**Pre-registered:** `PREREG_H3_MAGNITUDE_AND_SHARED_AXIS.md` (frozen `f288507`) and the
+amendment at `7f57136` pin the compound and shRNA extractions as
+`lincs_subset.npz` sha256 `2ad0f5d3` and `lincs_shrna.npz` sha256 `4a990e50`.
+`experiments/03c_h3_sensitivity.py` refuses unless the rebuild manifest records
+both, and records the deposited artifact, at the top level and inside the
+fingerprint.
+
+**Actual:** the first attempt to run S1-T, S2-T and S3-T refused, correctly, with
+`rebuild manifest is missing ['lincs_subset_sha256', 'lincs_shrna_sha256',
+'deposited_sha256']`. The rebuild that produced the bundle on the `di-h3` volume
+reads GSE92742 directly: `stage_fetch` downloads the GCTX from GEO and
+`_fingerprint` pins `gctx`, `sig_info`, `shrna_sig_info`, `deposited`,
+`landmark_order`, `loader` and `extract_code`. It never opens either `.npz`. Those
+two files are products of the extraction retired when the gene-axis defect was
+corrected under Deviation 12.
+
+The locally tracked bundle is not an alternative. Its manifest pins
+`deposited_sha256` `65e5d10e`, the artifact superseded by the correction, so that
+bundle predates the fix.
+
+**Why it matters:** the gate could be satisfied in three ways and two of them are
+dishonest. Making the rebuild record hashes for files it does not read would
+assert a dependency the run does not have. Hand-patching the manifest would assert
+provenance nobody derived, which is the failure Amendment 4 exists to prevent.
+Running on the local bundle would analyze pre-correction data.
+
+**What was done:** the gate now pins what the rebuild actually reads. `deposited`
+against the corrected `fd69e26f`, `sig_info` against `19da29c0` and
+`shrna_sig_info` against `bd396fa0`, all three registered in advance, and the
+presence of `landmark_order`, `loader` and `extract_code`. The GCTX is pinned to
+`b293f3fb` and named in the source as trust on first use rather than a registered
+pin, because `results/03c_h3_sensitivity/input_pin_check.json` records it as
+"stamped on first retrieval, not registered in advance".
+
+No inference criterion, seed, statistic or cohort rule is touched. The quantity the
+gate protects is unchanged: the analysis still runs only against the corrected
+artifact. What changed is which upstream objects the receipt names, because the
+pipeline that writes the receipt was replaced.
+
+**Why not regenerate the manifest instead:** `_fingerprint` includes
+`extract_code`, the hash of the rebuild's own source, so any edit to the rebuild
+invalidates every cached shard and forces a full re-read of GSE92742. That cost
+would be acceptable on its own, but the rebuild would still have to name files it
+does not read, so the expensive route does not buy an honest manifest.
+
+**How it was identified:** the run refused on its own gate; the volume manifest was
+retrieved and compared against the script's contract and against the tracked copy.
+
+**When:** 2026-10-08, before any S1-T, S2-T or S3-T statistic existed.
