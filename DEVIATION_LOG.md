@@ -968,3 +968,52 @@ added to the interpretation grid and no criterion was written after seeing a res
 Perplexity round 25 ruled against adding any, and this adds none.
 
 **When:** after the first complete execution, before any R4 reading was reported.
+
+## Deviation 16: the registration's "Reversal" is unsatisfied in the corrected data
+
+**Pre-registered:** the follow-up is titled "Why does H3's pattern reverse between the
+shRNA and CRISPRi references?" and defines its central term under Terms: "'The
+qualitative pattern reverses' means that the projected association is positive only
+under shRNA, and the raw association is positive only under CRISPRi."
+(`PREREG_H3_REFERENCE_DISCORDANCE.md`, frozen `7f57136`.) Its Foreknowledge table
+records the CRISPRi K562 arm under construction C0 at rho(P, E) = -0.1247 and
+rho(D, E) = +0.2723, cited to `results/03b_h3_crispri/h3_crispri_results.json`,
+sha256 `f00f8428`.
+
+**Actual:** those two values are reproduced exactly from that file, which still hashes
+to `f00f8428`. But the file predates the gene-axis mislabeling corrected under
+Deviation 12 on 2026-10-05, two weeks after this registration was frozen on
+2026-09-22. Recomputed on the corrected gene axis, the same C0 construction gives
+rho(P, E) = +0.5410 and rho(D, E) = -0.1920 (R0.9 headline, run
+`r0_to_r7_2026_10_07b`). Both signs are opposite to the frozen Foreknowledge.
+
+The projected association is therefore positive under the shRNA reference (+0.3172),
+under C0 (+0.5410), under C1 (+0.6074) and in RPE1 (+0.6090 to +0.7702). The raw
+association is positive under none of them. By the registration's own definition, the
+reversal is absent: the projected association is not positive *only* under shRNA, and
+the raw association is not positive under CRISPRi at all.
+
+**Why it matters:** three interpretation-grid rows name the reversal as their subject
+("R0.9: raw reversal construction-dependent", "raw reversal replicates in RPE1", "raw
+reversal is context-dependent"). Their premise term is unsatisfied, so the rows cannot
+be read as written. The modules still return their mechanical readings, and those
+readings are correct about what they measure: R0.9 returns "retained" for both halves
+and R6a returns "retained", meaning the corrected pattern is stable across
+constructions and across cell context. What is stable is a positive projected
+association and a negative raw one, not a reversal. Reporting "the reversal is not
+specific to K562" from R6a would assert the existence of something this data does not
+contain.
+
+**How it was identified:** recomputing rho(P, E) and rho(D, E) directly from the
+pinned Foreknowledge file and comparing against the run's C0 headline, while placing
+the completed readings against the grid row by row.
+
+**What was done:** no registration is edited and no criterion is added or removed. The
+three rows naming the reversal are recorded here as inapplicable, with the reason, and
+the readings they would have produced are reported as what the modules measure:
+construction-robustness and context-robustness of the corrected pattern. The
+registered question the follow-up was built to answer does not arise, which is an
+outcome of the analysis and is reported as one.
+
+**When:** 2026-10-07, after the second complete execution, before any reading was
+written into a manuscript.
