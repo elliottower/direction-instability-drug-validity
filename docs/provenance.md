@@ -198,9 +198,9 @@ narrower question than the one H2 was first written for.
 
 **What depends on it elsewhere.** `direction-instability-atlas` states the bias
 claim in `paper/atlas_paper_v7_plosone.tex` Methods at lines 411-416, again at
-line 1430, and in `PREREGISTRATION.md` at lines 125-130. No atlas result moves:
-the atlas uses Pearson residualization throughout and its own missing intercept
-is harmless on centered variables. The categorical claim that
+line 1430, and in `PREREGISTRATION.md` at lines 125-130. The defect affects the
+regression test and the categorical methodological claim, not the estimator used
+by the six reported partial-correlation analyses. The categorical claim that
 rank-then-residualize is biased, and that Pearson-then-rank is the correct
 method, is what needs correcting. The correction itself is Elliot's call and is
 not decided here.
@@ -225,6 +225,11 @@ sentence, 80% power for true effects at or above 0.35 at n = 76, comes from that
 simulation, where the measurement above gives -0.0022 for Pearson residualization
 with and without the intercept, so it is unaffected.
 
-So the claim holds, now on an audit of every path rather than on analogy. What
-remains wrong is the categorical methods claim, and that the function certified
-by the test is not the function that produced the results.
+So the narrow claim holds, on an audit of every path rather than on analogy: the
+six reported partial-correlation analyses are unaffected. The unrestricted phrase
+"no atlas number moves" is not supported and is not used. The manuscript's power
+sentence came from the no-intercept copy; under its centered generator the
+estimator comparison found no detectable mean shift, but that power result was
+not regenerated, so it is reported with that caveat or regenerated, which is
+Elliot's call. What remains wrong is the categorical methods claim, and that the
+function certified by the test is not the function that produced the results.
