@@ -10,7 +10,7 @@ median cohort contribution sat at the detection threshold and detection then
 required a cohort to exceed that same threshold, which at most half of them can.
 Detection here is the permutation rejection alone and the contribution is a
 separate calibration gate.
-**Commit SHA:** pending
+**Commit SHA:** ffd263a
 **Kind:** post-hoc diagnostic. No registered statistic is recomputed, no
 registered criterion is changed, and no outcome here can move the gate at
 `results/03c_h3_sensitivity/h3_sensitivity_results.json`, which is closed:
