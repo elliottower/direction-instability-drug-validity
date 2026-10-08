@@ -248,12 +248,31 @@ def stage_gate(cohort: str = "/app/results/03_phenotype_projection/phenotype_pro
 @app.function(**COMMON)
 def stage_s1s3():
     """S1-S3 and their target-level versions, on the bundle the rebuild produced."""
+    import shutil
+    from pathlib import Path
+
     _repo_at_its_absolute_path()
     _run(["/app/experiments/03c_h3_sensitivity.py",
           "--bundle", "/rebuild/results/cohort_bundle.npz",
           "--manifest", "/rebuild/results/rebuild_manifest.json"])
+    # The script writes beside its own source. The symlink puts that in the image
+    # layer, not on the results volume, so the outputs are copied across before the
+    # commit; without this the run completes and is lost when the container exits.
+    written = Path("/app/results/03c_h3_sensitivity")
+    out = Path("/out/03c_h3_sensitivity")
+    out.mkdir(parents=True, exist_ok=True)
+    carried = []
+    for name in ("h3_sensitivity_results.json", "h3_sensitivity_results.json.sha256",
+                 "h3_sensitivity_draws.npz"):
+        source = written / name
+        if not source.exists():
+            raise RuntimeError(
+                f"{name} is absent after the script returned; the stage does not "
+                "commit a partial run")
+        shutil.copy2(source, out / name)
+        carried.append(name)
     results.commit()
-    return "s1s3 done"
+    return f"s1s3 done; carried {', '.join(carried)}"
 
 
 @app.function(**COMMON)

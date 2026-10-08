@@ -1,0 +1,50 @@
+{
+  "what_this_binds": "the frozen design, the reviewed code and the pinned inputs for S1-S3 and their target-level versions, named before the run rather than after it",
+  "design_freeze": {
+    "registration": "experiments/PREREG_H3_S1S3_CORRECTED_BASELINE.md",
+    "commit": "7f57136",
+    "file_sha256": {
+      "experiments/PREREG_H3_S1S3_CORRECTED_BASELINE.md": "efcd3baccceb5c45dc9343d4e13abc745cafe7760763e7bbaa43d8882c75f3ef"
+    },
+    "governing_unit": "target; where a drug-level verdict and its target-level counterpart disagree the target-level verdict governs, and if S2-T fails the drug-target matching claim is withdrawn whatever S1-T shows"
+  },
+  "code": {
+    "commit": "067778f0916f972ce8d8bbe6f06adc443cad4698",
+    "short": "067778f",
+    "files": {
+      "experiments/03c_h3_sensitivity.py": "5d5faa4e1c1b6215edf59d0e96d3918e129f8ec8cd5c18c85584ef30e24f2d4a",
+      "geometry/inference.py": "622119626b7149274d7207c6841ddbaea2c8ec40ec563a1b618f11fd9b96ab68",
+      "experiments/modal_h3_execute.py": "73788872b7da0c0aed129d5442dc1f4dbff95d001ae0788fd31332e5f7475b5c"
+    },
+    "review": {
+      "when": "2026-10-07, before any run on real data, as the registration requires",
+      "verified": [
+        "unique_target_permutations shuffles target indices and indexes by inverse, so every drug of a target receives the same reassigned direction and target group sizes are preserved",
+        "target_members and target_representatives both order unique targets through numpy.unique, so the representative lookup is aligned with the permutation's indices",
+        "target_representatives refuses if drugs annotated to one target carry different directions",
+        "the identity permutation is asserted to reproduce the direct statistic to 1e-9 and the lookup tables to 1e-10 and 1e-12",
+        "the three criteria match the registration: S1-T rho >= 0.20 with the 95 percent lower bound above 0, S2-T p_perm < 0.01 over 10,000 unique-target permutations, S3-T 90 percent interval inside plus or minus 0.15",
+        "the gate requires all three target-level versions and records the governing unit"
+      ],
+      "defects_found_and_fixed": [
+        "stage_s1s3 ran the script but left its outputs in the image layer, since the script writes beside its own source and the results volume is mounted at /out; the stage now carries the three outputs onto the volume and refuses to commit a partial run"
+      ],
+      "noted_not_fixed": [
+        "geometry.target_members documents first-appearance order while numpy.unique returns sorted order; both callers use the same convention so no statistic is affected",
+        "the covariate fingerprint comparison cannot fail as written, because nothing mutates M_delta or K inside the permutation loop; it guards a future edit rather than this run"
+      ]
+    }
+  },
+  "inputs": {
+    "results/03c_h3_sensitivity/cohort_bundle.npz": "87f75267de9d2a1e9e71d6c5de60f3b34a00f1eea3ebf37c4529afbf4a0d64be",
+    "results/03_phenotype_projection/phenotype_projection_results.json": "fd69e26fc9a3917323065b631688baeab8b283f735c8bf5b16210ba67bd21425"
+  },
+  "seeds": {
+    "bootstrap_target": 20260926,
+    "permutation_target": 20260927,
+    "bootstrap": 20260913,
+    "permutation": 20260914
+  },
+  "n_permutations": 10000,
+  "n_bootstrap": 10000
+}
