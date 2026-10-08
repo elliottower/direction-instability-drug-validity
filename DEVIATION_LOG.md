@@ -1069,3 +1069,46 @@ does not read, so the expensive route does not buy an honest manifest.
 retrieved and compared against the script's contract and against the tracked copy.
 
 **When:** 2026-10-08, before any S1-T, S2-T or S3-T statistic existed.
+
+## Deviation 18: the S1-S3 gate applied the legacy flat tolerance to the production route
+
+**Pre-registered:** Amendment 5, frozen at `04fba74`, splits the single reproduction
+check in two. D1, legacy reproduction, is the retired extraction against the
+deposited records under the frozen flat `RECON_TOL` of 1e-06, established once in a
+sealed audit outside production. D2, production equivalence, is the authoritative
+GCTX-derived route against the same records under Amendment 2's elementwise rule,
+`|a-b| <= atol + rtol|b|` with `atol = 1e-8` and `rtol = 1e-6`.
+
+Amendment 5 measures both over all 795 drugs and records, for `P_shrna`, a legacy
+maximum of 9.755e-07 and a production maximum of 1.139e-06, the latter over the flat
+rule for one drug and at a fifth of its elementwise allowance. It states the
+resolution: "The frozen tolerance is therefore kept, not loosened: it governs the
+comparison it was registered for, which passes."
+
+**Actual:** `experiments/03c_h3_sensitivity.py` applies the flat `RECON_TOL` to the
+production route. Run on the GCTX-derived bundle it refused with `P reproduces to
+1.14e-06, tolerance 1e-06`. The script predates Amendment 5 and never received the
+split; the amendment was written against the reference-discordance driver.
+
+**Why it matters:** the refusal is correct about the arithmetic and wrong about which
+rule governs. Enforcing D1's tolerance on D2's comparison refuses a route the
+registration accepts, and would have left S1-T, S2-T and S3-T unrunnable on the only
+bundle built from the corrected artifact.
+
+**Corroboration:** 1.14e-06 is the figure Amendment 5 already records for the
+production route, 1.139e-06, reproduced here by a different script on a different
+day against the same deposited records. The residual is deterministic and is the one
+already characterized, not a new discrepancy.
+
+**What was done:** the reproduction check in `03c_h3_sensitivity.py` now enforces
+Amendment 2's elementwise rule, as Amendment 5 D2 specifies for this route, and
+reports the flat tolerance and the count of drugs over it rather than enforcing it.
+The per-quantity maximum absolute error, maximum normalized residual and worst drug
+travel in the result. No tolerance is loosened: the flat rule still governs D1, which
+is not re-run inside production, and the elementwise rule is the one Amendment 2
+registered for float32-derived values.
+
+**How it was identified:** the run refused on its own reproduction gate; the reported
+value was matched against the two-layer measurement table in Amendment 5.
+
+**When:** 2026-10-08, before any S1-T, S2-T or S3-T statistic existed.

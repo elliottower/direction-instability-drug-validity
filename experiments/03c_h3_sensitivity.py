@@ -44,6 +44,13 @@ OUT = REPO / "results" / "03c_h3_sensitivity"
 MIN_COMMON_RECORDS = 700
 DEPOSITED_RECORDS = 795
 RECON_TOL = 1e-6
+# Amendment 5 splits the one reproduction check in two. D1, the legacy route, keeps
+# the frozen flat RECON_TOL and is established once in a sealed audit outside
+# production. D2 governs this comparison, the authoritative GCTX-derived route
+# against the same deposited records, under Amendment 2's elementwise rule. The
+# amendment measures P_shrna at 1.139e-06 on the production route, over the flat
+# rule for one drug and at a fifth of the elementwise allowance. Deviation 18.
+RECON_ATOL, RECON_RTOL = 1e-8, 1e-6
 # the corrected artifact, which replaces the superseded 65e5d10e2720... of f288507
 EXPECTED_REFERENCE_SHA256 = "fd69e26fc9a3917323065b631688baeab8b283f735c8bf5b16210ba67bd21425"
 # The amendment's input table pins lincs_subset.npz and lincs_shrna.npz, which the
@@ -222,6 +229,9 @@ def main(bundle_path, manifest_path):
     P, E, D = np.empty(n), np.empty(n), np.empty(n)
     M_delta, M_mean, K = np.empty(n), np.empty(n), np.empty(n)
     worst = {"D": 0.0, "P": 0.0, "E": 0.0}
+    worst_residual = {"D": 0.0, "P": 0.0, "E": 0.0}
+    worst_drug = {"D": None, "P": None, "E": None}
+    n_over_flat = {"D": 0, "P": 0, "E": 0}
     for i, (drug, S, u) in enumerate(zip(drugs, sigs, dirs)):
         S = np.asarray(S, dtype=np.float64)
         if not (S.ndim == 2 and S.shape[1] == N_LANDMARK):
@@ -259,10 +269,21 @@ def main(bundle_path, manifest_path):
         for key, got, want in (("D", D[i], dep["raw_instability"]),
                                ("P", P[i], dep["projected_instability"]),
                                ("E", E[i], dep["on_target_enrichment"])):
-            worst[key] = max(worst[key], abs(got - want))
-    for key, w in worst.items():
-        if not (w < RECON_TOL):
-            raise AssertionError(f"{key} reproduces to {w:.3g}, tolerance {RECON_TOL}")
+            error = abs(got - want)
+            allowed = RECON_ATOL + RECON_RTOL * abs(float(want))
+            worst[key] = max(worst[key], error)
+            if not (error < RECON_TOL):
+                n_over_flat[key] += 1
+            if error / allowed > worst_residual[key]:
+                worst_residual[key] = error / allowed
+                worst_drug[key] = drug
+    over = [(k, worst_residual[k], worst_drug[k])
+            for k in sorted(worst_residual) if worst_residual[k] > 1.0]
+    if not (not over):
+        raise AssertionError(
+            "production equivalence fails under Amendment 2's elementwise rule "
+            f"atol={RECON_ATOL} rtol={RECON_RTOL}: "
+            + "; ".join(f"{k} residual {r:.3g} at {d}" for k, r, d in over))
 
     covars = (M_delta, K)
     rho_obs = partial_spearman(P, E, covars)
@@ -371,7 +392,14 @@ def main(bundle_path, manifest_path):
                    "restricted_to_rebuilt_subset": n < DEPOSITED_RECORDS,
                    "missing_from_rebuild": sorted(set(deposited) - set(drugs)),
                    "identifier_hash": hashlib.sha256("\n".join(sorted(drugs)).encode()).hexdigest(),
-                   "max_abs_reproduction_error": {k: float(v) for k, v in worst.items()}},
+                   "max_abs_reproduction_error": {k: float(v) for k, v in worst.items()},
+                   "reproduction_rule": {
+                       "enforced": f"|a-b| <= {RECON_ATOL} + {RECON_RTOL}|b|, elementwise, "
+                                   "Amendment 5 D2, the authoritative GCTX route",
+                       "flat_tolerance_reported_not_enforced": RECON_TOL,
+                       "max_normalized_residual": {k: float(v) for k, v in worst_residual.items()},
+                       "worst_drug": dict(worst_drug),
+                       "n_over_flat_tolerance": dict(n_over_flat)}},
         "S1_magnitude_and_coverage": {
             "partial_rho": rho_obs, "ci95_percentile": ci_s1,
             "display": f"{rho_obs:.4f} [{ci_s1[0]:.4f}, {ci_s1[1]:.4f}]",
